@@ -1,0 +1,160 @@
+{
+  "era" : 3,
+  "characters" : [
+    {
+      "characterType" : "SHAMAN" ,
+      "NumPlayers" :  4,
+      "ShamanStars" :2
+    },
+    {
+      "characterType" : "SHAMAN" ,
+      "NumPlayers" :  2,
+      "ShamanStars" :3
+    },
+    {
+      "characterType" : "SHAMAN" ,
+      "NumPlayers" :  2,
+      "ShamanStars" :2
+    },
+    {
+      "characterType" : "SHAMAN" ,
+      "NumPlayers" :  2,
+      "ShamanStars" :3
+    },
+    {
+      "characterType" : "SHAMAN" ,
+      "NumPlayers" :  3,
+      "ShamanStars" :2
+    },
+    {
+      "characterType" : "INVENTOR" ,
+      "NumPlayers" :  2,
+      "InventorIcon": "BREAD"
+    },
+    {
+      "characterType" : "INVENTOR" ,
+      "NumPlayers" :  2,
+      "InventorIcon": "NECKLACE"
+    },
+    {
+      "characterType" : "INVENTOR" ,
+      "NumPlayers" :  2,
+      "InventorIcon": "HOOK"
+    },
+    {
+      "characterType" : "INVENTOR" ,
+      "NumPlayers" :  2,
+      "InventorIcon": "DOLL"
+    },
+    {
+      "characterType" : "INVENTOR" ,
+      "NumPlayers" :  3,
+      "InventorIcon": "TREE"
+    },
+    {
+      "characterType" : "INVENTOR" ,
+      "NumPlayers" :  3,
+      "InventorIcon": "BOAT"
+    },
+    {
+      "characterType" : "INVENTOR" ,
+      "NumPlayers" :  4,
+      "InventorIcon": "NECKLACE"
+    },
+    {
+      "characterType" : "PAINTER" ,
+      "NumPlayers" :  2
+    },
+    {
+      "characterType" : "PAINTER" ,
+      "NumPlayers" :  2
+    },
+    {
+      "characterType" : "PAINTER" ,
+      "NumPlayers" :  2
+    },
+    {
+      "characterType" : "PAINTER" ,
+      "NumPlayers" :  5
+    },
+    {
+      "characterType" : "PICKER" ,
+      "NumPlayers" :  2
+    },
+    {
+      "characterType" : "PICKER" ,
+      "NumPlayers" :  4
+    },
+    {
+      "characterType" : "PICKER" ,
+      "NumPlayers" :  5
+    },
+    {
+      "characterType" : "BUILDER" ,
+      "NumPlayers" :  2,
+      "BuilderDiscount" : 2,
+      "BuilderPP" : 2
+    },
+    {
+      "characterType" : "BUILDER" ,
+      "NumPlayers" :  5,
+      "BuilderDiscount" : 1,
+      "BuilderPP" : 4
+    },
+    {
+      "characterType" : "BUILDER" ,
+      "NumPlayers" :  2,
+      "BuilderDiscount" : 2,
+      "BuilderPP" : 3
+    },
+    {
+      "characterType" : "BUILDER" ,
+      "NumPlayers" :  2,
+      "BuilderDiscount" : 1,
+      "BuilderPP" : 5
+    },
+    {
+      "characterType" : "HUNTER" ,
+      "NumPlayers" :  2,
+      "HunterSymbol" : true
+    },
+    {
+      "characterType" : "HUNTER" ,
+      "NumPlayers" :  2,
+      "HunterSymbol" : false
+    },
+    {
+      "characterType" : "HUNTER" ,
+      "NumPlayers" :  2,
+      "HunterSymbol" : false
+    },
+    {
+      "characterType" : "HUNTER" ,
+      "NumPlayers" :  5,
+      "HunterSymbol" : true
+    }
+  ],
+  "events": [
+    {
+      "eventName" : "HUNTING_EVENT",
+      "HuEvePP" : 3
+    },
+    {
+      "eventName" : "PAINTING_EVENT",
+      "PaEveNumMinPainters" : 3,
+      "PaEveMultiplierPP" : 3,
+      "PaEvePointsLoss" : -2
+    },
+    {
+      "eventName" : "SHAMANIC_EVENT",
+      "ShEvePenPoints" : -7,
+      "ShEvePrizePoints" : 15,
+      "FinalEvent" : true
+    },
+    {
+      "eventName" : "SUSTENANCE_EVENT",
+      "SuEvePointsLossMultiplier" : -3,
+      "FinalEvent" : true
+    }
+  ]
+}

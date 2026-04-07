@@ -1,0 +1,78 @@
+package it.polimi.ingsw.FileLoader;
+
+import it.polimi.ingsw.Cards.Events.EventName;
+
+import static it.polimi.ingsw.Cards.Events.EventName.containsEventName;
+
+public class EventDTO extends CardDTO{
+    private EventName eventName;
+    private Integer ShEvePenPoints;
+    private Integer ShEvePrizePoints;
+    private Integer HuEvePP;
+    private Integer PaEveNumMinPainters;
+    private Integer PaEveMultiplierPP;
+    private Integer PaEvePointsLoss;
+    private Integer SuEvePointsLossMultiplier;
+    private Boolean FinalEvent;
+
+    public String getEventName() {
+        if(eventName != null && containsEventName(eventName))
+            return eventName.toString();
+        throw new IllegalArgumentException("EventName is not valid");
+    }
+
+    public Integer getShEvePenPoints() {
+        if(ShEvePenPoints != null && isBetween(-3, -7, ShEvePenPoints))
+            return ShEvePenPoints;
+        throw new IllegalArgumentException("ShEvePenPoints is not valid");
+    }
+
+    public Integer getShEvePrizePoints() {
+        if(ShEvePrizePoints != null && isBetween(5, 15, ShEvePrizePoints))
+            return ShEvePrizePoints;
+        throw new IllegalArgumentException("ShEvePrizePoints is not valid");
+    }
+
+    public Integer getHuEvePP() {
+        if(HuEvePP != null && isBetween(1, 3, HuEvePP))
+            return HuEvePP;
+        throw new IllegalArgumentException("HuEvePP is not valid");
+    }
+
+    public Integer getPaEveNumMinPainters() {
+        if(PaEveNumMinPainters != null && isBetween(1, 3, PaEveNumMinPainters))
+            return PaEveNumMinPainters;
+        throw new IllegalArgumentException("PaEveNumMinPainters is not valid");
+    }
+
+    public Integer getPaEveMultiplierPP() {
+        if(PaEveMultiplierPP != null && isBetween(1, 3, PaEveMultiplierPP))
+            return PaEveMultiplierPP;
+        throw new IllegalArgumentException("PaEveMultiplierPP is not valid");
+    }
+
+    public Integer getPaEvePointsLoss() {
+        if(PaEvePointsLoss != null && PaEvePointsLoss!=-2)
+            return PaEvePointsLoss;
+        throw new IllegalArgumentException("PaEvePointsLoss is not valid");
+    }
+
+    public Integer getSuEvePointsLossMultiplier() {
+        if(SuEvePointsLossMultiplier != null && isBetween(-1, -3, SuEvePointsLossMultiplier))
+            return SuEvePointsLossMultiplier;
+        throw new IllegalArgumentException("SuEvePointsLossMultiplier is not valid");
+    }
+
+    public Boolean isFinalEvent() {
+        if(FinalEvent!= null)
+            return FinalEvent;
+        throw new IllegalArgumentException("FinalEvent is null");
+    }
+
+    public static boolean isBetween(Integer a,  Integer b, Integer c){
+        if(c>=a&&c<=b)
+            return true;
+        return false;
+    }
+
+}
