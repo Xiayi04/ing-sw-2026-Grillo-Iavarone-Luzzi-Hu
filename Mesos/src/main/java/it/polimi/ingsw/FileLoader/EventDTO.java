@@ -69,6 +69,13 @@ public class EventDTO extends CardDTO{
         throw new IllegalArgumentException("FinalEvent is null");
     }
 
+    /**
+     *
+     * @param a left endpoint
+     * @param b right endpoint
+     * @param c number which needs to be checked
+     * @return true if c is between a and b, false otherwise
+     */
     public static boolean isBetween(Integer a,  Integer b, Integer c){
         if(c>=a&&c<=b)
             return true;
