@@ -1,0 +1,16 @@
+{
+  "era" : 4,
+  "characters" : [
+  ],
+  "events" : [
+    {
+      "eventName" : "SHAMANIC_EVENT",
+      "ShEvePenPoints" : -7,
+      "ShEvePrizePoints" : 15
+    },
+    {
+      "eventName" : "SUSTENANCE_EVENT",
+      "SuEvePointsLossMultiplier" : -3
+    }
+  ]
+}

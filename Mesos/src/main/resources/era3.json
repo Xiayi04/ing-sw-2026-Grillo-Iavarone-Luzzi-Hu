@@ -144,17 +144,6 @@
       "PaEveNumMinPainters" : 3,
       "PaEveMultiplierPP" : 3,
       "PaEvePointsLoss" : -2
-    },
-    {
-      "eventName" : "SHAMANIC_EVENT",
-      "ShEvePenPoints" : -7,
-      "ShEvePrizePoints" : 15,
-      "FinalEvent" : true
-    },
-    {
-      "eventName" : "SUSTENANCE_EVENT",
-      "SuEvePointsLossMultiplier" : -3,
-      "FinalEvent" : true
     }
   ]
 }
