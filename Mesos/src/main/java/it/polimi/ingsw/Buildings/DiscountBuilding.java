@@ -20,7 +20,7 @@ public class DiscountBuilding extends Building{
         return foodBonus;
     }
 
-    public int getPpBonusppBonus(){
+    public int getPpBonus(){
         return ppBonus;
     }
 

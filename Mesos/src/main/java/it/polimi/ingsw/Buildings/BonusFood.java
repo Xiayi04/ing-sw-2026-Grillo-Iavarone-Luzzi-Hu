@@ -4,4 +4,8 @@ public class BonusFood extends Building{
     public BonusFood(int era, int price, int pp) {
         super(era, price, pp);
     }
+    public int giveExtraFood(){
+        return 1;
+
+    }
 }

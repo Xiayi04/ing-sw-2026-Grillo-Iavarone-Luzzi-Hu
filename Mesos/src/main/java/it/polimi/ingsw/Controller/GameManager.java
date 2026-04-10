@@ -105,7 +105,7 @@ public class GameManager {
     public void drawCard(Arraylist <card> up , Arraylist<card> down){
 
     }
-    public void buyBuilding{
+    public void buyBuilding() {
 
     }
 
