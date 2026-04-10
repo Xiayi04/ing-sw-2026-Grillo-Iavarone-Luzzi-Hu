@@ -7,7 +7,6 @@ import it.polimi.ingsw.Cards.CardType;
 import it.polimi.ingsw.FileLoader.*;
 
 import java.util.ArrayList;
-import java.util.LinkedList;
 import java.util.List;
 
 public class ConcreteFactoryEra1 implements Factory{
@@ -103,11 +102,10 @@ public class ConcreteFactoryEra1 implements Factory{
         return new sameIconBuilding();
     }*/
 
-    //DA ERRORE!!!!
-    /*public List<Character> createCharacterList(){
+    public List<Character> createCharacterList(){
         Loader loader = new Loader();
         EraDTO eraDTO = loader.loadFile(era);
-        List<Character> characters = new ArrayList<Character>();
+        List<Character> characters = new ArrayList<>();
 
         for(CharacterDTO c : eraDTO.getCharactersArray()){
             int numPlayer = c.getNumPlayers();
@@ -115,27 +113,32 @@ public class ConcreteFactoryEra1 implements Factory{
                 case "inventor":
                     String icon = c.getInventorIcon();
                     characters.add(createInventor(era, numPlayer, icon));
+                    break;
                 case "hunter":
                     boolean symbol = c.getHunterSymbol();
                     characters.add(createHunter(era, numPlayer, symbol));
+                    break;
                 case "builder":
                     int discount = c.getBuilderDiscount();
                     int pp = c.getBuilderPP();
                     characters.add(createBuilder(era, numPlayer, discount, pp));
+                    break;
                 case "painter":
                     characters.add(createPainter(era, numPlayer));
+                    break;
                 case "shaman":
                     int shamanStars = c.getShamanStars();
                     characters.add(createShaman(era, numPlayer, shamanStars));
+                    break;
                 case "picker":
                     characters.add(createPicker(era, numPlayer));
+                    break;
             }
         }
         return characters;
-    }*/
+    }
 
-    //DA ERRORE!!!!!!!
-    /*public List<Event> createEventList(){
+    public List<Event> createEventList(){
         Loader loader = new Loader();
         EraDTO eraDTO = loader.loadFile(era);
         List<Event> events = new ArrayList<>();
@@ -146,64 +149,24 @@ public class ConcreteFactoryEra1 implements Factory{
                     int penPoints = e.getShEvePenPoints();
                     int prizePoints = e.getShEvePrizePoints();
                     events.add(createShamanicEvent(era, penPoints, prizePoints));
+                    break;
                 case "hunting_event":
                     int huEvePP = e.getHuEvePP();
                     events.add(createHuntingEvent(era, huEvePP));
+                    break;
                 case "painting_event":
                     int minPainters = e.getPaEveNumMinPainters();
                     int multiplierPP = e.getPaEveMultiplierPP();
                     int pointLossPP = e.getPaEvePointsLoss();
                     events.add(createPaintingEvent(era, minPainters, multiplierPP, pointLossPP));
+                    break;
                 case "sustenance_event":
                     int pointLossMultiplier = e.getSuEvePointsLossMultiplier();
                     events.add(createSustenanceEvent(era, pointLossMultiplier));
+                    break;
             }
 
         }
         return events;
-    }*/
-
-    //DA ERRORE!!!!
-    //funzione con stampa all'interno
-    /*public List<Character> createCharacterListProva(){
-        Loader loader = new Loader();
-        EraDTO eraDTO = loader.loadFile(era);
-        List<Character> characters = new LinkedList<>();
-
-        for(CharacterDTO c : eraDTO.getCharactersArray()){
-            int numPlayer = c.getNumPlayers();
-            switch(c.getCharacterType().toLowerCase()) {
-                case "inventor":
-                    String icon = c.getInventorIcon();
-                    Character i = createInventor(era, numPlayer, icon);
-                    characters.add(i);
-                    i.printCard();
-                case "hunter":
-                    boolean symbol = c.getHunterSymbol();
-                    Character h = createHunter(era, numPlayer, symbol);
-                    characters.add(h);
-                    h.printCard();
-                case "builder":
-                    int discount = c.getBuilderDiscount();
-                    int pp = c.getBuilderPP();
-                    Character b = createBuilder(era, numPlayer, discount, pp);
-                    characters.add(b);
-                    b.printCard();
-                case "painter":
-                    Character p = createPainter(era, numPlayer);
-                    characters.add(p);
-                    p.printCard();
-                case "shaman":
-                    int shamanStars = c.getShamanStars();
-                    Character s = createShaman(era, numPlayer, shamanStars);
-                    characters.add(s);
-                    s.printCard();
-                case "picker":
-                    Character pi = createPicker(era, numPlayer);
-                    characters.add(pi);
-                    pi.printCard();
-            }
-        }
-        return characters;
-    }*/
+    }
 }
