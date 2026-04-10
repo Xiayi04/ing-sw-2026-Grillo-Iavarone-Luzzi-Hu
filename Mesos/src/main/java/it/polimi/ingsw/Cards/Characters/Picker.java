@@ -12,4 +12,9 @@ public class Picker extends Character{
     public int getDiscount() {
         return discount;
     }
+
+    public void printCard(){
+        super.printCard();
+        System.out.println("sconto:"+discount);
+    }
 }

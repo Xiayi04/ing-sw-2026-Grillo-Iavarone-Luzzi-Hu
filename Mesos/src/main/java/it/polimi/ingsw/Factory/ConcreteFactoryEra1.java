@@ -7,6 +7,7 @@ import it.polimi.ingsw.Cards.CardType;
 import it.polimi.ingsw.FileLoader.*;
 
 import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
 
 public class ConcreteFactoryEra1 implements Factory{
@@ -41,23 +42,23 @@ public class ConcreteFactoryEra1 implements Factory{
         return new Picker(era, CardType.CHARACTER, numPlayers, CharacterType.PICKER);
     }
 
-    public Event createShamanicEvent(int penaltyPoints, int prizePoints){
-        return new ShamanicEvent(penaltyPoints, prizePoints);
+    public Event createShamanicEvent(int era, int penPoints, int prizePoints){
+        return new ShamanicEvent(era, CardType.EVENT, EventName.SHAMANIC_EVENT, penPoints, prizePoints);
     }
 
-    public Event createHuntingEvent(int pp){
-        return new HuntingEvent(pp);
+    public Event createHuntingEvent(int era, int HuEvePP){
+        return new HuntingEvent(era, CardType.EVENT, EventName.HUNTING_EVENT, HuEvePP);
     }
 
-    public Event createPaintingEvent(int numMinPainters, int multiplierPP, int pointsLoss){
-        return new PaintingEvent(numMinPainters, multiplierPP, multiplierPP);
+    public Event createPaintingEvent(int era, int minPainters, int multiplierPP, int pointsLoss){
+        return new PaintingEvent(era, CardType.EVENT, EventName.PAINTING_EVENT, minPainters, multiplierPP, multiplierPP);
     }
 
-    public Event createSustenanceEvent(int pointsLossMultiplier){
-        return new SustenanceEvent(pointsLossMultiplier);
+    public Event createSustenanceEvent(int era,  int pointsLossMultiplier){
+        return new SustenanceEvent(era, CardType.EVENT, EventName.SUSTENANCE_EVENT, pointsLossMultiplier);
     }
 
-    public Building createBonusPPBuilding(){
+    /*public Building createBonusPPBuilding(){
         return new bonusPPBuilding();
     }
 
@@ -100,16 +101,17 @@ public class ConcreteFactoryEra1 implements Factory{
 
     public Building createSameIconBuilding(){
         return new sameIconBuilding();
-    }
+    }*/
 
-    public List<Character> createCharacterList(){
+    //DA ERRORE!!!!
+    /*public List<Character> createCharacterList(){
         Loader loader = new Loader();
         EraDTO eraDTO = loader.loadFile(era);
         List<Character> characters = new ArrayList<Character>();
 
         for(CharacterDTO c : eraDTO.getCharactersArray()){
             int numPlayer = c.getNumPlayers();
-            switch(c.getCharacterType().toLowerCase()){
+            switch(c.getCharacterType().toLowerCase()) {
                 case "inventor":
                     String icon = c.getInventorIcon();
                     characters.add(createInventor(era, numPlayer, icon));
@@ -128,12 +130,80 @@ public class ConcreteFactoryEra1 implements Factory{
                 case "picker":
                     characters.add(createPicker(era, numPlayer));
             }
-            return characters;
         }
+        return characters;
+    }*/
 
-    }
+    //DA ERRORE!!!!!!!
+    /*public List<Event> createEventList(){
+        Loader loader = new Loader();
+        EraDTO eraDTO = loader.loadFile(era);
+        List<Event> events = new ArrayList<>();
 
-    public List<Event> createEventList(){
+        for(EventDTO e : eraDTO.getEventsArray()){
+            switch(e.getEventName().toLowerCase()){
+                case "shamanic_event":
+                    int penPoints = e.getShEvePenPoints();
+                    int prizePoints = e.getShEvePrizePoints();
+                    events.add(createShamanicEvent(era, penPoints, prizePoints));
+                case "hunting_event":
+                    int huEvePP = e.getHuEvePP();
+                    events.add(createHuntingEvent(era, huEvePP));
+                case "painting_event":
+                    int minPainters = e.getPaEveNumMinPainters();
+                    int multiplierPP = e.getPaEveMultiplierPP();
+                    int pointLossPP = e.getPaEvePointsLoss();
+                    events.add(createPaintingEvent(era, minPainters, multiplierPP, pointLossPP));
+                case "sustenance_event":
+                    int pointLossMultiplier = e.getSuEvePointsLossMultiplier();
+                    events.add(createSustenanceEvent(era, pointLossMultiplier));
+            }
 
-    }
+        }
+        return events;
+    }*/
+
+    //DA ERRORE!!!!
+    //funzione con stampa all'interno
+    /*public List<Character> createCharacterListProva(){
+        Loader loader = new Loader();
+        EraDTO eraDTO = loader.loadFile(era);
+        List<Character> characters = new LinkedList<>();
+
+        for(CharacterDTO c : eraDTO.getCharactersArray()){
+            int numPlayer = c.getNumPlayers();
+            switch(c.getCharacterType().toLowerCase()) {
+                case "inventor":
+                    String icon = c.getInventorIcon();
+                    Character i = createInventor(era, numPlayer, icon);
+                    characters.add(i);
+                    i.printCard();
+                case "hunter":
+                    boolean symbol = c.getHunterSymbol();
+                    Character h = createHunter(era, numPlayer, symbol);
+                    characters.add(h);
+                    h.printCard();
+                case "builder":
+                    int discount = c.getBuilderDiscount();
+                    int pp = c.getBuilderPP();
+                    Character b = createBuilder(era, numPlayer, discount, pp);
+                    characters.add(b);
+                    b.printCard();
+                case "painter":
+                    Character p = createPainter(era, numPlayer);
+                    characters.add(p);
+                    p.printCard();
+                case "shaman":
+                    int shamanStars = c.getShamanStars();
+                    Character s = createShaman(era, numPlayer, shamanStars);
+                    characters.add(s);
+                    s.printCard();
+                case "picker":
+                    Character pi = createPicker(era, numPlayer);
+                    characters.add(pi);
+                    pi.printCard();
+            }
+        }
+        return characters;
+    }*/
 }

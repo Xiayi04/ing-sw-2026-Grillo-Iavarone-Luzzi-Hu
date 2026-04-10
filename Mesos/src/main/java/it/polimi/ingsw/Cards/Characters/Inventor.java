@@ -15,4 +15,9 @@ public class Inventor extends Character{
     public String getInventorIcon() {
         return inventorIcon;
     }
+
+    public void printCard(){
+        super.printCard();
+        System.out.println("icona:"+inventorIcon);
+    }
 }

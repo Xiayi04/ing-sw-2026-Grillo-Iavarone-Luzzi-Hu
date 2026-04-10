@@ -1,17 +1,24 @@
 package it.polimi.ingsw.Cards.Events;
 
+import it.polimi.ingsw.Cards.CardType;
+
 import java.util.ArrayList;
 
 public class SustenanceEvent extends Event {
     private final Integer SuEvePointsLossMultiplier;
     //CONSTRUCTOR
-    public SustenanceEvent(int era, EventName eventName, Integer pointsLossMultiplier) {
-        super(era, eventName);
+    public SustenanceEvent(int era, CardType cardType, EventName eventName, Integer pointsLossMultiplier) {
+        super(era, cardType, eventName);
         this.SuEvePointsLossMultiplier = pointsLossMultiplier;
     }
 
     public Integer getSuEvePointsLossMultiplier() {
         return SuEvePointsLossMultiplier;
+    }
+
+    public void printCard() {
+        super.printCard();
+        System.out.println("moltiplicatore:"+SuEvePointsLossMultiplier);
     }
 
     /**
