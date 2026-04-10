@@ -1,5 +1,5 @@
 package it.polimi.ingsw.Buildings;
-import Game.Player;
+import it.polimi.ingsw.Game.Player;
 
 public abstract class Building {
     private final int era;
