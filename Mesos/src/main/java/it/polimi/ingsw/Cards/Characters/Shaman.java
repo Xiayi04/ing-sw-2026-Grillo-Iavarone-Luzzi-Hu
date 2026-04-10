@@ -14,6 +14,11 @@ public class Shaman extends Character{
     //metodo getter
     public Integer getShamanStars() { return this.shamanStars; }
 
+    public void printCard(){
+        super.printCard();
+        System.out.println("stelle:"+shamanStars);
+    }
+
     /**
      * @param players is an ArrayList which contains al the players' informations
      * @return  the highest number of stars among the players

@@ -16,4 +16,10 @@ public class Builder extends Character{
 // metodi getter
     public Integer getBuilderDiscount() { return builderDiscount;}
     public Integer getPP() { return PP; }
+
+    public void printCard(){
+        super.printCard();
+        System.out.println("sconto:"+builderDiscount);
+        System.out.println("pp:"+PP);
+    }
 }

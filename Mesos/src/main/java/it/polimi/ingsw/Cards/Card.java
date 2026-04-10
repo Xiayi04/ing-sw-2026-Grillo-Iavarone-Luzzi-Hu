@@ -13,4 +13,9 @@ public abstract class Card {
         return era;
     }
     public String getCardType() { return cardType.toString(); }
+
+    public void printCard(){
+        System.out.println("era:"+era);
+        System.out.println("tipo di carta:"+cardType.toString());
+    }
 }

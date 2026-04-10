@@ -13,4 +13,9 @@ public class Hunter extends Character {
     }
     //metodi getter
     public boolean getSymbol() {return symbol;}
+
+    public void printCard(){
+        super.printCard();
+        System.out.println("simbolo:"+symbol);
+    }
 }
