@@ -22,7 +22,7 @@ public abstract class Building {
         return price;
     }
 
-    public int getPp(){
+    public int getPP(){
         return pp;
     }
 

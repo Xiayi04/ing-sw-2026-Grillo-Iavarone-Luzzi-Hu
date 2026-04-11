@@ -1,6 +1,8 @@
-package Game;
+package it.polimi.ingsw.Game;
 import java.util.ArrayList;
-import Buildings.Building;
+import it.polimi.ingsw.Buildings.Building;
+import it.polimi.ingsw.Cards.Card;
+import it.polimi.ingsw.Cards.Events.Event;
 
 public class Board {
     private int era;
