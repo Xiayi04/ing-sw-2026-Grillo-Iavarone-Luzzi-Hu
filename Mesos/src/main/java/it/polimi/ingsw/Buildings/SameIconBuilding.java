@@ -2,8 +2,8 @@ package it.polimi.ingsw.Buildings;
 
 public class SameIconBuilding extends Building{
 
-    public SameIconBuilding(int era, int price, int pp) {
-        super(era, price, pp);
+    public SameIconBuilding(int era, int price, int pp, String name) {
+        super(era, price, pp, "SameIconBuilding");
 
     }
     public int getFoodBonus(int pairOfInventor){

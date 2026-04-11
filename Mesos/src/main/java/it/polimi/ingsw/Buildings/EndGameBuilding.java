@@ -8,8 +8,8 @@ import it.polimi.ingsw.Game.Player;
 public abstract class EndGameBuilding extends Building {
     private final Icons typeIcons;
 
-    public EndGameBuilding(int era, int price, int pp, Icons typeIcons){
-        super(era, price,pp);
+    public EndGameBuilding(int era, int price, int pp,String name, Icons typeIcons){
+        super(era, price,pp,"EndGameBuilding");
         this.typeIcons=typeIcons;
     }
     public Icons getTypeIcons(){

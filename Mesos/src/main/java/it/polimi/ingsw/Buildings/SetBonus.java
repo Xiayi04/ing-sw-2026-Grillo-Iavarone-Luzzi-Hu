@@ -2,8 +2,8 @@ package it.polimi.ingsw.Buildings;
 
 public class SetBonus extends Building{
     private int setCompleted;
-    public SetBonus(int era, int price, int pp, int setCompleted) {
-        super(era, price, pp);
+    public SetBonus(int era, int price, int pp, String name, int setCompleted) {
+        super(era, price, pp, "SetBonus");
         this.setCompleted = 0;
     }
     /*public int getSetCompleted(){

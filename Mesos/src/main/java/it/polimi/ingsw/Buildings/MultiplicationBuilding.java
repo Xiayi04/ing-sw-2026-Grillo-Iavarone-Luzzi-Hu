@@ -7,8 +7,8 @@ public class MultiplicationBuilding extends EndGameBuilding{
     private final Icons typeIcons;
     private final int multiplier;
     //costruttore
-    public MultiplicationBuilding(int era, int price, int pp, Icons typeIcons, int multiplier){
-        super (era, price, pp, typeIcons);
+    public MultiplicationBuilding(int era, int price, int pp,String name, Icons typeIcons, int multiplier){
+        super (era, price, pp, "MultiplicationBuilding", typeIcons);
         this.typeIcons = typeIcons;
         this.multiplier = multiplier;
 

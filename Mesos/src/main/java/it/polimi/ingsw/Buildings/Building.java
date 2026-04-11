@@ -5,11 +5,13 @@ public abstract class Building {
     private final int era;
     private final int price;
     private final int pp;
+    private final String name;
 /*costruttore */
-    public Building(int era, int price, int pp){
+    public Building(int era, int price, int pp, String name){
         this.era = era;
         this.price = price;
         this.pp = pp;
+        this.name = name;
     }
 //metodi getter
     public int getEra(){
@@ -20,9 +22,11 @@ public abstract class Building {
         return price;
     }
 
-    public int getpp(){
+    public int getPp(){
         return pp;
     }
+
+    public String getName(){return name; }
 
 
 }
