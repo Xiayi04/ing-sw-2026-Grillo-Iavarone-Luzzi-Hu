@@ -8,7 +8,7 @@ public class DiscountBuilding extends Building{
     private final Events typeEvents;
 
 
-    public DiscountBuilding(int era, int price, int pp, String name, int foodBonus, int ppBonus, Icons typeIcons, Events typeEvents) {
+    public DiscountBuilding(int era, int price, int pp, int foodBonus, int ppBonus, Icons typeIcons, Events typeEvents) {
         super(era, price, pp,"DiscountBuilding");
         this.foodBonus = foodBonus;
         this.ppBonus = ppBonus;
