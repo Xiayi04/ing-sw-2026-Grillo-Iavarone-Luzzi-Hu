@@ -67,14 +67,14 @@ public class Board {
         return events;
 
     }
-//sposto da sopra a sotto
+    //sposto da sopra a sotto
     public void shiftUpToDown(){
         lowerCardsRow.clear();
         lowerCardsRow.addAll(upperCardRow);
         upperCardRow.clear();
     }
-   //rimozione degli edifici
-   public void removeLowerBuildings(){
+    //rimozione degli edifici
+    public void removeLowerBuildings(){
         lowerBuildingRow.clear();
 
     }
@@ -91,7 +91,7 @@ public class Board {
             upperCardRow.add(newCard);
         }
     }
-//lo si usa per rimuovere gli edifici
+    //lo si usa per rimuovere gli edifici
     public void removeCards(Card card){
         upperCardRow.remove(card);
         lowerCardsRow.remove(card);
