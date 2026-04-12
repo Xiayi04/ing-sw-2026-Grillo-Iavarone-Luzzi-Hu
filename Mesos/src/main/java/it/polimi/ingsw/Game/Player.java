@@ -78,7 +78,7 @@ public class Player {
         for(Character c : tribeCard){
             if(c instanceof Inventor inventor){
                 numInventor++;
-                String currentIcon = inventor.getInventorIcon().toLowerCase();
+                String currentIcon = inventor.getInventorIcon().toLowerCase();//per confrontare le stringhe
                 for(int i=0; i<icons.size() && !trovato; i++){
                     if(icons.get(i).toLowerCase().equals(currentIcon))
                         trovato=true;
