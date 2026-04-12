@@ -1,18 +1,14 @@
 package it.polimi.ingsw.Buildings;
 
+import it.polimi.ingsw.Game.Player;
+
 public class SetBonus extends Building{
     private int setCompleted;
     public SetBonus(int era, int price, int pp, String name, int setCompleted) {
         super(era, price, pp, "SetBonus");
-        this.setCompleted = 0;
+       // meglio avere un metodo contatore  aparte o uso countset(?)  this.setCompleted = 0;
     }
-    /*public int getSetCompleted(){
-        return setCompleted;
-    }
-    public void setCompletedCount(int setCompleted){
-        this.setCompleted = setCompleted;
-    }*/
-    public int giveExtraFoodSet(){
-        return 5;
-    }
+   public int giveExtraFoodSet(Player player){
+        return player.countSet()*5;
+   }
 }
