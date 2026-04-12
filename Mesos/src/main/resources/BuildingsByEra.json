@@ -1,0 +1,150 @@
+{
+  "era1" : [
+    {
+      "era" : 1,
+      "price" : 5 ,
+      "pp" : 2,
+      "buildingName" : "NoMalusBuilding"
+    },{
+      "era" : 1,
+      "price" : 5,
+      "pp" : 3,
+      "buildingName" : "DiscountBuilding",
+      "foodBonus" : -1,
+      "ppBonus" : 0,
+      "typeIcons" : "PAINTER",
+      "typeEvents" : "SUSTENANCEEVENT"
+    },{
+      "era" : 1,
+      "price" :4 ,
+      "pp" : 3,
+      "buildingName" : "SetBonus"
+    },{
+      "era" : 1,
+      "price" : 3,
+      "pp" : 3,
+      "buildingName" : "BonusFood"
+    },{
+      "era" : 1,
+      "price" :3 ,
+      "pp" : 4,
+      "buildingName" : "SameIconBuilding"
+    },{
+      "era" : 1,
+      "price" : 5,
+      "pp" : 3,
+      "buildingName" : "DiscountBuilding",
+      "foodBonus" : -1,
+      "ppBonus" : 0,
+      "typeIcons" : "PICKER",
+      "typeEvents" : "SUSTENANCEEVENT"
+    }
+  ],
+  "era2" : [
+    {
+      "era" : 2,
+      "price" : 5,
+      "pp" : 6,
+      "buildingName" : "MultiplicationBuilding",
+      "typeIcons" : "SET"
+    },{
+      "era" : 2,
+      "price" :6 ,
+      "pp" : 4,
+      "buildingName" : "MultiplierPPBuilderBuilding"
+    },{
+      "era" : 2,
+      "price" : 7,
+      "pp" : 2,
+      "buildingName" : "DiscountBuilding",
+      "foodBonus" : 1,
+      "ppBonus" : 1,
+      "typeIcons" : "HUNTER",
+      "typeEvents" : "HUNTEREVENT"
+    },{
+      "era" : 2,
+      "price" : 5,
+      "pp" : 6,
+      "buildingName" : "DiscountBuilding",
+      "foodBonus" : 1,
+      "ppBonus" : 0,
+      "typeIcons" : "PAINTER",
+      "typeEvents" : "PAINTINGEVENT"
+    },{
+      "era" : 2,
+      "price" : 7,
+      "pp" : 0,
+      "buildingName" : "DoubleBonusBuilding"
+    },{
+      "era" : 2,
+      "price" : 7,
+      "pp" : 4,
+      "buildingName" : "DiscountBuilding",
+      "foodBonus" : -1,
+      "ppBonus" : 0,
+      "typeIcons" : "INVENTOR",
+      "typeEvents" : "SUSTENANCEEVENT"
+    },{
+      "era" : 2,
+      "price" : 6,
+      "pp" : 4,
+      "buildingName" : "BonusStarBuilding"
+    }
+
+  ],
+  "era3" : [
+    {
+      "era" : 3,
+      "price" : 10,
+      "pp" : 0,
+      "buildingName" : "BonusPPBuilding"
+    },{
+      "era" : 3,
+      "price" : 9,
+      "pp" : 3,
+      "buildingName" : "AddCard"
+    },{
+      "era" : 3,
+      "price" : 6,
+      "pp" : 6,
+      "buildingName" : "MultiplicationBuilding",
+      "typeIcons" : "INVENTOR",
+      "multiplier" : 2
+    },{
+      "era" : 3,
+      "price" : 7,
+      "pp" : 4,
+      "buildingName" : "MultiplicationBuilding",
+      "typeIcons" : "PAINTER",
+      "multiplier" : 4
+    },{
+      "era" : 3,
+      "price" : 6,
+      "pp" : 3,
+      "buildingName" : "MultiplicationBuilding",
+      "typeIcons" : "BUILDER",
+      "multiplier": 4
+    },{
+      "era" : 3,
+      "price" : 7,
+      "pp" : 4,
+      "buildingName" : "MultiplicationBuilding",
+      "typeIcons" : "SHAMAN",
+      "multiplier" : 4
+    },{
+      "era" : 3,
+      "price" : 7,
+      "pp" : 6,
+      "buildingName" : "MultiplicationBuilding",
+      "typeIcons" : "PICKER",
+      "multiplier" : 4
+    },{
+      "era" : 3,
+      "price" : 8,
+      "pp" : 8,
+      "buildingName" : "MultiplicationBuilding",
+      "typeIcons" : "HUNTER",
+      "multiplier" : 3
+    }
+  ]
+}

@@ -39,7 +39,7 @@ public class Board {
         lowerCardsRow.remove(card);
     }
 
-    public ArrayList<OfferCard>getPath(){
+    public ArrayList<OfferCard> getPath(){
         return path;
     }
     public void moveTotem(Player player){
@@ -61,7 +61,5 @@ public class Board {
 
 
     }
-
-
 
 }
