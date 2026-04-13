@@ -52,7 +52,7 @@ public class EventDTO extends CardDTO{
     }
 
     public Integer getPaEvePointsLoss() {
-        if(PaEvePointsLoss != null && PaEvePointsLoss!=-2)
+        if(PaEvePointsLoss != null && PaEvePointsLoss==-2)
             return PaEvePointsLoss;
         throw new IllegalArgumentException("PaEvePointsLoss is not valid");
     }

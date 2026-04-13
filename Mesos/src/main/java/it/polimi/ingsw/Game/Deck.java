@@ -20,7 +20,7 @@ public class Deck {
         this.deck = new ArrayList<>();
     }
 
-    public List<Card> createDeck(){
+    public ArrayList<Card> createDeck(){
         ArrayList<Card> deckEra1 = new ArrayList<>();
         ArrayList<Card> deckEra2 = new ArrayList<>();
         ArrayList<Card> deckEra3 = new ArrayList<>();

@@ -50,7 +50,7 @@ public class ConcreteFactoryEra implements Factory{
     }
 
     public Event createPaintingEvent(int era, int minPainters, int multiplierPP, int pointsLoss){
-        return new PaintingEvent(era, CardType.EVENT, EventName.PAINTING_EVENT, minPainters, multiplierPP, multiplierPP);
+        return new PaintingEvent(era, CardType.EVENT, EventName.PAINTING_EVENT, minPainters, multiplierPP, pointsLoss);
     }
 
     public Event createSustenanceEvent(int era,  int pointsLossMultiplier){
