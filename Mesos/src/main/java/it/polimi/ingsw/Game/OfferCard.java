@@ -1,5 +1,5 @@
 package it.polimi.ingsw.Game;
-
+//cambiato il tipo di ID
 public class OfferCard {
     private int ID;
     private int UpArrow;

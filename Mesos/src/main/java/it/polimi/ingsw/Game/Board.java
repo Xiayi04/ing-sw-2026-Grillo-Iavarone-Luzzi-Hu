@@ -119,7 +119,7 @@ public class Board {
         }
 
     }
-
+//metodo percorso
     public ArrayList<OfferCard> obtainPath(ArrayList<Player> players) {
         int numPlayers = players.size();
 
