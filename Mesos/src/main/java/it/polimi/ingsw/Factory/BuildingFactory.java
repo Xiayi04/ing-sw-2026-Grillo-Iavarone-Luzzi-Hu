@@ -55,6 +55,12 @@ public class BuildingFactory {
         return new SameIconBuilding(era, price, pp);
     }
 
+    /**
+     * the method through the loader and the getter methods of BuildingByEraDTO derives the arrays composed of
+     * elements of type BuildingDTO. through the getter methods of BuildingDTO it obtains the useful values to
+     * create all types of buildings.
+     * @return a list with all the buildings
+     */
     public List<Building> createBuildingList(){
 
         Loader loader = new Loader();

@@ -57,6 +57,12 @@ public class ConcreteFactoryEra implements Factory{
         return new SustenanceEvent(era, CardType.EVENT, EventName.SUSTENANCE_EVENT, pointsLossMultiplier);
     }
 
+    /**
+     * the method through the loader and the getter methods of EraDTO derives the array composed of elements of
+     * type CharacterDTO. through the getter methods of CharacterDTO it obtains the useful values to create all
+     * types of character.
+     * @return a list of characters, all from a specific era
+     */
     public ArrayList<Character> createCharacterList(){
 
         Loader loader = new Loader();
@@ -94,6 +100,12 @@ public class ConcreteFactoryEra implements Factory{
         return characters;
     }
 
+    /**
+     * the method through the loader and the getter methods of EraDTO derives the array composed of elements of
+     * type EventDTO. through the getter methods of EventDTO it obtains the useful values to create all
+     * types of events.
+     * @return a list of events, all from a specific era
+     */
     public ArrayList<Event> createEventList(){
 
         Loader loader = new Loader();

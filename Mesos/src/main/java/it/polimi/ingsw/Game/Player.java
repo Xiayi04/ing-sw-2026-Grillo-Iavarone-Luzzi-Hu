@@ -2,6 +2,7 @@ package it.polimi.ingsw.Game;
 import it.polimi.ingsw.Buildings.Building;
 import it.polimi.ingsw.Buildings.Icons;
 import it.polimi.ingsw.Buildings.MultiplicationBuilding;
+import it.polimi.ingsw.Buildings.MultiplierPPBuilderBuilding;
 import it.polimi.ingsw.Cards.Characters.Builder;
 import it.polimi.ingsw.Cards.Characters.Character;
 import it.polimi.ingsw.Cards.Characters.Inventor;
@@ -31,7 +32,7 @@ public class Player {
 
     }
 
-     //metodi getter
+    //metodi getter
     public String getName() {
         return name;
     }
@@ -71,11 +72,21 @@ public class Player {
         starCounter+= bonus ;
     }
 
-    public int finalScore() {  //devo scrivere ancora da cosa è costituito
+    /**
+     * The method calculates a player's final PP taking into account the current PP, the buildings, and the
+     * bonuses given by the characters
+     * @return final PP
+     */
+    public int finalScore() {
         return prestigePoints + inventorBonus() + painterBonus() + builderBonus() +
                buildingBonus() + buildingMultipliedBonus();
     }
 
+    /**
+     * the method scrolls through the player's list of characters, counts the inventors and the number of
+     * different icons it finds, and finally multiplies the two values
+     * @return the inventors' bonus
+     */
     public int inventorBonus() {
         List<String> icons = new ArrayList<>();
         int numInventor = 0;
@@ -95,21 +106,39 @@ public class Player {
         return numInventor*icons.size();
     }
 
+    /**
+     * The method uses countTribeCardsByIcon to find the number of painters in the player's character list and
+     * through the formula returns the bonus
+     * @return the painters' bonus
+     */
     public int painterBonus() {
         return (countTribeCardsByIcon(Icons.PAINTER)/2)*10;
     }
 
+    /**
+     * the method goes through the player's list of characters and sums all the PP points given by the builders.
+     * if in the player's list of buildings there is a building of the type MultiplierPPBuilderBuilding the
+     * builders give double PP points.
+     * @return sum of all the PP points given by the builders
+     */
     public int builderBonus() {
         int sumPP = 0;
         for(Character c : tribeCard){
-            if(c instanceof Builder b){
-                int PP = b.getPP();
+            if(c instanceof Builder builder){
+                int PP = builder.getPP();
                 sumPP+=PP;
             }
+        }
+        if(buildings.stream().anyMatch(b -> b instanceof MultiplierPPBuilderBuilding)){
+            sumPP = sumPP *2;
         }
         return sumPP;
     }
 
+    /**
+     * the method goes through the player's list of building and sums all the PP points given by the building
+     * @return sum of all the PP points given by the building
+     */
     public int buildingBonus(){
         int sumPP = 0;
         for(Building b : buildings){
@@ -118,6 +147,11 @@ public class Player {
         return sumPP;
     }
 
+    /**
+     * The method checks if there are any MultiplicationBuildings in the player's list of buildings, if so it
+     * calls the building's method and adds up the bonus points given by each building of that type
+     * @return the sum of the bonus points given by the MultiplicationBuilding
+     */
     public int buildingMultipliedBonus(){
         int sumPP = 0;
         for(Building b : buildings){
@@ -127,6 +161,14 @@ public class Player {
         return sumPP;
     }
 
+    /**
+     *
+     * @param wantedIcon
+     * wantedIcon is one of the 6 types of character.
+     * the method goes through the entire list of the player's characters and counts how many characters of the
+     * type wantedIcon are present
+     * @return the number of wantedIcon-type characters
+     */
     public int countTribeCardsByIcon(Icons wantedIcon){
         int count = 0;
         for(Character c : tribeCard){
@@ -136,7 +178,11 @@ public class Player {
         return count;
     }
 
-    //l'ho creato perché mi serve per il SET in building, uso il metodo sopra per calcolare ogni personaggio
+    /**
+     * The method through countTribeCardsByIcon counts how many characters of each type are in the player's
+     * character list, the number of sets will be the minimum among the numbers found previously
+     * @return the number of sets
+     */
     public int countSet(){
         int inventor = countTribeCardsByIcon(Icons.INVENTOR);
         int builder = countTribeCardsByIcon(Icons.BUILDER);
