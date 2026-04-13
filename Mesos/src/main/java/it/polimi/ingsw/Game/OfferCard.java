@@ -7,14 +7,12 @@ public class OfferCard {
     private boolean Food;
     private boolean IsOccupied;
     private Totem OccupiedBy;
-    private Board board;
 
     public OfferCard(char ID, int UpArrow, int DownArrow, boolean Food, Board board) {
         this.ID = ID;
         this.UpArrow = UpArrow;
         this.DownArrow = DownArrow;
         this.Food = Food;
-        this.board = board;
         this.IsOccupied = false; //di dafaul la posiz. è libera
         this.OccupiedBy = null;
     }
@@ -35,7 +33,7 @@ public class OfferCard {
     }
 
 
-        // Questo metodo SERVE PER OCCUPARE la carta
+        // VERIFICO SE LA POSIZONE è LIBERA
         public boolean isOccupied(Totem totem) {   //occupo la posizione
             if (!IsOccupied) {
                 this.OccupiedBy = totem; // se non è occupata ci metto il mio totem

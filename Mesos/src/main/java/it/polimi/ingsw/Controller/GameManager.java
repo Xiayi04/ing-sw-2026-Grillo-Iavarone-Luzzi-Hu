@@ -1,5 +1,10 @@
 package it.polimi.ingsw.Controller;
 
+import it.polimi.ingsw.Cards.Events.Event;
+import it.polimi.ingsw.Game.Board;
+import it.polimi.ingsw.Game.Deck;
+import it.polimi.ingsw.Game.Player;
+
 import java.util.ArrayList;
 
 //La classe GameManager coordina il flusso di gioco, i turni e i cambi di era.
@@ -8,9 +13,9 @@ public class GameManager {
     private int round;
     private int numPlayers;
     private ArrayList<Player> players;
-    private int numPlayers;
     private Board board;
     private Deck deck;//*associazione 1:1 con Board*/
+    private int currentEra;
 
     //costruttore
     public GameManager(ArrayList<Player> players, int numPlayers, Board board, Deck deck ) {
@@ -34,9 +39,14 @@ public class GameManager {
             endGame();
             return;
         }
-        deck.loadEra(this.currentEra); //il mazzo usa la factory per creare gli oggetti
-        board.shiftUpToDown();
-        board.refillCards();
+        deck.loadEra(this.currentEra); //caricamento del nuovo mazzo tramite la factory
+        if (this.currentEra == 3){
+            board.removeLowerBuildings();
+        }
+        if(this.currentEra == 2 || this.currentEra == 3){
+            board.shiftBuildingUpToDown();
+        }
+        board.refillCards(deck,players);
         System.out.println("Siamo passati all'Era " + currentEra);
     }
 
@@ -53,7 +63,7 @@ public class GameManager {
 
     public void nextRound(){
         //risoluzione eventi sulle carte che sono sulla fila inferiore
-        ArrayList<Event> currentEvents =board.checkEvent();
+        ArrayList<Event> currentEvents = board.checkEvent();
         if (!currentEvents.isEmpty()){
             resolveEvents(currentEvents);
         }
@@ -68,6 +78,13 @@ public class GameManager {
 
 
     public void checkEraChange(){
+        for(Card c :newcards){
+            if(c.getEra()>board.getEra()){
+                int newEra = c.getEra();
+                board.setEra(newEra);
+
+            }
+        }
         //controllo di aver cambiato era
     }
 
