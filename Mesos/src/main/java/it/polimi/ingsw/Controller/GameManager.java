@@ -5,6 +5,7 @@ import it.polimi.ingsw.Game.Board;
 import it.polimi.ingsw.Game.Deck;
 import it.polimi.ingsw.Game.Player;
 
+import javax.smartcardio.Card;
 import java.util.ArrayList;
 
 //La classe GameManager coordina il flusso di gioco, i turni e i cambi di era.
@@ -50,16 +51,6 @@ public class GameManager {
         System.out.println("Siamo passati all'Era " + currentEra);
     }
 
-    public void eraSwitch(){
-        if(board.getEra() == 1){
-            board.setEra(2);
-        }else if(board.getEra() == 2){
-            board.setEra(3);
-        }
-        deck.createDeckforEra(board.getEra(), numPlayers);//passo al mazzo il numero dell'era
-        board.shiftUpToDown(); //le carte da sopra vanno sotto nel tabellone
-        board.refillCards(); //riempio la fila superiore
-    }
 
     public void nextRound(){
         //risoluzione eventi sulle carte che sono sulla fila inferiore
@@ -67,7 +58,7 @@ public class GameManager {
         if (!currentEvents.isEmpty()){
             resolveEvents(currentEvents);
         }
-        board.shiftUpToDown();// per dire che le carte da sopra vanno sotto
+        board.shiftUpToDown();
 
         if(deck.isEmpty()){ //Se il mazzo è vuoto cambio era
             eraSwitch();
@@ -76,43 +67,59 @@ public class GameManager {
         this.round++;
     }
 
-
     public void checkEraChange(){
-        for(Card c :newcards){
-            if(c.getEra()>board.getEra()){
-                int newEra = c.getEra();
-                board.setEra(newEra);
-
-            }
-        }
         //controllo di aver cambiato era
     }
 
+    /*Ordino eventi, quelli con lo stesso nome vengono ordinati per era
+     e il sostentamento viene risolto per ultimo
+     */
     public void endRound(){
-        board.risolviEventi();
-        board.pulisciESposta();
-        board.ripristina (numPlayers+4);
-
-        if(deck.isEmpty() && round==10){
+        ArrayList<Event> resolveEvents = board.checkEvent();
+        resolveEvents(resolveEvents);
+            board.getLowerCardsRow().clear();//tutte le carte personaggio rimaste sotto vengono rimosse
+            board.shiftUpToDown();
+            board.refillCards(this.deck);
+        }
+        if(deck.isEmpty() && round == 10){
             endGame();
         }
+
+        public void addPlayer(Player player){
+        if(this.players.size() >= 5){
+            throw new IllegalStateException("You can't add more than 5 players");
+        }
+        this.players.add(player);
+
     }
 
-    public void resolveEvents (arrayList<Event> events){
+
+    public void resolveEvents (ArrayList<Event> events){
         if(events == null || events.isEmpty()){
             return;
         }
+        events.sort((e1, e2) -> {
+            boolean isE1Sustenance = e1.getName().equalsIgnoreCase ("Sustenance");
+            boolean isE2Sustenance = e1.getName().equalsIgnoreCase ("Sustenance");
+
+            if (isE1Sustenance && !isE2Sustenance) return 1; //se e1 è sost. e e2 no slots e1 viene risolto dopo
+            if (!isE1Sustenance && isE2Sustenance) return -1;//se e2 è sost. e e1 no allora e1 viene risolto prima
+            return Integer.compare(e1.getEra(), e2.getEra()); // se non sono sost oppure lo sono entrambi, li ordino per era
+        });
+        for (Event e : events){
+            e.applyEffect(this.players);
+        }
 
     }
 
-    public player endGame(){
-        System.out.println("--- IL GIOCO E' FINITO ---");
-        System.out.println("Inizio conteggio punti finali...");
+    public Player endGame(){
+        System.out.println("--- THE GAME IS OVER  ---");
+        System.out.println("Final points count...");
 
-        risolviEventiFinali();
+        resolveEvents(board.checkEvent());
 
         for (Player p : players) {
-            int finale = p.calcolaPuntiFinali(); // Il calcolo vero è dentro Player!
+            int finale = p.finalScore(); // Il calcolo vero è dentro Player!
             p.setScore(finale);
         }
         proclamaVincitore();
@@ -120,6 +127,15 @@ public class GameManager {
     }
 
     public void drawCard(Arraylist <card> up , Arraylist<card> down){
+            if(deck.isEmpty()){
+                System.out.println("The deck is empty");
+                return null;
+            }
+            Card drawnCard = deck.drawCard(); //la carta che è stata pescata dal mazzo viene salvata in drawncard
+            if (drawnCard.getEra() > board.getEra()){ //se la carta pescata è di un'era futura, attivo cambio era
+                eraSwitch();
+            }
+            return drawnCard;
 
     }
     public void buyBuilding() {
@@ -138,3 +154,4 @@ public class GameManager {
         this.board = board;
     }
 }
+
