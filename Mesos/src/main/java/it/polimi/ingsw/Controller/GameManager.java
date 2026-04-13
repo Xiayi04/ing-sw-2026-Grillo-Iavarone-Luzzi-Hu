@@ -34,7 +34,7 @@ public class GameManager {
         this.numPlayers = numPlayers;
         this.round = 1;  //se il gioco parte subito
     }
-
+     /*
     public void eraSwitch(){
         this.currentEra++;
         if(this.currentEra > 4){
@@ -50,7 +50,7 @@ public class GameManager {
         }
         board.refillCards(deck,players);
         System.out.println("Siamo passati all'Era " + currentEra);
-    }
+    }*/
 
 
     public void nextRound(){
@@ -126,16 +126,15 @@ public class GameManager {
         System.out.println("IL VINCITORE E': " + vincitore.getName() + "!");
     }
 
-    public void drawCard(Arraylist <card> up , Arraylist<card> down){
+    public void drawCard(ArrayList <Card> up , ArrayList<Card> down){
             if(deck.isEmpty()){
-                System.out.println("The deck is empty");
-                return null;
+                throw new IllegalStateException("The deck is empty");
             }
             Card drawnCard = deck.drawCard(); //la carta che è stata pescata dal mazzo viene salvata in drawncard
             if (drawnCard.getEra() > board.getEra()){ //se la carta pescata è di un'era futura, attivo cambio era
                 eraSwitch();
             }
-            return drawnCard;
+
 
     }
     public void buyBuilding(Player player, Building building) {
