@@ -22,7 +22,7 @@ public class EventDTO extends CardDTO{
     }
 
     public Integer getShEvePenPoints() {
-        if(ShEvePenPoints != null && isBetween(-3, -7, ShEvePenPoints))
+        if(ShEvePenPoints != null && isBetween(-7, -3, ShEvePenPoints))
             return ShEvePenPoints;
         throw new IllegalArgumentException("ShEvePenPoints is not valid");
     }
@@ -58,7 +58,7 @@ public class EventDTO extends CardDTO{
     }
 
     public Integer getSuEvePointsLossMultiplier() {
-        if(SuEvePointsLossMultiplier != null && isBetween(-1, -3, SuEvePointsLossMultiplier))
+        if(SuEvePointsLossMultiplier != null && isBetween(-3, -1, SuEvePointsLossMultiplier))
             return SuEvePointsLossMultiplier;
         throw new IllegalArgumentException("SuEvePointsLossMultiplier is not valid");
     }
