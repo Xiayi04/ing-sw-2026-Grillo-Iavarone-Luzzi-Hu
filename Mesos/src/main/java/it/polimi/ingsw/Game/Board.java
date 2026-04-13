@@ -124,11 +124,11 @@ public class Board {
 
     //gestione players, non so se è meglio mettere nel gamemanager o nel board
 
-    public void addPlayer(Player players){
+    public void addPlayer(Player player){
         if(this.players.size() >= 5){
             throw new IllegalStateException("You can't add more than 5 players");
         }
-        this.players.add(players);
+        this.players.add(player);
 
     }
 
