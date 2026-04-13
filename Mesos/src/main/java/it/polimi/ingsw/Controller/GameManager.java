@@ -80,7 +80,7 @@ public class GameManager {
         resolveEvents(resolveEvents);
             board.getLowerCardsRow().clear();//tutte le carte personaggio rimaste sotto vengono rimosse
             board.shiftUpToDown();
-            board.refillCards(deck);
+            board.refillCards(this.deck);
         }
         if(deck.isEmpty() && round == 10){
             endGame();
