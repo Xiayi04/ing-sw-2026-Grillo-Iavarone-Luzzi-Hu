@@ -6,7 +6,7 @@ import it.polimi.ingsw.Cards.Events.Event;
 
 
 public class Board {
-    private final int era;
+    private int era;
     private final ArrayList<Card> upperCardRow ;
     private final  ArrayList<Card> lowerCardsRow;
     private final ArrayList<Building> upperBuildingRow;
