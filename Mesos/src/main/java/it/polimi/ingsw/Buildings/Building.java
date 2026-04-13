@@ -1,5 +1,4 @@
 package it.polimi.ingsw.Buildings;
-import it.polimi.ingsw.Game.Player;
 
 public abstract class Building {
     private final int era;
@@ -28,5 +27,11 @@ public abstract class Building {
 
     public String getName(){return name; }
 
+    public void printCard(){
+        System.out.println("era:"+era);
+        System.out.println("prezzo:"+price);
+        System.out.println("pp:"+pp);
+        System.out.println("nome:"+name);
+    }
 
 }

@@ -6,7 +6,7 @@ import it.polimi.ingsw.Game.Player;
 public class MultiplicationBuilding extends EndGameBuilding{
     private final int multiplier;
     //costruttore
-    public MultiplicationBuilding(int era, int price, int pp,String name, Icons typeIcons, int multiplier){
+    public MultiplicationBuilding(int era, int price, int pp, Icons typeIcons, int multiplier){
         super (era, price, pp, "MultiplicationBuilding", typeIcons);
         this.multiplier = multiplier;
 

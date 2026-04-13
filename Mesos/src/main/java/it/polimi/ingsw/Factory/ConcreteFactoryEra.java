@@ -9,11 +9,11 @@ import it.polimi.ingsw.FileLoader.*;
 import java.util.ArrayList;
 import java.util.List;
 
-public class ConcreteFactoryEra1 implements Factory{
+public class ConcreteFactoryEra implements Factory{
 
     private final int era;
 
-    public ConcreteFactoryEra1(int era){
+    public ConcreteFactoryEra(int era){
         this.era=era;
     }
 
@@ -57,52 +57,8 @@ public class ConcreteFactoryEra1 implements Factory{
         return new SustenanceEvent(era, CardType.EVENT, EventName.SUSTENANCE_EVENT, pointsLossMultiplier);
     }
 
-    /*public Building createBonusPPBuilding(){
-        return new bonusPPBuilding();
-    }
-
-    public Building createMoltiplicationBuilding(Icons typeIcon, int multiplier){
-        return new moltiplicationBuilding(typeIcon, multiplier);
-    }
-
-    public Building createMultiplierPPBuilderBuilding(){
-        return new multiplierPPBuilderBuilding();
-    }
-
-    public Building createDiscountBuilding(int food, int pp, Icons typeIcon, Events typeEvent){
-        return new discountBuilding(food, pp, typeIcon, typeEvent);
-    }
-
-    public Building createNoMalusBuilding(){
-        return new noMalusBuilding();
-    }
-
-    public Building createDoubleBonusBuilding(){
-        return new doubleBonusBuilding();
-    }
-
-    public Building createBonusStarsBuilding(){
-        return new bonusStarsBuilding();
-    }
-
-    public Building createAddCardBuilding(){
-        return new addCardBuilding();
-    }
-
-    public Building createBonusFoodBuilding(){
-        return new bonusFoodBuilding();
-    }
-
-
-    public Building createSetBonusBuilding(){
-        return new setBonusBuilding();
-    }
-
-    public Building createSameIconBuilding(){
-        return new sameIconBuilding();
-    }*/
-
     public List<Character> createCharacterList(){
+
         Loader loader = new Loader();
         EraDTO eraDTO = loader.loadFile(era);
         List<Character> characters = new ArrayList<>();
@@ -139,6 +95,7 @@ public class ConcreteFactoryEra1 implements Factory{
     }
 
     public List<Event> createEventList(){
+
         Loader loader = new Loader();
         EraDTO eraDTO = loader.loadFile(era);
         List<Event> events = new ArrayList<>();
@@ -165,7 +122,6 @@ public class ConcreteFactoryEra1 implements Factory{
                     events.add(createSustenanceEvent(era, pointLossMultiplier));
                     break;
             }
-
         }
         return events;
     }

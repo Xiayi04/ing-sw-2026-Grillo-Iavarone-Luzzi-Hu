@@ -1,4 +1,7 @@
 package it.polimi.ingsw.Factory;
+import it.polimi.ingsw.Buildings.Building;
+import it.polimi.ingsw.Buildings.Events;
+import it.polimi.ingsw.Buildings.Icons;
 import it.polimi.ingsw.Cards.Characters.Character;
 import it.polimi.ingsw.Cards.Characters.InventorIcon;
 import it.polimi.ingsw.Cards.Events.Event;
@@ -15,15 +18,4 @@ public interface Factory {
     public abstract Event createHuntingEvent(int era, int HuEvePP);
     public abstract Event createPaintingEvent(int era, int minPainters, int multiplierPP, int pointsLoss);
     public abstract Event createSustenanceEvent(int era,  int pointsLossMultiplier);
-    /*public abstract Building createBonusPPBuilding();
-    public abstract Building createMoltiplicationBuilding(Icons typeIcon, int multiplier);
-    public abstract Building createMultiplierPPBuilderBuilding();
-    public abstract Building createDiscountBuilding(int food, int pp, Icons typeIcon, Events typeEvent);
-    public abstract Building createNoMalusBuilding();
-    public abstract Building createDoubleBonusBuilding();
-    public abstract Building createBonusStarsBuilding();
-    public abstract Building createAddCardBuilding();
-    public abstract Building createBonusFoodBuilding();
-    public abstract Building createSetBonusBuilding();
-    public abstract Building createSameIconBuilding();*/
 }
