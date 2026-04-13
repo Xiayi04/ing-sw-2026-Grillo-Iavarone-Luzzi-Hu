@@ -5,11 +5,11 @@ import it.polimi.ingsw.Cards.Events.Event;
 import it.polimi.ingsw.Game.Board;
 import it.polimi.ingsw.Game.Deck;
 import it.polimi.ingsw.Game.Player;
+import it.polimi.ingsw.Cards.Card;
 
-import javax.smartcardio.Card;
 import java.util.ArrayList;
 
-//La classe GameManager coordina il flusso di gioco, i turni e i cambi di era.
+/*La classe GameManager coordina il flusso di gioco, i turni e i cambi di era.*/
 
 public class GameManager {
     private int round;
@@ -139,7 +139,7 @@ public class GameManager {
 
     }
     public void buyBuilding(Player player, Building building) {
-            int cost = building.getprice();
+            int cost = building.getPrice();
             if(player.getFood() <= cost){
                 player.modifyFood(-cost);
                 player.getBuilding().add(building); //aggiungo l'edificio alla lista degli edifici del giocatore
@@ -165,6 +165,26 @@ public class GameManager {
 
     public void setBoard(Board board){
         this.board = board;
+    }
+
+    public int getRound() {
+        return round;
+    }
+
+    public int getNumPlayers() {
+        return numPlayers;
+    }
+
+    public ArrayList<Player> getPlayers() {
+        return players;
+    }
+
+    public Deck getDeck() {
+        return deck;
+    }
+
+    public int getCurrentEra() {
+        return currentEra;
     }
 }
 
