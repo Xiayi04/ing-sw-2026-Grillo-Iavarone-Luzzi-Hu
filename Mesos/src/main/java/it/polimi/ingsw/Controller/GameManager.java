@@ -1,5 +1,6 @@
 package it.polimi.ingsw.Controller;
 
+import it.polimi.ingsw.Buildings.Building;
 import it.polimi.ingsw.Cards.Events.Event;
 import it.polimi.ingsw.Game.Board;
 import it.polimi.ingsw.Game.Deck;
@@ -79,7 +80,7 @@ public class GameManager {
         resolveEvents(resolveEvents);
             board.getLowerCardsRow().clear();//tutte le carte personaggio rimaste sotto vengono rimosse
             board.shiftUpToDown();
-            board.refillCards(this.deck);
+            board.refillCards(deck);
         }
         if(deck.isEmpty() && round == 10){
             endGame();
@@ -102,7 +103,7 @@ public class GameManager {
             boolean isE1Sustenance = e1.getName().equalsIgnoreCase ("Sustenance");
             boolean isE2Sustenance = e1.getName().equalsIgnoreCase ("Sustenance");
 
-            if (isE1Sustenance && !isE2Sustenance) return 1; //se e1 è sost. e e2 no slots e1 viene risolto dopo
+            if (isE1Sustenance && !isE2Sustenance) return 1; //se e1 è sost. e e2 no sost allora e1 viene risolto dopo
             if (!isE1Sustenance && isE2Sustenance) return -1;//se e2 è sost. e e1 no allora e1 viene risolto prima
             return Integer.compare(e1.getEra(), e2.getEra()); // se non sono sost oppure lo sono entrambi, li ordino per era
         });
@@ -122,7 +123,6 @@ public class GameManager {
             int finale = p.finalScore(); // Il calcolo vero è dentro Player!
             p.setScore(finale);
         }
-        proclamaVincitore();
         System.out.println("IL VINCITORE E': " + vincitore.getName() + "!");
     }
 
@@ -138,11 +138,24 @@ public class GameManager {
             return drawnCard;
 
     }
-    public void buyBuilding() {
+    public void buyBuilding(Player player, Building building) {
+            int cost = building.getprice();
+            if(player.getFood() <= cost){
+                player.modifyFood(-cost);
+                player.getBuilding().add(building); //aggiungo l'edificio alla lista degli edifici del giocatore
+                board.removeCards(building);
+                System.out.println("Building " + building.getName() + " has been modified!");
+            }else{
+                System.out.println("INSUFFICIENT FOOD! (Requested :" + cost +")");
+            }
+
 
     }
 
-    public void takeCharacter(){
+    public void takeCharacter(Player player, Character character){
+            player.getTribeCard().add(character);
+            board.removeCards(character);
+            System.out.println(player.getName() + " he added" + character.getCharacterType());
 
     }
 
