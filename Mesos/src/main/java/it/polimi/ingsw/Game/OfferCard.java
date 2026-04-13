@@ -1,14 +1,14 @@
 package it.polimi.ingsw.Game;
 
 public class OfferCard {
-    private char ID;
+    private int ID;
     private int UpArrow;
     private int DownArrow;
     private boolean Food;
     private boolean IsOccupied;
     private Totem OccupiedBy;
 
-    public OfferCard(char ID, int UpArrow, int DownArrow, boolean Food, Board board) {
+    public OfferCard(char ID, int UpArrow, int DownArrow, boolean Food) {
         this.ID = ID;
         this.UpArrow = UpArrow;
         this.DownArrow = DownArrow;
@@ -17,7 +17,7 @@ public class OfferCard {
         this.OccupiedBy = null;
     }
 
-    public char getID() {
+    public int getID() {
         return ID;
     }
 
