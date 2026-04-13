@@ -38,7 +38,7 @@ public class SustenanceEvent extends Event {
             throw new IllegalArgumentException("players ArrayList is not valid");
 
         for(Player player : players){
-            int numCards = player.getCard().size();
+            int numCards = player.getTribeCard().size();
             int pickerDiscount = player.countTribeCardsByIcon(Icons.PICKER) * 3;
             int buildingDiscount = 0;
 

@@ -50,7 +50,7 @@ public class Player {
     public ArrayList<Building> getBuilding(){
         return buildings;
     }
-    public int getStaCounter(){
+    public int getStarCounter(){
         return starCounter;
     }
 
@@ -60,6 +60,11 @@ public class Player {
 
     public void modifyFood(int f){
         food+=f;
+        /*if(food<0){
+            int PPDebt = -food;
+            modifyPP(PPDebt);
+            food = 0;
+        }*/
     }
 
     public void modifyStarCounter(int bonus){

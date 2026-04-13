@@ -1,56 +1,73 @@
 package it.polimi.ingsw.Game;
 
-import javax.smartcardio.Card;
+import it.polimi.ingsw.Cards.Card;
+import it.polimi.ingsw.Cards.Characters.Character;
+import it.polimi.ingsw.Cards.Events.Event;
+import it.polimi.ingsw.Factory.*;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
+
 
 /**
  * La classe Deck gestisce l'insieme di carte disponibili per l'era corrente.
  * Carica i dati da un file JSON e fornisce metodi per pescare e rimescolare.
  */
 public class Deck {
-    private ArrayList<Card> cards;
-    private CardFactory factory;
+    private final ArrayList<Card> deck;
 
     public Deck(){
-        this.cards = new ArrayList<>();
-        this.factory = new CardFactory();
-    }
-    public void createDeckforEra(int era,int numPlayers) {
-        List<Card> allCardsFromFile = loadCardsFromJson(); //carica tutte le carte prese dal file
-        for (Card c : allCardsFromFile) { //filtro le carte e tengo solo quelle dell'era che mi servono
-            if (c.getEra() == era) {
-                this.cards.add(c);
-            }
-        }
+        this.deck = new ArrayList<>();
     }
 
-    public void clearOldCards(){
-        if(this.cards!= null) {//svuota il mazzo attuale e fa spazio alle nuove carte
-            this.cards.clear();
-        }
+    public List<Card> createDeck(){
+        ArrayList<Card> deckEra1 = new ArrayList<>();
+        ArrayList<Card> deckEra2 = new ArrayList<>();
+        ArrayList<Card> deckEra3 = new ArrayList<>();
+        ArrayList<Card> deckEra4 = new ArrayList<>();
+        //creazione delle factory
+        ConcreteFactoryEra factory1 = new ConcreteFactoryEra(1);
+        ConcreteFactoryEra factory2 = new ConcreteFactoryEra(2);
+        ConcreteFactoryEra factory3 = new ConcreteFactoryEra(3);
+        ConcreteFactoryEra factory4 = new ConcreteFactoryEra(4);
+        //mazzo dell'era 1 mischiato
+        ArrayList<Character> charactersEra1 = factory1.createCharacterList();
+        ArrayList<Event> eventsEra1 = factory1.createEventList();
+        deckEra1.addAll(charactersEra1);
+        deckEra1.addAll(eventsEra1);
+        Collections.shuffle(deckEra1);
+        //mazzo dell'era 2 mischiato
+        ArrayList<Character> charactersEra2 = factory2.createCharacterList();
+        ArrayList<Event> eventsEra2 = factory2.createEventList();
+        deckEra2.addAll(charactersEra2);
+        deckEra2.addAll(eventsEra2);
+        Collections.shuffle(deckEra2);
+        //mazzo dell'era 3 mischiato
+        ArrayList<Character> charactersEra3 = factory3.createCharacterList();
+        ArrayList<Event> eventsEra3 = factory3.createEventList();
+        deckEra3.addAll(charactersEra3);
+        deckEra3.addAll(eventsEra3);
+        Collections.shuffle(deckEra3);
+        //mazzo dell'era 4 mischiato
+        ArrayList<Event> eventsEra4 = factory4.createEventList();
+        deckEra4.addAll(eventsEra4);
+        Collections.shuffle(deckEra4);
+        //creazione mazzo completo
+        deck.addAll(deckEra1);
+        deck.addAll(deckEra2);
+        deck.addAll(deckEra3);
+        deck.addAll(deckEra4);
+
+        return deck;
     }
 
-    public void loadEra(int eraNumero){ // per caricare un file specifico
-        this.cards.clear(); //svuota il precedente
-        String nomeFile= "era"+eraNumero+".json";
-        ArrayList<Card> listaDati = JacksonHelper.readJson(nomeFile);
-        for (Card d : listaDati) {
-            Card newCard = factory.createCard(d);
-            if (newCard != null) {
-                this.cards.add(newCard);
-            }
-        }
-    }
-
+    //rimuove e restituisce la prima carta in cima al mazzo
     public Card drawCard() {
-        if (!this.cards.isEmpty()) { //rimuove e restituisce la prima carta in cima al mazzo
-            return this.cards.remove(0);//ritorna la carta pescata opppue null se il mazzo è vuoto
+        if (!deck.isEmpty()) {
+            Card c = deck.getFirst();
+            deck.removeFirst();
+            return c;
         }
-        return null;
+        else throw new IllegalArgumentException("il deck è finito");
     }
-    public boolean isEmpty() { //verifica se il mazzo è esaurito
-        return this.cards.isEmpty();
-    }
-
 }

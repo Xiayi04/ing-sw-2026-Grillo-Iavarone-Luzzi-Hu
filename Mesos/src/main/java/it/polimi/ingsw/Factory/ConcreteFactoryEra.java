@@ -57,11 +57,11 @@ public class ConcreteFactoryEra implements Factory{
         return new SustenanceEvent(era, CardType.EVENT, EventName.SUSTENANCE_EVENT, pointsLossMultiplier);
     }
 
-    public List<Character> createCharacterList(){
+    public ArrayList<Character> createCharacterList(){
 
         Loader loader = new Loader();
         EraDTO eraDTO = loader.loadFile(era);
-        List<Character> characters = new ArrayList<>();
+        ArrayList<Character> characters = new ArrayList<>();
 
         for(CharacterDTO c : eraDTO.getCharactersArray()){
             int numPlayer = c.getNumPlayers();
@@ -94,11 +94,11 @@ public class ConcreteFactoryEra implements Factory{
         return characters;
     }
 
-    public List<Event> createEventList(){
+    public ArrayList<Event> createEventList(){
 
         Loader loader = new Loader();
         EraDTO eraDTO = loader.loadFile(era);
-        List<Event> events = new ArrayList<>();
+        ArrayList<Event> events = new ArrayList<>();
 
         for(EventDTO e : eraDTO.getEventsArray()){
             switch(e.getEventName().toLowerCase()){
