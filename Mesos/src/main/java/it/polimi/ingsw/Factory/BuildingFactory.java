@@ -61,11 +61,11 @@ public class BuildingFactory {
      * create all types of buildings.
      * @return a list with all the buildings
      */
-    public List<Building> createBuildingList(){
+    public ArrayList<Building> createBuildingList(){
 
         Loader loader = new Loader();
         BuildingsByEraDTO buildingDTO = loader.loadBuildingsByEra();
-        List<Building> buildings = new ArrayList<>();
+        ArrayList<Building> buildings = new ArrayList<>();
 
         for(BuildingDTO b : buildingDTO.getEra1()){
             int era = b.getBuildingDTOEra();

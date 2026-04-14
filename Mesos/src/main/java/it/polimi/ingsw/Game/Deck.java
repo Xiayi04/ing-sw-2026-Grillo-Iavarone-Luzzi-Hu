@@ -82,4 +82,8 @@ public class Deck {
         }
         else throw new IllegalArgumentException("il deck è finito");
     }
+
+    public ArrayList<Card> getDeck() {
+        return deck;
+    }
 }

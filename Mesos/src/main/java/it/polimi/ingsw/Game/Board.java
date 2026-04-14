@@ -17,6 +17,7 @@ public class Board {
     private final ArrayList<Building> lowerBuildingRow;
     private final ArrayList<OfferCard> path;
     private final ArrayList<Player> players; //relazione con Player (2..5)
+    private Deck deck;//*associazione 1:1 con Board*/
 
     public Board() {
         this.era = 1;
@@ -59,6 +60,9 @@ public class Board {
         return players;
     }
 
+    public Deck getDeck() {
+        return deck;
+    }
 
     //metodi
     //scorro la lista per individuare carte evento
@@ -94,11 +98,11 @@ public class Board {
     }
 
     public void refillCards(Deck deck, ArrayList<Player> players) {
-        int cardNeeded = players.size() + 4;
-        while (upperCardRow.size() < cardNeeded && !Deck.isEmpty()) {/*per l'ultimo turno*/
+       /* int cardNeeded = players.size() + 4;
+        while (upperCardRow.size() < cardNeeded && !Deck.isEmpty()) {/*per l'ultimo turno
             Card newCard = deck.drawCard();// non capisco pk sia sbagliato
             upperCardRow.add(newCard);
-        }
+        }*/
     }
 
     //lo si usa per rimuovere gli edifici

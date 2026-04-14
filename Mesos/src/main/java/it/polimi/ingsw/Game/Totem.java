@@ -1,9 +1,9 @@
 package it.polimi.ingsw.Game;
 
 public enum Totem {
-    ARANCIO,
-    BLU,
-    NERO,
-    GIALLO,
-    ROSSO
+    ORANGE,
+    BLUE,
+    BLACK,
+    YELLOW,
+    RED
 }
