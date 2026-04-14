@@ -4,7 +4,9 @@ import java.util.Collections;
 
 import it.polimi.ingsw.Buildings.Building;
 import it.polimi.ingsw.Cards.Card;
+import it.polimi.ingsw.Cards.CardType;
 import it.polimi.ingsw.Cards.Events.Event;
+
 
 
 public class Board {
@@ -93,7 +95,7 @@ public class Board {
 
     public void refillCards(Deck deck, ArrayList<Player> players) {
         int cardNeeded = players.size() + 4;
-        while (upperCardRow.size() < cardNeeded && !deck.isEmpty()) {/*per l'ultimo turno*/
+        while (upperCardRow.size() < cardNeeded && !Deck.isEmpty()) {/*per l'ultimo turno*/
             Card newCard = deck.drawCard();// non capisco pk sia sbagliato
             upperCardRow.add(newCard);
         }
@@ -138,12 +140,32 @@ public class Board {
         return path;
     }
 
+    public Card pickCard( boolean upper, boolean building, int i){
+        ArrayList<? extends Card> pickCardRow;
+        if(upper){
+            if (building){
+                pickCardRow = upperBuildingRow;
+            }else{
+                pickCardRow = upperCardRow;
+            }
+        }else{
+            if(building){
+                pickCardRow = lowerBuildingRow;
+            }else {
+                pickCardRow = lowerCardsRow;
+            }
+        }
+        Card pickedCard = pickCardRow.get(i);
+        if(pickedCard.getCardType().equals("EVENT")){
+            throw new IllegalArgumentException("Event is not pickable");
+        }else{
+            pickCardRow.remove(i);
+            return pickedCard;
+        }
+    }
 
-   /* public void pickCard(Player players,Card card){
-
-
-
-
-
-}*/
 }
+
+
+
+
