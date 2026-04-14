@@ -1,6 +1,7 @@
 package it.polimi.ingsw.Controller;
 
 import it.polimi.ingsw.Buildings.Building;
+import it.polimi.ingsw.Cards.Card;
 import it.polimi.ingsw.Cards.Events.Event;
 import it.polimi.ingsw.Game.Board;
 import it.polimi.ingsw.Game.Deck;
@@ -20,7 +21,7 @@ public class GameManager {
     private int currentEra;
 
     //costruttore
-    public GameManager(ArrayList<Player> players, int numPlayers, Board board, Deck deck ) {
+    public GameManager(ArrayList<Player> players, int numPlayers, Board board) {
         this.players = players;
         this.numPlayers = numPlayers;
         this.board = board;
@@ -32,6 +33,8 @@ public class GameManager {
         this.players = players;
         this.numPlayers = numPlayers;
         this.round = 1;  //se il gioco parte subito
+        deck.createDeck(numPlayers);
+
     }
      /*
     public void eraSwitch(){
@@ -55,7 +58,7 @@ public class GameManager {
     public void nextRound() {
         /*//risoluzione eventi sulle carte che sono sulla fila inferiore
         ArrayList<Event> currentEvents = board.checkEvent();
-        if (!currentEvents.isEmpty()){
+        if (!currentEvents.isEmpty()) {
             resolveEvents(currentEvents);
         }
         board.shiftUpToDown();
@@ -70,8 +73,8 @@ public class GameManager {
     /*Metodo per gestire la fine di un round: Ordino eventi, quelli con lo stesso nome vengono ordinati per era
      e il sostentamento viene risolto per ultimo
      */
-    public void endRound(){
-        ArrayList<Event> resolveEvents = board.checkEvent();
+    public void endRound() {
+        /*ArrayList<Event> resolveEvents = board.checkEvent();
         resolveEvents(resolveEvents);
         board.shiftUpToDown();
         board.refillCards(deck, players);
@@ -89,8 +92,8 @@ public class GameManager {
     }
 
 
-    public void resolveEvents (ArrayList<Event> events){
-        if(events == null || events.isEmpty()){
+    /*public void resolveEvents(ArrayList<Event> events) {
+        if (events == null || events.isEmpty()) {
             return;
         }
         events.sort((e1, e2) -> {
@@ -101,23 +104,61 @@ public class GameManager {
            // if (!isE1Sustenance && isE2Sustenance) return -1;//se e2 è sost. e e1 no allora e1 viene risolto prima
             return Integer.compare(e1.getEra(), e2.getEra()); // se non sono sost oppure lo sono entrambi, li ordino per era
         });
-        for (Event e : events){
-            e.applyEffect(this.players);
+        for (Event e : events) {
+            e.resolveEvent(players);
         }
+        return;
+    }*/
+
+    public static void resolveEvents(ArrayList<Event> events) {
+        if (events == null || events.isEmpty()) {
+            return;
+        }
+        events.sort(
+                Comparator //ordina i casi true e false , se è sostentamento è true quindi lo risolve dopo altrimenti vengono risolti prima
+                        .comparing((Event e) -> e.getEventName().equalsIgnoreCase("Sustenance"))
+                        .thenComparing(Event::getEra)
+        );
+
 
     }
 
-    public Player endGame(){
+    public void endGame() { //il metodo ora restituisce void da Player
         System.out.println("--- THE GAME IS OVER  ---");
         System.out.println("Final points count...");
 
         int maxScore = 0;
         for (Player p : players) {
             int finale = p.finalScore(); // Il calcolo vero è dentro Player!
-            p.setScore(finale);
+            if (finale > maxScore) {
+                maxScore = finale;
+            }
         }
-        System.out.println("IL VINCITORE E': " + vincitore.getName() + "!");
+
+        ArrayList<Player> tmpWinner = null;
+        for (Player p : players) {
+            if (p.finalScore() == maxScore) {
+                tmpWinner.add(p);
+            }
+        }
+
+        Player winner = null;
+
+        if (tmpWinner.size() == 1) {
+            winner = tmpWinner.getFirst();
+        } else {
+            int maxFood = 0;
+            for (Player p : tmpWinner) {
+                if (p.getFood() > maxFood) {
+                    maxFood = p.getFood();
+                    winner = p;
+                }
+            }
+        }
+
+        System.out.println("The winner is: " + winner.getName() + "with"+ winner.finalScore()+ "points!");
     }
+
 
     public void pickingPhase(ArrayList<Player> players) {
         /*ArrayList<OfferCard> path = board.getPath();
@@ -134,9 +175,12 @@ public class GameManager {
 
 
     }
-    public void buyBuilding(Player player, Building building) {
-            int cost = building.getPrice();
-            if(player.getFood() <= cost){
+
+
+    public void buyBuilding(Player player, Boolean row, int index) {
+        ArrayList<Building> building = new ArrayList<>();
+        int cost = building.get(index).getPrice();
+            if(player.getFood() >= cost){
                 player.modifyFood(-cost);
                 player.getBuilding().add(building.get(index)); //aggiungo l'edificio alla lista degli edifici del giocatore
                 System.out.println("Building " + building.get(index).getName() + " has been modified!");
@@ -146,13 +190,12 @@ public class GameManager {
                 System.out.println("INSUFFICIENT FOOD! (Requested :" + cost +")");
             }
 
-
     }
 
-    public void takeCharacter(Player player, Character character){
+    public void takeCharacter(Player player, Character character){//da cambiare
             player.getTribeCard().add(character);
             board.removeCards(character);
-            System.out.println(player.getName() + " he added" + character.getCharacterType());
+            System.out.println(player.getName() + "added" + character.getCharacterType());
 
     }
 
