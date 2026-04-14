@@ -7,7 +7,6 @@ import it.polimi.ingsw.Buildings.Icons;
 import it.polimi.ingsw.Cards.CardType;
 import it.polimi.ingsw.Game.Player;
 
-import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 
 public class HuntingEvent extends Event {
@@ -27,11 +26,12 @@ public class HuntingEvent extends Event {
         System.out.println("punti pp:"+HuEvePP);
     }
 
+    @Override
     public void resolveEvent(ArrayList<Player> players){
-
         if(players == null || players.size()< 2){
             throw new IllegalArgumentException("Players list is not valid");
         }
+
         boolean checkHuEveBuilding = false;
 
         for(Player p : players){

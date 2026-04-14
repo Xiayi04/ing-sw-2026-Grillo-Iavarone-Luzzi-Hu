@@ -46,6 +46,7 @@ public class PaintingEvent extends Event {
      * gives the player a bonus in PP, else if the number is smaller gives them a penalty
      * @param players
      */
+    @Override
     public void resolveEvent(ArrayList<Player> players){
         boolean checkPaEveBuilding = false;
 

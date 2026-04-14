@@ -33,6 +33,7 @@ public class SustenanceEvent extends Event {
      *
      * @param players </Player> players
      */
+    @Override
     public void resolveEvent(ArrayList<Player> players) {
         if(players.size()<2 || players == null)
             throw new IllegalArgumentException("players ArrayList is not valid");

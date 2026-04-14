@@ -2,6 +2,9 @@ package it.polimi.ingsw.Cards.Events;
 
 import it.polimi.ingsw.Cards.Card;
 import it.polimi.ingsw.Cards.CardType;
+import it.polimi.ingsw.Game.Player;
+
+import java.util.ArrayList;
 
 public abstract class Event extends Card {
     private final EventName eventName;
@@ -19,4 +22,7 @@ public abstract class Event extends Card {
         super.printCard();
         System.out.println("tipo di evento:"+eventName.toString());
     }
+
+
+    public abstract void resolveEvent(ArrayList<Player> players);
 }

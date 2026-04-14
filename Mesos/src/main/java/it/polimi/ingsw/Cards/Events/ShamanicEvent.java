@@ -59,6 +59,7 @@ public class ShamanicEvent extends Event {
         return minStars;
     }
 
+    @Override
     public void resolveEvent(ArrayList<Player> players){
         if(players.size()<2 || players == null)
             throw new IllegalArgumentException("players ArrayList is not valid");
