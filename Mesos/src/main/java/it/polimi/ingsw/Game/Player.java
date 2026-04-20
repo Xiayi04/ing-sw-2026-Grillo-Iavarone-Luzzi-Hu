@@ -61,11 +61,11 @@ public class Player {
 
     public void modifyFood(int f){
         food+=f;
-        /*if(food<0){
+        if(food<0){
             int PPDebt = -food;
             modifyPP(PPDebt);
             food = 0;
-        }*/
+        }
     }
 
     public void modifyStarCounter(int bonus){
