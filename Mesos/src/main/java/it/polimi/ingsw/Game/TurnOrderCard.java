@@ -1,14 +1,12 @@
 package it.polimi.ingsw.Game;
 
+import it.polimi.ingsw.Buildings.*;
 import java.util.ArrayList;
-import java.util.LinkedList;
-import java.util.List;
-
 import static java.lang.Math.ceil;
 
 public class TurnOrderCard {
-    private ArrayList<Player> order;
-    private int NumPlayers;
+    private final ArrayList<Player> order;
+    private final int NumPlayers;
 
     public TurnOrderCard(int NumPlayers) {
         this.NumPlayers = NumPlayers;
@@ -38,8 +36,15 @@ public class TurnOrderCard {
 
         int foodFirst = (int) ceil(NumPlayers / 2.0);
         order.getFirst().modifyFood(foodFirst);
-        if(NumPlayers >= 4)
+        for(Building b : order.getFirst().getBuilding())
+            if(b instanceof BonusFood)
+                order.getFirst().modifyFood(1);
+        if(NumPlayers >= 4){
             order.get(1).modifyFood(1);
+            for(Building b : order.get(1).getBuilding())
+                if(b instanceof BonusFood)
+                    order.get(1).modifyFood(1);
+        }
         order.get(order.size()).modifyFood(-1);
     }
 

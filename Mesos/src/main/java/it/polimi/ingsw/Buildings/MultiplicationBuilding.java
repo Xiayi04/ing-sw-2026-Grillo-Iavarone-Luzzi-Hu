@@ -1,19 +1,21 @@
 package it.polimi.ingsw.Buildings;
 
-
 import it.polimi.ingsw.Game.Player;
 
 public class MultiplicationBuilding extends EndGameBuilding{
     private final int multiplier;
+
     //costruttore
     public MultiplicationBuilding(int era, int price, int pp, Icons typeIcons, int multiplier){
         super (era, price, pp, "MultiplicationBuilding", typeIcons);
         this.multiplier = multiplier;
+    }
 
-        }
-        //getter
+    //getter
     public int getMultiplier(){
-        return multiplier;}
+        return multiplier;
+    }
+
     @Override
     public int countPP(Player player){
         if(getTypeIcons() == Icons.SET){
@@ -21,15 +23,11 @@ public class MultiplicationBuilding extends EndGameBuilding{
         }else{
             return player.countTribeCardsByIcon(getTypeIcons())*multiplier;
         }
-
     }
 
     @Override
     public void buildingActivation(Player player) {}
-
-
     //HO fatto due metodi in player per contare le carte di un tipo e i set completi
-
 }
 
 
