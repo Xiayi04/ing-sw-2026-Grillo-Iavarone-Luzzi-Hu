@@ -16,6 +16,7 @@ public abstract class Character extends Card {
     public int getNumPlayers() {
         return numPlayers;
     }
+
     public CharacterType getCharacterType() {
         return this.characterType;
     }

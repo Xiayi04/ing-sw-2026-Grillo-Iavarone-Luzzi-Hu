@@ -1,5 +1,7 @@
 package it.polimi.ingsw.Cards;
 
+import it.polimi.ingsw.Cards.Characters.CharacterType;
+
 public abstract class Card {
     private final int era;
     private final CardType cardType;

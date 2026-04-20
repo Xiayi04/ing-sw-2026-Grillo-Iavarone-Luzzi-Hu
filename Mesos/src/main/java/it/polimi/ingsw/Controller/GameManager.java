@@ -117,10 +117,9 @@ public class GameManager {
         events.sort(
                 Comparator //ordina i casi true e false , se è sostentamento è true quindi lo risolve dopo altrimenti vengono risolti prima
                         .comparing((Event e) -> e.getEventName().equalsIgnoreCase("Sustenance"))
+                        .thenComparing(Event :: getEventName)
                         .thenComparing(Event::getEra)
         );
-
-
     }
 
     public void endGame() { //il metodo ora restituisce void da Player
