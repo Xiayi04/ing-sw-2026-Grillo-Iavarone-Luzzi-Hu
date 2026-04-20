@@ -2,6 +2,7 @@ package it.polimi.ingsw.Buildings;
 
 import it.polimi.ingsw.Cards.Card;
 import it.polimi.ingsw.Cards.CardType;
+import it.polimi.ingsw.Game.Player;
 
 public abstract class Building extends Card {
     private final int price;
@@ -14,8 +15,8 @@ public abstract class Building extends Card {
         this.pp = pp;
         this.name = name;
     }
-//metodi getter
 
+    public abstract void buildingActivation(Player player);
 
     public int getPrice(){
         return price;

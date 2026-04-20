@@ -1,7 +1,7 @@
 package it.polimi.ingsw.Buildings;
 import it.polimi.ingsw.Game.Player;
 
-public class SetBonus extends Building implements ActivationInterface {
+public class SetBonus extends Building {
     private int setCounter;
 
     public SetBonus(int era, int price, int pp) {

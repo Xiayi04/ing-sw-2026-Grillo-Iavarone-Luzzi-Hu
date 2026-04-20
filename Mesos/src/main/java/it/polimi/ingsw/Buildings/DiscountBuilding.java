@@ -38,4 +38,7 @@ public class DiscountBuilding extends Building{
     public int getPpBonus(Player player) {
         return ppBonus * player.countTribeCardsByIcon(typeIcons);
     }
+
+    @Override
+    public void buildingActivation(Player player) {}
 }

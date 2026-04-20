@@ -13,6 +13,9 @@ public class MultiplierPPBuilderBuilding extends EndGameBuilding{
     }
 
     @Override
+    public void buildingActivation(Player player) {}
+
+    @Override
     public void printCard() {
         super.printCard();
         System.out.println("icona:"+typeIcons.toString());

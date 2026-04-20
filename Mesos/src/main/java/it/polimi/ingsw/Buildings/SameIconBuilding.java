@@ -6,7 +6,7 @@ import it.polimi.ingsw.Game.Player;
 
 import java.util.Map;
 
-public class SameIconBuilding extends Building implements ActivationInterface {
+public class SameIconBuilding extends Building {
     Map<String, Integer> checkPair;
 
     public SameIconBuilding(int era, int price, int pp) {

@@ -1,5 +1,7 @@
 package it.polimi.ingsw.Buildings;
 
+import it.polimi.ingsw.Game.Player;
+
 public class AddCard extends Building{
 
     public AddCard(int era, int price, int pp) {
@@ -11,10 +13,6 @@ public class AddCard extends Building{
     }
 
 
-
-
-
-
-
-
+    @Override
+    public void buildingActivation(Player player) {}
 }

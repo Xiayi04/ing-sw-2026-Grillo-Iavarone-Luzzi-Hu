@@ -24,8 +24,11 @@ public class MultiplicationBuilding extends EndGameBuilding{
 
     }
 
+    @Override
+    public void buildingActivation(Player player) {}
 
-     //HO fatto due metodi in player per contare le carte di un tipo e i set completi
+
+    //HO fatto due metodi in player per contare le carte di un tipo e i set completi
 
 }
 

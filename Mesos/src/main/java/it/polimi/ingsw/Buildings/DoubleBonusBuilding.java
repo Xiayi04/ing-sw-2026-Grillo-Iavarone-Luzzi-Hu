@@ -1,5 +1,7 @@
 package it.polimi.ingsw.Buildings;
 
+import it.polimi.ingsw.Game.Player;
+
 public class DoubleBonusBuilding extends Building{
     public DoubleBonusBuilding(int era, int price, int pp){
         super(era,price,pp,"DoubleBonusBuilding");
@@ -8,4 +10,6 @@ public class DoubleBonusBuilding extends Building{
         return 2;
     }
 
+    @Override
+    public void buildingActivation(Player player) {}
 }

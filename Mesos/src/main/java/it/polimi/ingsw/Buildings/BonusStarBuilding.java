@@ -1,6 +1,6 @@
 package it.polimi.ingsw.Buildings;
 import  it.polimi.ingsw.Game.Player;
-public class BonusStarBuilding extends Building implements ActivationInterface {
+public class BonusStarBuilding extends Building  {
     public BonusStarBuilding(int era, int price, int pp) {
         super(era, price, pp, "BonusStarBuilding");
     }
