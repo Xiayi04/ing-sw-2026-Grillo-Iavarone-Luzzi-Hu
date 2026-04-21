@@ -1,16 +1,10 @@
 package it.polimi.ingsw.GameTest;
 
 import it.polimi.ingsw.Cards.Card;
-import it.polimi.ingsw.Cards.CardType;
-import it.polimi.ingsw.Cards.Characters.CharacterType;
-import it.polimi.ingsw.Cards.Events.Event;
 import it.polimi.ingsw.Game.Deck;
 import org.junit.jupiter.api.Test;
-import java.util.Comparator;
+
 import java.util.ArrayList;
-import it.polimi.ingsw.Cards.Events.Event;
-import it.polimi.ingsw.Cards.Characters.Character;
-import it.polimi.ingsw.Cards.Events.EventName;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 

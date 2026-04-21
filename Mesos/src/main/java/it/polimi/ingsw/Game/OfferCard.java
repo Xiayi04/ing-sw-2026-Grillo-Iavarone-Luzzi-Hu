@@ -6,9 +6,9 @@ public class OfferCard {
     private int DownArrow;
     private boolean Food;
     private boolean IsOccupied;
-    private Totem OccupiedBy;
+    private Player OccupiedBy;
 
-    public OfferCard(char ID, int UpArrow, int DownArrow, boolean Food) {
+    public OfferCard(int ID, int UpArrow, int DownArrow, boolean Food) {
         this.ID = ID;
         this.UpArrow = UpArrow;
         this.DownArrow = DownArrow;
@@ -24,6 +24,7 @@ public class OfferCard {
     public int getUpArrow() {
         return UpArrow;
     }
+
     public int getDownArrow() {
         return DownArrow;
     }
@@ -33,22 +34,29 @@ public class OfferCard {
     }
 
 
-        // VERIFICO SE LA POSIZONE è LIBERA
-        public boolean isOccupied(Totem totem) {   //occupo la posizione
+    /**
+     * The method lets a player occupy an offer card
+     * @param player
+     */
+    public void setOccupiedBy(Player player) {
             if (!IsOccupied) {
-                this.OccupiedBy = totem; // se non è occupata ci metto il mio totem
-                this.IsOccupied = true;  // Dico a tutti che ora è occupata
-                return true;             // per dire che l'operazione è riuscita
+                this.OccupiedBy = player;
+                this.IsOccupied = true;
             }
-            return false;                // altrimenti se è gia occupata mi viene detto che qui non posso metterlo
         }
+
+    public boolean isOccupied() {
+        return IsOccupied;
+    }
+
+    public Player getOccupiedBy() {
+        return OccupiedBy;
+    }
 
     public void release(){ //metodo per liberare l posizione quando il totem viene rimosso
         this.OccupiedBy = null;
         this.IsOccupied = false;
     }
 
-    public Totem getOccupiedBy() {
-        return OccupiedBy;
-    }
+
 }
