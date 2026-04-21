@@ -24,7 +24,7 @@ public class DiscountBuilding extends Building{
         return ppBonus;
     }
 
-    public Icons getypeIcons(){
+    public Icons getTypeIcons(){
         return typeIcons;
     }
 
