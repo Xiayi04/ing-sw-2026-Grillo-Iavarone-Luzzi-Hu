@@ -62,7 +62,7 @@ public class Player {
     public void modifyFood(int f){
         food+=f;
         if(food<0){
-            int PPDebt = -food;
+            int PPDebt = food;
             modifyPP(PPDebt);
             food = 0;
         }

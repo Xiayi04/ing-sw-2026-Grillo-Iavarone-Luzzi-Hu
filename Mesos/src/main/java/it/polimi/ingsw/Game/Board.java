@@ -120,7 +120,7 @@ public class Board {
         }
 
 
-        if (!offerCard.isOccupied(players.getTotem())) {
+        if (!offerCard.isOccupied()) {
             throw new IllegalStateException("OfferCard already occupied");
         }
 
