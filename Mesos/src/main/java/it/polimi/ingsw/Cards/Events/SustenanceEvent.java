@@ -47,18 +47,20 @@ public class SustenanceEvent extends Event {
             for(Building b : buildings){
 
                 if(b.getName().equals("DiscountBuilding") && ((DiscountBuilding)b).getTypeEvents().equals(Events.SUSTENANCEEVENT)){
-                    buildingDiscount += ((DiscountBuilding)b).getFoodBonus();
+                    buildingDiscount += ((DiscountBuilding)b).getFoodBonusForPlayer(player);
                 }
             }
 
             if(numCards>pickerDiscount+buildingDiscount){
-                int penalty = numCards-pickerDiscount-buildingDiscount;
+                int penalty = numCards-pickerDiscount+buildingDiscount;
 
                 if(penalty> player.getFood()){
                     player.modifyFood(-player.getFood());
                     penalty -= player.getFood();
                     player.modifyPP(-penalty * SuEvePointsLossMultiplier );
                 }
+                else
+                    player.modifyFood(-penalty);
             }
         }
     }

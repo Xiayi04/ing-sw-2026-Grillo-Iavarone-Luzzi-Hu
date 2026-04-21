@@ -64,7 +64,7 @@ public class PaintingEvent extends Event {
 
                 for(Building b : building){
                     if(b.getName().equals("DiscountBuilding") && ((DiscountBuilding)b).getTypeEvents().equals(Events.PAINTINGEVENT) ){
-                        int bonus = ((DiscountBuilding)b).getFoodBonus();
+                        int bonus = ((DiscountBuilding)b).getFoodBonusForPlayer(player);
                         player.modifyFood(bonus);
                         checkPaEveBuilding = true;
                         break;

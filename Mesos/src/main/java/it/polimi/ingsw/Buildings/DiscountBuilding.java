@@ -32,7 +32,7 @@ public class DiscountBuilding extends Building{
         return typeEvents;
     }
 
-    public int getFoodBonus(Player player){
+    public int getFoodBonusForPlayer(Player player){
         return foodBonus * player.countTribeCardsByIcon(typeIcons);
     }
     public int getPpBonus(Player player) {
