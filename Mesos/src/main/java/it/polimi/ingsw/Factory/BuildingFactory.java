@@ -85,7 +85,7 @@ public class BuildingFactory {
                 case "setbonus":
                     buildings.add(createSetBonus(era, price, pp));
                     break;
-                case "foodbonus":
+                case "bonusfood":
                     buildings.add(createBonusFood(era, price, pp));
                     break;
                 case "sameiconbuilding":

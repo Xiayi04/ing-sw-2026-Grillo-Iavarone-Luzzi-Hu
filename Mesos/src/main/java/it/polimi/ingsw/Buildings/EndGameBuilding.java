@@ -1,5 +1,7 @@
 package it.polimi.ingsw.Buildings;
 
+import it.polimi.ingsw.Buildings.BuildingVisitor.BuildingInterface;
+import it.polimi.ingsw.Buildings.BuildingVisitor.Visitor;
 import it.polimi.ingsw.Cards.Characters.CharacterType;
 import it.polimi.ingsw.Game.Player;
 

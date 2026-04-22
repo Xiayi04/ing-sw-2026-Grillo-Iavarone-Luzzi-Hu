@@ -1,8 +1,10 @@
 package it.polimi.ingsw.Buildings;
 
+import it.polimi.ingsw.Buildings.BuildingVisitor.BuildingInterface;
+import it.polimi.ingsw.Buildings.BuildingVisitor.Visitor;
 import it.polimi.ingsw.Game.Player;
 
-public class MultiplicationBuilding extends EndGameBuilding{
+public class MultiplicationBuilding extends EndGameBuilding implements BuildingInterface {
     private final int multiplier;
 
     //costruttore
@@ -26,7 +28,9 @@ public class MultiplicationBuilding extends EndGameBuilding{
     }
 
     @Override
-    public void buildingActivation(Player player) {}
+    public void accept(Visitor visitor, Player player) {
+        visitor.visit(this,player);
+    }
     //HO fatto due metodi in player per contare le carte di un tipo e i set completi
 }
 

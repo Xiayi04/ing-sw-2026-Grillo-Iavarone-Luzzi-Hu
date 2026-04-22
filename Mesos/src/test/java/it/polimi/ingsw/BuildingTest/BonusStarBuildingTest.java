@@ -6,7 +6,7 @@ import it.polimi.ingsw.Game.Totem;
 import org.junit.jupiter.api.Test;
 //import org.junit.jupiter.params.ParameterizedTest;
 
-import static junit.framework.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.*;
 
 public class BonusStarBuildingTest {
 

@@ -1,12 +1,14 @@
 package it.polimi.ingsw.Buildings;
 
+import it.polimi.ingsw.Buildings.BuildingVisitor.BuildingInterface;
+import it.polimi.ingsw.Buildings.BuildingVisitor.Visitor;
 import it.polimi.ingsw.Cards.Characters.Character;
 import it.polimi.ingsw.Cards.Characters.Inventor;
 import it.polimi.ingsw.Game.Player;
 
 import java.util.Map;
 
-public class SameIconBuilding extends Building {
+public class SameIconBuilding extends Building implements BuildingInterface {
     Map<String, Integer> checkPair;
 
     public SameIconBuilding(int era, int price, int pp) {
@@ -32,18 +34,14 @@ public class SameIconBuilding extends Building {
         }
         checkPair.put(inventor.getInventorIcon(), v);
     }
+
     @Override
-    public void buildingActivation(Player p){
-
-        for(Character c : p.getTribeCard()){
-
-            if(c instanceof Inventor){
-                int v = checkPair.get(((Inventor)c).getInventorIcon());
-                v++;
-                if(v==2)
-                    v=-1;
-                checkPair.put(((Inventor)c).getInventorIcon(), v);
-            }
-        }
+    public void accept(Visitor visitor, Player player){
+        visitor.visit(this, player);
     }
+
+    public Map<String, Integer> getCheckPair(){
+        return checkPair;
+    }
+
 }

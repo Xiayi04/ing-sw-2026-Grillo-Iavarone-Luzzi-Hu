@@ -1,8 +1,10 @@
 package it.polimi.ingsw.Buildings;
 
+import it.polimi.ingsw.Buildings.BuildingVisitor.BuildingInterface;
+import it.polimi.ingsw.Buildings.BuildingVisitor.Visitor;
 import it.polimi.ingsw.Game.Player;
 
-public class DoubleBonusBuilding extends Building{
+public class DoubleBonusBuilding extends Building implements BuildingInterface {
     public DoubleBonusBuilding(int era, int price, int pp){
         super(era,price,pp,"DoubleBonusBuilding");
     }
@@ -11,5 +13,7 @@ public class DoubleBonusBuilding extends Building{
     }
 
     @Override
-    public void buildingActivation(Player player) {}
+    public void accept(Visitor visitor, Player player) {
+        visitor.visit(this, player);
+    }
 }

@@ -1,7 +1,9 @@
 package it.polimi.ingsw.Buildings;
+import it.polimi.ingsw.Buildings.BuildingVisitor.BuildingInterface;
+import it.polimi.ingsw.Buildings.BuildingVisitor.Visitor;
 import it.polimi.ingsw.Game.Player;
 
-public class DiscountBuilding extends Building{
+public class DiscountBuilding extends Building implements BuildingInterface {
     private final int foodBonus;
     private final int ppBonus;
     private final Icons typeIcons;
@@ -40,5 +42,7 @@ public class DiscountBuilding extends Building{
     }
 
     @Override
-    public void buildingActivation(Player player) {}
+    public void accept(Visitor visitor, Player player) {
+        visitor.visit(this, player);
+    }
 }

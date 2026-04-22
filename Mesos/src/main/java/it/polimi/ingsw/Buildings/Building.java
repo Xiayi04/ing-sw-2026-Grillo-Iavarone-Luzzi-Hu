@@ -1,10 +1,11 @@
 package it.polimi.ingsw.Buildings;
 
+import it.polimi.ingsw.Buildings.BuildingVisitor.BuildingInterface;
 import it.polimi.ingsw.Cards.Card;
 import it.polimi.ingsw.Cards.CardType;
 import it.polimi.ingsw.Game.Player;
 
-public abstract class Building extends Card {
+public abstract class Building extends Card implements BuildingInterface {
     private final int price;
     private final int pp;
     private final String name;
@@ -15,8 +16,6 @@ public abstract class Building extends Card {
         this.pp = pp;
         this.name = name;
     }
-
-    public abstract void buildingActivation(Player player);
 
     public int getPrice(){
         return price;
