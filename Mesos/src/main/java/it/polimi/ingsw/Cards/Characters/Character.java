@@ -2,8 +2,10 @@ package it.polimi.ingsw.Cards.Characters;
 
 import it.polimi.ingsw.Cards.Card;
 import it.polimi.ingsw.Cards.CardType;
+import it.polimi.ingsw.Cards.Characters.CharacterVisitor.CharacterInterface;
+import it.polimi.ingsw.Cards.Characters.CharacterVisitor.InventorInterface;
 
-public abstract class Character extends Card {
+public abstract class Character extends Card implements CharacterInterface, InventorInterface {
     private final int numPlayers;
     private final CharacterType characterType;
 
@@ -26,5 +28,6 @@ public abstract class Character extends Card {
         System.out.println("numero giocatori:"+numPlayers);
         System.out.println(("tipo di personaggio:"+characterType.toString()));
     }
+
 
 }

@@ -1,8 +1,13 @@
 package it.polimi.ingsw.Cards.Characters;
 import it.polimi.ingsw.Cards.CardType;
+import it.polimi.ingsw.Cards.Characters.CharacterVisitor.CharacterInterface;
+import it.polimi.ingsw.Cards.Characters.CharacterVisitor.CharacterVisitor;
+import it.polimi.ingsw.Cards.Characters.CharacterVisitor.InventorInterface;
+import it.polimi.ingsw.Game.Player;
+
 import javax.swing.*;
 
-public class Inventor extends Character{
+public class Inventor extends Character implements CharacterInterface, InventorInterface {
     private final String inventorIcon;
 
 
@@ -13,11 +18,20 @@ public class Inventor extends Character{
     }
 
     public String getInventorIcon() {
-        return inventorIcon;
+        return inventorIcon.toLowerCase();
     }
 
     public void printCard(){
         super.printCard();
         System.out.println("icona:"+inventorIcon);
+    }
+    @Override
+    public String isInventorAndGetIcon(CharacterVisitor visitor){
+        return visitor.visit(this);
+    }
+
+    @Override
+    public void addCard(CharacterVisitor visitor, Player player){
+        visitor.visit(this, player);
     }
 }

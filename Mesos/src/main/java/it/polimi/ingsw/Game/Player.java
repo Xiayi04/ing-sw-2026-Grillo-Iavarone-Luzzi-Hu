@@ -1,10 +1,13 @@
 package it.polimi.ingsw.Game;
 import it.polimi.ingsw.Buildings.Building;
+import it.polimi.ingsw.Buildings.BuildingVisitor.Visitor;
 import it.polimi.ingsw.Buildings.Icons;
 import it.polimi.ingsw.Buildings.MultiplicationBuilding;
 import it.polimi.ingsw.Buildings.MultiplierPPBuilderBuilding;
 import it.polimi.ingsw.Cards.Characters.Builder;
 import it.polimi.ingsw.Cards.Characters.Character;
+import it.polimi.ingsw.Cards.Characters.CharacterVisitor.CharacterVisitor;
+import it.polimi.ingsw.Cards.Characters.CharacterVisitor.InventorIconCounter;
 import it.polimi.ingsw.Cards.Characters.Inventor;
 
 import java.util.ArrayList;
@@ -19,6 +22,12 @@ public class Player {
     private final ArrayList<Character> tribeCard;
     private final ArrayList<Building> buildings;
     private int starCounter;
+    private int hunterCounter;
+    private int builderCounter;
+    private int pickerCounter;
+    private int painterCounter;
+    private int inventorCounter;
+    private int shamanCounter;
 
     //metodo costruttore
     public Player(String name, Totem totem, int food){
@@ -54,6 +63,45 @@ public class Player {
     public int getStarCounter(){
         return starCounter;
     }
+    public int getHunterCounter(){
+        return hunterCounter;
+    }
+    public int getBuilderCounter(){
+        return builderCounter;
+    }
+    public int getPickerCounter(){
+        return pickerCounter;
+    }
+    public int getPainterCounter(){
+        return painterCounter;
+    }
+    public int getInventorCounter(){
+        return inventorCounter;
+    }
+    public int getShamanCounter(){
+        return shamanCounter;
+    }
+    //setter methods
+    public void setHunterCounter(int count){
+        hunterCounter=count;
+    }
+    public void setShamanCounter(int count){
+        shamanCounter=count;
+    }
+    public void setPickerCounter(int count){
+        pickerCounter=count;
+    }
+    public void setPainterCounter(int count){
+        painterCounter = count;
+    }
+    public void setInventorCounter(int count){
+        inventorCounter = count;
+    }
+    public void setBuilderCounter(int count){
+        builderCounter = count;
+    }
+
+
 
     public void modifyPP(int pp){
         prestigePoints+=pp;
@@ -89,21 +137,19 @@ public class Player {
      */
     public int inventorBonus() {
         List<String> icons = new ArrayList<>();
-        int numInventor = 0;
-        boolean trovato=false;
+        CharacterVisitor v = new InventorIconCounter();
         for(Character c : tribeCard){
-            if(c instanceof Inventor inventor){
-                numInventor++;
-                String currentIcon = inventor.getInventorIcon().toLowerCase();//per confrontare le stringhe
-                for(int i=0; i<icons.size() && !trovato; i++){
-                    if(icons.get(i).toLowerCase().equals(currentIcon))
-                        trovato=true;
-                }
-                if(!trovato)
-                    icons.add(currentIcon);
+            boolean trovato=false;
+            String currentIcon = null;
+            currentIcon=c.isInventorAndGetIcon(v);
+            for(int i=0; i<icons.size() && !trovato; i++){
+                if(icons.get(i).toLowerCase().equals(currentIcon))
+                    trovato=true;
             }
+            if(!trovato)
+                icons.add(currentIcon);
         }
-        return numInventor*icons.size();
+        return inventorCounter*icons.size();
     }
 
     /**
@@ -112,7 +158,7 @@ public class Player {
      * @return the painters' bonus
      */
     public int painterBonus() {
-        return (countTribeCardsByIcon(Icons.PAINTER)/2)*10;
+        return (painterCounter/2)*10;
     }
 
     /**
@@ -169,14 +215,14 @@ public class Player {
      * type wantedIcon are present
      * @return the number of wantedIcon-type characters
      */
-    public int countTribeCardsByIcon(Icons wantedIcon){
+    /*public int countTribeCardsByIcon(Icons wantedIcon){
         int count = 0;
         for(Character c : tribeCard){
             if(c.getCharacterType().toString().equals(wantedIcon.toString()))
                 count++;
         }
         return count;
-    }
+    }*/
 
     /**
      * The method through countTribeCardsByIcon counts how many characters of each type are in the player's
@@ -184,31 +230,23 @@ public class Player {
      * @return the number of sets
      */
     public int countSet(){
-        int inventor = countTribeCardsByIcon(Icons.INVENTOR);
-        int builder = countTribeCardsByIcon(Icons.BUILDER);
-        int hunter = countTribeCardsByIcon(Icons.HUNTER);
-        int painter = countTribeCardsByIcon(Icons.PAINTER);
-        int picker = countTribeCardsByIcon(Icons.PICKER);
-        int shaman = countTribeCardsByIcon(Icons.SHAMAN);
 
-        int min = inventor;
-
-        if (builder < min) {
-            min = builder;
+        int min = inventorCounter;
+        if (builderCounter < min) {
+            min = builderCounter;
         }
-        if (hunter < min) {
-            min = hunter;
+        if (hunterCounter < min) {
+            min = hunterCounter;
         }
-        if (painter < min) {
-            min = painter;
+        if (painterCounter < min) {
+            min = painterCounter;
         }
-        if (picker < min) {
-            min = picker;
+        if (pickerCounter < min) {
+            min = pickerCounter;
         }
-        if (shaman < min) {
-            min = shaman;
+        if (shamanCounter < min) {
+            min = shamanCounter;
         }
-
         return min;
     }
 }

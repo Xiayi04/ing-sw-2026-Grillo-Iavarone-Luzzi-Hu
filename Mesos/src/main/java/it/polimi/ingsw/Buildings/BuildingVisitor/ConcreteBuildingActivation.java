@@ -18,7 +18,7 @@ public class ConcreteBuildingActivation extends BuildingActivation{
             Map<String, Integer> checkPair = sameIconBuilding.getCheckPair();
 
             if(c instanceof Inventor){
-                int v = checkPair.get(((Inventor)c).getInventorIcon());
+                Integer v = checkPair.get(((Inventor)c).getInventorIcon());
                 v++;
                 if(v==2)
                     v=-1;
