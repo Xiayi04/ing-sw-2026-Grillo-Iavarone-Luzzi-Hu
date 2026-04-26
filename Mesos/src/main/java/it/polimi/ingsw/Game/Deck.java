@@ -4,10 +4,13 @@ import it.polimi.ingsw.Cards.Card;
 import it.polimi.ingsw.Cards.Characters.Character;
 import it.polimi.ingsw.Cards.Events.Event;
 import it.polimi.ingsw.Factory.*;
+
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collections;
 
-public class Deck {
+public class Deck implements Serializable {
+    private static final long serialVersionUID = 1L;
     private final ArrayList<Card> deck;
 
     public Deck(){

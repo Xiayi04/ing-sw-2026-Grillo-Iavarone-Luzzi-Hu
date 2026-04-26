@@ -1,4 +1,5 @@
 package it.polimi.ingsw.Game;
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collections;
 
@@ -9,7 +10,8 @@ import it.polimi.ingsw.Cards.Events.Event;
 
 
 
-public class Board {
+public class Board  implements Serializable {
+    private static final long serialVersionUID = 1L;
     private int era;
     private final ArrayList<Card> upperCardRow;
     private final ArrayList<Card> lowerCardsRow;
@@ -17,7 +19,7 @@ public class Board {
     private final ArrayList<Building> lowerBuildingRow;
     private final ArrayList<OfferCard> path;
     private final ArrayList<Player> players; //relazione con Player (2..5)
-    private Deck deck;//*associazione 1:1 con Board*/
+    private ArrayList<Card> deck;//*associazione 1:1 con Board*/
 
     public Board() {
         this.era = 1;
@@ -60,7 +62,7 @@ public class Board {
         return players;
     }
 
-    public Deck getDeck() {
+    public ArrayList<Card> getDeck() {
         return deck;
     }
 
@@ -128,6 +130,7 @@ public class Board {
 //metodo percorso
     public ArrayList<OfferCard> obtainPath(ArrayList<Player> players) {
         int numPlayers = players.size();
+        path.clear();
 
         path.add(new OfferCard('2', 0, 1, false));
         path.add(new OfferCard('3', 1, 0, false));
