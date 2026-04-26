@@ -1,4 +1,4 @@
-package it.polimi.ingsw.Network.RMI;
+package it.polimi.ingsw.Network;
 
 import it.polimi.ingsw.Buildings.Building;
 import it.polimi.ingsw.Controller.GameManager;
@@ -42,35 +42,23 @@ public class ServerRMI extends UnicastRemoteObject implements VirtualServer {
     public void login(String username,Totem chosenColor,VirtualView client) throws RemoteException{
         synchronized (this.clients){
             if (gameManager.getPlayers().size() >= 5) {
-                client.showError("Partita piena!");
+                client.showError("FULL GAME!");
                 return;
             }
             Player player = new Player(username, chosenColor, 0);
             gameManager.addPlayer(player);
             this.clients.add(client);
-            System.out.println(username + "si è connesso");
+            System.out.println(username + "he connected");
         }
     }
 
     public synchronized void buyBuilding(String username,boolean isUpper,int index) throws RemoteException{
         Player p = gameManager.getPlayerByName(username);
-        ArrayList<Building> buildings;
-        if (isUpper) {
-            // Se isUpper è true, puntiamo alla riga superiore
-            buildings = gameManager.getBoard().getUpperBuildingRow();
-        } else {
-            // Altrimenti puntiamo alla riga inferiore
-            buildings = gameManager.getBoard().getLowerBuildingRow();
-        }
-        Building chosen = buildings.get(index);
-        int cost = chosen.getPrice();
-        if(p.getFood()>= cost) {
-            p.modifyFood(-cost);
-            Building picked = (Building) gameManager.getBoard().pickCard(isUpper,true,index);
-            p.getBuilding().add(picked);
+        if( p!=null){
+            gameManager.buyBuilding(p,isUpper,index);
             notifyAllClients();
         }else{
-            System.out.println("INSUFFICIENT FOOD! (Requested :" + cost +")");
+            System.out.println("Error: Player "+username+" not found!");
         }
 
     }
@@ -78,11 +66,12 @@ public class ServerRMI extends UnicastRemoteObject implements VirtualServer {
     private void notifyAllClients() {
         for(VirtualView client : new ArrayList<>(clients)){
             try{
+                // i client osservano i cambiamenti che avvengono sul server
                 client.updateBoardStatus(gameManager.getBoard());
-                // i client osservamo i cambiamenti che avvengono sul server
+                // i client osservano il giocatore che sta giocando
                 client.showCurrentPlayer("username");
             } catch (Exception e) {
-                System.err.println("Impossibile contattare un client, potrebbe essere disconnesso");
+                System.err.println("Unable to contact a client, it may be disconnected");
             }
         }
     }
@@ -92,10 +81,10 @@ public class ServerRMI extends UnicastRemoteObject implements VirtualServer {
         Player player = gameManager.getPlayerByName(username);
         OfferCard chosenCard = gameManager.getBoard().getPath().get(pathIndex);
         if(chosenCard.isOccupied()){
-            System.out.println("La posizione" +pathIndex + " è già occupata");
+            System.out.println("The position" +pathIndex + "it's already occupied");
         }
         gameManager.getBoard().moveTotem(player,chosenCard);
-        System.out.println("Il giocatore " + player.getName() + " ha occupato la posizione " + pathIndex);
+        System.out.println("The player " + player.getName() + "occupied the position" + pathIndex);
         notifyAllClients();
     }
 
@@ -109,7 +98,7 @@ public class ServerRMI extends UnicastRemoteObject implements VirtualServer {
                 this.takeCharacter(username,isUpper,index);
             }
         } catch (Exception e) {
-            System.err.println("Errore durante pickCard: " + e.getMessage());
+            System.err.println("Error during pickCard: " + e.getMessage());
         }
 
     }
@@ -117,7 +106,7 @@ public class ServerRMI extends UnicastRemoteObject implements VirtualServer {
     public void takeCharacter(String username, boolean isUpper, int index) throws RemoteException{
         Player player = gameManager.getPlayerByName(username);
         gameManager.takeCharacter(player,isUpper,index);
-        System.out.println(username + "ha preso il personaggio:" +player.getName());
+        System.out.println(username + "he took the character:" +player.getName());
         notifyAllClients();
     }
 }
