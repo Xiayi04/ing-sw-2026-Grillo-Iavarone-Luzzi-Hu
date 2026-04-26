@@ -1,6 +1,6 @@
 package it.polimi.ingsw.Network.RMI;
 
-mport it.polimi.ingsw.FileLoader.BuildingDTO;
+import it.polimi.ingsw.FileLoader.BuildingDTO;
 import it.polimi.ingsw.FileLoader.CardDTO;
 import it.polimi.ingsw.Game.Board;
 import it.polimi.ingsw.Game.Player;

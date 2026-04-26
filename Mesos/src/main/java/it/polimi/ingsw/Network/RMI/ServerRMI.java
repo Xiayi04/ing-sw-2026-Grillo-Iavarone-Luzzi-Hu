@@ -79,7 +79,7 @@ public class ServerRMI extends UnicastRemoteObject implements VirtualServer {
         for(VirtualView client : new ArrayList<>(clients)){
             try{
                 client.updateBoardStatus(gameManager.getBoard());
-                //è il cuore del patternObeserver: i client osservamo i cambiamenti che avvengono sul server
+                // i client osservamo i cambiamenti che avvengono sul server
                 client.showCurrentPlayer("username");
             } catch (Exception e) {
                 System.err.println("Impossibile contattare un client, potrebbe essere disconnesso");
