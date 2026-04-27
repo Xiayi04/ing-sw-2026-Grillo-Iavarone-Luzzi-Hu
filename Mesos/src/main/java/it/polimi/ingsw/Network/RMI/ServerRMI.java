@@ -27,7 +27,7 @@ public class ServerRMI extends UnicastRemoteObject implements VirtualServer {
         try {
             GameManager gameManager = new GameManager(new ArrayList<Player>(),5,new Board());
             ServerRMI server = new ServerRMI(gameManager); //crea l'oggetto remoto
-            Registry registry = LocateRegistry.createRegistry(1099);//crea il registro sulla porta 1099
+            Registry registry = LocateRegistry.createRegistry(1234);//crea il registro sulla porta 1234
             registry.rebind(serverName, server);//pubblica il server nel registro
             System.out.println("---Server is ready!---");
         } catch (Exception e) {
@@ -112,7 +112,8 @@ public class ServerRMI extends UnicastRemoteObject implements VirtualServer {
     }
 
     @Override
-    public void leave(VirtualView client){
+    public synchronized void leave(VirtualView client){
+        clients.remove(client);
 
     }
 }

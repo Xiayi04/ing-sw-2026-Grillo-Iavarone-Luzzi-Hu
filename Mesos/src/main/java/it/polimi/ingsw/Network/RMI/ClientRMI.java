@@ -1,7 +1,8 @@
 package it.polimi.ingsw.Network.RMI;
 
-import it.polimi.ingsw.FileLoader.BuildingDTO;
-import it.polimi.ingsw.FileLoader.CardDTO;
+
+import it.polimi.ingsw.Buildings.Building;
+import it.polimi.ingsw.Cards.Card;
 import it.polimi.ingsw.Game.Board;
 import it.polimi.ingsw.Game.Player;
 import it.polimi.ingsw.Game.Totem;
@@ -15,12 +16,11 @@ import java.util.List;
 
 
 public class ClientRMI extends UnicastRemoteObject implements VirtualView {
-    final VirtualServer server;
+    private final VirtualServer server;
 
     public ClientRMI (VirtualServer server) throws RemoteException {
+        super();
         this.server = server;
-        //devo ancora scrivere i metodi per il login
-
 
     }
 
@@ -48,11 +48,11 @@ public class ClientRMI extends UnicastRemoteObject implements VirtualView {
 
     @Override
     public void showError(String message) throws RemoteException {
-        System.out.println(" " + message);
+        System.out.println("ERROR" + message);
     }
 
     @Override
-    public void updateOtherPlayerStatus(String playerName, List<CardDTO> tribeCards, List<BuildingDTO> buildings)
+    public void updateOtherPlayerStatus(String playerName, List<Card> tribeCards, List<Building> buildings)
             throws RemoteException {
 
     }
@@ -63,8 +63,23 @@ public class ClientRMI extends UnicastRemoteObject implements VirtualView {
     }
 
     public static void main(String[] args) throws RemoteException {
+         try{
+             Registry registry = LocateRegistry.getRegistry("localhost", 1234);
+             VirtualServer server = (VirtualServer) registry.lookup("---MESOS_SERVER---");
+             ClientRMI client = new ClientRMI(server);
 
+             server.login("username", Totem.BLACK, client);
+
+             System.out.println("Client connesso al server RMI");
+
+           //  client.runCli(); ancora da completare
+
+         } catch (Exception e) {
+             e.printStackTrace();
+         }
     }
+
+
 }
 
 

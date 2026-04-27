@@ -12,5 +12,5 @@ public interface VirtualServer extends Remote {
 
     void pickCard(String username, boolean isUpper, boolean isBuilding, int index) throws RemoteException;
 
-    void leave(VirtualView client) throws RemoteException; //per comunicare ad un altri client che x si è disconnesso
+    void leave(VirtualView client) throws RemoteException;  //per comunicare ad un altri client che x si è disconnesso
 }
