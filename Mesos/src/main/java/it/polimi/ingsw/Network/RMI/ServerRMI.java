@@ -26,7 +26,7 @@ public class ServerRMI extends UnicastRemoteObject implements VirtualServer {
         final String serverName = "---MESOS_SERVER---";
         try {
             GameManager gameManager = new GameManager(new ArrayList<Player>(),5,new Board());
-            ServerRMI server = new ServerRMI(gameManager); //creo l'oggetto remoto
+            ServerRMI server = new ServerRMI(gameManager); //crea l'oggetto remoto
             Registry registry = LocateRegistry.createRegistry(1099);//crea il registro sulla porta 1099
             registry.rebind(serverName, server);//pubblica il server nel registro
             System.out.println("---Server is ready!---");
@@ -112,5 +112,7 @@ public class ServerRMI extends UnicastRemoteObject implements VirtualServer {
     }
 
     @Override
-    public void leave(VirtualView client){}
+    public void leave(VirtualView client){
+
+    }
 }
