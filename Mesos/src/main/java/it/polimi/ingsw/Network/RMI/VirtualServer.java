@@ -7,7 +7,7 @@ import java.rmi.RemoteException;
 
 public interface VirtualServer extends Remote {
     void login(String username, Totem chosenColor, VirtualView client) throws RemoteException;
-
+    //void notifyTunrn(String username);
     void moveTotem(String username, int pathIndex) throws RemoteException;
 
     void pickCard(String username, boolean isUpper, boolean isBuilding, int index) throws RemoteException;

@@ -31,7 +31,7 @@ public class ServerRMI extends UnicastRemoteObject implements VirtualServer {
             registry.rebind(serverName, server);//pubblica il server nel registro
             System.out.println("---Server is ready!---");
         } catch (Exception e) {
-            System.err.println("Server configuration error:" + e.getMessage());
+            System.err.println("Server configuration error:  " + e.getMessage());
             e.printStackTrace();
         }
 
@@ -42,13 +42,13 @@ public class ServerRMI extends UnicastRemoteObject implements VirtualServer {
     public void login(String username, Totem chosenColor, VirtualView client) throws RemoteException{
         synchronized (this.clients){
             if (gameManager.getPlayers().size() >= 5) {
-                client.showError("FULL GAME!");
+                client.showError("--FULL  GAME!--");
                 return;
             }
             Player player = new Player(username, chosenColor, 0);
             gameManager.addPlayer(player);
             this.clients.add(client);
-            System.out.println(username + "he connected");
+            System.out.println(username + " connected  with TOTEM :" + chosenColor);
         }
     }
 
