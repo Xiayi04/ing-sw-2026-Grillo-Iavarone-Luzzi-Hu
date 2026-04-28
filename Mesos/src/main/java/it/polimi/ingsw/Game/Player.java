@@ -10,11 +10,13 @@ import it.polimi.ingsw.Cards.Characters.CharacterVisitor.CharacterVisitor;
 import it.polimi.ingsw.Cards.Characters.CharacterVisitor.InventorIconCounter;
 import it.polimi.ingsw.Cards.Characters.Inventor;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
 
-public class Player {
+public class Player implements Serializable {
+    private static final long serialVersionUID = 1L;
     private final String name;
     private final Totem totem;
     private int food;

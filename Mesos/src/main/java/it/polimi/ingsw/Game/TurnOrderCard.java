@@ -1,10 +1,13 @@
 package it.polimi.ingsw.Game;
 
 import it.polimi.ingsw.Buildings.*;
+
+import java.io.Serializable;
 import java.util.ArrayList;
 import static java.lang.Math.ceil;
 
-public class TurnOrderCard {
+public class TurnOrderCard implements Serializable {
+    private static final long serialVersionUID = 1L;
     private final ArrayList<Player> order;
     private final int NumPlayers;
 

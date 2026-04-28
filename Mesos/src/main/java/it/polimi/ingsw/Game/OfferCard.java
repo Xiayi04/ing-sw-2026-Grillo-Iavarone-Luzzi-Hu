@@ -1,6 +1,10 @@
 package it.polimi.ingsw.Game;
+
+import java.io.Serializable;
+
 //cambiato il tipo di ID
-public class OfferCard {
+public class OfferCard implements Serializable {
+    private static final long serialVersionUID = 1L;
     private int ID;
     private int UpArrow;
     private int DownArrow;

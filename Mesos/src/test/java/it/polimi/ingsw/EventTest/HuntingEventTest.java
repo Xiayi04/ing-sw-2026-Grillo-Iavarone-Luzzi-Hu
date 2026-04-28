@@ -1,15 +1,10 @@
 package it.polimi.ingsw.EventTest;
 
-import it.polimi.ingsw.Buildings.DiscountBuilding;
-import it.polimi.ingsw.Buildings.Events;
-import it.polimi.ingsw.Buildings.Icons;
 import it.polimi.ingsw.Cards.CardType;
-import it.polimi.ingsw.Cards.Characters.Builder;
 import it.polimi.ingsw.Cards.Characters.CharacterType;
 import it.polimi.ingsw.Cards.Characters.Hunter;
 import it.polimi.ingsw.Cards.Events.EventName;
 import it.polimi.ingsw.Cards.Events.HuntingEvent;
-import it.polimi.ingsw.Controller.GameManager;
 import it.polimi.ingsw.Game.Player;
 import it.polimi.ingsw.Game.Totem;
 import org.junit.jupiter.api.Test;

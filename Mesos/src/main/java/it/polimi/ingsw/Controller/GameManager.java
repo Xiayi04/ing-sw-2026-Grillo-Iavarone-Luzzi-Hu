@@ -36,54 +36,41 @@ public class GameManager {
         deck.createDeck(numPlayers);
 
     }
-     /*
-    public void eraSwitch(){
-        this.currentEra++;
-        if(this.currentEra > 4){
-            endGame();
-            return;
-        }
-        deck.loadEra(this.currentEra); //caricamento del nuovo mazzo tramite la factory
-        if (this.currentEra == 3){
-            board.removeLowerBuildings();
-        }
-        if(this.currentEra == 2 || this.currentEra == 3){
-            board.shiftBuildingUpToDown();
-        }
-        board.refillCards(deck,players);
-        System.out.println("Siamo passati all'Era " + currentEra);
-    }*/
 
-    /*metodo per passare al round successivo */
+    /**
+     * Method for moving to the next round.
+     * Resolve the events on the bottom row,
+     * then move the cards from the top row to the bottom row,
+     * and finally refill the cards from the deck in the top row.
+     * @return next Round.
+     */
     public void nextRound() {
-        /*//risoluzione eventi sulle carte che sono sulla fila inferiore
         ArrayList<Event> currentEvents = board.checkEvent();
         if (!currentEvents.isEmpty()) {
             resolveEvents(currentEvents);
         }
         board.shiftUpToDown();
-        board.refillCards(deck, players); //metto le carte della nuova era nella file superiore
-        this.round++;*/
+        board.refillCards(board.getDeck(), players);
+        // manca il fatto che il giocatore che sta alla sinistra del tabellone deve prendere la prima posizione
     }
 
-    /*public void checkEraChange(){
-        //controllo di aver cambiato era
-    }*/
+    /**
+     * The method to handle the end or a round : I sort events,
+     * those with the same name are sorted by era
+     * and the sustenance is resolved last.
+     * @return endRound;
+     * */
 
-    /*Metodo per gestire la fine di un round: Ordino eventi, quelli con lo stesso nome vengono ordinati per era
-     e il sostentamento viene risolto per ultimo
-     */
     public void endRound() {
-        /*ArrayList<Event> resolveEvents = board.checkEvent();
+        ArrayList<Event> resolveEvents = board.checkEvent();
         resolveEvents(resolveEvents);
         board.shiftUpToDown();
-        board.refillCards(deck, players);
+        board.refillCards(board.getDeck(), players);
 
-        if(deck.isEmpty() && round == 10)
-            endGame();*/
+        if(board.getDeck().isEmpty() && round == 10)
+            endGame();
     }
 
-    /*aggiungo i giocatori */
     public void addPlayer(Player player) {
         if (this.players.size() >= 5) {
             throw new IllegalStateException("You can't add more than 5 players");
@@ -91,24 +78,6 @@ public class GameManager {
         this.players.add(player);
     }
 
-
-    /*public void resolveEvents(ArrayList<Event> events) {
-        if (events == null || events.isEmpty()) {
-            return;
-        }
-        events.sort((e1, e2) -> {
-            boolean isE1Sustenance = e1.getEventName().equalsIgnoreCase("Sustenance");
-            boolean isE2Sustenance = e2.getEventName().equalsIgnoreCase("Sustenance");
-
-           // if (isE1Sustenance && !isE2Sustenance) return 1; //se e1 è sost. e e2 no sost allora e1 viene risolto dopo
-           // if (!isE1Sustenance && isE2Sustenance) return -1;//se e2 è sost. e e1 no allora e1 viene risolto prima
-            return Integer.compare(e1.getEra(), e2.getEra()); // se non sono sost oppure lo sono entrambi, li ordino per era
-        });
-        for (Event e : events) {
-            e.resolveEvent(players);
-        }
-        return;
-    }*/
 
     public static void resolveEvents(ArrayList<Event> events) {
         if (events == null || events.isEmpty()) {
@@ -121,6 +90,12 @@ public class GameManager {
                         .thenComparing(Event::getEra)
         );
     }
+
+    /**
+     * the method for managing the end of the game and the various calculations
+     * to establish the winner.
+     * @return the winner
+     */
 
     public void endGame() { //il metodo ora restituisce void da Player
         System.out.println("--- THE GAME IS OVER  ---");
@@ -171,32 +146,67 @@ public class GameManager {
                 //
             }//DUBBIO : FORSE NON VA FATTO ANCORA IL GAME MANAGER PERCHè VA IMPLEMENTATO CON LA RETE
         }*/
-
-
     }
 
+    /**
+     * Method to buy a building from the list of buildings on the board +
+     * make sure you have enough food to buy it.
+     * @param player
+     * @param row
+     * @param index
+     * @return of the purchased building
+     */
 
     public void buyBuilding(Player player, Boolean row, int index) {
-        ArrayList<Building> building = new ArrayList<>();
-        int cost = building.get(index).getPrice();
-            if(player.getFood() >= cost){
-                player.modifyFood(-cost);
-                player.getBuilding().add(building.get(index)); //aggiungo l'edificio alla lista degli edifici del giocatore
-                System.out.println("Building " + building.get(index).getName() + " has been modified!");
-                Card pickedBuilding=  board.pickCard(row, true, index);
-                player.getBuilding().add((Building) pickedBuilding);
-            }else{
-                System.out.println("INSUFFICIENT FOOD! (Requested :" + cost +")");
-            }
+        ArrayList<Building> buildings;
+        if (row) {
+            buildings = board.getUpperBuildingRow();
+        }else{
+            buildings = board.getLowerBuildingRow();
+        }
+        int cost = buildings.get(index).getPrice();
+        if(player.getFood() >= cost){
+            player.modifyFood(-cost);
+            Card pickedBuilding=  board.pickCard(row, true, index);
+            player.getBuilding().add((Building) pickedBuilding);
+            System.out.println("The building" + ((Building) pickedBuilding).getName() + "was purchased by");
+        }else{
+            System.out.println("INSUFFICIENT FOOD! (Requested :" + cost +")");
+        }
 
     }
 
-    public void takeCharacter(Player player, Character character){//da cambiare
-            player.getTribeCard().add(character);
-            board.removeCards(character);
-            System.out.println(player.getName() + "added" + character.getCharacterType());
+    /**
+     * method to take a character from the board +
+     * check if that character is there
+     * @param player
+     * @param isUpper
+     * @param index
+     * @return the character taken
+     */
 
+    public void takeCharacter(Player player, boolean isUpper,int index){
+        Character pickedCharacter = (Character) board.pickCard(isUpper,false,index);
+        if(pickedCharacter != null){
+            player.getTribeCard().add(pickedCharacter);
+            System.out.println(player.getName() + "added" + pickedCharacter.getCharacterType());
+        }else{
+            System.err.println(player.getName() + "not added" + pickedCharacter.getCharacterType());
+        }
     }
+
+    /**
+     * The getPlayerByName method searches the list of players for the one with exactly
+     * this name to understand who is actually doing something.
+     * @param name
+     * @return getPlayerByName
+     */
+    public Player getPlayerByName(String name) {
+        return players.stream()
+                .filter(p -> p.getName().equals(name))
+                .findFirst()
+                .orElse(null);
+        }
 
     public Board getBoard() {
         return board;
