@@ -12,7 +12,7 @@ import java.rmi.registry.Registry;
 import java.rmi.server.UnicastRemoteObject;
 import java.util.ArrayList;
 
-public class ServerRMI extends UnicastRemoteObject implements VirtualServer {
+public class ServerRMI extends UnicastRemoteObject implements VirtualServer,Runnable {
     private GameManager gameManager;
     private final ArrayList<VirtualView> clients = new ArrayList<>();
 
@@ -22,7 +22,7 @@ public class ServerRMI extends UnicastRemoteObject implements VirtualServer {
         this.gameManager = gameManager;
     }
 
-    public static void main( String[] args ) {
+    public void run() {
         final String serverName = "---MESOS_SERVER---";
         try {
             GameManager gameManager = new GameManager(new ArrayList<Player>(),5,new Board());
