@@ -64,28 +64,37 @@ public class ServerRMI extends UnicastRemoteObject implements VirtualServer {
     }
 
     private void notifyAllClients() {
+        Board board = gameManager.getBoard();
+        Player current = gameManager.getCurrentPlayer();
+        String playerName;
+        if(current != null){
+            playerName = current.getName();
+        }else{
+            System.out.println("Error: Player "+gameManager.getCurrentPlayer().getName()+" not found!");
+        }
         for(VirtualView client : new ArrayList<>(clients)){
             try{
                 // i client osservano i cambiamenti che avvengono sul server
-                client.updateBoardStatus(gameManager.getBoard());
+                client.updateBoardStatus(board);
                 // i client osservano il giocatore che sta giocando
-                //client.showCurrentPlayer(gameManager.getC)
+                client.showCurrentPlayer(playerName);
             } catch (Exception e) {
                 System.err.println("Unable to contact a client, it may be disconnected");
+                clients.remove(client);
             }
         }
     }
 
     @Override
     public synchronized void moveTotem(String username, int pathIndex)throws RemoteException{
-        Player player = gameManager.getPlayerByName(username);
+        Player p = gameManager.getPlayerByName(username);
         OfferCard chosenCard = gameManager.getBoard().getPath().get(pathIndex);
         if(chosenCard.isOccupied()){
             System.out.println("The position" +pathIndex + "it's already occupied");
             return;
         }
-        gameManager.getBoard().moveTotem(player,chosenCard);
-        System.out.println("The player " + player.getName() + "occupied the position" + pathIndex);
+        gameManager.getBoard().moveTotem(p,chosenCard);
+        System.out.println("The player " + p.getName() + "occupied the position" + pathIndex);
         notifyAllClients();
     }
 
@@ -112,8 +121,19 @@ public class ServerRMI extends UnicastRemoteObject implements VirtualServer {
     }
 
     @Override
-    public synchronized void leave(VirtualView client){
-        clients.remove(client);
-
+    public synchronized void leave(String username, VirtualView client) throws RemoteException{
+        clients.remove(client); //rimuove client dalla lista per le notifiche
+        Player p = gameManager.getPlayerByName(username);
+        if(p!=null){
+            gameManager.getPlayers().remove(p);
+            System.out.println("The user  " + username + "left the game ");
+        }
+        for (VirtualView v : new ArrayList<>(clients)){
+            try{
+                v.showError("The player  " + username + "he abandoned the game"); //gli altri giocatori vengono a conoscenza
+            }catch(RemoteException e){
+            }
+        }
+        notifyAllClients();
     }
 }

@@ -19,6 +19,7 @@ public class GameManager {
     private ArrayList<Player> players;
     private Board board;
     private int currentEra;
+    private Player currentPlayer;
 
     //costruttore
     public GameManager(ArrayList<Player> players, int numPlayers, Board board) {
@@ -50,7 +51,7 @@ public class GameManager {
             resolveEvents(currentEvents);
         }
         board.shiftUpToDown();
-        board.refillCards(board.getDeck(), players);
+        //board.refillCards(board.getDeck(), players);
         // manca il fatto che il giocatore che sta alla sinistra del tabellone deve prendere la prima posizione
     }
 
@@ -65,7 +66,7 @@ public class GameManager {
         ArrayList<Event> resolveEvents = board.checkEvent();
         resolveEvents(resolveEvents);
         board.shiftUpToDown();
-        board.refillCards(board.getDeck(), players);
+       // board.refillCards(board.getDeck(), players);
 
         if(board.getDeck().isEmpty() && round == 10)
             endGame();
@@ -109,7 +110,7 @@ public class GameManager {
             }
         }
 
-        ArrayList<Player> tmpWinner = null;
+        ArrayList<Player> tmpWinner = new ArrayList<>();
         for (Player p : players) {
             if (p.finalScore() == maxScore) {
                 tmpWinner.add(p);
@@ -152,14 +153,14 @@ public class GameManager {
      * Method to buy a building from the list of buildings on the board +
      * make sure you have enough food to buy it.
      * @param player
-     * @param row
+     * @param rowUpper
      * @param index
      * @return of the purchased building
      */
 
-    public void buyBuilding(Player player, Boolean row, int index) {
+    public Building buyBuilding(Player player, Boolean rowUpper, int index) {
         ArrayList<Building> buildings;
-        if (row) {
+        if (rowUpper) {
             buildings = board.getUpperBuildingRow();
         }else{
             buildings = board.getLowerBuildingRow();
@@ -167,11 +168,13 @@ public class GameManager {
         int cost = buildings.get(index).getPrice();
         if(player.getFood() >= cost){
             player.modifyFood(-cost);
-            Card pickedBuilding=  board.pickCard(row, true, index);
+            Building pickedBuilding=  (Building) board.pickCard(rowUpper, true, index);
             player.getBuilding().add((Building) pickedBuilding);
             System.out.println("The building" + ((Building) pickedBuilding).getName() + "was purchased by");
+            return pickedBuilding;
         }else{
             System.out.println("INSUFFICIENT FOOD! (Requested :" + cost +")");
+            return null;
         }
 
     }
@@ -191,7 +194,7 @@ public class GameManager {
             player.getTribeCard().add(pickedCharacter);
             System.out.println(player.getName() + "added" + pickedCharacter.getCharacterType());
         }else{
-            System.err.println(player.getName() + "not added" + pickedCharacter.getCharacterType());
+            System.err.println("Personaggio non trovato");
         }
     }
 
@@ -230,6 +233,10 @@ public class GameManager {
 
     public int getCurrentEra() {
         return currentEra;
+    }
+
+    public Player getCurrentPlayer() {
+        return currentPlayer;
     }
 }
 
