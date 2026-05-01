@@ -1,15 +1,28 @@
-package it.polimi.ingsw.Network.Socket;
+package it.polimi.ingsw.Network;
+
+import it.polimi.ingsw.Network.Socket.Client.ClientSocket;
 
 import java.net.Socket;
 import java.util.Scanner;
 
-public class ClientWelcomer {
+public class ClientMain {
+
+    private static String username;
+
+    public static String getUsername(){
+        return ClientMain.username;
+    }
+
     public static void main(String[] args){
         System.out.println("Welcome user");
         System.out.print("Please write your username:");
 
         Scanner sc = new Scanner(System.in);
-        String username = sc.nextLine();
+        ClientMain.username = sc.nextLine();
+        while(ClientMain.username.isEmpty()){
+            System.out.print("The username cannot be empty,  please try again:");
+            ClientMain.username = sc.nextLine();
+        }
 
         System.out.print("Please choose the preferred connection protocol (0:RMI/1:Socket) :");
         int connection = sc.nextInt();
