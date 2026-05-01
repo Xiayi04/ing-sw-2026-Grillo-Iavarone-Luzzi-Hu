@@ -1,6 +1,10 @@
 package it.polimi.ingsw.Buildings;
 import it.polimi.ingsw.Buildings.BuildingVisitor.BuildingInterface;
+import it.polimi.ingsw.Buildings.BuildingVisitor.EventBuildings.Discount.DiscountVisitorInterface;
 import it.polimi.ingsw.Buildings.BuildingVisitor.Visitor;
+import it.polimi.ingsw.Cards.Events.HuntingEvent;
+import it.polimi.ingsw.Cards.Events.PaintingEvent;
+import it.polimi.ingsw.Cards.Events.SustenanceEvent;
 import it.polimi.ingsw.Game.Player;
 
 public class DiscountBuilding extends Building implements BuildingInterface {
@@ -35,14 +39,27 @@ public class DiscountBuilding extends Building implements BuildingInterface {
     }
 
     public int getFoodBonusForPlayer(Player player){
-        return foodBonus * player.countTribeCardsByIcon(typeIcons);
-    }
-    public int getPpBonus(Player player) {
-        return ppBonus * player.countTribeCardsByIcon(typeIcons);
+        return foodBonus * player.countTribeCardsByIcon(typeIcons.toString());
     }
 
-    @Override
-    public void accept(Visitor visitor, Player player) {
+    public int getPpBonus(Player player) {
+        return ppBonus * player.countTribeCardsByIcon(typeIcons.toString());
+    }
+
+
+    public void acceptActivation(Visitor visitor, Player player) {
         visitor.visit(this, player);
+    }
+
+    public int acceptDiscountEvent(DiscountVisitorInterface visitor, Player player, SustenanceEvent event) {
+        return visitor.visit(this, player, event);
+    }
+
+    public void acceptDiscountEvent(DiscountVisitorInterface visitor, Player player, HuntingEvent event) {
+        visitor.visit(this, player, event);
+    }
+
+    public void acceptDiscountEvent(DiscountVisitorInterface visitor, Player player, PaintingEvent event) {
+        visitor.visit(this, player, event);
     }
 }

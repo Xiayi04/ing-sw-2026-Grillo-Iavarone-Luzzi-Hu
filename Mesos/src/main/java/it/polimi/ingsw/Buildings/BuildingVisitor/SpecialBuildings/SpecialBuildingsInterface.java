@@ -1,12 +1,9 @@
-package it.polimi.ingsw.Buildings.BuildingVisitor;
+package it.polimi.ingsw.Buildings.BuildingVisitor.SpecialBuildings;
 
 import it.polimi.ingsw.Buildings.*;
 import it.polimi.ingsw.Game.Player;
 
-/*
-metto metodi visit per tutti i building anche se non devono implementare building activation
- */
-public interface Visitor {
+public interface SpecialBuildingsInterface {
     void visit(AddCard addCard, Player player);
     void visit(BonusStarBuilding bonusStarBuilding, Player player);
     void visit(BonusFood bonusFood, Player player);
@@ -18,4 +15,5 @@ public interface Visitor {
     void visit(NoMalusBuilding noMalusBuilding, Player player);
     void visit(SameIconBuilding sameIconBuilding, Player player);
     void visit(SetBonus setBonus, Player player);
+
 }

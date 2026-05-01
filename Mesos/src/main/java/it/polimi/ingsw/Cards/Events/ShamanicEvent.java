@@ -1,18 +1,27 @@
 package it.polimi.ingsw.Cards.Events;
 
+import it.polimi.ingsw.Buildings.Building;
+import it.polimi.ingsw.Buildings.BuildingVisitor.EventBuildings.Shamanic.ShamanicVisitor;
+import it.polimi.ingsw.Buildings.BuildingVisitor.EventBuildings.Shamanic.ShamanicVisitorInterface;
 import it.polimi.ingsw.Cards.CardType;
 import it.polimi.ingsw.Game.Player;
 
 import java.util.ArrayList;
 
+import static java.lang.Math.abs;
+
 public class ShamanicEvent extends Event {
     private final Integer ShEvePenPoints;
     private final Integer ShEvePrizePoints;
+    private Integer MaxStars ;
+    private Integer MinStars ;
     //CONSTRUCTOR
     public ShamanicEvent(int era, CardType cardType, EventName eventName, Integer penPoints, Integer prizePoints) {
         super(era, cardType, eventName);
         this.ShEvePenPoints = penPoints;
         this.ShEvePrizePoints = prizePoints;
+        this.MaxStars = 0;
+        this.MinStars = 0;
     }
 
     /**
@@ -33,7 +42,7 @@ public class ShamanicEvent extends Event {
     }
 
     public int getMaxStars(ArrayList<Player> players){
-        if(players.size()<2 || players == null)
+        if(players == null || players.size()<2 )
             throw new IllegalArgumentException("players ArrayList is not valid");
         int maxStars = 0;
 
@@ -46,11 +55,11 @@ public class ShamanicEvent extends Event {
     }
 
     public int getMinStars(ArrayList<Player> players){
-        if(players.size()<2 || players == null)
+        if(players == null || players.size()<2)
             throw new IllegalArgumentException("players ArrayList is not valid");
 
         int minStars = 1000;
-        int starCounter = 0;
+        int starCounter;
         for(Player p : players){
             starCounter = p.getStarCounter();
             if(starCounter<minStars)
@@ -61,42 +70,35 @@ public class ShamanicEvent extends Event {
 
     @Override
     public void resolveEvent(ArrayList<Player> players){
-        if(players.size()<2 || players == null)
+        if(players == null || players.size()<2)
             throw new IllegalArgumentException("players ArrayList is not valid");
 
-        int maxStars = getMaxStars(players);
-        int minStars = getMinStars(players);
+        MaxStars = getMaxStars(players);
+        MinStars = getMinStars(players);
 
         for(Player p : players){
 
-            if(p.getStarCounter()==maxStars){
+            if(p.getStarCounter()==MaxStars){
+                ShamanicVisitorInterface v = new ShamanicVisitor();
 
-                boolean exists = p.getBuilding().stream()
-                        .anyMatch(b -> b.getName().equals("DoubleBonusBuilding"));
+                for(Building b : p.getBuilding()){
+                    b.acceptShamanicEvent(v,p,this);
+                }
+                p.modifyPP(abs(this.getShEvePrizePoints()));
+            } else if (p.getStarCounter()==MinStars) {
+                ShamanicVisitorInterface v = new ShamanicVisitor();
 
-                if(exists)
-                    p.modifyPP(ShEvePrizePoints* 2);
-                else
-                    p.modifyPP(ShEvePrizePoints);
-
-            } else if (p.getStarCounter()==minStars) {
-
-                boolean exists =  p.getBuilding().stream()
-                        .anyMatch(b -> b.getName().equals("NoMalusBuilding"));
-
-                if(!exists)
-                    p.modifyPP(ShEvePenPoints);
+                for(Building b : p.getBuilding()){
+                    b.acceptShamanicEvent(v,p,this);
+                }
+                p.modifyPP(-abs(this.getShEvePenPoints()));
             }
+            //p.getProxy().notifyAll(p,this);
         }
+        //resetting the values of max e min stars for security reasons.
+        MaxStars = 0;
+        MinStars = 0;
 
     }
 
-    /*public static boolean containsBuilding(Player player, String buildingName){
-        ArrayList<Building> buildings = player.getBuilding();
-
-        for(Building b : buildings){
-            if(b.getName().equals(buildingName))
-                return true;
-        }
-    }*/
 }

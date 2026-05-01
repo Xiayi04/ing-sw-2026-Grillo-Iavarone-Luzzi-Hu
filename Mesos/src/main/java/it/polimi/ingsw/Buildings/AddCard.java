@@ -13,11 +13,10 @@ public class AddCard extends Building implements BuildingInterface {
         return 1;
     }
 
-    public void accept(Visitor visitor, Player player){
+    public void acceptActivation(Visitor visitor, Player player){
         visitor.visit(this, player);
     }
 
 
-    /*@Override
-    public void buildingActivation(Player player) {}*/
+
 }

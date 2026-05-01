@@ -1,13 +1,15 @@
 package it.polimi.ingsw.Cards.Events;
 
 import it.polimi.ingsw.Buildings.Building;
-import it.polimi.ingsw.Buildings.DiscountBuilding;
-import it.polimi.ingsw.Buildings.Events;
+import it.polimi.ingsw.Buildings.BuildingVisitor.EventBuildings.Discount.DiscountVisitor;
+import it.polimi.ingsw.Buildings.BuildingVisitor.EventBuildings.Discount.DiscountVisitorInterface;
 import it.polimi.ingsw.Buildings.Icons;
 import it.polimi.ingsw.Cards.CardType;
 import it.polimi.ingsw.Game.Player;
 
 import java.util.ArrayList;
+
+import static java.lang.Math.abs;
 
 public class HuntingEvent extends Event {
     private final Integer HuEvePP;
@@ -32,27 +34,18 @@ public class HuntingEvent extends Event {
             throw new IllegalArgumentException("Players list is not valid");
         }
 
-        boolean checkHuEveBuilding = false;
 
         for(Player p : players){
-            int numHunters = p.countTribeCardsByIcon(Icons.HUNTER);
+            int numHunters = p.countTribeCardsByIcon(Icons.HUNTER.toString());
             int foodBonus = numHunters;
             int bonusPP = HuEvePP * numHunters;
+            DiscountVisitorInterface v = new DiscountVisitor();
 
-            if(!checkHuEveBuilding ){
-                ArrayList<Building> buildings = p.getBuilding();
-
-                for(Building b : buildings){
-
-                    if(b.getName().equals("DiscountBuilding") && ((DiscountBuilding)b).getTypeEvents().equals(Events.HUNTEREVENT)){
-                        foodBonus += numHunters;
-                        bonusPP += numHunters;
-                    }
-                }
+            for(Building b : p.getBuilding()){
+                b.acceptDiscountEvent(v,p,this);
             }
-
-            p.modifyPP(bonusPP);
-            p.modifyFood(foodBonus);
+            p.modifyPP(abs(bonusPP));
+            p.modifyFood(abs(foodBonus));
         }
     }
 

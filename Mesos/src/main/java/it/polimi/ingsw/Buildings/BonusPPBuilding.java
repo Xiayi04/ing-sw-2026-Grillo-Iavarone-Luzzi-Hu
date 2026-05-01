@@ -18,7 +18,7 @@ public class BonusPPBuilding extends Building implements BuildingInterface {
     }
 
     @Override
-    public void accept(Visitor visitor, Player player){
+    public void acceptActivation(Visitor visitor, Player player){
         visitor.visit(this, player);
     }
 }

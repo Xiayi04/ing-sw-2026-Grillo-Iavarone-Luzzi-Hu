@@ -9,10 +9,13 @@ import it.polimi.ingsw.Cards.Characters.Character;
 import it.polimi.ingsw.Cards.Characters.CharacterVisitor.CharacterVisitor;
 import it.polimi.ingsw.Cards.Characters.CharacterVisitor.InventorIconCounter;
 import it.polimi.ingsw.Cards.Characters.Inventor;
+import it.polimi.ingsw.Network.ClientProxy;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 
 public class Player implements Serializable {
@@ -30,8 +33,21 @@ public class Player implements Serializable {
     private int painterCounter;
     private int inventorCounter;
     private int shamanCounter;
+    private ClientProxy proxy;
+    public static Object countersLock = new Object();
 
     //metodo costruttore
+    public Player(String name, Totem totem, int food, ClientProxy proxy) {
+        this.name = name;
+        this.totem = totem;
+        this.food = food;
+        this.prestigePoints = 0;
+        this.tribeCard = new ArrayList<Character>();
+        this.buildings = new ArrayList<Building>();
+        this.starCounter = 0;
+        this.proxy = proxy;
+    }
+
     public Player(String name, Totem totem, int food){
         this.name = name;
         this.totem = totem;
@@ -82,6 +98,9 @@ public class Player implements Serializable {
     }
     public int getShamanCounter(){
         return shamanCounter;
+    }
+    public ClientProxy getProxy() {
+        return proxy;
     }
     //setter methods
     public void setHunterCounter(int count){
@@ -211,20 +230,30 @@ public class Player implements Serializable {
 
     /**
      *
-     * @param wantedIcon
+     * @param typeOfCharacter: Inventor's icon
      * wantedIcon is one of the 6 types of character.
      * the method goes through the entire list of the player's characters and counts how many characters of the
      * type wantedIcon are present
      * @return the number of wantedIcon-type characters
      */
-    /*public int countTribeCardsByIcon(Icons wantedIcon){
-        int count = 0;
-        for(Character c : tribeCard){
-            if(c.getCharacterType().toString().equals(wantedIcon.toString()))
-                count++;
+    public int countTribeCardsByIcon(String typeOfCharacter){
+        Map<String, Integer> cards = new HashMap<>();
+        typeOfCharacter = typeOfCharacter.toLowerCase();
+        Integer num = null;
+        synchronized (countersLock){
+            cards.put("hunter", hunterCounter);
+            cards.put("builder", builderCounter);
+            cards.put("painter", painterCounter);
+            cards.put("inventor", inventorCounter);
+            cards.put("shaman", shamanCounter);
+            cards.put("picker", pickerCounter);
         }
-        return count;
-    }*/
+        num = cards.get(typeOfCharacter);
+        if(num == null){
+            throw new IllegalArgumentException(typeOfCharacter + " is not a valid character");
+        }
+        return num;
+    }
 
     /**
      * The method through countTribeCardsByIcon counts how many characters of each type are in the player's

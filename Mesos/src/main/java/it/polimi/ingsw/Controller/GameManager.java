@@ -1,12 +1,13 @@
 package it.polimi.ingsw.Controller;
 
 import it.polimi.ingsw.Buildings.Building;
-import it.polimi.ingsw.Cards.Card;
 import it.polimi.ingsw.Cards.Events.Event;
 import it.polimi.ingsw.Game.Board;
 import it.polimi.ingsw.Game.Deck;
 import it.polimi.ingsw.Game.Player;
 import it.polimi.ingsw.Cards.Characters.Character;
+import it.polimi.ingsw.Game.Totem;
+import it.polimi.ingsw.Network.ClientProxy;
 
 import java.util.ArrayList;
 import java.util.Comparator;
@@ -16,7 +17,9 @@ import java.util.Comparator;
 public class GameManager {
     private int round;
     private int numPlayers;
+    public final Object numPlayersLock = new Object();
     private ArrayList<Player> players;
+    public static final Object playersLock = new Object();
     private Board board;
     private int currentEra;
     private Player currentPlayer;
@@ -85,7 +88,7 @@ public class GameManager {
             return;
         }
         events.sort(
-                Comparator //ordina i casi true e false , se è sostentamento è true quindi lo risolve dopo altrimenti vengono risolti prima
+                Comparator //ordina i casi true e false, se è sostentamento è true quindi lo risolve dopo altrimenti vengono risolti prima
                         .comparing((Event e) -> e.getEventName().equalsIgnoreCase("Sustenance"))
                         .thenComparing(Event :: getEventName)
                         .thenComparing(Event::getEra)
@@ -142,7 +145,7 @@ public class GameManager {
 
             if(offerCard.isOccupied()){
                 //sarebbe bello avere un metodo getOccupier per ottenere il nome del player
-                //che occupa l'offerCard
+                //che occupa offerCard
                 //qui dovremo anche avere il modo per mostrare al giocatore le carte che può sceglier
                 //
             }//DUBBIO : FORSE NON VA FATTO ANCORA IL GAME MANAGER PERCHè VA IMPLEMENTATO CON LA RETE
@@ -214,29 +217,42 @@ public class GameManager {
     public Board getBoard() {
         return board;
     }
-
     public void setBoard(Board board){
         this.board = board;
     }
-
     public int getRound() {
         return round;
     }
-
     public int getNumPlayers() {
         return numPlayers;
     }
-
     public ArrayList<Player> getPlayers() {
         return players;
     }
-
     public int getCurrentEra() {
         return currentEra;
     }
-
     public Player getCurrentPlayer() {
         return currentPlayer;
+    }
+
+    public void setNumPlayers(int numPlayers) {
+        this.numPlayers = numPlayers;
+    }
+    public String[] getAvailableTotems(){
+        synchronized (this.players){
+            String[] takenTotems = new String[players.size()];
+            for (int i = 0; i < players.size(); i++){
+                //in attesa di cambiare le enum a stringhe
+                takenTotems[i] = players.get(i).getTotem().toString();
+            }
+            //return Totems.removeAll(takenTotems);
+        }
+        return null;
+    }
+
+    public synchronized void  addPlayer(String Username, Totem totem, ClientProxy proxy){
+        this.players.add(new Player(Username, totem, 0,proxy));
     }
 }
 

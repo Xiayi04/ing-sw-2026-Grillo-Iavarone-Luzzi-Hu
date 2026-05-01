@@ -1,4 +1,4 @@
-package it.polimi.ingsw.Network.Socket;
+package it.polimi.ingsw.Network.Socket.Client;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -8,6 +8,8 @@ import java.net.Socket;
 
 public class ClientSocket implements Runnable{
     private Socket socket;
+    public static final Object inputLock = new Object();
+    public static final Object outputLock = new Object();
     public ClientSocket(Socket socket){
         this.socket = socket;
     }
@@ -27,9 +29,7 @@ public class ClientSocket implements Runnable{
             //implementazione heartbeat
 
             while(true){
-                /* ogni volta il server da un comando al client
-                *
-                */
+
 
             }
 

@@ -1,6 +1,8 @@
 package it.polimi.ingsw.Cards.Events;
 
 import it.polimi.ingsw.Buildings.Building;
+import it.polimi.ingsw.Buildings.BuildingVisitor.EventBuildings.Discount.DiscountVisitor;
+import it.polimi.ingsw.Buildings.BuildingVisitor.EventBuildings.Discount.DiscountVisitorInterface;
 import it.polimi.ingsw.Buildings.DiscountBuilding;
 import it.polimi.ingsw.Buildings.Events;
 import it.polimi.ingsw.Buildings.Icons;
@@ -10,6 +12,8 @@ import it.polimi.ingsw.Cards.Characters.CharacterType;
 import it.polimi.ingsw.Game.Player;
 
 import java.util.ArrayList;
+
+import static java.lang.Math.abs;
 
 public class SustenanceEvent extends Event {
     private final Integer SuEvePointsLossMultiplier;
@@ -35,34 +39,37 @@ public class SustenanceEvent extends Event {
      */
     @Override
     public void resolveEvent(ArrayList<Player> players) {
-        if(players.size()<2 || players == null)
+        if (players == null || players.size() < 2)
             throw new IllegalArgumentException("players ArrayList is not valid");
 
-        for(Player player : players){
+        for (Player player : players) {
             int numCards = player.getTribeCard().size();
-            int pickerDiscount = player.countTribeCardsByIcon(Icons.PICKER) * 3;
+            int pickerDiscount = player.countTribeCardsByIcon(Icons.PICKER.toString()) * 3;
             int buildingDiscount = 0;
+            DiscountVisitorInterface visitor = new DiscountVisitor();
 
-            ArrayList<Building> buildings = player.getBuilding();
-            for(Building b : buildings){
-
-                if(b.getName().equals("DiscountBuilding") && ((DiscountBuilding)b).getTypeEvents().equals(Events.SUSTENANCEEVENT)){
-                    buildingDiscount += ((DiscountBuilding)b).getFoodBonusForPlayer(player);
-                }
+            for (Building b : player.getBuilding()) {
+                buildingDiscount += b.acceptDiscountEvent(visitor, player, this);
             }
+            numCards = abs(numCards);
+            pickerDiscount = abs(pickerDiscount);
+            buildingDiscount = abs(buildingDiscount);
 
-            if(numCards>pickerDiscount+buildingDiscount){
-                int penalty = numCards-pickerDiscount+buildingDiscount;
+            if (numCards > pickerDiscount + buildingDiscount) {
+                int penalty = numCards - pickerDiscount - buildingDiscount;
 
-                if(penalty> player.getFood()){
-                    player.modifyFood(-player.getFood());
+                if (penalty > player.getFood()) {
                     penalty -= player.getFood();
-                    player.modifyPP(-penalty * SuEvePointsLossMultiplier );
-                }
-                else
+                    player.modifyFood(-player.getFood());
+
+                    player.modifyPP(-penalty * this.SuEvePointsLossMultiplier);
+                } else
                     player.modifyFood(-penalty);
             }
+            player.getProxy().notifyAll(player,this );
         }
     }
-
 }
+
+
+

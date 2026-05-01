@@ -13,7 +13,7 @@ public class BonusStarBuilding extends Building implements BuildingInterface {
         player.modifyStarCounter(3);
     }*/
 
-    public void accept(Visitor visitor, Player player){
+    public void acceptActivation(Visitor visitor, Player player){
         visitor.visit(this, player);
     }
 

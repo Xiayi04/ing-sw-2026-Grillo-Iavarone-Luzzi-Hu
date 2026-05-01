@@ -19,7 +19,7 @@ public class Board  implements Serializable {
     private final ArrayList<Building> lowerBuildingRow;
     private final ArrayList<OfferCard> path;
     private final ArrayList<Player> players; //relazione con Player (2..5)
-    private ArrayList<Card> deck;//*associazione 1:1 con Board*/
+    private  final ArrayList<Card> deck;//*associazione 1:1 con Board*/
 
     public Board() {
         this.era = 1;
@@ -29,6 +29,7 @@ public class Board  implements Serializable {
         this.lowerBuildingRow = new ArrayList<>();
         this.path = new ArrayList<>();
         this.players = new ArrayList<>();
+        this.deck = Deck.createDeck(5);
     }
 
     //metodi getter

@@ -14,12 +14,14 @@ public class SetBonus extends Building implements BuildingInterface {
    public void giveExtraFoodSet(Player player){
         if(fullSetCounter != player.countSet()) {
             fullSetCounter = player.countSet();
-            player.modifyFood(5);
+            for(;fullSetCounter < player.countSet();fullSetCounter++){
+                player.modifyFood(5);
+            }
         }
     }
 
     @Override
-    public void accept(Visitor visitor, Player player){
+    public void acceptActivation(Visitor visitor, Player player){
         visitor.visit(this, player);
     }
 
@@ -29,5 +31,18 @@ public class SetBonus extends Building implements BuildingInterface {
 
     public void setFullSetCounter(int fullSetCounter){
         this.fullSetCounter = fullSetCounter;
+    }
+
+    public void setUpdater(Player player){
+        synchronized (player.getTribeCard()){
+            while(player.countSet() != fullSetCounter){
+                try{
+                    player.getTribeCard().wait();
+                } catch (Exception e) {
+                    throw new RuntimeException(e);
+                }
+            }
+            giveExtraFoodSet(player);
+        }
     }
 }

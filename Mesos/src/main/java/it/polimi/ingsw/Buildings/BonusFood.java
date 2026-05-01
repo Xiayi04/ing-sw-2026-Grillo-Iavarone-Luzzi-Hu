@@ -17,7 +17,7 @@ public class BonusFood extends Building implements BuildingInterface {
     public void buildingActivation(Player player) {}*/
 
     @Override
-    public void accept(Visitor visitor, Player player){
+    public void acceptActivation(Visitor visitor, Player player){
         visitor.visit( this, player);
     }
 }

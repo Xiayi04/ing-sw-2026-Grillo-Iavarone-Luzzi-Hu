@@ -1,14 +1,13 @@
 package it.polimi.ingsw.Cards.Events;
 
 import it.polimi.ingsw.Buildings.Building;
-import it.polimi.ingsw.Buildings.DiscountBuilding;
-import it.polimi.ingsw.Buildings.Events;
+import it.polimi.ingsw.Buildings.BuildingVisitor.EventBuildings.Discount.DiscountVisitor;
+import it.polimi.ingsw.Buildings.BuildingVisitor.EventBuildings.Discount.DiscountVisitorInterface;
 import it.polimi.ingsw.Buildings.Icons;
 import it.polimi.ingsw.Cards.CardType;
-import it.polimi.ingsw.Cards.Characters.CharacterType;
 import it.polimi.ingsw.Game.Player;
-
 import java.util.ArrayList;
+import static java.lang.Math.abs;
 
 public class PaintingEvent extends Event {
     private final Integer PaEveNumMinPainters;
@@ -25,11 +24,9 @@ public class PaintingEvent extends Event {
     public Integer getPaEveNumMinPainters() {
         return PaEveNumMinPainters;
     }
-
     public Integer getPaEveMultiplierPP() {
         return PaEveMultiplierPP;
     }
-
     public Integer getPaEvePointsLoss() { //returns a negative integer
         return PaEvePointsLoss;
     }
@@ -44,34 +41,22 @@ public class PaintingEvent extends Event {
     /**
      * checks the number of painters for each player, if that number is greater or equal to NumMinPainters
      * gives the player a bonus in PP, else if the number is smaller gives them a penalty
-     * @param players
+     * @param players: array containing the game's players
      */
     @Override
     public void resolveEvent(ArrayList<Player> players){
-        boolean checkPaEveBuilding = false;
-
+        DiscountVisitorInterface v = new DiscountVisitor();
         for(Player player : players){
-            Integer numPainters = player.countTribeCardsByIcon(Icons.PAINTER);
+            Integer numPainters = player.countTribeCardsByIcon(Icons.PAINTER.toString());
 
             if(numPainters >= PaEveNumMinPainters){
-                player.modifyPP(numPainters*PaEveMultiplierPP);
+                player.modifyPP(abs(numPainters*PaEveMultiplierPP));
             }else{
-                player.modifyPP(PaEvePointsLoss);
+                player.modifyPP(-abs(PaEvePointsLoss));
             }
-
-            if (!checkPaEveBuilding){
-                ArrayList<Building> building = player.getBuilding();
-
-                for(Building b : building){
-                    if(b.getName().equals("DiscountBuilding") && ((DiscountBuilding)b).getTypeEvents().equals(Events.PAINTINGEVENT) ){
-                        int bonus = ((DiscountBuilding)b).getFoodBonusForPlayer(player);
-                        player.modifyFood(bonus);
-                        checkPaEveBuilding = true;
-                        break;
-                    }
-                }
+            for(Building b : player.getBuilding()){
+                b.acceptDiscountEvent(v,player,this);
             }
-
         }
     }
 }

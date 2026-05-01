@@ -1,0 +1,19 @@
+package it.polimi.ingsw.Buildings.BuildingVisitor.SpecialBuildings;
+
+import it.polimi.ingsw.Buildings.*;
+import it.polimi.ingsw.Buildings.SetBonus;
+import it.polimi.ingsw.Game.Player;
+
+public interface TurnOrderCardFoodBonus {
+    int visit(AddCard addCard, Player player);
+    int visit(BonusStarBuilding bonusStarBuilding, Player player);
+    int visit(BonusFood bonusFood, Player player);
+    int visit(BonusPPBuilding bonusPPBuilding, Player player);
+    int visit(DiscountBuilding discountBuilding, Player player);
+    int visit(DoubleBonusBuilding doubleBonusBuilding, Player player);
+    int visit(MultiplicationBuilding multiplicationBuilding, Player player);
+    int visit(MultiplierPPBuilderBuilding multiplierPPBuilderBuilding, Player player);
+    int visit(NoMalusBuilding noMalusBuilding, Player player);
+    int visit(SameIconBuilding sameIconBuilding, Player player);
+    int visit(SetBonus setBonus, Player player);
+}

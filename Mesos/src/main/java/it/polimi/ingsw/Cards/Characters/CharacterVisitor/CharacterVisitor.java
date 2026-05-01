@@ -11,4 +11,9 @@ public interface CharacterVisitor {
     void visit(Hunter hunter, Player player);
     void visit(Painter painter, Player player);
     String visit(Inventor inventor);
+    String visit(Builder builder);
+    String visit(Shaman shaman);
+    String visit(Picker picker);
+    String visit(Hunter hunter);
+    String visit(Painter painter);
 }

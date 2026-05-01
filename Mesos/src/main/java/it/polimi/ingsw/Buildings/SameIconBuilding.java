@@ -3,6 +3,7 @@ package it.polimi.ingsw.Buildings;
 import it.polimi.ingsw.Buildings.BuildingVisitor.BuildingInterface;
 import it.polimi.ingsw.Buildings.BuildingVisitor.Visitor;
 import it.polimi.ingsw.Cards.Characters.Character;
+import it.polimi.ingsw.Cards.Characters.CharacterVisitor.InventorIconCounter;
 import it.polimi.ingsw.Cards.Characters.Inventor;
 import it.polimi.ingsw.Game.Player;
 
@@ -26,18 +27,31 @@ public class SameIconBuilding extends Building implements BuildingInterface {
         checkPair.put("leather",0);
         checkPair.put("bread",0);
     }
-    public void giveFoodBonus(Player player, Inventor inventor){
-        Integer v = checkPair.get(inventor.getInventorIcon());
+    public void giveFoodBonus(Player player, String icon){
+        Integer v = checkPair.get(icon);
         v++;
         if(v==2) {
             player.modifyFood(3);
             v = -1;
         }
-        checkPair.put(inventor.getInventorIcon(), v);
+        checkPair.put(icon, v);
+    }
+
+    public void addInventorIconToMap(String icon){
+        if(icon.equals(" "))
+            return;
+        Integer v = checkPair.get(icon);
+
+        if(v==null)
+            throw new RuntimeException("The map is not initialized correctly");
+        v++;
+        if(v==2)
+            v=-1;
+        checkPair.put(icon, v);
     }
 
     @Override
-    public void accept(Visitor visitor, Player player){
+    public void acceptActivation(Visitor visitor, Player player){
         visitor.visit(this, player);
     }
 
@@ -45,4 +59,30 @@ public class SameIconBuilding extends Building implements BuildingInterface {
         return checkPair;
     }
 
+    public void mapUpdater(Player player){
+        Thread t = new Thread(()->{
+            int i = 0;
+            while(true){
+                synchronized (player.getTribeCard()){
+                    int prevSize =  player.getTribeCard().size();
+                    while (player.getTribeCard().size() == prevSize){
+                        try{
+                            player.getTribeCard().wait();
+                        } catch (Exception e) {
+                            throw new RuntimeException(e);
+                        }
+                    }
+                    for(;i<player.getTribeCard().size();i++){
+                        Character c = player.getTribeCard().get(i);
+                        String icon = c.isInventorAndGetIcon(new InventorIconCounter());
+                        if(icon.equals(" "))
+                            continue;
+                        giveFoodBonus(player, icon);
+                    }
+
+                }
+            }
+        });
+        t.start();
+    }
 }

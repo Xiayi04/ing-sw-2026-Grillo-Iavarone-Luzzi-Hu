@@ -3,7 +3,9 @@ package it.polimi.ingsw.Cards.Characters;
 import it.polimi.ingsw.Cards.Card;
 import it.polimi.ingsw.Cards.CardType;
 import it.polimi.ingsw.Cards.Characters.CharacterVisitor.CharacterInterface;
+import it.polimi.ingsw.Cards.Characters.CharacterVisitor.CharacterVisitor;
 import it.polimi.ingsw.Cards.Characters.CharacterVisitor.InventorInterface;
+import it.polimi.ingsw.Game.Player;
 
 public abstract class Character extends Card implements CharacterInterface, InventorInterface {
     private final int numPlayers;
@@ -30,4 +32,21 @@ public abstract class Character extends Card implements CharacterInterface, Inve
     }
 
 
+    /**
+     * @param visitor
+     * @param player
+     */
+    @Override
+    public void addCard(CharacterVisitor visitor, Player player) {
+
+    }
+
+    /**
+     * @param visitor
+     * @return
+     */
+    @Override
+    public String isInventorAndGetIcon(CharacterVisitor visitor) {
+        return "";
+    }
 }
