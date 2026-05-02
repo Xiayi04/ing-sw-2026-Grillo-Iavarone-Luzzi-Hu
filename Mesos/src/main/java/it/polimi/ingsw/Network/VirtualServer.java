@@ -1,0 +1,22 @@
+package it.polimi.ingsw.Network;
+
+import it.polimi.ingsw.Cards.Events.Event;
+import it.polimi.ingsw.Game.Player;
+import it.polimi.ingsw.Game.Totem;
+
+import java.rmi.Remote;
+import java.rmi.RemoteException;
+// Il Client lo usa per mandare comandi verso il Server
+public interface VirtualServer extends Remote {
+    void login(String username, Totem chosenColor, ClientProxy client) throws RemoteException;
+
+    void moveTotem(String username, int pathIndex) throws RemoteException;
+
+    void pickCard(String username, boolean isUpper, boolean isBuilding, int index) throws RemoteException;
+
+    void setNumPlayers(int numPlayer) throws RemoteException;
+
+    void leave(ClientProxy client) throws RemoteException;  //per comunicare ad altri client che x si è disconnesso
+
+
+}
