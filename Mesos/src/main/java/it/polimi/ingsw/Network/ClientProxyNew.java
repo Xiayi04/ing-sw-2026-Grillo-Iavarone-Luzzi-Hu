@@ -41,5 +41,5 @@ public interface ClientProxyNew extends Remote {
     void showMessage(String message) throws RemoteException;
 
     void showEndGame(int finalScore) throws RemoteException;
-
+//ciao
 }

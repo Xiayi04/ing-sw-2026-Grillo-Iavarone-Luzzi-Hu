@@ -18,5 +18,7 @@ public interface VirtualServer extends Remote {
 
     void leave(ClientProxy client) throws RemoteException;  //per comunicare ad altri client che x si è disconnesso
 
+    void requestGameState(String username) throws RemoteException;
+
 
 }
