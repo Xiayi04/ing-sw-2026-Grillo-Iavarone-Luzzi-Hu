@@ -1,9 +1,9 @@
 package it.polimi.ingsw.Cards.Events;
 
 import it.polimi.ingsw.Buildings.Building;
-import it.polimi.ingsw.Buildings.BuildingVisitor.EventBuildings.Shamanic.ShamanicVisitor;
+import it.polimi.ingsw.Buildings.BuildingVisitor.EventBuildings.Shamanic.ShamanicDoubleBonusVisitor;
+import it.polimi.ingsw.Buildings.BuildingVisitor.EventBuildings.Shamanic.ShamanicNoMalusVisitor;
 import it.polimi.ingsw.Buildings.BuildingVisitor.EventBuildings.Shamanic.ShamanicVisitorInterface;
-import it.polimi.ingsw.Cards.CardType;
 import it.polimi.ingsw.Game.Player;
 
 import java.util.ArrayList;
@@ -16,7 +16,7 @@ public class ShamanicEvent extends Event {
     private Integer MaxStars ;
     private Integer MinStars ;
     //CONSTRUCTOR
-    public ShamanicEvent(int era, CardType cardType, EventName eventName, Integer penPoints, Integer prizePoints) {
+    public ShamanicEvent(int era, String cardType, String eventName, Integer penPoints, Integer prizePoints) {
         super(era, cardType, eventName);
         this.ShEvePenPoints = penPoints;
         this.ShEvePrizePoints = prizePoints;
@@ -79,14 +79,14 @@ public class ShamanicEvent extends Event {
         for(Player p : players){
 
             if(p.getStarCounter()==MaxStars){
-                ShamanicVisitorInterface v = new ShamanicVisitor();
+                ShamanicVisitorInterface v = new ShamanicDoubleBonusVisitor();
 
                 for(Building b : p.getBuilding()){
                     b.acceptShamanicEvent(v,p,this);
                 }
                 p.modifyPP(abs(this.getShEvePrizePoints()));
             } else if (p.getStarCounter()==MinStars) {
-                ShamanicVisitorInterface v = new ShamanicVisitor();
+                ShamanicVisitorInterface v = new ShamanicNoMalusVisitor();
 
                 for(Building b : p.getBuilding()){
                     b.acceptShamanicEvent(v,p,this);

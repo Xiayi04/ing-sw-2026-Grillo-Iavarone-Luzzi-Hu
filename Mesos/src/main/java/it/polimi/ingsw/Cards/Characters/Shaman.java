@@ -10,7 +10,7 @@ import java.util.ArrayList;
 public class Shaman extends Character implements CharacterInterface {
     private final Integer shamanStars;
 
-    public Shaman(int era, CardType cardType, int numPlayers, CharacterType characterType, Integer shamanStars) {
+    public Shaman(int era, String cardType, int numPlayers, String characterType, Integer shamanStars) {
         super(era, cardType, numPlayers, characterType);
         this.shamanStars = shamanStars;
     }

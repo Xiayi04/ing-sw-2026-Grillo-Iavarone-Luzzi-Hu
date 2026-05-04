@@ -11,7 +11,7 @@ public class Builder extends Character implements CharacterInterface {
     private final Integer builderDiscount;
     private final Integer PP;
 
-    public Builder(int era, CardType cardType, int numPlayers, CharacterType characterType, Integer discount, Integer PP) {
+    public Builder(int era, String cardType, int numPlayers, String characterType, Integer discount, Integer PP) {
         super(era, cardType, numPlayers, characterType);
 
         this.builderDiscount = discount;

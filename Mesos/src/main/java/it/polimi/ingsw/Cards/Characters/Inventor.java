@@ -11,7 +11,7 @@ public class Inventor extends Character implements CharacterInterface, InventorI
     private final String inventorIcon;
 
 
-    public Inventor(int era, CardType cardType, int numPlayers, CharacterType characterType, String icon) {
+    public Inventor(int era, String cardType, int numPlayers, String characterType, String icon) {
         super(era, cardType, numPlayers, characterType);
 
         this.inventorIcon = icon;

@@ -8,9 +8,9 @@ import java.io.Serializable;
 public abstract class Card implements Serializable {
     private static final long serialVersionUID = 1L;
     private final int era;
-    private final CardType cardType;
+    private final String cardType;
 
-    public Card(int era, CardType cardType) {
+    public Card(int era, String cardType) {
         this.era = era;
         this.cardType = cardType;
     }
@@ -18,10 +18,10 @@ public abstract class Card implements Serializable {
     public int getEra() {
         return era;
     }
-    public String getCardType() { return cardType.toString(); }
+    public String getCardType() { return cardType; }
 
     public void printCard(){
         System.out.println("era:"+era);
-        System.out.println("tipo di carta:"+cardType.toString());
+        System.out.println("tipo di carta:"+cardType);
     }
 }

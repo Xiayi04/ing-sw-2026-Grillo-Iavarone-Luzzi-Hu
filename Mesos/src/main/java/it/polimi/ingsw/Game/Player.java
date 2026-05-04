@@ -10,6 +10,7 @@ import it.polimi.ingsw.Cards.Characters.CharacterVisitor.CharacterVisitor;
 import it.polimi.ingsw.Cards.Characters.CharacterVisitor.InventorIconCounter;
 import it.polimi.ingsw.Cards.Characters.Inventor;
 import it.polimi.ingsw.Network.ClientProxy;
+import it.polimi.ingsw.Network.VirtualClient;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -33,11 +34,11 @@ public class Player implements Serializable {
     private int painterCounter;
     private int inventorCounter;
     private int shamanCounter;
-    private ClientProxy proxy;
+    private final VirtualClient virtualClient;
     public static Object countersLock = new Object();
 
-    //metodo costruttore
-    public Player(String name, Totem totem, int food, ClientProxy proxy) {
+    //Constructor
+    public Player(String name, Totem totem, int food, VirtualClient virtualClient){
         this.name = name;
         this.totem = totem;
         this.food = food;
@@ -45,18 +46,7 @@ public class Player implements Serializable {
         this.tribeCard = new ArrayList<Character>();
         this.buildings = new ArrayList<Building>();
         this.starCounter = 0;
-        this.proxy = proxy;
-    }
-
-    public Player(String name, Totem totem, int food){
-        this.name = name;
-        this.totem = totem;
-        this.food = food;
-        this.prestigePoints = 0;
-        this.tribeCard = new ArrayList<Character>();
-        this.buildings = new ArrayList<Building>();
-        this.starCounter = 0;
-
+        this.virtualClient = virtualClient;
     }
 
     //metodi getter
@@ -99,8 +89,8 @@ public class Player implements Serializable {
     public int getShamanCounter(){
         return shamanCounter;
     }
-    public ClientProxy getProxy() {
-        return proxy;
+    public VirtualClient getVirtualClient() {
+        return virtualClient;
     }
     //setter methods
     public void setHunterCounter(int count){

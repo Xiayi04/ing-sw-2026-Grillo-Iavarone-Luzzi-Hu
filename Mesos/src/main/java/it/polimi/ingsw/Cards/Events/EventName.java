@@ -6,14 +6,5 @@ public enum EventName {
     PAINTING_EVENT,
     SUSTENANCE_EVENT;
 
-    public static boolean containsEventName(EventName eventName) {
-        boolean c = false;
-        for (EventName event: EventName.values()) {
-            if (eventName.toString().equals(event.toString())) {
-                c = true;
-                break;
-            }
-        }
-        return c;
-    }
+
 }

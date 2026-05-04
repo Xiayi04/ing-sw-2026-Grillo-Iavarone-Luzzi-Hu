@@ -10,7 +10,7 @@ import java.util.function.Function;
 public class CommandFactoryClientSide {
     private static Map<String, Function<String[], ClientCommand>> commands = new HashMap<>();
     public CommandFactoryClientSide() {
-        commands.put("numplayers", payload -> new NumPlayersCommand( Arrays.toString(payload)));
+        commands.put("setnumplayers", payload -> new NumPlayersCommand( Arrays.toString(payload)));
         commands.put("login", payload -> new ClientLoginCommand(payload));
     }
 
@@ -19,7 +19,6 @@ public class CommandFactoryClientSide {
     String[] split = command.split("#");
     String[] payload = split[1].split(",");
 
-    ClientCommand cmd = commands.get(split[0]).apply(payload);
-    return cmd;
+        return commands.get(split[0]).apply(payload);
     }
 }

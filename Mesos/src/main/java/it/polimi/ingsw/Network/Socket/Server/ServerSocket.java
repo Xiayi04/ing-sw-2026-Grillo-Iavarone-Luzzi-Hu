@@ -1,21 +1,25 @@
 package it.polimi.ingsw.Network.Socket.Server;
 
 import it.polimi.ingsw.Controller.GameManager;
-import it.polimi.ingsw.Network.Server;
+import it.polimi.ingsw.Controller.ServerController;
+import it.polimi.ingsw.Controller.Lobby;
+import it.polimi.ingsw.Network.VirtualClient;
 
-import java.io.IOException;
-import java.io.PrintWriter;
 import java.net.Socket;
 
 public class ServerSocket implements Runnable {
     private final Integer port;
+    private final ServerController serverController;
     private final GameManager gameManager;
+    private final Lobby lobby;
     public static Object readerLock = new Object();
     public static Object writerLock = new Object();
 
-    public ServerSocket(Integer port, GameManager gameManager) {
+    public ServerSocket(Integer port, ServerController serverController, Lobby lobby) {
         this.port = port;
-        this.gameManager= gameManager;
+        this.serverController = serverController;
+        this.gameManager= serverController.getGM();
+        this.lobby = lobby;
     }
 
 
@@ -28,33 +32,9 @@ public class ServerSocket implements Runnable {
 
             while (true) {
                 Socket socket = serverSocket.accept();
-                ClientSocketProxy proxy = new ClientSocketProxy(socket, gameManager);
-                boolean accepted = false;
-
-                synchronized (Server.class) {
-                    if(Server.numConnections.get() >= gameManager.getNumPlayers()) {
-                        accepted = false;
-                    }else {
-                        accepted = true;
-                        Server.numConnections.incrementAndGet();
-                        Server.clientProxies.add(proxy);
-                        Server.lock.notify();
-                        proxy.askForLogin(gameManager.getAvailableTotems());
-                    }
-                }
-
-                if (!accepted) {
-
-                    try {
-                        PrintWriter out = new PrintWriter(socket.getOutputStream(), true);
-                        out.println("Server already full");
-                        socket.close();
-                        continue;
-                    } catch (IOException e) {
-                        throw new RuntimeException(e);
-                    }
-                }
-
+                VirtualClient proxy = new ClientSocketProxy(socket, gameManager);
+                lobby.addClient(proxy);
+                new Thread(new ClientHandler(socket, gameManager, proxy, serverController)).start();
             }
 
         }catch (Exception e){

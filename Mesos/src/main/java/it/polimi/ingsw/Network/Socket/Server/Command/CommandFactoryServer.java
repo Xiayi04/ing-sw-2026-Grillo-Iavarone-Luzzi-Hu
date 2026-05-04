@@ -9,7 +9,7 @@ public class CommandFactoryServer {
     private static Map<String, Function<String[], ServerCommand>> commands = new HashMap<>();
     public CommandFactoryServer() {
         commands.put("login", payload ->new LoginCommand(payload[0],payload[1]));
-        commands.put("numplayers", payload -> new SetNumPlayersCommand(payload));
+        commands.put("setnumplayers", payload -> new SetNumPlayersCommand(payload));
     }
 
 

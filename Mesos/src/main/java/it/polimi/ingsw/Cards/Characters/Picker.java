@@ -8,7 +8,7 @@ import it.polimi.ingsw.Game.Player;
 public class Picker extends Character implements CharacterInterface {
     private final int discount = -3;
 
-    public Picker(int era, CardType cardType, int numPlayers, CharacterType characterType) {
+    public Picker(int era, String cardType, int numPlayers, String characterType) {
         super(era, cardType, numPlayers, characterType);
     }
 

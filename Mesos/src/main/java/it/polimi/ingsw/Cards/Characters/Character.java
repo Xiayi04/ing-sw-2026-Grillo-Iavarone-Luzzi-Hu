@@ -9,10 +9,10 @@ import it.polimi.ingsw.Game.Player;
 
 public abstract class Character extends Card implements CharacterInterface, InventorInterface {
     private final int numPlayers;
-    private final CharacterType characterType;
+    private final String characterType;
 
-    public Character(int era, CardType cardType, int numPlayers, CharacterType characterType) {
-        super( era, cardType);
+    public Character(int era, String cardType, int numPlayers, String characterType) {
+        super( era, "CHARACTER");
         this.numPlayers = numPlayers;
         this.characterType = characterType;
     }
@@ -21,14 +21,14 @@ public abstract class Character extends Card implements CharacterInterface, Inve
         return numPlayers;
     }
 
-    public CharacterType getCharacterType() {
+    public String getCharacterType() {
         return this.characterType;
     }
 
     public void printCard(){
         super.printCard();
         System.out.println("numero giocatori:"+numPlayers);
-        System.out.println(("tipo di personaggio:"+characterType.toString()));
+        System.out.println(("tipo di personaggio:"+characterType));
     }
 
 

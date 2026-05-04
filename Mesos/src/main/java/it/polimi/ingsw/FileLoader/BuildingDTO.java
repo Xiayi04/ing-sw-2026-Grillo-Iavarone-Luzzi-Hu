@@ -7,7 +7,7 @@ public class BuildingDTO {
     int era;
     int price;
     int pp;
-    BuildingNames buildingName;
+    String buildingName;
     Integer foodBonus;
     Integer ppBonus;
     Icons typeIcons;

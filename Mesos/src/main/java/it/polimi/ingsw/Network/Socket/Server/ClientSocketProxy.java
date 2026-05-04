@@ -1,13 +1,21 @@
 package it.polimi.ingsw.Network.Socket.Server;
+import it.polimi.ingsw.Buildings.Building;
+import it.polimi.ingsw.Cards.Card;
 import it.polimi.ingsw.Cards.Events.Event;
 import it.polimi.ingsw.Controller.GameManager;
+import it.polimi.ingsw.Game.Board;
 import it.polimi.ingsw.Game.Player;
+import it.polimi.ingsw.Game.Totem;
 import it.polimi.ingsw.Network.ClientProxy;
+import it.polimi.ingsw.Network.VirtualClient;
 
 import java.io.*;
 import java.net.Socket;
+import java.rmi.RemoteException;
+import java.util.ArrayList;
+import java.util.List;
 
-public class ClientSocketProxy implements ClientProxy {
+public class ClientSocketProxy implements VirtualClient {
     private final Socket socket;
     private final PrintWriter out;
     //private final BufferedReader in;
@@ -22,41 +30,64 @@ public class ClientSocketProxy implements ClientProxy {
         this.gm = gameManager;
     }
 
-
-    /**
-     *
-     */
     @Override
-    public void askForLogin(String[] totems) {
-        String payload = String.join(",", totems);
-        synchronized (GameManager.playersLock){
-            int size = gm.getPlayers().size();
-            synchronized (outputLock){
-                out.println("LOGIN"+separator+payload);
-            }
-            while(true){
-
-            }
-        }
+    public void updateBoardtatus(Board board) throws RemoteException {
 
     }
 
-    /**
-     *
-     */
     @Override
-    public void askForNumPlayers() {
-//Da inserire metodi da TUI
+    public void showCurrentPlayer(String playerName) throws RemoteException {
 
+    }
+
+    @Override
+    public void showError(String message) throws RemoteException {
+
+    }
+
+    @Override
+    public void updateOtherPlayerStatus(String playerName, List<Card> tribeCards, List<Building> buildings) throws RemoteException {
+
+    }
+
+    @Override
+    public void notifyAllPlayers(Player player, Event event) throws RemoteException {
+
+    }
+
+    @Override
+    public void showMessage(String message) throws RemoteException {
+
+    }
+
+    @Override
+    public void showEndGame(int finalScore) throws RemoteException {
+
+    }
+
+    @Override
+    public void showStartGame(String myName, ArrayList<Player> players, Totem myTotem, int myFood) throws RemoteException {
+
+    }
+
+    @Override
+    public void askNumPlayers() throws RemoteException {
         synchronized (outputLock) {
-            out.println("NUMPLAYERS"+separator);
+            out.println("SETNUMPLAYERS"+separator);
         }
     }
 
     @Override
-    public void askForRowBuildingIndex() throws IOException {
-        synchronized (outputLock) {
-            out.println("PICK"+separator);
+    public void showStartGame() throws RemoteException {
+
+    }
+
+    @Override
+    public void askForLogin() throws RemoteException {
+
+        //trovare totem disponibili
+        synchronized (outputLock){
+            out.println("LOGIN"+separator+payload);
         }
     }
 
@@ -67,15 +98,20 @@ public class ClientSocketProxy implements ClientProxy {
         }
     }
 
-    /**
-     * @param player
-     * @param event
-     */
     @Override
-    public void notifyAll(Player player, Event event) {
-        synchronized (outputLock){
-
-        }
+    public void askForTotemMove() throws RemoteException {
 
     }
+
+    @Override
+    public void showMyTurn() throws RemoteException {
+
+    }
+
+    @Override
+    public void askForRowBuildingIndex() throws RemoteException, IOException {
+
+    }
+
+
 }

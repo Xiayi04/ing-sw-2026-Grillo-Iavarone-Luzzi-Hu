@@ -6,7 +6,6 @@ import it.polimi.ingsw.Buildings.BuildingVisitor.EndGame.EndGameVisitorInterface
 import it.polimi.ingsw.Buildings.BuildingVisitor.EventBuildings.Shamanic.ShamanicVisitorInterface;
 import it.polimi.ingsw.Buildings.BuildingVisitor.Visitor;
 import it.polimi.ingsw.Cards.Card;
-import it.polimi.ingsw.Cards.CardType;
 import it.polimi.ingsw.Cards.Events.HuntingEvent;
 import it.polimi.ingsw.Cards.Events.PaintingEvent;
 import it.polimi.ingsw.Cards.Events.ShamanicEvent;
@@ -19,7 +18,7 @@ public abstract class Building extends Card implements BuildingInterface {
     private final String name;
 /*costruttore */
     public Building(int era, int price, int pp, String name){
-        super(era, CardType.BUILDING);
+        super(era, "BUILDING");
         this.price = price;
         this.pp = pp;
         this.name = name;

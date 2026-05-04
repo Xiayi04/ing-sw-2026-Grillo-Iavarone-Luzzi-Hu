@@ -10,7 +10,7 @@ import javax.xml.stream.events.Characters;
 public class Hunter extends Character implements CharacterInterface {
     private final boolean symbol;
 
-    public Hunter(int era, CardType cardType, int numPlayers,CharacterType characterType, boolean symbol) {
+    public Hunter(int era, String cardType, int numPlayers,String characterType, boolean symbol) {
         super(era, cardType, numPlayers, characterType);
 
         this.symbol = symbol;

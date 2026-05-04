@@ -14,7 +14,7 @@ public class PaintingEvent extends Event {
     private final Integer PaEveMultiplierPP;
     private final Integer PaEvePointsLoss;
     //CONSTRUCTOR
-    public PaintingEvent(int era, CardType cardType, EventName eventName, Integer minPainters, Integer multiplierPP, Integer pointsLoss) {
+    public PaintingEvent(int era, String cardType, String eventName, Integer minPainters, Integer multiplierPP, Integer pointsLoss) {
         super(era, cardType ,eventName);
         this.PaEveNumMinPainters = minPainters;
         this.PaEveMultiplierPP = multiplierPP;

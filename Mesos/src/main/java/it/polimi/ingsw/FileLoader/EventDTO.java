@@ -1,11 +1,9 @@
 package it.polimi.ingsw.FileLoader;
 
-import it.polimi.ingsw.Cards.Events.EventName;
 
-import static it.polimi.ingsw.Cards.Events.EventName.containsEventName;
 
 public class EventDTO extends CardDTO{
-    private EventName eventName;
+    private String eventName;
     private Integer ShEvePenPoints;
     private Integer ShEvePrizePoints;
     private Integer HuEvePP;
@@ -16,9 +14,7 @@ public class EventDTO extends CardDTO{
     private Boolean FinalEvent;
 
     public String getEventName() {
-        if(eventName != null && containsEventName(eventName))
-            return eventName.toString();
-        throw new IllegalArgumentException("EventName is not valid");
+            return eventName;
     }
 
     public Integer getShEvePenPoints() {

@@ -18,7 +18,7 @@ import static java.lang.Math.abs;
 public class SustenanceEvent extends Event {
     private final Integer SuEvePointsLossMultiplier;
     //CONSTRUCTOR
-    public SustenanceEvent(int era, CardType cardType, EventName eventName, Integer pointsLossMultiplier) {
+    public SustenanceEvent(int era, String cardType, String eventName, Integer pointsLossMultiplier) {
         super(era, cardType, eventName);
         this.SuEvePointsLossMultiplier = pointsLossMultiplier;
     }
@@ -44,7 +44,7 @@ public class SustenanceEvent extends Event {
 
         for (Player player : players) {
             int numCards = player.getTribeCard().size();
-            int pickerDiscount = player.countTribeCardsByIcon(Icons.PICKER.toString()) * 3;
+            int pickerDiscount = player.countTribeCardsByIcon("PICKER") * 3;
             int buildingDiscount = 0;
             DiscountVisitorInterface visitor = new DiscountVisitor();
 

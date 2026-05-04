@@ -14,7 +14,7 @@ import static java.lang.Math.abs;
 public class HuntingEvent extends Event {
     private final Integer HuEvePP;
     //CONSTRUCTOR
-    public HuntingEvent(int era, CardType cardType, EventName eventName, Integer HuEvePP) {
+    public HuntingEvent(int era, String cardType, String eventName, Integer HuEvePP) {
         super(era, cardType, eventName);
         this.HuEvePP = HuEvePP;
     }

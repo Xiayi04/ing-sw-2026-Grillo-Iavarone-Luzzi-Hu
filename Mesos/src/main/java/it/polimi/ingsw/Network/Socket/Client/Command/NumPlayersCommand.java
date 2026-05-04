@@ -30,6 +30,6 @@ public class NumPlayersCommand implements ClientCommand {
         }
 
         PrintWriter out = new PrintWriter(socket.getOutputStream(),true);
-        out.println("NUMPLAYERS#"+ numPlayers);
+        out.println("SETNUMPLAYERS#"+ numPlayers);
     }
 }

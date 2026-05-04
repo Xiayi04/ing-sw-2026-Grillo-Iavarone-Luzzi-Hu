@@ -29,7 +29,7 @@ public interface VirtualClient extends Remote {
 
     void showMyTurn() throws RemoteException;
 
-    void askForRowBuildingIndex() throws RemoteException;
+    void askForRowBuildingIndex() throws RemoteException, IOException;
 
     void updateBoardtatus(Board board) throws RemoteException;
 

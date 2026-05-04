@@ -26,7 +26,7 @@ public class ClientMain {
 
         System.out.print("Please choose the preferred connection protocol (0:RMI/1:Socket) :");
         int connection = sc.nextInt();
-        while(!(connection != 1 || connection != 0) ){
+        while(!(connection == 1 || connection == 0) ){
             System.out.println("Invalid input");
             System.out.print("Please choose the connection protocol (0:RMI/1:Socket) :");
             connection = sc.nextInt();

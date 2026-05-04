@@ -18,43 +18,43 @@ public class ConcreteFactoryEra implements Factory{
     }
 
     public Character createInventor(int era, int numPlayers, String typeIcon){
-        return new Inventor(era, CardType.CHARACTER, numPlayers, CharacterType.INVENTOR, typeIcon);
+        return new Inventor(era, "CHARACTER", numPlayers, "INVENTOR", typeIcon);
     }
 
     public Character createHunter(int era, int numPlayers, boolean symbol){
-        return new Hunter(era, CardType.CHARACTER, numPlayers, CharacterType.HUNTER, symbol);
+        return new Hunter(era,"CHARACTER", numPlayers, "HUNTER", symbol);
     }
 
     public Character createBuilder(int era, int numPlayers, int discount, int pp){
-        return new Builder(era, CardType.CHARACTER, numPlayers, CharacterType.BUILDER, discount, pp);
+        return new Builder(era,"CHARACTER", numPlayers, "BUILDER", discount, pp);
     }
 
     public Character createPainter(int era, int numPlayers){
-        return new Painter(era, CardType.CHARACTER, numPlayers, CharacterType.PAINTER);
+        return new Painter(era,"CHARACTER", numPlayers, "PAINTER");
     }
 
     public Character createShaman(int era, int numPlayers, int shamanStars){
-        return new Shaman(era, CardType.CHARACTER, numPlayers, CharacterType.SHAMAN, shamanStars);
+        return new Shaman(era,"CHARACTER", numPlayers, "SHAMAN", shamanStars);
     }
 
     public Character createPicker(int era, int numPlayers){
-        return new Picker(era, CardType.CHARACTER, numPlayers, CharacterType.PICKER);
+        return new Picker(era, "CHARACTER", numPlayers, "PICKER");
     }
 
     public Event createShamanicEvent(int era, int penPoints, int prizePoints){
-        return new ShamanicEvent(era, CardType.EVENT, EventName.SHAMANIC_EVENT, penPoints, prizePoints);
+        return new ShamanicEvent(era,"EVENT", "SHAMANIC_EVENT", penPoints, prizePoints);
     }
 
     public Event createHuntingEvent(int era, int HuEvePP){
-        return new HuntingEvent(era, CardType.EVENT, EventName.HUNTING_EVENT, HuEvePP);
+        return new HuntingEvent(era,"EVENT","HUNTING_EVENT", HuEvePP);
     }
 
     public Event createPaintingEvent(int era, int minPainters, int multiplierPP, int pointsLoss){
-        return new PaintingEvent(era, CardType.EVENT, EventName.PAINTING_EVENT, minPainters, multiplierPP, pointsLoss);
+        return new PaintingEvent(era,"EVENT", "PAINTING_EVENT", minPainters, multiplierPP, pointsLoss);
     }
 
     public Event createSustenanceEvent(int era,  int pointsLossMultiplier){
-        return new SustenanceEvent(era, CardType.EVENT, EventName.SUSTENANCE_EVENT, pointsLossMultiplier);
+        return new SustenanceEvent(era,"EVENT", "PAINTING_EVENT", pointsLossMultiplier);
     }
 
     /**

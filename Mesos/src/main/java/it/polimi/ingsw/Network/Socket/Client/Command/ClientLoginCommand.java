@@ -10,8 +10,8 @@ import java.util.Arrays;
 import java.util.Scanner;
 
 public class ClientLoginCommand implements ClientCommand{
-    private String username = ClientMain.getUsername();
-    private String[] totems;
+    private  final String username = ClientMain.getUsername();
+    private  final String[] totems;
     private String chosenOne;
 
     public ClientLoginCommand(String[] totems) {
@@ -19,8 +19,8 @@ public class ClientLoginCommand implements ClientCommand{
     }
 
     /**
-     * @param socket
-     * @throws IOException
+     * @param socket:
+     * @throws IOException:
      */
     @Override
     public void execute(Socket socket) throws IOException {

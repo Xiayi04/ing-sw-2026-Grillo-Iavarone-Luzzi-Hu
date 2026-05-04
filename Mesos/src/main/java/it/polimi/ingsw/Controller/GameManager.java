@@ -4,17 +4,17 @@ import it.polimi.ingsw.Buildings.Building;
 import it.polimi.ingsw.Cards.Events.Event;
 import it.polimi.ingsw.Game.*;
 import it.polimi.ingsw.Cards.Characters.Character;
+import it.polimi.ingsw.Network.VirtualClient;
 
-import java.util.ArrayList;
-import java.util.Comparator;
-import java.util.List;
-
+import java.util.*;
 /*La classe GameManager coordina il flusso di gioco, i turni e i cambi di era.*/
 
 public class GameManager {
     private int round;
     private int numPlayers;
+    public final static Object numPlayersLock = new Object();
     private ArrayList<Player> players;
+    public static final Object playersLock = new Object();
     private Board board;
     private int currentEra;
     private Player currentPlayer;
@@ -392,5 +392,23 @@ public class GameManager {
     public Player getCurrentPlayer() {
         return this.currentPlayer;
     }
+
+    public String[] getAvailableTotems(){
+        ArrayList<Totem> takenTotems = new ArrayList<>();
+        Totem[] allTotems = new Totem[]{Totem.RED, Totem.BLACK, Totem.BLUE, Totem.ORANGE, Totem.YELLOW};
+        ArrayList<Totem> totems = (ArrayList<Totem>) Arrays.asList(allTotems);
+        synchronized (playersLock) {
+            for (Player player : players) {
+                takenTotems.add(player.getTotem());
+            }
+        }
+        totems.removeAll(takenTotems);
+        String[] totemNames = new String[takenTotems.size()];
+        for(int i = 0; i < takenTotems.size(); i++) {
+            totemNames[i] = totems.get(i).toString();
+        }
+        return totemNames;
+    }
+
 }
 

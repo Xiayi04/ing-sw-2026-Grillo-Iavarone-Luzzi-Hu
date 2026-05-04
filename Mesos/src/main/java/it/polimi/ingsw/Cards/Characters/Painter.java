@@ -5,7 +5,7 @@ import it.polimi.ingsw.Cards.Characters.CharacterVisitor.CharacterVisitor;
 import it.polimi.ingsw.Game.Player;
 
 public class Painter extends Character implements CharacterInterface {
-    public Painter(int era, CardType cardType, int numPlayers, CharacterType characterType){
+    public Painter(int era, String cardType, int numPlayers, String characterType){
         super( era, cardType, numPlayers, characterType);
     }
 

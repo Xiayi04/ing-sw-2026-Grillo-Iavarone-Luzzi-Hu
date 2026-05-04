@@ -8,7 +8,7 @@ public class MultiplicationBuilding extends EndGameBuilding {
     private final int multiplier;
 
     //costruttore
-    public MultiplicationBuilding(int era, int price, int pp, Icons typeIcons, int multiplier){
+    public MultiplicationBuilding(int era, int price, int pp, String typeIcons, int multiplier){
         super (era, price, pp, "MultiplicationBuilding", typeIcons);
         this.multiplier = multiplier;
     }
@@ -20,10 +20,10 @@ public class MultiplicationBuilding extends EndGameBuilding {
 
     @Override
     public int countPP(Player player){
-        if(getTypeIcons() == Icons.SET){
+        if(getTypeIcons().equals("SET")){
             return player.countSet()*multiplier;
         }else{
-            return player.countTribeCardsByIcon(getTypeIcons().toString())*multiplier;
+            return player.countTribeCardsByIcon(getTypeIcons())*multiplier;
         }
     }
 

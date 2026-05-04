@@ -3,9 +3,8 @@ import it.polimi.ingsw.Buildings.Building;
 import it.polimi.ingsw.Buildings.Events;
 import it.polimi.ingsw.Buildings.Icons;
 import it.polimi.ingsw.Cards.Characters.Character;
-import it.polimi.ingsw.Cards.Characters.InventorIcon;
 import it.polimi.ingsw.Cards.Events.Event;
-import it.polimi.ingsw.Cards.Events.EventName;
+
 
 public interface Factory {
     public abstract Character createInventor(int era, int numPlayers, String typeIcon);
