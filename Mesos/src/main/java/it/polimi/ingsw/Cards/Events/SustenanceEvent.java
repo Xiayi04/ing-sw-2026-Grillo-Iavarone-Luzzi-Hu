@@ -66,7 +66,7 @@ public class SustenanceEvent extends Event {
                 } else
                     player.modifyFood(-penalty);
             }
-            player.getProxy().notifyAll(player,this );
+            player.getVirtualClient().notifyAll();
         }
     }
 }

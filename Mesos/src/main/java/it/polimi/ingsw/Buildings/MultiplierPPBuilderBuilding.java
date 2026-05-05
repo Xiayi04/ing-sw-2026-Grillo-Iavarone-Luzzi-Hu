@@ -8,7 +8,7 @@ import it.polimi.ingsw.Game.Player;
 public class MultiplierPPBuilderBuilding extends EndGameBuilding implements BuildingInterface {
 
     public MultiplierPPBuilderBuilding(int era, int price, int pp, Icons typeIcon) {
-        super(era, price, pp,"MultiplierPPBuilderBuilding", Icons.BUILDER);
+        super(era, price, pp,"MultiplierPPBuilderBuilding", "BUILDER");
     }
     @Override
     public int countPP(Player player){

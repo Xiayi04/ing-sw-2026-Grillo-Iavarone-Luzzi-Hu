@@ -37,6 +37,8 @@ public class ServerRMI extends UnicastRemoteObject implements VirtualServer,Runn
         }
 
     }
+
+    @Override
     public void connect(VirtualView client) throws RemoteException {
         Lobby.addClient(new RMIVirtualClient(client));
 

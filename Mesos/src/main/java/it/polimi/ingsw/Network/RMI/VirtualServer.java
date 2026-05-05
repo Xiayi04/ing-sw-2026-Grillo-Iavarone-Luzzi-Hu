@@ -21,4 +21,5 @@ public interface VirtualServer extends Remote {
 
     void setTotemPosition(int index) throws RemoteException;
 
+    void connect();
 }
