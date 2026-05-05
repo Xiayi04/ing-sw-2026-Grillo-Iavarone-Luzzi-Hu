@@ -4,7 +4,6 @@ import it.polimi.ingsw.Buildings.Building;
 import it.polimi.ingsw.Cards.Events.Event;
 import it.polimi.ingsw.Game.*;
 import it.polimi.ingsw.Cards.Characters.Character;
-import it.polimi.ingsw.Network.VirtualClient;
 
 import java.util.*;
 /*La classe GameManager coordina il flusso di gioco, i turni e i cambi di era.*/
@@ -39,10 +38,10 @@ public class GameManager {
     }
 
     /**
-     * crea una nuova lista players ordinataa da sinistra a destra
-     * in base alla posizione dei gioctori sul tabellone
+     * The new player order method is used to manage the turns of the next round,
+     * it creates a temporary list with the order of the players
      */
-    private void reorderPlayersByPosition() {
+    private void newPlayerOrder() {
         ArrayList<Player> tmpOrder = new ArrayList<>();
         ArrayList<OfferCard> path = board.getPath();
         for( OfferCard c : path ) {
@@ -65,9 +64,8 @@ public class GameManager {
         if (!currentEvents.isEmpty()) {
             resolveEvents(currentEvents);
         }
-        reorderPlayersByPosition(); //calcolo nuovo ordine dei giocatori
         board.shiftUpToDown();
-        //board.refillCards(board.getDeck(), players);
+        board.refillCards(new Deck(),players);
         positionPhase();
     }
 
@@ -82,7 +80,7 @@ public class GameManager {
         ArrayList<Event> resolveEvents = board.checkEvent();
         resolveEvents(resolveEvents);
         board.shiftUpToDown();
-       // board.refillCards(board.getDeck(), players);
+        board.refillCards(new Deck(),players);
 
         if(board.getDeck().isEmpty() && round == 10)
             endGame();
@@ -158,7 +156,8 @@ public class GameManager {
     }
 
     /**
-     * Lista giocatori che devono posizionarsi
+     * The method positionPhase represents the list of players
+     * who must position themselves
      */
 
     public void positionPhase(){
@@ -168,17 +167,19 @@ public class GameManager {
     }
 
     /**
-     * metodo per chiamare il primo giocatore della lista per
-     * scegliere la posizone sul tracciato
+     * The method execute Next Position calls the first player on the list
+     * and asks him to take his place
      */
+    //serve a gestire il flusso dei turni in modo sequenziale,
+    // assicurandosi che un giocatore alla volta scelga dove mettere il proprio totem sul tabellone.
     public void executeNextPosition(){
         if (positionQueue.isEmpty()) {
             pickingPhase(this.players);
             return;
         }
         this.currentPlayer = positionQueue.get(0);
-        this.currentPlayer.getProxy().askToPlaceTotem();
-        System.out.println(" Giocatore "+ currentPlayer.getName() + "poszioma il tuo totem");
+        this.currentPlayer.getVirtualClient().askForTotemMove();
+        System.out.println("Player  "+ currentPlayer.getName() + "place your totem");
     }
 
     /**
@@ -193,37 +194,26 @@ public class GameManager {
             }
             OfferCard chosenCard = board.getPath().get(pathIndex);
             if(chosenCard.isOccupied()){
-                System.out.println("La posizione scelta è occupata, scegline un'altra");
+                System.out.println("The position you have chosen is occupied, please choose another one.");
                 executeNextPosition();
                 return;
             }
             Player p = positionQueue.get(0);
             chosenCard.setOccupiedBy(p);
-            System.out.println(p.getName() + "si è posizionato sulla tessera " + pathIndex);
+            System.out.println(p.getName() + " he positioned himself on the card " + pathIndex);
+            newPlayerOrder();
+            notifyAll();
             positionQueue.remove(0);
             executeNextPosition();
         }
     }
 
-    /**Contenitore in cui ci sono i nome dei giocatori che dicono
-     * al server chi deve giocare e cosa deve fare
+    /**
+     * The method PendingPhase è un contenitore in cui ci sono i nomi dei giocatori, contiene solo dei dati e nessuna logica
      * @param player
      * @param isUpper
      */
-    public record PendingPick(Player player, boolean isUpper) {} // contenitore per contenere solo i dati
-    //invece di fare questo  public class PendingPick {
-    //    private final Player player;
-    //    private final boolean isUpper;
-    //
-    //    public PendingPick(Player player, boolean isUpper) {
-    //        this.player = player;
-    //        this.isUpper = isUpper;
-    //    }
-    //
-    //    public Player getPlayer() { return player; }
-    //    public boolean isUpper() { return isUpper; }
-    //    // + i metodi equals, hashCode e toString... un sacco di codice!
-    //} si usa record
+    public record PendingPick(Player player, boolean isUpper) {} // contenitore per contenere solo i dati invece di creare una classe dove ha solo metodi get
 
     /** The execute Next Pick method advances the turns in the draw phase.
      * If the list is empty, this means that all players have completed the draw phase
@@ -234,13 +224,13 @@ public class GameManager {
      */
 
      private void executeNextPick(){
-        if (pickingQueue.isEmpty()) {
+        if (pickingQueue.isEmpty()) { // se è vuota vuol dire che tutti i giocatori si sono posizionati
             nextRound();
             return;
         }
         PendingPick next = pickingQueue.get(0);
         this.currentPlayer = next.player();
-        this.currentPlayer.getProxy().asktToPickCard(next.isUpper());
+        this.currentPlayer.getVirtualClient().askToPickCard(next.isUpper()); // Invia un segnale attraverso la rete verso il client del giocatore specifico.
         System.out.println("Tocca a " + currentPlayer.getName());
     }
 
@@ -263,15 +253,12 @@ public class GameManager {
                 for(int i = 0; i < offerCard.getUpArrow(); i++){
                     pickingQueue.add(new PendingPick(offerCard.getOccupiedBy(), true));
                 }
-            }
-        }
-        for (OfferCard offerCard : path ) {
-            if(offerCard.isOccupied()){
                 for(int i = 0; i < offerCard.getDownArrow(); i++){
                     pickingQueue.add(new PendingPick(offerCard.getOccupiedBy(), false));
                 }
             }
         }
+
         executeNextPick();
     }
 

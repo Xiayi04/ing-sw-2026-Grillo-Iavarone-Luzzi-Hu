@@ -1,6 +1,7 @@
 package it.polimi.ingsw.Network.RMI;
 
 import it.polimi.ingsw.Controller.GameManager;
+import it.polimi.ingsw.Controller.Lobby;
 import it.polimi.ingsw.Game.Board;
 import it.polimi.ingsw.Game.OfferCard;
 import it.polimi.ingsw.Game.Player;
@@ -34,6 +35,10 @@ public class ServerRMI extends UnicastRemoteObject implements VirtualServer,Runn
             System.err.println("Server configuration error:  " + e.getMessage());
             e.printStackTrace();
         }
+
+    }
+    public void connect(VirtualView client) throws RemoteException {
+        Lobby.addClient(new RMIVirtualClient(client));
 
     }
 
