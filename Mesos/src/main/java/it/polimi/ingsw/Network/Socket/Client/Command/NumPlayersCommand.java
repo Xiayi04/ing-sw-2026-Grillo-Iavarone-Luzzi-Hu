@@ -1,6 +1,7 @@
 package it.polimi.ingsw.Network.Socket.Client.Command;
 
-import it.polimi.ingsw.Network.Socket.Client.ClientSocket;
+import it.polimi.ingsw.Network.ClientController;
+import it.polimi.ingsw.Network.Socket.Client.SocketClient;
 
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -16,10 +17,10 @@ public class NumPlayersCommand implements ClientCommand {
      *
      */
     @Override
-    public void execute(Socket socket) throws IOException {
+    public void execute(Socket socket, ClientController clientController) throws IOException {
         Scanner sc = new Scanner(System.in);
         int numPlayers;
-        synchronized (ClientSocket.inputLock){
+        synchronized (SocketClient.inputLock){
             System.out.print("Enter number of players that will join the game, from 2 to 5: ");
             numPlayers = sc.nextInt();
             while(numPlayers < 2 || numPlayers > 5) {

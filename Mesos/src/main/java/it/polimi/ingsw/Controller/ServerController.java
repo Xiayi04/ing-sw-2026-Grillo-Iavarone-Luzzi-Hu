@@ -2,7 +2,7 @@ package it.polimi.ingsw.Controller;
 
 import it.polimi.ingsw.Game.Player;
 import it.polimi.ingsw.Game.Totem;
-import it.polimi.ingsw.Network.VirtualClient;
+import it.polimi.ingsw.Network.VirtualClientInterface;
 
 public class ServerController {
     private final GameManager gameManager;
@@ -21,19 +21,24 @@ public class ServerController {
                 int numPlayers;
                 synchronized (GameManager.numPlayersLock) {
                     numPlayers = gameManager.getNumPlayers();
-                    if(numPlayers<2)
+                    if(numPlayers<2) {
+                        GameManager.numPlayersLock.notifyAll();
                         continue;
+                    }
+                    GameManager.numPlayersLock.notifyAll();
                 }
                 GameManager.numPlayersLock.notifyAll();
+
 
                 synchronized (gameManager.getPlayers()) {
 
                     if(gameManager.getNumPlayers()==numPlayers){
-                        gameManager.gameInitializing();
+                        //gameManager.gameInitializing();
+                        gameManager.getPlayers().notifyAll();
                         break;
                     }
+                    gameManager.getPlayers().notifyAll();
                 }
-                gameManager.getPlayers().notifyAll();
             }
         }).start();
     }
@@ -42,17 +47,19 @@ public class ServerController {
         return gameManager;
     }
 
-    public synchronized void addPlayerToGame(String username, String totem, VirtualClient virtualClient) {
+    public synchronized void addPlayerToGame(String username, String totem, VirtualClientInterface virtualClient) {
         synchronized (Lobby.getClients()){
             if(!Lobby.getClients().contains(virtualClient)){
                 throw new RuntimeException("Error: virtualClient not present in lobby!");
             }
         }
+        totem = totem.toUpperCase();
         Player p = new Player(username,Totem.valueOf(totem),0 ,virtualClient);
         synchronized (GameManager.playersLock){
             gameManager.getPlayers().add(p);
+            GameManager.playersLock.notifyAll();
         }
-        GameManager.playersLock.notifyAll();
+
         notifier.addedNewPlayerBroadcast(p);
     }
 
@@ -62,19 +69,25 @@ public class ServerController {
         }
     }
     //dubbio
-    public void refuseConnection(VirtualClient virtualClient){
+    public void refuseConnection(VirtualClientInterface virtualClient){
 
     }
 
     public void setNumPlayers(int numPlayers){
         synchronized (GameManager.numPlayersLock){
-            gameManager.setNumPlayers() = numPlayers;
+            gameManager.setNumPlayers(numPlayers);
+            Lobby.isNumPlayersSetted = true;
+            GameManager.numPlayersLock.notifyAll();
         }
-        GameManager.numPlayersLock.notifyAll();
+
+            Lobby.isNumPlayersSetted = true;
+
+
+
     }
 
-    public void totemMove(VirtualClient virtualClient){
-        synchronized (){}
+    public void totemMove(VirtualClientInterface virtualClient){
+        //synchronized (){}
     }
 
 }

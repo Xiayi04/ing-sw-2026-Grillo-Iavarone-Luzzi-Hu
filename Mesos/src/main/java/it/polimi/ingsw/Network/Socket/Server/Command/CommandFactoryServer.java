@@ -14,10 +14,14 @@ public class CommandFactoryServer {
 
 
 
-    public static ServerCommand getCommand(String command) {
+    public ServerCommand getCommand(String command) {
         command = command.toLowerCase();
-        String[] split = command.split(":");
-        String[] payload = split[1].split(",");
+        String[] split = command.split("#");
+
+        String[] payload = null;
+        if(split.length>1){
+            payload = split[1].split(",");
+        }
 
         ServerCommand cmd = commands.get(split[0]).apply(payload);
         return  cmd;

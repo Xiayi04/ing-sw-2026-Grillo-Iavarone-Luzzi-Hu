@@ -7,6 +7,6 @@ public class AddCardVisitor extends SpecialBuildingsAbstractVisitor {
     @Override
     public void visit(AddCard addCard, Player player) {
         //Nuova richiesta di una carta
-        player.getProxy().askForBuildingIndex(addCard.addArrow());
+       // player.getVirtualClient().askForBuildingIndex(addCard.addArrow());
     }
 }

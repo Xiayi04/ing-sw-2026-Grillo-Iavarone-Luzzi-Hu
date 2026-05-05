@@ -4,10 +4,10 @@ import it.polimi.ingsw.Cards.Card;
 import it.polimi.ingsw.Cards.Events.Event;
 import it.polimi.ingsw.Controller.GameManager;
 import it.polimi.ingsw.Game.Board;
+import it.polimi.ingsw.Game.OfferCard;
 import it.polimi.ingsw.Game.Player;
 import it.polimi.ingsw.Game.Totem;
-import it.polimi.ingsw.Network.ClientProxy;
-import it.polimi.ingsw.Network.VirtualClient;
+import it.polimi.ingsw.Network.VirtualClientInterface;
 
 import java.io.*;
 import java.net.Socket;
@@ -15,7 +15,7 @@ import java.rmi.RemoteException;
 import java.util.ArrayList;
 import java.util.List;
 
-public class ClientSocketProxy implements VirtualClient {
+public class ClientSocketProxy implements VirtualClientInterface {
     private final Socket socket;
     private final PrintWriter out;
     //private final BufferedReader in;
@@ -30,10 +30,6 @@ public class ClientSocketProxy implements VirtualClient {
         this.gm = gameManager;
     }
 
-    @Override
-    public void updateBoardtatus(Board board) throws RemoteException {
-
-    }
 
     @Override
     public void showCurrentPlayer(String playerName) throws RemoteException {
@@ -61,12 +57,23 @@ public class ClientSocketProxy implements VirtualClient {
     }
 
     @Override
-    public void showEndGame(int finalScore) throws RemoteException {
+    public void showEndGame() throws RemoteException {
+
+    }
+
+
+    @Override
+    public void showStartGame(String myName, ArrayList<Player> players, Totem myTotem, int myFood) throws RemoteException {
 
     }
 
     @Override
-    public void showStartGame(String myName, ArrayList<Player> players, Totem myTotem, int myFood) throws RemoteException {
+    public void askForTotemMove(ArrayList<OfferCard> path) throws RemoteException {
+
+    }
+
+    @Override
+    public void askForLogin(List<Totem> availableTotems) throws RemoteException {
 
     }
 
@@ -77,31 +84,21 @@ public class ClientSocketProxy implements VirtualClient {
         }
     }
 
-    @Override
-    public void showStartGame() throws RemoteException {
 
-    }
 
     @Override
-    public void askForLogin() throws RemoteException {
+    public void askForLogin() {
 
         //trovare totem disponibili
         synchronized (outputLock){
-            out.println("LOGIN"+separator+payload);
+            out.println("LOGIN"+separator);
         }
     }
 
-    @Override
-    public void askForBuildingIndex(int row){
-        synchronized (outputLock) {
-            out.println("PICK"+separator+row);
-        }
-    }
 
-    @Override
-    public void askForTotemMove() throws RemoteException {
 
-    }
+
+
 
     @Override
     public void showMyTurn() throws RemoteException {
@@ -109,7 +106,7 @@ public class ClientSocketProxy implements VirtualClient {
     }
 
     @Override
-    public void askForRowBuildingIndex() throws RemoteException, IOException {
+    public void updateBoardStatus(Board board) throws RemoteException {
 
     }
 

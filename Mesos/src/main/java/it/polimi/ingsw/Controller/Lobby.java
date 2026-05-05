@@ -1,15 +1,17 @@
 package it.polimi.ingsw.Controller;
 
-import it.polimi.ingsw.Network.VirtualClient;
+import it.polimi.ingsw.Network.VirtualClientInterface;
 
 import java.rmi.RemoteException;
 import java.util.ArrayList;
 
+import static java.lang.Thread.sleep;
+
 public class Lobby {
-    private static final ArrayList<VirtualClient> clients = new ArrayList<VirtualClient>();
+    private static final ArrayList<VirtualClientInterface> clients = new ArrayList<VirtualClientInterface>();
     private final ServerController serverController;
     private final GameManager gameManager;
-    private boolean isNumPlayersSetted = false;
+    public static Boolean isNumPlayersSetted = false;
 
     public  Lobby(ServerController serverController){
         this.serverController = serverController;
@@ -24,42 +26,44 @@ public class Lobby {
      * there is a while that waits for modify in GameManager.numPlayers
      *
      */
-    public synchronized void addClient(VirtualClient client) throws RemoteException {
+    public synchronized void addClient(VirtualClientInterface client) throws RemoteException {
 
         synchronized (clients){
             //This should let the first player jump this 'if statement' even though the first condition is false
-            if(clients.size() >= gameManager.getNumPlayers() || !isNumPlayersSetted ){
-                client.refuseConnection();
+            if(clients.size() >= gameManager.getNumPlayers() && isNumPlayersSetted ){
+                //client.refuseConnection();
                 return;
             }
             clients.add(client);
 
             if(clients.size()==1){
 
-                synchronized (GameManager.numPlayersLock){
-                    int precNumPlayers = gameManager.getNumPlayers();
+                synchronized (isNumPlayersSetted){
+
                     client.askNumPlayers();
 
-                    while(precNumPlayers == gameManager.getNumPlayers()){
+                    while(!isNumPlayersSetted){
 
                         try {
-                            GameManager.numPlayersLock.wait();
+                            sleep(50);
                         } catch (InterruptedException e) {
                             throw new RuntimeException(e);
                         }
                     }
-                    GameManager.numPlayersLock.notifyAll();
-                    this.isNumPlayersSetted = true;
+                    System.out.println("ciao1");
+
 
                 }
 
-                return;
+
             }
-            //notify other players that a new player joined the game
+            System.out.println("ciao2");
+            //String totems = String.join(",", gameManager.getAvailableTotems());
+            client.askForLogin();
         }
     }
 
-    public static ArrayList<VirtualClient> getClients(){
+    public static ArrayList<VirtualClientInterface> getClients(){
         return clients;
     }
 }

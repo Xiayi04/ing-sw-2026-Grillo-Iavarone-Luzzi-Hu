@@ -3,7 +3,7 @@ package it.polimi.ingsw.Network.Socket.Server;
 import it.polimi.ingsw.Controller.GameManager;
 import it.polimi.ingsw.Controller.ServerController;
 import it.polimi.ingsw.Controller.Lobby;
-import it.polimi.ingsw.Network.VirtualClient;
+import it.polimi.ingsw.Network.VirtualClientInterface;
 
 import java.net.Socket;
 
@@ -32,9 +32,11 @@ public class ServerSocket implements Runnable {
 
             while (true) {
                 Socket socket = serverSocket.accept();
-                VirtualClient proxy = new ClientSocketProxy(socket, gameManager);
+                System.out.println("Accepted connection from " + socket.getInetAddress());
+                VirtualClientInterface proxy = new ClientSocketProxy(socket, gameManager);
+                new ClientHandler(socket, gameManager, proxy, serverController);
                 lobby.addClient(proxy);
-                new Thread(new ClientHandler(socket, gameManager, proxy, serverController)).start();
+
             }
 
         }catch (Exception e){

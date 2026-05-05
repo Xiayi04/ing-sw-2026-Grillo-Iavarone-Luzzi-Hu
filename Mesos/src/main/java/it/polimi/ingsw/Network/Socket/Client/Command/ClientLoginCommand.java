@@ -1,12 +1,12 @@
 package it.polimi.ingsw.Network.Socket.Client.Command;
 
+import it.polimi.ingsw.Network.ClientController;
 import it.polimi.ingsw.Network.ClientMain;
-import it.polimi.ingsw.Network.Socket.Client.ClientSocket;
+import it.polimi.ingsw.Network.Socket.Client.SocketClient;
 
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.net.Socket;
-import java.util.Arrays;
 import java.util.Scanner;
 
 public class ClientLoginCommand implements ClientCommand{
@@ -19,33 +19,23 @@ public class ClientLoginCommand implements ClientCommand{
     }
 
     /**
-     * @param socket:
+     * @param socket           :
+     * @param clientController
      * @throws IOException:
      */
     @Override
-    public void execute(Socket socket) throws IOException {
-        String totems = String.join(",", this.totems);
+    public void execute(Socket socket, ClientController clientController) throws IOException {
+        String totems;
+        if(this.totems!=null){
+            totems = String.join(",", this.totems);
+        }
         Scanner input = new Scanner(System.in);
 
-        synchronized (ClientSocket.inputLock){
-            System.out.print("Please choose a totem's color among the available ones:"+ totems);
-
-            chosenOne = input.nextLine();
-            boolean flag = Arrays.stream(this.totems)
-                                    .anyMatch(totem -> totem.equals(chosenOne.toLowerCase()));
-            while(!flag) {
-                System.out.print("");
-                chosenOne = input.nextLine();
-                flag = Arrays.stream(this.totems)
-                                    .anyMatch(totem -> totem.equals(chosenOne.toLowerCase()));
-            }
-
+        synchronized (SocketClient.inputLock){
+            clientController.askForLogin();
+            out.println("LOGIN#"+username);
+            SocketClient.inputLock.notifyAll();
         }
-        ClientSocket.inputLock.notifyAll();
-        synchronized (ClientSocket.outputLock){
-            PrintWriter out = new PrintWriter(socket.getOutputStream(), true);
-            out.println("LOGIN#"+this.username+chosenOne);
-        }
-        ClientSocket.outputLock.notifyAll();
+
     }
 }

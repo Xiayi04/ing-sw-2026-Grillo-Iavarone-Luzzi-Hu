@@ -23,6 +23,8 @@ public interface VirtualClientInterface extends Remote {
 
     void askForTotemMove(ArrayList<OfferCard> path) throws RemoteException;
 
+    void askForLogin();
+
     void showMyTurn() throws RemoteException;
 
     void updateBoardStatus(Board board) throws RemoteException;

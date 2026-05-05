@@ -1,16 +1,12 @@
 package it.polimi.ingsw.Game;
 import it.polimi.ingsw.Buildings.Building;
-import it.polimi.ingsw.Buildings.BuildingVisitor.Visitor;
-import it.polimi.ingsw.Buildings.Icons;
 import it.polimi.ingsw.Buildings.MultiplicationBuilding;
 import it.polimi.ingsw.Buildings.MultiplierPPBuilderBuilding;
 import it.polimi.ingsw.Cards.Characters.Builder;
 import it.polimi.ingsw.Cards.Characters.Character;
 import it.polimi.ingsw.Cards.Characters.CharacterVisitor.CharacterVisitor;
 import it.polimi.ingsw.Cards.Characters.CharacterVisitor.InventorIconCounter;
-import it.polimi.ingsw.Cards.Characters.Inventor;
-import it.polimi.ingsw.Network.ClientProxy;
-import it.polimi.ingsw.Network.VirtualClient;
+import it.polimi.ingsw.Network.VirtualClientInterface;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -34,11 +30,11 @@ public class Player implements Serializable {
     private int painterCounter;
     private int inventorCounter;
     private int shamanCounter;
-    private final VirtualClient virtualClient;
+    private final VirtualClientInterface virtualClient;
     public static Object countersLock = new Object();
 
     //Constructor
-    public Player(String name, Totem totem, int food, VirtualClient virtualClient){
+    public Player(String name, Totem totem, int food, VirtualClientInterface virtualClient){
         this.name = name;
         this.totem = totem;
         this.food = food;
@@ -89,7 +85,7 @@ public class Player implements Serializable {
     public int getShamanCounter(){
         return shamanCounter;
     }
-    public VirtualClient getVirtualClient() {
+    public VirtualClientInterface getVirtualClient() {
         return virtualClient;
     }
     //setter methods

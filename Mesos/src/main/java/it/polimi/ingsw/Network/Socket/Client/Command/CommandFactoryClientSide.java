@@ -14,10 +14,14 @@ public class CommandFactoryClientSide {
         commands.put("login", payload -> new ClientLoginCommand(payload));
     }
 
-    public static ClientCommand getCommand(String command) {
-    command = command.toLowerCase();
-    String[] split = command.split("#");
-    String[] payload = split[1].split(",");
+    public synchronized ClientCommand getCommand(String command) {
+        command = command.toLowerCase();
+        String[] split = command.split("#");
+
+        String[] payload = null;
+        if (split.length > 1) {
+            payload = split[1].split(",");
+        }
 
         return commands.get(split[0]).apply(payload);
     }
