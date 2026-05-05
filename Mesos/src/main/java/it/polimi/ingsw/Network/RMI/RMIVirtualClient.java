@@ -16,28 +16,28 @@ import java.util.List;
 
 public class RMIVirtualClient extends UnicastRemoteObject implements VirtualClientInterface {
 //riceve le richieste dal server
-    private final ClientController clientController;
+    private final ClientRMI client;
 
-    public RMIVirtualClient(ClientController clientController) throws RemoteException{
-        this.clientController = clientController;
+    public RMIVirtualClient(ClientRMI client) throws RemoteException{
+        this.client = client;
     }
 
     @Override
     public void askForLogin(List<Totem> availableTotems)throws RemoteException{
-        clientController.askForLogin(availableTotems);
+        client.askForLogin(availableTotems);
     }
     @Override
     void showStartGame(String myName, ArrayList<Player> players, Totem myTotem, int myFood) throws RemoteException{
-        clientController.showStartGame(myName, players, myTotem, myFood);
+        client.showStartGame(myName, players, myTotem, myFood);
     }
     @Override
     void askNumPlayers() throws RemoteException{
-        clientController.askNumPlayers();
+        client.askNumPlayers();
     }
 
     @Override
     void showStartGame() throws RemoteException{
-        clientController.showStartGame();
+        client.showStartGame();
     }
 
     /*@Override
@@ -52,27 +52,27 @@ public class RMIVirtualClient extends UnicastRemoteObject implements VirtualClie
 
     @Override
     void showMyTurn() throws RemoteException{
-        clientController.showMyTurn();
+        client.showMyTurn();
     }
 
     @Override
     void askForRowBuildingIndex() throws RemoteException{
-        clientController.askForRowBuildingIndex();
+        client.askForRowBuildingIndex();
     }
 
     @Override
     void updateBoardStatus(Board board) throws RemoteException{
-        clientController.updateBoardStatus();
+        client.updateBoardStatus();
     }
 
     @Override
     void showCurrentPlayer(String playerName) throws RemoteException{
-        clientController.showCurrentPlayer(playerName);
+        client.showCurrentPlayer(playerName);
     }
 
     @Override
     void showError(String message) throws RemoteException{
-        clientController.showError(message);
+        client.showError(message);
     }
 
    /* @Override
@@ -87,12 +87,12 @@ public class RMIVirtualClient extends UnicastRemoteObject implements VirtualClie
 
     @Override
     void showMessage(String message) throws RemoteException{
-        clientController.(message);
+        client.(message);
     }
 
     @Override
     void showEndGame(int finalScore) throws RemoteException{
-        clientController.showEndGame(finalScore);
+        client.showEndGame(finalScore);
     }
 
 
