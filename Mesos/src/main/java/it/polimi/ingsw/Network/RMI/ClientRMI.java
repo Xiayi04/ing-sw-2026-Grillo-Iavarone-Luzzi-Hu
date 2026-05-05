@@ -1,108 +1,73 @@
 package it.polimi.ingsw.Network.RMI;
 
-import it.polimi.ingsw.Buildings.Building;
-import it.polimi.ingsw.Cards.Card;
-import it.polimi.ingsw.Game.Board;
-import it.polimi.ingsw.Game.Player;
 import it.polimi.ingsw.Game.Totem;
+import it.polimi.ingsw.Network.ClientInterface;
+import it.polimi.ingsw.Network.VirtualClientInterface;
 
 import java.rmi.RemoteException;
-import java.rmi.registry.LocateRegistry;
-import java.rmi.registry.Registry;
-import java.rmi.server.UnicastRemoteObject;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Scanner;
 
-public class ClientRMI extends UnicastRemoteObject implements VirtualView {
+public class ClientRMI implements ClientInterface {
 
     private final VirtualServer server;
-    private String username;
+    private final VirtualClientInterface virtualClient;
 
-    public ClientRMI(VirtualServer server) throws RemoteException {
-        super();
+    public ClientRMI(VirtualServer server, VirtualClientInterface virtualClient) {
         this.server = server;
+        this.virtualClient = virtualClient;
     }
 
-    private void runCli() throws RemoteException {
-        Scanner scan = new Scanner(System.in);
-
-        System.out.print("Username: ");
-        username = scan.nextLine();
-
-        System.out.print("Totem: ");
-        String totemInput = scan.nextLine();
-
-        Totem chosenTotem = Totem.valueOf(totemInput.toUpperCase());
-
-        server.login(username, chosenTotem, this);
-
-        System.out.println("Client connected to the server RMI");
-
-
-    }
-
-    @Override
-    public void showStartGame(String name, ArrayList<Player> players, Totem totem, int food)
-            throws RemoteException {
-        System.out.println("Game started");
-    }
-
-    @Override
-    public void showMyTurn() throws RemoteException {
-        System.out.println("It's your turn");
-    }
-
-    @Override
-    public void updateBoardStatus(Board board) throws RemoteException {
-        System.out.println("Board updated:");
-        System.out.println(board);
-    }
-
-    @Override
-    public void showCurrentPlayer(String playerName) throws RemoteException {
-        System.out.println("Turn of: " + playerName);
-    }
-
-    @Override
-    public void showError(String message) throws RemoteException {
-        System.out.println("ERROR: " + message);
-    }
-
-    @Override
-    public void updateOtherPlayerStatus(String playerName, List<Card> tribeCards, List<Building> buildings)
-            throws RemoteException {
-
-        System.out.println("Player update: " + playerName);
-
-        System.out.println("Tribe cards of " + playerName + ":");
-        for (Card card : tribeCards) {
-            System.out.println("  " + card);
-        }
-
-        System.out.println("Buildings of " + playerName + ":");
-        for (Building building : buildings) {
-            System.out.println("  " + building);
-        }
-    }
-
-    @Override
-    public void showEndGame(int finalScore) throws RemoteException {
-        System.out.println("Game ended. Final score: " + finalScore);
-    }
-
-    public static void main(String[] args) {
+    public void login(String username, Totem chosenTotem) {
         try {
-            Registry registry = LocateRegistry.getRegistry("localhost", 1234);
-
-            VirtualServer server = (VirtualServer) registry.lookup("---MESOS_SERVER---");
-
-            ClientRMI client = new ClientRMI(server);
-
-            client.runCli();
-
-        } catch (Exception e) {
-            e.printStackTrace();
+            server.login(username, chosenTotem, virtualClient);
+        } catch (RemoteException e) {
+            throw new RuntimeException(e);
         }
     }
+
+    public void setNumPlayers(int numPlayers) {
+        try {
+            server.setNumPlayers(numPlayers);
+        } catch (RemoteException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+
+    public void moveTotem(String username, int pathIndex){
+        try {
+            server.moveTotem(username, pathIndex);
+        } catch (RemoteException e) {
+            throw new RuntimeException(e);
+        }
+
+    }
+
+    public void pickCard(String username, boolean isUpper, boolean isBuilding, int index){
+        try {
+            server.pickCard(username, isUpper,isBuilding,index);
+        } catch (RemoteException e) {
+            throw new RuntimeException(e);
+        }
+
+    }
+
+
+    public void setTotemPosition(int chosenPosition){
+        try {
+            server.setTotemPosition(chosenPosition);
+        } catch (RemoteException e) {
+            throw new RuntimeException(e);
+        }
+
+    }
+
+    public void leave(VirtualClientInterface client){
+        try {
+            server.leave(client);
+        } catch (RemoteException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+
 }
