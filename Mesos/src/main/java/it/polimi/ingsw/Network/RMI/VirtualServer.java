@@ -15,11 +15,9 @@ public interface VirtualServer extends Remote {
 
     void setNumPlayers(int numPlayer) throws RemoteException;
 
-    void leave(VirtualClientInterface client) throws RemoteException;  //per comunicare ad altri client che x si è disconnesso
-
-    void requestGameState(String username) throws RemoteException;
+   // void leave(VirtualClientInterface client) throws RemoteException;  //per comunicare ad altri client che x si è disconnesso
 
     void setTotemPosition(int index) throws RemoteException;
 
-    void connect();
+    void connect(RemoteClientInterface client);
 }
