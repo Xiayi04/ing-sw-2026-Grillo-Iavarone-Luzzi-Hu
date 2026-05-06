@@ -7,6 +7,7 @@ import it.polimi.ingsw.Game.Board;
 import it.polimi.ingsw.Game.OfferCard;
 import it.polimi.ingsw.Game.Player;
 import it.polimi.ingsw.Game.Totem;
+import it.polimi.ingsw.Network.VirtualClientInterface;
 
 import java.rmi.RemoteException;
 import java.rmi.registry.LocateRegistry;
@@ -50,7 +51,7 @@ public class ServerRMI extends UnicastRemoteObject implements VirtualServer,Runn
 
     //Corpo dei metodi che stanno nel virtualServer
     @Override
-    public void login(String username, Totem chosenColor, RMIVirtualClient client) throws RemoteException {
+    public void login(String username, Totem chosenColor, RemoteClientInterface  client ) throws RemoteException {
         serverController.addPlayerToGame(username, chosenColor.toString(), client);
     }
 
