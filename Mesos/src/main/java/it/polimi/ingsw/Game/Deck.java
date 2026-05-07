@@ -1,5 +1,6 @@
 package it.polimi.ingsw.Game;
 
+import it.polimi.ingsw.Buildings.Building;
 import it.polimi.ingsw.Cards.Card;
 import it.polimi.ingsw.Cards.Characters.Character;
 import it.polimi.ingsw.Cards.Events.Event;
@@ -71,6 +72,40 @@ public class Deck implements Serializable {
         deck.addAll(deckEra4);
 
         return deck;
+    }
+
+    public ArrayList<Building> buildingPerPlayers(int numPlayers){
+
+        BuildingFactory buildingFactory = new BuildingFactory();
+        ArrayList<Building> buildings = buildingFactory.createBuildingList();
+        ArrayList<Building> correctBuilding = new ArrayList<>();
+        ArrayList<Building> buildingEra1 = new ArrayList<>();
+        ArrayList<Building> buildingEra2 = new ArrayList<>();
+        ArrayList<Building> buildingEra3 = new ArrayList<>();
+        buildingEra1.addAll(buildings.subList(0,6));
+        Collections.shuffle(buildingEra1);
+        buildingEra2.addAll(buildings.subList(6,13));
+        Collections.shuffle(buildingEra2);
+        buildingEra3.addAll(buildings.subList(13,21));
+        Collections.shuffle(buildingEra3);
+        if(numPlayers==2) {
+            correctBuilding.add(buildingEra1.getFirst());
+            correctBuilding.addAll(buildingEra2.subList(0,2));
+            correctBuilding.addAll(buildingEra3.subList(0,3));
+        } else if (numPlayers==3) {
+            correctBuilding.addAll(buildingEra1.subList(0,2));
+            correctBuilding.addAll(buildingEra2.subList(0,2));
+            correctBuilding.addAll(buildingEra3.subList(0,4));
+        } else if (numPlayers==4) {
+            correctBuilding.addAll(buildingEra1.subList(0,2));
+            correctBuilding.addAll(buildingEra2.subList(0,3));
+            correctBuilding.addAll(buildingEra3.subList(0,4));
+        } else {
+            correctBuilding.addAll(buildingEra1.subList(0,2));
+            correctBuilding.addAll(buildingEra2.subList(0,3));
+            correctBuilding.addAll(buildingEra3.subList(0,5));
+        }
+        return correctBuilding;
     }
 
     /**
