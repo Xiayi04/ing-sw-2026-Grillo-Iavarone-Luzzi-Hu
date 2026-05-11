@@ -25,14 +25,14 @@ public class GameManager {
         this.players = players;
         this.numPlayers = numPlayers;
         this.board = board;
-        this.round = 0; //il gioco ancora non è iniziato
+        this.round = 0;
     }
 
     //metodi
     public void gameInitializing(ArrayList<Player> players, int numPlayers, Deck deck) {
         this.players = players;
         this.numPlayers = numPlayers;
-        this.round = 1;  //se il gioco parte subito
+        this.round = 1;
         deck.createDeck(numPlayers);
 
     }
@@ -61,6 +61,7 @@ public class GameManager {
      */
     public void nextRound() {
         ArrayList<Event> currentEvents = board.checkEvent();
+        positionQueue.clear();
         if (!currentEvents.isEmpty()) {
             resolveEvents(currentEvents);
         }
@@ -106,7 +107,7 @@ public class GameManager {
             return;
         }
         events.sort(
-                Comparator //ordina i casi true e false , se è sostentamento è true quindi lo risolve dopo altrimenti vengono risolti prima
+                Comparator
                         .comparing((Event e) -> e.getEventName().equalsIgnoreCase("Sustenance"))
                         .thenComparing(Event :: getEventName)
                         .thenComparing(Event::getEra)
@@ -119,13 +120,13 @@ public class GameManager {
      * @return the winner
      */
 
-    public void endGame() { //il metodo ora restituisce void da Player
+    public void endGame() {
         System.out.println("--- THE GAME IS OVER  ---");
         System.out.println("Final points count...");
 
         int maxScore = 0;
         for (Player p : players) {
-            int finale = p.finalScore(); // Il calcolo vero è dentro Player!
+            int finale = p.finalScore();
             if (finale > maxScore) {
                 maxScore = finale;
             }
@@ -167,19 +168,20 @@ public class GameManager {
     }
 
     /**
-     * The method execute Next Position calls the first player on the list
-     * and asks him to take his place
+     * The method execute Next Position is used to manage the flow of turns sequentially,
+     * ensuring that one player at a time chooses where to place their totem on the board.
      */
-    //serve a gestire il flusso dei turni in modo sequenziale,
-    // assicurandosi che un giocatore alla volta scelga dove mettere il proprio totem sul tabellone.
-    public void executeNextPosition(){
-        if (positionQueue.isEmpty()) {
-            pickingPhase(this.players);
-            return;
+
+    public void executeNextPosition() {
+        synchronized (playersLock) {
+            if (positionQueue.isEmpty()) {
+                pickingPhase(this.players);
+                return;
+            }
+            this.currentPlayer = positionQueue.get(0);
+            System.out.println("Player  " + currentPlayer.getName() + "place your totem");
+            notifyAll();
         }
-        this.currentPlayer = positionQueue.get(0);
-        this.currentPlayer.getVirtualClient().askForTotemMove();
-        System.out.println("Player  "+ currentPlayer.getName() + "place your totem");
     }
 
     /**
@@ -209,28 +211,43 @@ public class GameManager {
     }
 
     /**
-     * The method PendingPhase è un contenitore in cui ci sono i nomi dei giocatori, contiene solo dei dati e nessuna logica
+     * The method setNumPlayers determines how many players the server should
+     * wait before declaring the lobby "full" and starting rounds.
+     * @param numPlayers
+     */
+
+    public void setNumPlayers(int numPlayers) {
+        synchronized (numPlayersLock){
+            this.numPlayers = numPlayers;
+            this.board.obtainPath(this.players);
+            System.out.println("The game is made up of" + numPlayers + " players");
+            notifyAll();
+        }
+
+    }
+
+    /**
+     *The PendingPhase record is a special type of class where the data inside cannot be changed
+     * until the action is complete, allowing the server to remember what to validate when the
+     * client submits its final choice.
      * @param player
      * @param isUpper
      */
-    public record PendingPick(Player player, boolean isUpper) {} // contenitore per contenere solo i dati invece di creare una classe dove ha solo metodi get
+    public record PendingPick(Player player, boolean isUpper) {}
 
     /** The execute Next Pick method advances the turns in the draw phase.
      * If the list is empty, this means that all players have completed the draw phase
      * for that round; otherwise, it looks at the first element of the list,
      * takes the communication interface associated with the specific player
-     * and communicates the moves to the player,
      * and finally waits for the player to respond.
      */
 
      private void executeNextPick(){
-        if (pickingQueue.isEmpty()) { // se è vuota vuol dire che tutti i giocatori si sono posizionati
+        if (pickingQueue.isEmpty()) { // se è vuota vuol dire che tutti i giocatori si sono posizionati allora si passsa al prossimo turno
             nextRound();
             return;
         }
-        PendingPick next = pickingQueue.get(0);
-        this.currentPlayer = next.player();
-        this.currentPlayer.getVirtualClient().askToPickCard(next.isUpper()); // Invia un segnale attraverso la rete verso il client del giocatore specifico.
+        this.currentPlayer = pickingQueue.get(0).player();
         System.out.println("Tocca a " + currentPlayer.getName());
     }
 
@@ -270,22 +287,57 @@ public class GameManager {
      * @param index
      */
     public void resolvePick(String playerName, boolean isBuilding, int index) {
-        synchronized (this.players) {
-            PendingPick currentAction = pickingQueue.get(0); //recupero azione in cima alla lista
+        synchronized (playersLock) {
+            PendingPick currentAction = pickingQueue.get(0);
             Player p = getPlayerByName(playerName);
+
+            boolean success = false;
             if (isBuilding) {
-                buyBuilding(p, currentAction.isUpper(), index);
+                success = (buyBuilding(p, currentAction.isUpper(), index) != null);
             } else {
                 takeCharacter(p, currentAction.isUpper(), index);
+                success = true;
             }
-            pickingQueue.remove(0); //Rimuovo l'azione dalla lista perchè è completata
-            executeNextPick();
+            if (success) {
+                pickingQueue.remove(0);
+                executeNextPick();
+            } else {
+                System.out.println("Failed action");
+            }
         }
     }
 
+    /**
+     * The method MoveTotem  move a player's totem to a position on the offer card
+     * @param playerName
+     * @param pathIndex
+     */
 
-    public void moveTotem(String playerName, Totem totem) {
-        ArrayList<Player> players = new ArrayList<>();
+
+    public synchronized void moveTotem(String playerName, int pathIndex) {
+        //verifica che sia il turno del giocatore effettivo
+        if(positionQueue.isEmpty() || !positionQueue.get(0).getName().equals(playerName)){
+            System.out.println(" Error: It's not your turn ");
+            return;
+        }
+        //verifica se la poszione è valida e libera
+        if( pathIndex<0 || pathIndex >= board.getPath().size()){
+            System.out.println("Invalid path index");
+            return;
+        }
+
+        OfferCard chosenCard = board.getPath().get(pathIndex);
+        if(chosenCard.isOccupied()){
+            System.out.println("Position" + pathIndex + "it's already busy");
+            return;
+        }
+        //modiifica del Model
+         Player p = positionQueue.get(0);
+        chosenCard.setOccupiedBy(p);
+        System.out.println(p.getName() + " he positioned himself on the card " + pathIndex);
+        positionQueue.remove(0);
+        executeNextPosition();
+
     }
 
     /**
@@ -304,17 +356,21 @@ public class GameManager {
         }else{
             buildings = board.getLowerBuildingRow();
         }
+        if(index < 0 || index >= buildings.size()|| buildings.get(index) == null){
+            System.out.println("Error: Error: building not available in index" + index);
+            return null;
+        }
+
         int cost = buildings.get(index).getPrice();
         if(player.getFood() >= cost){
             player.modifyFood(-cost);
             Building pickedBuilding=  (Building) board.pickCard(rowUpper, true, index);
-            player.getBuilding().add((Building) pickedBuilding);
-            System.out.println("The building" + ((Building) pickedBuilding).getName() + "was purchased by");
+            player.getBuilding().add(pickedBuilding);
+            System.out.println("The building" + pickedBuilding.getName() + "was purchased by");
             return pickedBuilding;
         }else{
             System.out.println("INSUFFICIENT FOOD! (Requested :" + cost +")");
-            System.out.println("Scegli un personaggio oppure passa");
-            pickingQueue.remove(0);
+            System.out.println("Choose another building or move on");
             return null;
         }
 
@@ -335,7 +391,7 @@ public class GameManager {
             player.getTribeCard().add(pickedCharacter);
             System.out.println(player.getName() + "added" + pickedCharacter.getCharacterType());
         }else{
-            System.err.println("Personaggio non trovato");
+            System.err.println("Character not found");
         }
     }
 
