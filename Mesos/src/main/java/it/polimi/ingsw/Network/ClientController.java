@@ -1,11 +1,14 @@
 package it.polimi.ingsw.Network;
 
 
+import it.polimi.ingsw.Buildings.Building;
+import it.polimi.ingsw.Cards.Card;
 import it.polimi.ingsw.Game.Board;
 import it.polimi.ingsw.Game.OfferCard;
 import it.polimi.ingsw.Game.Totem;
 
 
+import java.rmi.RemoteException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -13,89 +16,93 @@ public class ClientController {
     /*deve avere una view*/
     private final GraphicInterface view;
     //riferimento all'if che manda messaggi al server
-    private final ClientInterface clientInterface;
+    private final ServerConnection serverConnection;
 
-    public ClientController(GraphicInterface view,ClientInterface clientInterface){
+    public ClientController(GraphicInterface view, ServerConnection serverConnection) {
         this.view = view;
-        this.clientInterface = clientInterface;
+        this.serverConnection = serverConnection;
     }
 
     private Board currentBoard;
 
 
-    public void askForLogin(List<Totem> availableTotems) {
-        String username = view.askUsername();
-
-        while (username == null) {
+    public void login(String username, Totem chosenTotem) {
+        if (username == null || username.isBlank()) {
             view.showError("Username not valid.");
-            username = view.askUsername();
+            return;
         }
 
-        Totem chosenTotem = view.askTotem(availableTotems);
-
-        while(!availableTotems.contains(chosenTotem)){
-            view.showError("Totem not available ");
-            chosenTotem = view.askTotem(availableTotems);
+        if (chosenTotem == null) {
+            view.showError("Totem not valid.");
+            return;
         }
-        clientInterface.login(username,chosenTotem);
+        serverConnection.login(username, chosenTotem);
     }
 
-    public void askNumPlayers(){
-        int numPlayers = view.askNumToPlayer();
 
-        while(numPlayers < 2 || numPlayers > 5){
+    public void SetNumPlayers(int numPlayers) {
+        while (numPlayers < 2 || numPlayers > 5) {
             view.showError("Number of Players is wrong ");
             numPlayers = view.askNumToPlayer();
         }
-        clientInterface.setNumPlayers(numPlayers);
+        serverConnection.setNumPlayers(numPlayers);
     }
 
-    public void showStartGame(){
-        view.showMessage("The game started ");
-    }
-    public void askForTotemMove(ArrayList<OfferCard> path){
+    public void moveTotem(ArrayList<OfferCard> path) {
+
+        if (path == null || path.isEmpty()) {
+            view.showError("Offer card path not available.");
+            return;
+        }
+
         int chosenPosition = view.askPosition(path);
-        while(chosenPosition < 0 || chosenPosition >= path.size()){
-            view.showError("Position not valid ");
+
+        while (chosenPosition < 0 || chosenPosition >= path.size()) {
+            view.showError("Position not valid.");
             chosenPosition = view.askPosition(path);
         }
-        clientInterface.setTotemPosition(chosenPosition);
-    }
-    public void showMyTurn(){
-        view.showMessage("It's your turn ");
-    }
-    public void updateBoardStatus(Board updatedBoard){
-        this.currentBoard = updatedBoard;
-        view.updateBoardStatus(currentBoard);
-    }
-    public void showCurrentPlayer(String playerName){
-        view.showCurrentPlayer(playerName);
+
+        serverConnection.moveTotem(chosenPosition);
     }
 
-    public void showError(String message){
-        view.showError(message);
+    public void pickCard(boolean isUpper, boolean isBuilding, int index) {
+
+
+        if (index < 0) {
+            view.showError("Card index not valid.");
+            return;
+        }
+
+        serverConnection.pickCard(isUpper, isBuilding, index);
     }
 
-    public void showMessage(String message){
+    public void leave() {
+        serverConnection.leave();
+    }
+
+    public void showMessage(String message) {
         view.showMessage(message);
     }
 
+    public void showError(String message) {
+        view.showError(message);
+    }
 
-    public void showEndGame(){
-        view.showMessage("Game ended ");
+    public void showStartGame() {
+        view.showMessage("The game started.");
+    }
+
+    public void showMyTurn() {
+        view.showMessage("It's your turn.");
+    }
+
+    public void updateBoardStatus(Board updatedBoard) {
+        this.currentBoard = updatedBoard;
+        view.updateBoardStatus(currentBoard);
     }
 
 
-
-
-
-
-
-
-
-
-
-
-
-
+    public void showEndGame() {
+        view.showMessage("Game ended.");
+    }
 }
