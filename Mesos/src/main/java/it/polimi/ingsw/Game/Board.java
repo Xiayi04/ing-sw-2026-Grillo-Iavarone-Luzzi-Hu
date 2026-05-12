@@ -7,7 +7,7 @@ import it.polimi.ingsw.Buildings.Building;
 import it.polimi.ingsw.Cards.Card;
 import it.polimi.ingsw.Cards.CardType;
 import it.polimi.ingsw.Cards.Events.Event;
-
+import it.polimi.ingsw.Controller.GameManager;
 
 
 public class Board  implements Serializable {
@@ -19,7 +19,7 @@ public class Board  implements Serializable {
     private final ArrayList<Building> lowerBuildingRow;
     private final ArrayList<OfferCard> path;
     private final ArrayList<Player> players; //relazione con Player (2..5)
-    private  final ArrayList<Card> deck;//*associazione 1:1 con Board*/
+    private final ArrayList<Card> deck;//*associazione 1:1 con Board*/
 
     public Board() {
         this.era = 1;
@@ -29,7 +29,7 @@ public class Board  implements Serializable {
         this.lowerBuildingRow = new ArrayList<>();
         this.path = new ArrayList<>();
         this.players = new ArrayList<>();
-        this.deck = Deck.createDeck(5);
+        this.deck = new ArrayList<>();
     }
 
     //metodi getter
@@ -91,6 +91,12 @@ public class Board  implements Serializable {
     public void removeLowerBuildings() {
         lowerBuildingRow.clear();
 
+    }
+
+    public void inizializeDeck(){
+        Deck deck = new Deck();
+        this.deck.clear();
+        this.deck.addAll(deck.createDeck(players.size()));
     }
 
     //spostamento degli edifici quando cambiano le ere
@@ -165,7 +171,7 @@ public class Board  implements Serializable {
         }
         Card pickedCard = pickCardRow.get(i);
         if(pickedCard.getCardType().equals("EVENT")){
-            throw new IllegalArgumentException("Event is not pickable");
+            return null;
         }else{
             pickCardRow.remove(i);
             return pickedCard;
