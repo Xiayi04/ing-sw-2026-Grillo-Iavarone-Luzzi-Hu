@@ -1,9 +1,13 @@
 package it.polimi.ingsw.Network;
 
+import it.polimi.ingsw.Network.RMI.ClientRMI;
+import it.polimi.ingsw.Network.RMI.VirtualServer;
 import it.polimi.ingsw.Network.Socket.Client.SocketClient;
 import it.polimi.ingsw.UI.TUI;
 
 import java.net.Socket;
+import java.rmi.registry.LocateRegistry;
+import java.rmi.registry.Registry;
 import java.util.Scanner;
 
 public class ClientMain {
@@ -19,21 +23,20 @@ public class ClientMain {
         System.out.println("Welcome user");
         //System.out.print("Please write your username:");
 
-
         Scanner sc = new Scanner(System.in);
-        System.out.print("Select the preferred User Interface that you want to use [0:Textual/1:Graphic]:");
-        int UI = sc.nextInt();
-        while(!(UI == 1 || UI == 0) ){
-            System.out.println("Invalid input");
-            System.out.print("Select the preferred User Interface that you want to use [0:Textual/1:Graphic]:");
-            UI = sc.nextInt();
-        }
+//        System.out.print("Select the preferred User Interface that you want to use [0:Textual/1:Graphic]:");
+//        int UI = sc.nextInt();
+//        while(!(UI == 1 || UI == 0) ){
+//            System.out.println("Invalid input");
+//            System.out.print("Select the preferred User Interface that you want to use [0:Textual/1:Graphic]:");
+//            UI = sc.nextInt();
+//        }
 
-        if(UI == 1){
-            //GUI
-        } else {
-            userInterface = new TUI();
-        }
+//        if(UI == 1){
+//            //GUI
+//        } else {
+//            userInterface = new TUI();
+//        }
 
 
 //        ClientMain.username = sc.nextLine();
@@ -53,6 +56,18 @@ public class ClientMain {
 
 
         if(connection == 0){
+            try {
+                Registry registry = LocateRegistry.getRegistry("localhost", 1234);
+
+                VirtualServer server = (VirtualServer) registry.lookup("---MESOS_SERVER---");
+
+                ClientRMI client = new ClientRMI( new ClientController(new TUI()) );
+
+                client.run();
+
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
             //gestione RMI
         }else if(connection == 1){
             //gestione Socket

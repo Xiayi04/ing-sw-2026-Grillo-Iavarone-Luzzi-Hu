@@ -15,12 +15,12 @@ public class BuildingFactory {
         return new BonusPPBuilding(era, price);
     }
 
-    public Building createMultiplicationBuilding(int era, int price, int pp, Icons typeIcon, int multiplier){
+    public Building createMultiplicationBuilding(int era, int price, int pp, String typeIcon, int multiplier){
         return new MultiplicationBuilding(era, price, pp, typeIcon, multiplier);
     }
 
     public Building createMultiplierPPBuilderBuilding(int era, int price, int pp){
-        return new MultiplierPPBuilderBuilding(era, price, pp, Icons.BUILDER);
+        return new MultiplierPPBuilderBuilding(era, price, pp, "BUILDER");
     }
 
     public Building createDiscountBuilding(int era, int price, int pp, int foodBonus, int ppBonus, Icons typeIcons, Events typeEvents){
@@ -102,7 +102,7 @@ public class BuildingFactory {
                 case "multiplicationbuilding":
                     Icons typeIcon = b.getTypeIcons();
                     int multiplier = b.getMultiplier();
-                    buildings.add(createMultiplicationBuilding(era, price, pp, typeIcon, multiplier));
+                    buildings.add(createMultiplicationBuilding(era, price, pp, String.valueOf(typeIcon), multiplier));
                     break;
                 case "multiplierppbuilderbuinding":
                     buildings.add(createMultiplierPPBuilderBuilding(era, price, pp));
@@ -137,7 +137,7 @@ public class BuildingFactory {
                 case "multiplicationbuilding":
                     Icons typeIcon = b.getTypeIcons();
                     int multiplier = b.getMultiplier();
-                    buildings.add(createMultiplicationBuilding(era, price, pp, typeIcon, multiplier));
+                    buildings.add(createMultiplicationBuilding(era, price, pp, String.valueOf(typeIcon), multiplier));
                     break;
             }
         }

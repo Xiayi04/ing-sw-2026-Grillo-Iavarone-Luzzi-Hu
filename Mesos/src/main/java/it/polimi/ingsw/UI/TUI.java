@@ -1,5 +1,6 @@
 package it.polimi.ingsw.UI;
 
+import it.polimi.ingsw.Cards.Card;
 import it.polimi.ingsw.Game.Board;
 import it.polimi.ingsw.Game.OfferCard;
 import it.polimi.ingsw.Game.Totem;
@@ -61,5 +62,9 @@ private final Object LOCK = new Object();
     @Override
     public void showCurrentPlayer(String username) {
 
+    }
+
+    public String[] addCardToRow(String[] row, Card card) {
+        return null;
     }
 }

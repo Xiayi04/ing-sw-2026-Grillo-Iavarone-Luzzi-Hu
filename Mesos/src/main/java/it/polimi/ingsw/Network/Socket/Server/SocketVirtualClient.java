@@ -15,7 +15,7 @@ import java.rmi.RemoteException;
 import java.util.ArrayList;
 import java.util.List;
 
-public class ClientSocketProxy implements VirtualClientInterface {
+public class SocketVirtualClient implements VirtualClientInterface {
     private final Socket socket;
     private final PrintWriter out;
     //private final BufferedReader in;
@@ -23,7 +23,7 @@ public class ClientSocketProxy implements VirtualClientInterface {
     private final char separator = '#';
     private final GameManager gm;
 
-    public ClientSocketProxy(Socket socket, GameManager gameManager) throws IOException {
+    public SocketVirtualClient(Socket socket, GameManager gameManager) throws IOException {
         this.socket = socket;
         this.out = new PrintWriter(socket.getOutputStream(), true );
         //this.in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
@@ -53,7 +53,9 @@ public class ClientSocketProxy implements VirtualClientInterface {
 
     @Override
     public void showMessage(String message) throws RemoteException {
-
+        synchronized (outputLock) {
+            out.println("MSG"+separator+message);
+        }
     }
 
     @Override
@@ -87,7 +89,7 @@ public class ClientSocketProxy implements VirtualClientInterface {
 
 
     @Override
-    public void askForLogin() {
+    public void askForLogin() throws RemoteException {
 
         //trovare totem disponibili
         synchronized (outputLock){
@@ -95,9 +97,59 @@ public class ClientSocketProxy implements VirtualClientInterface {
         }
     }
 
+    @Override
+    public void refuseConnection(){
+        synchronized (outputLock){
+            out.println("REFUSECONNECTION"+separator);
+        }
+    }
 
+    @Override
+    public void newPlayer(Player newPlayer) throws RemoteException {
+        synchronized (outputLock){
+            out.println("NEWPLAYER"+separator+newPlayer.getName() + "," +  newPlayer.getTotem().toString());
+        }
+    }
 
+    @Override
+    public void pickedCard(Player player, boolean row, boolean isBuilding, int index) {
 
+    }
+
+    @Override
+    public void movedTotem(Player player, int index) {
+
+    }
+
+    @Override
+    public void updatePlayerFood(Player player, int update) {
+
+    }
+
+    @Override
+    public void updatePlayerPP(Player player, int update) {
+
+    }
+
+    @Override
+    public void showPlayerTurn(Player player) {
+
+    }
+
+    @Override
+    public void cardPickError() {
+
+    }
+
+    @Override
+    public void buildingPurchaseError() {
+
+    }
+
+    @Override
+    public void totemPositionError() {
+
+    }
 
 
     @Override

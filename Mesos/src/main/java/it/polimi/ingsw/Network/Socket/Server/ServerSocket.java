@@ -32,10 +32,10 @@ public class ServerSocket implements Runnable {
 
             while (true) {
                 Socket socket = serverSocket.accept();
-                System.out.println("Accepted connection from " + socket.getInetAddress());
-                VirtualClientInterface proxy = new ClientSocketProxy(socket, gameManager);
+                VirtualClientInterface proxy = new SocketVirtualClient(socket, gameManager);
                 new ClientHandler(socket, gameManager, proxy, serverController);
-                lobby.addClient(proxy);
+                System.out.println("Accepted connection from " + socket.getInetAddress());
+
 
             }
 

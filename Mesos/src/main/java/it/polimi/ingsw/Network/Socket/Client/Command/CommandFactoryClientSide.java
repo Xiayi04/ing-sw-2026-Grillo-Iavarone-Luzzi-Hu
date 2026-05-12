@@ -12,6 +12,9 @@ public class CommandFactoryClientSide {
     public CommandFactoryClientSide() {
         commands.put("setnumplayers", payload -> new NumPlayersCommand( Arrays.toString(payload)));
         commands.put("login", payload -> new ClientLoginCommand(payload));
+        commands.put("msg", payload-> new ShowMSGCommand(payload));
+        commands.put("refuseconnection", payload-> new RefusedConnectionCommand());
+        commands.put("newplayer", payload-> new NewPlayerCommand(payload));
     }
 
     public synchronized ClientCommand getCommand(String command) {

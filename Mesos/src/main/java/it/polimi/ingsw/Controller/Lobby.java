@@ -4,14 +4,13 @@ import it.polimi.ingsw.Network.VirtualClientInterface;
 
 import java.rmi.RemoteException;
 import java.util.ArrayList;
-
-import static java.lang.Thread.sleep;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 public class Lobby {
-    private static final ArrayList<VirtualClientInterface> clients = new ArrayList<VirtualClientInterface>();
+    private static final ArrayList<VirtualClientInterface> clients = new ArrayList<>();
     private final ServerController serverController;
     private final GameManager gameManager;
-    public static Boolean isNumPlayersSetted = false;
+    public static final AtomicBoolean isNumPlayersSetted = new AtomicBoolean(false);
 
     public  Lobby(ServerController serverController){
         this.serverController = serverController;
@@ -19,51 +18,68 @@ public class Lobby {
     }
 
 
-    /**
-     * This method must be called when a client asks to connect to the server. It adds the client's
-     * VirtualClient to a list, if he's the first starts a procedure to ask him the number of players that
-     * will join the game, while this happens no other client can be accepted by the server in fact
-     * there is a while that waits for modify in GameManager.numPlayers
-     *
-     */
     public synchronized void addClient(VirtualClientInterface client) throws RemoteException {
-
         synchronized (clients){
             //This should let the first player jump this 'if statement' even though the first condition is false
-            if(clients.size() >= gameManager.getNumPlayers() && isNumPlayersSetted ){
-                //client.refuseConnection();
-                return;
+            synchronized (isNumPlayersSetted){
+                if (isNumPlayersSetted.get() && clients.size() >= gameManager.getNumPlayers()) {
+                    client.refuseConnection();
+                    return;
+                }
+                isNumPlayersSetted.notify();
             }
             clients.add(client);
 
             if(clients.size()==1){
-
-                synchronized (isNumPlayersSetted){
-
-                    client.askNumPlayers();
-
-                    while(!isNumPlayersSetted){
-
-                        try {
-                            sleep(50);
-                        } catch (InterruptedException e) {
-                            throw new RuntimeException(e);
-                        }
-                    }
-                    System.out.println("ciao1");
-
-
-                }
-
-
+                client.askNumPlayers();
+                checkSetNumPlayers();
+                client.askForLogin();
             }
-            System.out.println("ciao2");
-            //String totems = String.join(",", gameManager.getAvailableTotems());
-            client.askForLogin();
+
         }
     }
 
     public static ArrayList<VirtualClientInterface> getClients(){
         return clients;
+    }
+
+
+    public void checkSetNumPlayers(){
+        new Thread(()->{
+            int nPlayers = 0;
+            synchronized (GameManager.numPlayersLock) {
+                while(gameManager.getNumPlayers() <2){
+                    try {
+                        GameManager.numPlayersLock.wait();
+                    } catch (InterruptedException e) {}
+                }
+                nPlayers = gameManager.getNumPlayers();
+                GameManager.numPlayersLock.notifyAll();
+            }
+
+            synchronized (clients){
+
+                for(int i = 1; i< nPlayers; i++){
+                    try {
+                        clients.get(i).askForLogin();
+                    } catch (RemoteException e) {
+                        throw new RuntimeException(e);
+                    }
+                }
+
+                if(clients.size()>nPlayers){
+                    for(int i = nPlayers; i< clients.size(); i++){
+                        clients.get(i).refuseConnection();
+                    }
+                }
+
+                synchronized (isNumPlayersSetted){
+                    isNumPlayersSetted.set(true);
+                    isNumPlayersSetted.notifyAll();
+                }
+                clients.notifyAll();
+            }
+
+        }).start();
     }
 }

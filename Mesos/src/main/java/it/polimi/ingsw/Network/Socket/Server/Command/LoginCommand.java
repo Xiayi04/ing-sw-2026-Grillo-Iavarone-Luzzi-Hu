@@ -4,6 +4,8 @@ import it.polimi.ingsw.Controller.GameManager;
 import it.polimi.ingsw.Controller.ServerController;
 import it.polimi.ingsw.Network.VirtualClientInterface;
 
+import java.rmi.RemoteException;
+
 public class LoginCommand implements ServerCommand {
     private final String username;
     private final String totem;

@@ -65,7 +65,14 @@ public class ServerController {
             GameManager.playersLock.notifyAll();
         }
 
-        notifier.addedNewPlayerBroadcast(p);
+        synchronized (gameManager.getPlayers()){
+            try {
+                notifier.addedNewPlayerBroadcast(gameManager.getPlayers(), p);
+            } catch (RemoteException e) {
+                throw new RuntimeException(e);
+            }
+            gameManager.getPlayers().notifyAll();
+        }
     }
 
     public void takeCharacter(String username, boolean isUpper, int index) throws RemoteException{
@@ -105,28 +112,28 @@ public class ServerController {
     }
 
     public void setNumPlayers(int numPlayers){
-        synchronized (GameManager.numPlayersLock){
-            gameManager.setNumPlayers(numPlayers);
-            Lobby.isNumPlayersSetted = true;
-            GameManager.numPlayersLock.notifyAll();
-        }
+//        synchronized (GameManager.numPlayersLock){
+//            gameManager.setNumPlayers(numPlayers);
+//            //Lobby.isNumPlayersSetted = true;
+//            GameManager.numPlayersLock.notifyAll();
+//        }
 
-            Lobby.isNumPlayersSetted = true;
+//            Lobby.isNumPlayersSetted = true;
 
 
 
     }
     public synchronized void moveTotem(String username, int pathIndex)throws RemoteException {
-        synchronized (this.clients) {
-            Player p = gameManager.getPlayerByName(username);
-            OfferCard chosenCard = gameManager.getBoard().getPath().get(pathIndex);
-            if (chosenCard.isOccupied()) {
-                System.out.println("The position" + pathIndex + "it's already occupied");
-                return;
-            }
-            gameManager.getBoard().moveTotem(p, chosenCard);
-            System.out.println("The player " + p.getName() + "occupied the position" + pathIndex);
-        }
+//        synchronized (this.clients) {
+//            Player p = gameManager.getPlayerByName(username);
+//            OfferCard chosenCard = gameManager.getBoard().getPath().get(pathIndex);
+//            if (chosenCard.isOccupied()) {
+//                System.out.println("The position" + pathIndex + "it's already occupied");
+//                return;
+//            }
+//            gameManager.getBoard().moveTotem(p, chosenCard);
+//            System.out.println("The player " + p.getName() + "occupied the position" + pathIndex);
+//        }
     }
 
 

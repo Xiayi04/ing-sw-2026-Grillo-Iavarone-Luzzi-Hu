@@ -87,6 +87,28 @@ public class Board  implements Serializable {
         upperCardRow.clear();
     }
 
+    public void initializeBoard(int NumPlayers){
+        int upper = NumPlayers+4;
+        int lower = NumPlayers+1;
+        int j= 0;
+        for(int i = 0; i<lower;  ){
+            Card c = deck.removeFirst();
+            if (c instanceof Event) {
+                upperCardRow.add(c);
+                j++;
+                continue;
+            }
+            lowerCardsRow.add(c);
+            i++;
+
+        }
+
+        for(;j<upper;j++){
+            Card c = deck.removeFirst();
+            upperCardRow.add(c);
+        }
+    }
+
     //rimozione degli edifici
     public void removeLowerBuildings() {
         lowerBuildingRow.clear();
