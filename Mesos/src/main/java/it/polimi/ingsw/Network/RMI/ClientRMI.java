@@ -1,75 +1,59 @@
 package it.polimi.ingsw.Network.RMI;
 
-import it.polimi.ingsw.Game.Totem;
+import it.polimi.ingsw.Buildings.Building;
+import it.polimi.ingsw.Cards.Card;
+import it.polimi.ingsw.Game.Board;
 import it.polimi.ingsw.Network.ClientController;
-import it.polimi.ingsw.Network.ClientInterface;
-import it.polimi.ingsw.Network.VirtualClientInterface;
 
 import java.rmi.RemoteException;
+import java.rmi.server.UnicastRemoteObject;
+import java.util.List;
 
-public class ClientRMI implements ClientInterface {
+public class ClientRMI extends UnicastRemoteObject implements RemoteClientInterface {
 
-    private final VirtualServer server;
-    private final VirtualClientInterface virtualClient;
     private ClientController clientController;
 
-    public ClientRMI(VirtualServer server, VirtualClientInterface virtualClient) {
-        this.server = server;
-        this.virtualClient = virtualClient;
-    }
-
-    public void setClientController(ClientController clientController) {
+    public ClientRMI (ClientController clientController) throws RemoteException {
+        super();
         this.clientController = clientController;
     }
+
     @Override
-    public void login(String username, Totem chosenTotem) {
-        try {
-            server.login(username, chosenTotem, virtualClient);
-        } catch (RemoteException e) {
-            throw new RuntimeException(e);
-        }
-    }
-    @Override
-    public void setNumPlayers(int numPlayers) {
-        try {
-            server.setNumPlayers(numPlayers);
-        } catch (RemoteException e) {
-            throw new RuntimeException(e);
-        }
-    }
-    @Override
-    public void moveTotem(String username, int pathIndex) {
-        try {
-            server.moveTotem(username, pathIndex);
-        } catch (RemoteException e) {
-            throw new RuntimeException("Errore RMI durante moveTotem", e);
-        }
+    public void showMyTurn() throws RemoteException {
+        clientController.showMyTurn();
     }
 
     @Override
-    public void pickCard(String username, boolean isUpper, boolean isBuilding, int index) {
-        try {
-            server.pickCard(username, isUpper, isBuilding, index);
-        } catch (RemoteException e) {
-            throw new RuntimeException(e);
-        }
+    public void updateBoard(Board board) throws RemoteException {
+        clientController.updateBoardStatus(board);
     }
+
+    /*@Override
+    public void showCurrentPlayer(String playerName) throws RemoteException {
+        clientController.showCurrentPlayer(playerName);
+    }*/
+
     @Override
-    public void setTotemPosition(int chosenPosition) {
-        try {
-            server.setTotemPosition(chosenPosition);
-        } catch (RemoteException e) {
-            throw new RuntimeException(e);
-        }
+    public void showError(String message) throws RemoteException {
+        clientController.showError(message);
+    }
+
+    /*@Override
+    public void updateOtherPlayerStatus(String playerName, List<Card> tribeCards, List<Building> buildings) throws RemoteException {
+        clientController.updateOtherPlayerStatus(playerName, tribeCards, buildings);
+    }*/
+
+    @Override
+    public void showMessage(String message) throws RemoteException {
+        clientController.showMessage(message);
     }
 
     @Override
-    public void leave(VirtualClientInterface client) {
-        try {
-            server.leave(client);
-        } catch (RemoteException e) {
-            throw new RuntimeException("Errore RMI durante leave", e);
-        }
+    public void showEndGame() throws RemoteException {
+        clientController.showEndGame();
     }
+
 
 }
+
+
