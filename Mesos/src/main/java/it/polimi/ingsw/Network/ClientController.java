@@ -13,7 +13,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class ClientController {
-    /*deve avere una view*/
     private final GraphicInterface view;
     //riferimento all'if che manda messaggi al server
     private final ServerConnection serverConnection;
