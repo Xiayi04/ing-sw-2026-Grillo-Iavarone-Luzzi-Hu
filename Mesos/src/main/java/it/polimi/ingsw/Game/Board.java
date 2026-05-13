@@ -20,6 +20,7 @@ public class Board  implements Serializable {
     private final ArrayList<OfferCard> path;
     private final ArrayList<Player> players; //relazione con Player (2..5)
     private final ArrayList<Card> deck;//*associazione 1:1 con Board*/
+    private TurnOrderCard turnOrderCard;
 
     public Board() {
         this.era = 1;
@@ -30,6 +31,7 @@ public class Board  implements Serializable {
         this.path = new ArrayList<>();
         this.players = new ArrayList<>();
         this.deck = new ArrayList<>();
+
     }
 
     //metodi getter
@@ -67,6 +69,10 @@ public class Board  implements Serializable {
         return deck;
     }
 
+    public TurnOrderCard getTurnOrderCard(){
+        return turnOrderCard;
+    }
+
     //metodi
     //scorro la lista per individuare carte evento
     public ArrayList<Event> checkEvent() {
@@ -78,6 +84,9 @@ public class Board  implements Serializable {
         }
         return events;
 
+    }
+    public void chooseTurnOrderCard(int numPlayers) {
+        this.turnOrderCard = new TurnOrderCard(numPlayers);
     }
 
     //sposto da sopra a sotto
