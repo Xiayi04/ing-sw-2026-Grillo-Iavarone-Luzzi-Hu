@@ -170,16 +170,16 @@ public class Board  implements Serializable {
         int numPlayers = players.size();
         path.clear();
 
-        path.add(new OfferCard('2', 0, 1, false));
-        path.add(new OfferCard('3', 1, 0, false));
-        path.add(new OfferCard('5', 1, 1, false));
-        path.add(new OfferCard('6', 2, 0, false));
+        path.add(new OfferCard(2, 0, 1, false));
+        path.add(new OfferCard(3, 1, 0, false));
+        path.add(new OfferCard(5, 1, 1, false));
+        path.add(new OfferCard(6, 2, 0, false));
         if (numPlayers >= 3) {
-            path.add(new OfferCard('4', 0, 2, false));
+            path.add(new OfferCard(4, 0, 2, false));
             if (numPlayers >= 4)
-                path.add(new OfferCard('7', 2, 1, false));
+                path.add(new OfferCard(7, 2, 1, false));
             if (numPlayers >= 5)
-                path.add(new OfferCard('1', 0, 0, true));
+                path.add(new OfferCard(1, 0, 0, true));
         }
         Collections.sort(path, (a, b) -> a.getID() - b.getID());
         return path;
