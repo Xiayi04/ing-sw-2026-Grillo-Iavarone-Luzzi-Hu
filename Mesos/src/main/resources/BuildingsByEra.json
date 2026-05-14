@@ -46,7 +46,8 @@
       "price" : 5,
       "pp" : 6,
       "buildingName" : "MultiplicationBuilding",
-      "typeIcons" : "SET"
+      "typeIcons" : "SET",
+      "multiplier" : 6
     },{
       "era" : 2,
       "price" :6 ,
