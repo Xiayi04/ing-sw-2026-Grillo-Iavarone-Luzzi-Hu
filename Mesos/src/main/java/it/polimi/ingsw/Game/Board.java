@@ -20,6 +20,7 @@ public class Board  implements Serializable {
     private final ArrayList<OfferCard> path;
     private final ArrayList<Player> players; //relazione con Player (2..5)
     private final ArrayList<Card> deck;//*associazione 1:1 con Board*/
+    private TurnOrderCard turnOrderCard;
 
     public Board() {
         this.era = 1;
@@ -30,6 +31,7 @@ public class Board  implements Serializable {
         this.path = new ArrayList<>();
         this.players = new ArrayList<>();
         this.deck = new ArrayList<>();
+
     }
 
     //metodi getter
@@ -67,6 +69,10 @@ public class Board  implements Serializable {
         return deck;
     }
 
+    public TurnOrderCard getTurnOrderCard(){
+        return turnOrderCard;
+    }
+
     //metodi
     //scorro la lista per individuare carte evento
     public ArrayList<Event> checkEvent() {
@@ -78,6 +84,9 @@ public class Board  implements Serializable {
         }
         return events;
 
+    }
+    public void chooseTurnOrderCard(int numPlayers) {
+        this.turnOrderCard = new TurnOrderCard(numPlayers);
     }
 
     //sposto da sopra a sotto
@@ -161,16 +170,16 @@ public class Board  implements Serializable {
         int numPlayers = players.size();
         path.clear();
 
-        path.add(new OfferCard('2', 0, 1, false));
-        path.add(new OfferCard('3', 1, 0, false));
-        path.add(new OfferCard('5', 1, 1, false));
-        path.add(new OfferCard('6', 2, 0, false));
+        path.add(new OfferCard(2, 0, 1, false));
+        path.add(new OfferCard(3, 1, 0, false));
+        path.add(new OfferCard(5, 1, 1, false));
+        path.add(new OfferCard(6, 2, 0, false));
         if (numPlayers >= 3) {
-            path.add(new OfferCard('4', 0, 2, false));
+            path.add(new OfferCard(4, 0, 2, false));
             if (numPlayers >= 4)
-                path.add(new OfferCard('7', 2, 1, false));
+                path.add(new OfferCard(7, 2, 1, false));
             if (numPlayers >= 5)
-                path.add(new OfferCard('1', 0, 0, true));
+                path.add(new OfferCard(1, 0, 0, true));
         }
         Collections.sort(path, (a, b) -> a.getID() - b.getID());
         return path;
