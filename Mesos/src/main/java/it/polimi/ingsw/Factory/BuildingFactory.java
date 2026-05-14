@@ -104,7 +104,7 @@ public class BuildingFactory {
                     int multiplier = b.getMultiplier();
                     buildings.add(createMultiplicationBuilding(era, price, pp, String.valueOf(typeIcon), multiplier));
                     break;
-                case "multiplierppbuilderbuinding":
+                case "multiplierppbuilderbuilding":
                     buildings.add(createMultiplierPPBuilderBuilding(era, price, pp));
                     break;
                 case "discountbuilding":
