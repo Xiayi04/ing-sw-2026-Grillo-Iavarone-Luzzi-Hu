@@ -1,6 +1,7 @@
 package it.polimi.ingsw.Controller;
 
 import it.polimi.ingsw.Game.Player;
+import it.polimi.ingsw.Game.Totem;
 
 import java.rmi.RemoteException;
 import java.util.ArrayList;
@@ -72,6 +73,24 @@ public class Notifier {
     public synchronized void invalidTotemPosition(Player player) throws RemoteException {
         player.getVirtualClient().totemPositionError();
     }
+
+    //messagi di notifica per inizio e fine gioco
+    public void showStartGameBroadcast (String myName, ArrayList<Player> players, Totem myTotem, int myFood)  throws RemoteException {
+        synchronized (OutputLock) {
+            for (Player p : players) {
+                p.getVirtualClient().showStartGame(myName,  players, myTotem, myFood);
+            }
+        }
+    }
+
+    public void showEndGameBroadcast(ArrayList<Player> players) throws RemoteException {
+        synchronized (OutputLock){
+            for(Player p : players){
+                p.getVirtualClient().showEndGame();
+            }
+        }
+    }
+
 
 
 

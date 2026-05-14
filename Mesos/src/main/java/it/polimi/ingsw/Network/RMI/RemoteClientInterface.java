@@ -15,24 +15,23 @@ import java.util.ArrayList;
 import java.util.List;
 
 public interface RemoteClientInterface extends Remote {
+    void showStartGame() throws RemoteException;
 
-    void showMyTurn() throws RemoteException;
+    void showPlayerTurn(Player player) throws RemoteException;
 
-    void updateBoard(Board board) throws RemoteException;
+    void addedPlayer (Player player) throws RemoteException;
 
-   // void showCurrentPlayer(String playerName) throws RemoteException;
+    void showPickedCard (Player playerWhoPicked, boolean row, boolean isBuilding, int index) throws RemoteException;
 
-    void showError(String message) throws RemoteException;
+    void movedTotem(Player player, int path) throws RemoteException;
 
-   // void updateOtherPlayerStatus(String playerName, List<Card> tribeCards, List<Building> buildings) throws RemoteException;
+    void foodUpdated(Player player, int foodUpdated) throws RemoteException;
 
-    void showMessage(String message) throws RemoteException;
+    void updatePlayerPP(Player player, int foodUpdated) throws RemoteException;
+
+    void showErrorMessage(String message) throws RemoteException;
 
     void showEndGame() throws RemoteException;
 
-
-    //void Login(List<Totem> availableTotems) throws  RemoteException;
-    //void MoveTotem(ArrayList<OfferCard> path) throws RemoteException;
-    //void pickCard() throws RemoteException;
 
 }
