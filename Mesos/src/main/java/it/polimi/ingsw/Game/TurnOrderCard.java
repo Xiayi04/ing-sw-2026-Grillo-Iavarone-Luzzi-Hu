@@ -48,7 +48,7 @@ public class TurnOrderCard implements Serializable {
                 if(b instanceof BonusFood)
                     order.get(1).modifyFood(1);
         }
-        order.get(order.size()).modifyFood(-1);
+        order.get(order.size()-1).modifyFood(-1);
     }
 
 

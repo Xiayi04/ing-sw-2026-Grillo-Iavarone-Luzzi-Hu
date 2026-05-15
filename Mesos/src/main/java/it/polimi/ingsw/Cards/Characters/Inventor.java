@@ -34,4 +34,8 @@ public class Inventor extends Character implements CharacterInterface, InventorI
     public void addCard(CharacterVisitor visitor, Player player){
         visitor.visit(this, player);
     }
+
+    public String getImagePath(){
+        return "/images/cards/characters/"+getCharacterType()+"_"+getInventorIcon()+".png";
+    }
 }

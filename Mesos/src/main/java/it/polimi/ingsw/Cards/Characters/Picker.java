@@ -25,4 +25,8 @@ public class Picker extends Character implements CharacterInterface {
     public void addCard(CharacterVisitor visitor, Player player){
         visitor.visit(this, player);
     }
+
+    public String getImagePath(){
+        return "/images/cards/characters/"+getCharacterType()+".png";
+    }
 }

@@ -16,7 +16,9 @@ public class Hunter extends Character implements CharacterInterface {
         this.symbol = symbol;
     }
     //metodi getter
-    public boolean getSymbol() {return symbol;}
+    public boolean getSymbol() {
+        return symbol;
+    }
 
     public void printCard(){
         super.printCard();
@@ -26,5 +28,9 @@ public class Hunter extends Character implements CharacterInterface {
     @Override
     public void addCard(CharacterVisitor visitor, Player player){
         visitor.visit(this, player);
+    }
+
+    public String getImagePath(){
+        return "/images/cards/characters/"+getCharacterType()+"_"+getSymbol()+".png";
     }
 }

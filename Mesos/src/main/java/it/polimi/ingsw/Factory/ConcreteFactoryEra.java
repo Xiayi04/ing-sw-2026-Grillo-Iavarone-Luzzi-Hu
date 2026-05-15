@@ -54,7 +54,7 @@ public class ConcreteFactoryEra implements Factory{
     }
 
     public Event createSustenanceEvent(int era,  int pointsLossMultiplier){
-        return new SustenanceEvent(era,"EVENT", "PAINTING_EVENT", pointsLossMultiplier);
+        return new SustenanceEvent(era,"EVENT", "SUSTENANCE_EVENT", pointsLossMultiplier);
     }
 
     /**

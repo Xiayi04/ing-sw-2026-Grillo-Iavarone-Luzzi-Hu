@@ -5,9 +5,8 @@ import java.util.Collections;
 
 import it.polimi.ingsw.Buildings.Building;
 import it.polimi.ingsw.Cards.Card;
-import it.polimi.ingsw.Cards.CardType;
 import it.polimi.ingsw.Cards.Events.Event;
-import it.polimi.ingsw.Controller.GameManager;
+import it.polimi.ingsw.Factory.BuildingFactory;
 
 
 public class Board  implements Serializable {
@@ -21,6 +20,9 @@ public class Board  implements Serializable {
     private final ArrayList<Player> players; //relazione con Player (2..5)
     private final ArrayList<Card> deck;//*associazione 1:1 con Board*/
     private TurnOrderCard turnOrderCard;
+    private final ArrayList<Building> buildingsEra1;
+    private final ArrayList<Building> buildingsEra2;
+    private final ArrayList<Building> buildingsEra3;
 
     public Board() {
         this.era = 1;
@@ -31,6 +33,9 @@ public class Board  implements Serializable {
         this.path = new ArrayList<>();
         this.players = new ArrayList<>();
         this.deck = new ArrayList<>();
+        this.buildingsEra1 = new ArrayList<>();
+        this.buildingsEra2 = new ArrayList<>();
+        this.buildingsEra3 = new ArrayList<>();
 
     }
 
@@ -99,6 +104,8 @@ public class Board  implements Serializable {
     public void initializeBoard(int NumPlayers){
         int upper = NumPlayers+4;
         int lower = NumPlayers+1;
+        initializeDeck();
+        buildingPerPlayers(NumPlayers);
         int j= 0;
         for(int i = 0; i<lower;  ){
             Card c = deck.removeFirst();
@@ -124,7 +131,7 @@ public class Board  implements Serializable {
 
     }
 
-    public void inizializeDeck(){
+    public void initializeDeck(){
         Deck deck = new Deck();
         this.deck.clear();
         this.deck.addAll(deck.createDeck(players.size()));
@@ -209,6 +216,56 @@ public class Board  implements Serializable {
         }
     }
 
+    /**
+     * the method checks that the deck still has cards, if so it removes the first card of the deck and returns it
+     * @return the first card of the deck
+     */
+    public Card drawCard() {
+        if (!deck.isEmpty()) {
+            Card c = deck.getFirst();
+            deck.removeFirst();
+            return c;
+        }
+        else throw new IllegalArgumentException("il deck è finito");
+    }
+
+    /**
+     * @param numPlayers it is the number of players present in the game
+     * The method creates all the buildings in the game through the factory in 3 different lists, mixes them, and
+     * based on the number of players selects the right number of buildings to use in the game
+     */
+    public void buildingPerPlayers(int numPlayers){
+
+        BuildingFactory buildingFactory = new BuildingFactory();
+        ArrayList<Building> buildings = buildingFactory.createBuildingList();
+        ArrayList<Building> correctBuilding = new ArrayList<>();
+        ArrayList<Building> totalBuildingEra1 = new ArrayList<>();
+        ArrayList<Building> totalBuildingEra2 = new ArrayList<>();
+        ArrayList<Building> totalBuildingEra3 = new ArrayList<>();
+        totalBuildingEra1.addAll(buildings.subList(0,6));
+        Collections.shuffle(totalBuildingEra1);
+        totalBuildingEra2.addAll(buildings.subList(6,13));
+        Collections.shuffle(totalBuildingEra2);
+        totalBuildingEra3.addAll(buildings.subList(13,21));
+        Collections.shuffle(totalBuildingEra3);
+        if(numPlayers==2) {
+            buildingsEra1.add(totalBuildingEra1.getFirst());
+            buildingsEra2.addAll(totalBuildingEra2.subList(0,2));
+            buildingsEra3.addAll(totalBuildingEra3.subList(0,3));
+        } else if (numPlayers==3) {
+            buildingsEra1.addAll(totalBuildingEra1.subList(0,2));
+            buildingsEra2.addAll(totalBuildingEra2.subList(0,2));
+            buildingsEra3.addAll(totalBuildingEra3.subList(0,4));
+        } else if (numPlayers==4) {
+            buildingsEra1.addAll(totalBuildingEra1.subList(0,2));
+            buildingsEra2.addAll(totalBuildingEra2.subList(0,3));
+            buildingsEra3.addAll(totalBuildingEra3.subList(0,4));
+        } else {
+            buildingsEra1.addAll(totalBuildingEra1.subList(0,2));
+            buildingsEra2.addAll(totalBuildingEra2.subList(0,3));
+            buildingsEra3.addAll(totalBuildingEra3.subList(0,5));
+        }
+    }
 }
 
 

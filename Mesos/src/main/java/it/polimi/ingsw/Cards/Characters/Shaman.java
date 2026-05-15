@@ -15,7 +15,9 @@ public class Shaman extends Character implements CharacterInterface {
         this.shamanStars = shamanStars;
     }
     //metodo getter
-    public Integer getShamanStars() { return this.shamanStars; }
+    public Integer getShamanStars() {
+        return this.shamanStars;
+    }
 
     public void printCard(){
         super.printCard();
@@ -26,10 +28,12 @@ public class Shaman extends Character implements CharacterInterface {
         visitor.visit(this, player);
     }
 
-    /**
-     * @param players is an ArrayList which contains al the players' informations
-     * @return  the highest number of stars among the players
-     */
+//    /**
+//     * @param players is an ArrayList which contains al the players' informations
+//     * @return  the highest number of stars among the players
+//     */
 
-
+    public String getImagePath(){
+        return "/images/cards/characters/"+getCharacterType()+"_"+getShamanStars()+"star.png";
+    }
 }
