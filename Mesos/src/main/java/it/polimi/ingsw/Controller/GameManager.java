@@ -20,6 +20,7 @@ public class GameManager {
     private Player currentPlayer;
     private List<PendingPick> pickingQueue = new ArrayList<>();
     private List<Player> positionQueue = new ArrayList<>();
+    private Notifier  notifier = null;
 
     //costruttore
     public GameManager(ArrayList<Player> players, int numPlayers, Board board) {
@@ -60,13 +61,20 @@ public class GameManager {
      * @return next Round.
      */
     public void nextRound() {
+        this.round++;
+
+        if(this.round > 10){
+            endGame();
+            return;
+        }
+        System.out.println(" Inizio Round    " + this.round);
         ArrayList<Event> currentEvents = board.checkEvent();
         positionQueue.clear();
         if (!currentEvents.isEmpty()) {
             resolveEvents(currentEvents);
         }
         board.shiftUpToDown();
-        board.refillCards(new Deck(),players);
+        board.refillCards(this.board.getDeck(),this.players);
         positionPhase();
     }
 
@@ -79,12 +87,15 @@ public class GameManager {
 
     public void endRound() {
         ArrayList<Event> resolveEvents = board.checkEvent();
-        resolveEvents(resolveEvents);
-        board.shiftUpToDown();
-        board.refillCards(new Deck(),players);
-
-        if(board.getDeck().isEmpty() && round == 10){
+        if(!resolveEvents.isEmpty()) {
+            resolveEvents(resolveEvents);
+        }
+        if(round > 10 || board.getDeck().isEmpty()){
             endGame();
+        }else{
+        board.shiftUpToDown();
+        board.refillCards(board.getDeck(),players);
+        nextRound();
         }
     }
 
@@ -174,7 +185,6 @@ public class GameManager {
      */
 
     public void executeNextPosition() {
-        Notifier notifier = new Notifier();
         synchronized (playersLock) {
             if (positionQueue.isEmpty()) {
                 System.out.println("Fase di posizionamento terminata.");
@@ -186,7 +196,7 @@ public class GameManager {
             System.out.println("Player  " + currentPlayer.getName() + "place your totem");
             if(currentPlayer.getVirtualClient() != null){
                 try{
-                   // notifier. (dovrei dire al giocatore in modo indiretto di poszionare il totem tramite notifier)
+                    notifier.showTurnBroadcast (players,currentPlayer);
                 }catch (Exception e) {
                     System.err.println("Errore di comunicazione con " + currentPlayer.getName());
                 }
@@ -214,7 +224,6 @@ public class GameManager {
             chosenCard.setOccupiedBy(p);
             System.out.println(p.getName() + " he positioned himself on the card " + pathIndex);
             newPlayerOrder();
-            Notifier notifier = new Notifier();
             try{
                 notifier.movedTotemBroadcast(this.players ,p ,pathIndex);
             } catch (RemoteException e) {
@@ -285,7 +294,6 @@ public class GameManager {
      */
     public void resolvePick(String playerName, boolean isUpperRequested, boolean isBuilding, int index){
         Player p = getPlayerByName(playerName);
-        Notifier notifier = new Notifier();
 
         //il giocatore sceglie la riga da dove prendere la carta e nello stream cerchiamo se
         //quel giocatore ha una freccia per la riga(sotto/sopra) scelta
@@ -372,7 +380,6 @@ public class GameManager {
 
     public synchronized void moveTotem(String playerName, int pathIndex) {
         Player p = getPlayerByName(playerName);
-        Notifier notifier = new Notifier();
         //verifica che sia il turno del giocatore effettivo
         if(positionQueue.isEmpty() || !positionQueue.get(0).getName().equals(playerName)){
             System.out.println(" Error: It's not your turn ");
@@ -392,6 +399,11 @@ public class GameManager {
         OfferCard chosenCard = board.getPath().get(pathIndex);
         if(chosenCard.isOccupied()){
             System.out.println("Position" + pathIndex + "it's already busy");
+            try{
+                notifier.invalidTotemPosition(p);
+            }catch(RemoteException e){
+                System.err.println("Errore di rete");
+            }
             return;
         }
         //modiifica del Model
@@ -414,7 +426,6 @@ public class GameManager {
 
     public Building buyBuilding(Player player, boolean rowUpper, int index) {
         ArrayList<Building> buildings;
-        Notifier notifier = new Notifier();
         if (rowUpper) {
             buildings = board.getUpperBuildingRow();
         }else{
@@ -461,7 +472,6 @@ public class GameManager {
 
     public boolean takeCharacter(Player player, boolean isUpper,int index){
         Character pickedCharacter = (Character) board.pickCard(isUpper,false,index);
-        Notifier notifier = new Notifier();
         if(pickedCharacter != null){
             player.getTribeCard().add(pickedCharacter);
             System.out.println(player.getName() + "added" + pickedCharacter.getCharacterType());
@@ -496,6 +506,10 @@ public class GameManager {
 
     public void setBoard(Board board){
         this.board = board;
+    }
+
+    public void setNotifier(Notifier notifier){
+        this.notifier = notifier;
     }
 
     public int getRound() {
