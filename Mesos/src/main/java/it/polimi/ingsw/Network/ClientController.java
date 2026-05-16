@@ -1,34 +1,33 @@
 package it.polimi.ingsw.Network;
 
-
-import it.polimi.ingsw.Buildings.Building;
-import it.polimi.ingsw.Cards.Card;
 import it.polimi.ingsw.Game.Board;
 import it.polimi.ingsw.Game.OfferCard;
 import it.polimi.ingsw.Game.Totem;
 
 
-import java.rmi.RemoteException;
+
 import java.util.ArrayList;
-import java.util.List;
+// riferimento all'if che manda messaggi al server
 
 public class ClientController {
-    private final GraphicInterface view;
-    //riferimento all'if che manda messaggi al server
-    private final ServerConnection serverConnection;
-    private String tmpUsername = null;
-    private Totem tmpTotem = null;
-    private final Object tmpLock = new Object();
+    private  GraphicInterface view;
+    private  ServerConnection serverConnection;
+    private  String tmpUsername = null;
+    private  Totem tmpTotem = null;
+    private  final Object tmpLock = new Object();
+    private  Board currentBoard;
 
-    public ClientController(GraphicInterface view, ServerConnection serverConnection) {
+    public void setView(GraphicInterface view){
         this.view = view;
+    }
+    public void setServerConnection(ServerConnection serverConnection){
         this.serverConnection = serverConnection;
     }
 
-    private Board currentBoard;
 
 
-    public void login(String username, Totem chosenTotem) {
+
+   /* public void login(String username, Totem chosenTotem) {
         if (username == null || username.isBlank()) {
             view.showError("Username not valid.");
             return;
@@ -39,7 +38,7 @@ public class ClientController {
             return;
         }
         serverConnection.login(username, chosenTotem);
-    }
+    }*/
 
 
     public void SetNumPlayers(int numPlayers) {
