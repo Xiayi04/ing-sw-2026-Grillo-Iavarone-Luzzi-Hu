@@ -2,6 +2,7 @@ package it.polimi.ingsw.Cards;
 
 import it.polimi.ingsw.Cards.Characters.CharacterType;
 import it.polimi.ingsw.Game.Totem;
+import it.polimi.ingsw.UI.Printer;
 
 import java.io.Serializable;
 
@@ -35,6 +36,8 @@ public abstract class Card implements Serializable {
         System.out.println("era:"+era);
         System.out.println("tipo di carta:"+cardType);
     }
+
+    public abstract String[] print(Printer printer);
 
     public abstract String getImagePath();
 }

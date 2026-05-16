@@ -7,7 +7,7 @@ import it.polimi.ingsw.Game.Player;
 metto metodi visit per tutti i building anche se non devono implementare buildingactivation
  */
 
-public abstract class BuildingActivation implements Visitor {
+public abstract class BuildingActivation implements ActivationVisitor {
     public void visit(BonusStarBuilding visitorBonusStarBuilding, Player player){};
     public void visit(AddCard visitorAddCard, Player player){}
     public void visit(BonusFood bonusFood, Player player){}

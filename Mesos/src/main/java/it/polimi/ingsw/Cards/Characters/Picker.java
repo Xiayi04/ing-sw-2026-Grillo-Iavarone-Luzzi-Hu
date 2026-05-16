@@ -4,6 +4,7 @@ import it.polimi.ingsw.Cards.CardType;
 import it.polimi.ingsw.Cards.Characters.CharacterVisitor.CharacterInterface;
 import it.polimi.ingsw.Cards.Characters.CharacterVisitor.CharacterVisitor;
 import it.polimi.ingsw.Game.Player;
+import it.polimi.ingsw.UI.Printer;
 
 public class Picker extends Character implements CharacterInterface {
     private final int discount = -3;
@@ -14,6 +15,10 @@ public class Picker extends Character implements CharacterInterface {
 
     public int getDiscount() {
         return discount;
+    }
+
+    public String[] print(Printer printer){
+        return printer.print(this);
     }
 
     public void printCard(){

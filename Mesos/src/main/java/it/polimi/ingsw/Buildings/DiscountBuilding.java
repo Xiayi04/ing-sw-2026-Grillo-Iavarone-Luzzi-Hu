@@ -1,11 +1,12 @@
 package it.polimi.ingsw.Buildings;
 import it.polimi.ingsw.Buildings.BuildingVisitor.BuildingInterface;
 import it.polimi.ingsw.Buildings.BuildingVisitor.EventBuildings.Discount.DiscountVisitorInterface;
-import it.polimi.ingsw.Buildings.BuildingVisitor.Visitor;
+import it.polimi.ingsw.Buildings.BuildingVisitor.ActivationVisitor;
 import it.polimi.ingsw.Cards.Events.HuntingEvent;
 import it.polimi.ingsw.Cards.Events.PaintingEvent;
 import it.polimi.ingsw.Cards.Events.SustenanceEvent;
 import it.polimi.ingsw.Game.Player;
+import it.polimi.ingsw.UI.Printer;
 
 public class DiscountBuilding extends Building implements BuildingInterface {
     private final int foodBonus;
@@ -20,6 +21,10 @@ public class DiscountBuilding extends Building implements BuildingInterface {
         this.ppBonus = ppBonus;
         this.typeIcons = typeIcons;
         this.typeEvents = typeEvents;
+    }
+
+    public String[] print(Printer printer){
+        return printer.print(this);
     }
 
     public int getFoodBonus(){
@@ -47,8 +52,8 @@ public class DiscountBuilding extends Building implements BuildingInterface {
     }
 
 
-    public void acceptActivation(Visitor visitor, Player player) {
-        visitor.visit(this, player);
+    public void acceptActivation(ActivationVisitor activationVisitor, Player player) {
+        activationVisitor.visit(this, player);
     }
 
     public int acceptDiscountEvent(DiscountVisitorInterface visitor, Player player, SustenanceEvent event) {

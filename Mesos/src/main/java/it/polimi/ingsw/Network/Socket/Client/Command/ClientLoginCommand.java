@@ -7,13 +7,9 @@ import java.io.IOException;
 import java.net.Socket;
 
 public class ClientLoginCommand implements ClientCommand{
-    private  final String username = ClientMain.getUsername();
-    private  final String[] totems;
-    private String chosenOne;
 
-    public ClientLoginCommand(String[] totems) {
-        this.totems = totems;
-    }
+
+    public ClientLoginCommand() {;    }
 
     /**
      * @param socket           :

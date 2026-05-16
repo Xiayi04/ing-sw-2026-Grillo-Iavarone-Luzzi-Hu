@@ -4,6 +4,7 @@ import it.polimi.ingsw.Cards.CardType;
 import it.polimi.ingsw.Cards.Characters.CharacterVisitor.CharacterInterface;
 import it.polimi.ingsw.Cards.Characters.CharacterVisitor.CharacterVisitor;
 import it.polimi.ingsw.Game.Player;
+import it.polimi.ingsw.UI.Printer;
 
 import java.util.ArrayList;
 
@@ -17,6 +18,10 @@ public class Shaman extends Character implements CharacterInterface {
     //metodo getter
     public Integer getShamanStars() {
         return this.shamanStars;
+    }
+
+    public String[] print(Printer printer){
+        return printer.print(this);
     }
 
     public void printCard(){

@@ -1,144 +1,224 @@
 package it.polimi.ingsw.Controller;
 
-import it.polimi.ingsw.Game.OfferCard;
 import it.polimi.ingsw.Game.Player;
 import it.polimi.ingsw.Game.Totem;
-import it.polimi.ingsw.Network.RMI.ClientRMI;
 import it.polimi.ingsw.Network.VirtualClientInterface;
-
 import java.rmi.RemoteException;
 import java.util.ArrayList;
 
-public class ServerController {
+public class ServerController implements LobbyManager{
     private final GameManager gameManager;
-    private final Notifier notifier;
+    private  Notifier notifier = null;
+    private final Lobby lobby;
 
-    public ServerController(GameManager gameManager,  Notifier notifier) {
+    public ServerController(GameManager gameManager) {
         this.gameManager = gameManager;
-        this.notifier = notifier;
-        gameStarter();
+        this.lobby = new Lobby(this);
     }
 
-    public void gameStarter(){
-        new Thread(()->{
+    //setters and getters
+    public void setNotifier(Notifier notifier) {
+        this.notifier = notifier;
+    }
+    public GameManager getGameManager() {
+        return gameManager;
+    }
+    public Notifier getNotifier() {
+        return notifier;
+    }
+    public Lobby getLobby() {
+        return lobby;
+    }
+    public GameManager getGM(){
+        return gameManager;
+    }
 
-            while(true){
-                int numPlayers;
-                synchronized (GameManager.numPlayersLock) {
-                    numPlayers = gameManager.getNumPlayers();
-                    if(numPlayers<2) {
-                        GameManager.numPlayersLock.notifyAll();
-                        continue;
+    //lobby management
+    @Override
+    public void checkUsername(String username, VirtualClientInterface client){
+        new Thread(() -> {
+            java.util.ArrayList<TempPlayer> tempPlayers =lobby.getTempPlayers();
+
+            synchronized (tempPlayers){
+                TempPlayer tempPlayer = null;
+                boolean alreadyUsed = false;
+
+                for (TempPlayer p : tempPlayers){
+                    if(p.getClient() != null && p.getClient().equals(client)){
+                        tempPlayer = p;
                     }
-                    GameManager.numPlayersLock.notifyAll();
+                    if(p.getName() != null && p.getName().equals(username)){
+                        alreadyUsed = true;
+                    }
                 }
-                GameManager.numPlayersLock.notifyAll();
 
-
-                synchronized (gameManager.getPlayers()) {
-
-                    if(gameManager.getNumPlayers()==numPlayers){
-                        //gameManager.gameInitializing();
-                        gameManager.getPlayers().notifyAll();
-                        break;
-                    }
-                    gameManager.getPlayers().notifyAll();
+                if(!alreadyUsed && tempPlayer != null){
+                    tempPlayer.setName(username);
+                    try {
+                        client.confirmUsername(username);
+                    } catch (Exception e) { e.printStackTrace(); }
+                    checkStartGame();
                 }
             }
         }).start();
     }
 
-    public GameManager getGM(){
-        return gameManager;
-    }
+    @Override
+    public void checkTotem(Totem totem, VirtualClientInterface client) {
+        new Thread(() -> {
+            ArrayList<TempPlayer> tempPlayers =lobby.getTempPlayers();
+            synchronized (tempPlayers){
+                TempPlayer tempPlayer = null;
+                boolean alreadyUsed = false;
 
-    public synchronized void addPlayerToGame(String username, String totem, VirtualClientInterface virtualClient) {
-        synchronized (Lobby.getClients()){
-            if(!Lobby.getClients().contains(virtualClient)){
-                throw new RuntimeException("Error: virtualClient not present in lobby!");
-            }
-        }
-        totem = totem.toUpperCase();
-        Player p = new Player(username,Totem.valueOf(totem),0 ,virtualClient);
-        synchronized (GameManager.playersLock){
-            gameManager.getPlayers().add(p);
-            GameManager.playersLock.notifyAll();
-        }
-
-        synchronized (gameManager.getPlayers()){
-            try {
-                notifier.addedNewPlayerBroadcast(gameManager.getPlayers(), p);
-            } catch (RemoteException e) {
-                throw new RuntimeException(e);
-            }
-            gameManager.getPlayers().notifyAll();
-        }
-    }
-
-    public void takeCharacter(String username, boolean isUpper, int index) throws RemoteException{
-        Player player = gameManager.getPlayerByName(username);
-        gameManager.takeCharacter(player,isUpper,index);
-        System.out.println(username + "he took the character:" +player.getName());
-    }
-
-    public synchronized void buyBuilding(String username,boolean isUpper,int index) throws RemoteException {
-        Player p = gameManager.getPlayerByName(username);
-        if( p!=null){
-            gameManager.buyBuilding(p,isUpper,index);
-        }else{
-            System.out.println("Error: Player "+username+" not found!");
-        }
-
-    }
-
-    public synchronized void pickCard(String playerUsername, boolean isUpper, boolean isBuilding, int index){
-        synchronized (GameManager.class){
-            Player p = gameManager.getPlayerByName(playerUsername);
-            try{
-                if(isBuilding){
-                    this.buyBuilding(playerUsername,isUpper,index);
-                }else{
-                    this.takeCharacter(playerUsername,isUpper,index);
+                for (TempPlayer p : tempPlayers){
+                    if(p.getClient() != null && p.getClient().equals(client)){
+                        tempPlayer = p;
+                    }
+                    if (p.getTempPlayerTotem() != null && p.getTempPlayerTotem().equals(totem)){
+                        alreadyUsed = true;
+                    }
                 }
-            } catch (Exception e) {
-                System.err.println("Error during pickCard: " + e.getMessage());
+
+
+                if(!alreadyUsed && tempPlayer != null){
+                    tempPlayer.setTempPlayerTotem(totem);
+                    checkStartGame();
+                } else if(alreadyUsed){
+                    try {
+                        if(lobby.getAvailableTotems().isEmpty()){
+                            client.totemNotAvailableError(null);
+                            client.refuseConnection();
+                            return;
+                        }
+                        client.totemNotAvailableError(lobby.getAvailableTotems());
+                    } catch (Exception e) { e.printStackTrace(); }
+                }
             }
+        }).start();
+    }
 
+    @Override
+    public void checkSetNumPlayers(int numPlayers, VirtualClientInterface client) {
+        new Thread(() -> {
+            ArrayList<TempPlayer> tempPlayers =lobby.getTempPlayers();
+            synchronized (tempPlayers){
+                boolean present = tempPlayers.stream()
+                        .map(TempPlayer::getClient)
+                        .anyMatch(c->c.equals(client));
+
+                if(!present){
+                    //errore gigante
+                    return;
+                }
+                if(!tempPlayers.getFirst().getClient().equals(client)){
+                    //notFirstError
+                    return;
+                }
+                if(numPlayers<2 || numPlayers>5){
+                    //numero non valido
+                    return;
+                }
+                lobby.getNumPlayers().set(numPlayers);
+                lobby.IsNumPlayersSet().set(true);
+                checkStartGame();
+            }
+        }).start();
+    }
+
+    public void checkStartGame() {
+        new Thread(() -> {
+            ArrayList<TempPlayer> tempPlayers =lobby.getTempPlayers();
+            synchronized (tempPlayers){
+
+                if(!lobby.IsNumPlayersSet().get())
+                    return;
+
+                if(lobby.getTempPlayers().size()<lobby.getNumPlayers().get())
+                    return;
+
+
+                boolean allReady = lobby.getTempPlayers().stream()
+                        .allMatch(p ->
+                                p.getName() != null &&
+                                        p.getTempPlayerTotem() != null);
+
+                if (!allReady) return;
+
+                gameInitializer(lobby.getNumPlayers().get() , tempPlayers);
+            }
+        }).start();
+    }
+
+    //Requests management
+
+    public synchronized void moveTotemRequest(String username, int pathIndex)throws RemoteException {
+        new Thread( () ->{
+            gameManager.resolvePosition(username, pathIndex);
+        }).start();
+    }
+
+    public synchronized void genericPick(String username, boolean isUpper,boolean isBuilding,int index){
+        new Thread(()->{
+            gameManager.resolvePick(username, isUpper,isBuilding,index);
+        }).start();
+    }
+
+    //Game Initializing
+
+    public  void gameInitializer(int numPLayers, ArrayList<TempPlayer> tempPlayers){
+        new Thread(()->{
+            gameManager.setNumPlayers(numPLayers);
+            pushPlayersInGM(tempPlayers);
+
+            synchronized (gameManager.getPlayers()){
+                while(gameManager.getPlayers().size()<numPLayers){
+                    try {
+                        gameManager.getPlayers().wait();
+                    } catch (InterruptedException e) {
+                        throw new RuntimeException(e);
+                    }
+                }
+                ArrayList<VirtualClientInterface> clients = new ArrayList<>();
+                for(TempPlayer p : tempPlayers){
+                    clients.add(p.getClient());
+                }
+                Notifier notifier = new Notifier(clients);
+                setNotifier(notifier);
+                gameManager.setNotifier(notifier)
+
+
+            }
+        }).start();
+    }
+
+    public synchronized void addPlayerToGame(String username, Totem totem, VirtualClientInterface virtualClient) {
+
+        Player p = new Player(username,totem,0 ,virtualClient);
+        synchronized (gameManager.getPlayers()){
+            gameManager.addPlayer(p);
         }
-    }
-    //dubbio
-    public void refuseConnection(VirtualClientInterface virtualClient){
-
+        notifier.addedNewPlayerBroadcast(p);
     }
 
-    public void setNumPlayers(int numPlayers){
-//        synchronized (GameManager.numPlayersLock){
-//            gameManager.setNumPlayers(numPlayers);
-//            //Lobby.isNumPlayersSetted = true;
-//            GameManager.numPlayersLock.notifyAll();
-//        }
+    public void pushPlayersInGM(ArrayList<TempPlayer> tempPlayers){
+        new Thread( () ->{
+            synchronized (gameManager.getPlayers()) {
+                if(!gameManager.getPlayers().isEmpty()){
+                    throw new RuntimeException("Players already in GM");
+                }
+                for(TempPlayer tempPlayer : tempPlayers){
 
-//            Lobby.isNumPlayersSetted = true;
-
-
-
-    }
-    public synchronized void moveTotem(String username, int pathIndex)throws RemoteException {
-//        synchronized (this.clients) {
-//            Player p = gameManager.getPlayerByName(username);
-//            OfferCard chosenCard = gameManager.getBoard().getPath().get(pathIndex);
-//            if (chosenCard.isOccupied()) {
-//                System.out.println("The position" + pathIndex + "it's already occupied");
-//                return;
-//            }
-//            gameManager.getBoard().moveTotem(p, chosenCard);
-//            System.out.println("The player " + p.getName() + "occupied the position" + pathIndex);
-//        }
+                    new Thread( () ->{
+                        addPlayerToGame(tempPlayer.getName(), tempPlayer.getTempPlayerTotem(), tempPlayer.getClient());
+                    }).start();
+                }
+                gameManager.getPlayers().notifyAll();
+            }
+        }).start();
     }
 
 
-    public void totemMove(VirtualClientInterface virtualClient){
-        //synchronized (){}
-    }
+
 
 }

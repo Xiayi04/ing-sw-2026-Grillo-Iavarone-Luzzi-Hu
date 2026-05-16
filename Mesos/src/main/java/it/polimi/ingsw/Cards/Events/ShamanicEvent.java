@@ -5,6 +5,7 @@ import it.polimi.ingsw.Buildings.BuildingVisitor.EventBuildings.Shamanic.Shamani
 import it.polimi.ingsw.Buildings.BuildingVisitor.EventBuildings.Shamanic.ShamanicNoMalusVisitor;
 import it.polimi.ingsw.Buildings.BuildingVisitor.EventBuildings.Shamanic.ShamanicVisitorInterface;
 import it.polimi.ingsw.Game.Player;
+import it.polimi.ingsw.UI.Printer;
 
 import java.util.ArrayList;
 
@@ -22,6 +23,10 @@ public class ShamanicEvent extends Event {
         this.ShEvePrizePoints = prizePoints;
         this.MaxStars = 0;
         this.MinStars = 0;
+    }
+
+    public String[] print(Printer printer){
+        return printer.print(this);
     }
 
     /**

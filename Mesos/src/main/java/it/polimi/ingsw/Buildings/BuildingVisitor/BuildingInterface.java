@@ -10,7 +10,7 @@ import it.polimi.ingsw.Cards.Events.SustenanceEvent;
 import it.polimi.ingsw.Game.Player;
 
 public interface BuildingInterface {
-    public void acceptActivation(Visitor visitor, Player player);
+    public void acceptActivation(ActivationVisitor activationVisitor, Player player);
     //discount
     int acceptDiscountEvent(DiscountVisitorInterface visitor, Player player, SustenanceEvent event);
     void acceptDiscountEvent(DiscountVisitorInterface visitor, Player player, HuntingEvent event);

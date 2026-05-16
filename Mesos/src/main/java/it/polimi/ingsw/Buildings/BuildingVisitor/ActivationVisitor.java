@@ -6,7 +6,7 @@ import it.polimi.ingsw.Game.Player;
 /*
 metto metodi visit per tutti i building anche se non devono implementare building activation
  */
-public interface Visitor {
+public interface ActivationVisitor {
     void visit(AddCard addCard, Player player);
     void visit(BonusStarBuilding bonusStarBuilding, Player player);
     void visit(BonusFood bonusFood, Player player);

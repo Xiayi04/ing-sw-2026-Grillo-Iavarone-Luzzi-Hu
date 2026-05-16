@@ -6,6 +6,7 @@ import it.polimi.ingsw.Cards.Characters.CharacterVisitor.CharacterInterface;
 import it.polimi.ingsw.Cards.Characters.CharacterVisitor.CharacterVisitor;
 import it.polimi.ingsw.Cards.Characters.CharacterVisitor.InventorInterface;
 import it.polimi.ingsw.Game.Player;
+import it.polimi.ingsw.UI.Printer;
 
 public abstract class Character extends Card implements CharacterInterface, InventorInterface {
     private final int numPlayers;
@@ -31,6 +32,8 @@ public abstract class Character extends Card implements CharacterInterface, Inve
         System.out.println(("tipo di personaggio:"+characterType));
     }
 
+
+    public abstract String[] print(Printer printer);
 
     /**
      * @param visitor

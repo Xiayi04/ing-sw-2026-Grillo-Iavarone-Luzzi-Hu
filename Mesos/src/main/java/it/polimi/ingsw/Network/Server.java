@@ -24,16 +24,17 @@ public class Server {
 
 
     public static void main(String[] args) throws RemoteException {
-        gameManager = new GameManager(new ArrayList<Player>(),0, new Board());
+
 
         System.out.println("Server starting...");
 
+        Lobby lobby = new Lobby();
+        GameManager gameManager = new GameManager(null,0,new Board());
+        ServerController serverController = new ServerController(lobby,gameManager);
 
-        ServerController serverController = new ServerController(gameManager, new Notifier());
-        Lobby lobby = new Lobby(serverController);
 
         new Thread(new ServerSocket(socketPort,serverController, lobby)).start();
-        new Thread(new ServerRMI(gameManager)).start();
+        new Thread(new ServerRMI(gameManager,serverController,lobby)).start();
 
 
 

@@ -1,6 +1,7 @@
 package it.polimi.ingsw.Game;
 
 import it.polimi.ingsw.Buildings.*;
+import it.polimi.ingsw.UI.Printer;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -49,6 +50,10 @@ public class TurnOrderCard implements Serializable {
                     order.get(1).modifyFood(1);
         }
         order.get(order.size()-1).modifyFood(-1);
+    }
+
+    public String[] print(Printer printer){
+        return printer.print(this);
     }
 
 

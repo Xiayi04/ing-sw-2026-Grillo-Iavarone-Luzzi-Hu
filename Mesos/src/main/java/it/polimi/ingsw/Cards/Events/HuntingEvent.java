@@ -6,6 +6,7 @@ import it.polimi.ingsw.Buildings.BuildingVisitor.EventBuildings.Discount.Discoun
 import it.polimi.ingsw.Buildings.Icons;
 import it.polimi.ingsw.Cards.CardType;
 import it.polimi.ingsw.Game.Player;
+import it.polimi.ingsw.UI.Printer;
 
 import java.util.ArrayList;
 
@@ -17,6 +18,10 @@ public class HuntingEvent extends Event {
     public HuntingEvent(int era, String cardType, String eventName, Integer HuEvePP) {
         super(era, cardType, eventName);
         this.HuEvePP = HuEvePP;
+    }
+
+    public String[] print(Printer printer){
+        return printer.print(this);
     }
 
     public Integer getHuEvePP() {

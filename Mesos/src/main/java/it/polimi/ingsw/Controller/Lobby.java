@@ -1,85 +1,97 @@
 package it.polimi.ingsw.Controller;
 
+import it.polimi.ingsw.Game.Totem;
 import it.polimi.ingsw.Network.VirtualClientInterface;
 
-import java.rmi.RemoteException;
+import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Objects;
 import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.concurrent.atomic.AtomicInteger;
 
 public class Lobby {
-    private static final ArrayList<VirtualClientInterface> clients = new ArrayList<>();
-    private final ServerController serverController;
-    private final GameManager gameManager;
-    public static final AtomicBoolean isNumPlayersSetted = new AtomicBoolean(false);
+    private final ArrayList<TempPlayer> tempPlayers = new ArrayList<>();
+    public static final AtomicBoolean isNumPlayersSet = new AtomicBoolean(false);
+    public final AtomicInteger numPlayers = new AtomicInteger(0);
+    public final LobbyManager serverController;
 
-    public  Lobby(ServerController serverController){
+    public Lobby(LobbyManager serverController) {
         this.serverController = serverController;
-        this.gameManager = serverController.getGM();
     }
 
+    public AtomicInteger getNumPlayers() {
+        return numPlayers;
+    }
+    public AtomicBoolean IsNumPlayersSet() {
+        return isNumPlayersSet;
+    }
 
-    public synchronized void addClient(VirtualClientInterface client) throws RemoteException {
-        synchronized (clients){
-            //This should let the first player jump this 'if statement' even though the first condition is false
-            synchronized (isNumPlayersSetted){
-                if (isNumPlayersSetted.get() && clients.size() >= gameManager.getNumPlayers()) {
+    public void addClient(VirtualClientInterface client){
+        synchronized (tempPlayers){
+            if(tempPlayers.size()>=5){
+                try {
                     client.refuseConnection();
-                    return;
+                } catch (IOException e) {
+                    throw new RuntimeException(e);
                 }
-                isNumPlayersSetted.notify();
-            }
-            clients.add(client);
-
-            if(clients.size()==1){
-                client.askNumPlayers();
-                checkSetNumPlayers();
-                client.askForLogin();
+                return;
             }
 
+            boolean present = tempPlayers.stream()
+                    .map(TempPlayer::getClient)
+                    .anyMatch(c -> c.equals(client));
+
+            if(!present) {
+                tempPlayers.add(new TempPlayer(client));
+            }else
+                throw new RuntimeException("client already in tempPlayers");
         }
     }
 
-    public static ArrayList<VirtualClientInterface> getClients(){
-        return clients;
+    public void addUsername(String username, VirtualClientInterface client){
+        serverController.checkUsername(username, client);
     }
 
+    public void addTotem(Totem totem, VirtualClientInterface client){
+        serverController.checkTotem(totem, client);
+    }
 
-    public void checkSetNumPlayers(){
-        new Thread(()->{
-            int nPlayers = 0;
-            synchronized (GameManager.numPlayersLock) {
-                while(gameManager.getNumPlayers() <2){
-                    try {
-                        GameManager.numPlayersLock.wait();
-                    } catch (InterruptedException e) {}
+    public void setNumPlayers(Integer numPlayers, VirtualClientInterface client){
+        serverController.checkSetNumPlayers(numPlayers, client);
+    }
+
+    public ArrayList<Totem> getAvailableTotems(){
+        ArrayList<Totem> totems = new ArrayList<>();
+        totems.add(Totem.BLACK);
+        totems.add(Totem.BLUE);
+        totems.add(Totem.WHITE);
+        totems.add(Totem.YELLOW);
+        totems.add(Totem.ORANGE);
+
+        ArrayList<Totem> takenTotems = new ArrayList<>();
+
+        synchronized (tempPlayers){
+            for (TempPlayer p : tempPlayers){
+                if(p.getTempPlayerTotem() != null){
+                    takenTotems.add(p.getTempPlayerTotem());
                 }
-                nPlayers = gameManager.getNumPlayers();
-                GameManager.numPlayersLock.notifyAll();
             }
+        }
+        totems.removeAll(takenTotems);
+        return totems;
+    }
 
-            synchronized (clients){
+    public ArrayList<TempPlayer> getTempPlayers(){
+        return tempPlayers;
+    }
 
-                for(int i = 1; i< nPlayers; i++){
-                    try {
-                        clients.get(i).askForLogin();
-                    } catch (RemoteException e) {
-                        throw new RuntimeException(e);
-                    }
-                }
-
-                if(clients.size()>nPlayers){
-                    for(int i = nPlayers; i< clients.size(); i++){
-                        clients.get(i).refuseConnection();
-                    }
-                }
-
-                synchronized (isNumPlayersSetted){
-                    isNumPlayersSetted.set(true);
-                    isNumPlayersSetted.notifyAll();
-                }
-                clients.notifyAll();
+    public TempPlayer getTempPlayerByClient(VirtualClientInterface client){
+        synchronized (tempPlayers){
+            for (TempPlayer t : tempPlayers){
+                if(t.getClient()!=null && t.getClient().equals(client))
+                    return t;
             }
-
-        }).start();
+        }
+        return null;
     }
 }

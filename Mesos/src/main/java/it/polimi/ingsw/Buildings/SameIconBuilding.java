@@ -1,11 +1,11 @@
 package it.polimi.ingsw.Buildings;
 
 import it.polimi.ingsw.Buildings.BuildingVisitor.BuildingInterface;
-import it.polimi.ingsw.Buildings.BuildingVisitor.Visitor;
+import it.polimi.ingsw.Buildings.BuildingVisitor.ActivationVisitor;
 import it.polimi.ingsw.Cards.Characters.Character;
 import it.polimi.ingsw.Cards.Characters.CharacterVisitor.InventorIconCounter;
-import it.polimi.ingsw.Cards.Characters.Inventor;
 import it.polimi.ingsw.Game.Player;
+import it.polimi.ingsw.UI.Printer;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -50,9 +50,13 @@ public class SameIconBuilding extends Building implements BuildingInterface {
         checkPair.put(icon, v);
     }
 
+    public String[] print(Printer printer){
+        return printer.print(this);
+    }
+
     @Override
-    public void acceptActivation(Visitor visitor, Player player){
-        visitor.visit(this, player);
+    public void acceptActivation(ActivationVisitor activationVisitor, Player player){
+        activationVisitor.visit(this, player);
     }
 
     public Map<String, Integer> getCheckPair(){

@@ -2,8 +2,9 @@ package it.polimi.ingsw.Buildings;
 
 import it.polimi.ingsw.Buildings.BuildingVisitor.BuildingInterface;
 import it.polimi.ingsw.Buildings.BuildingVisitor.EndGame.EndGameVisitorInterface;
-import it.polimi.ingsw.Buildings.BuildingVisitor.Visitor;
+import it.polimi.ingsw.Buildings.BuildingVisitor.ActivationVisitor;
 import it.polimi.ingsw.Game.Player;
+import it.polimi.ingsw.UI.Printer;
 
 public class MultiplierPPBuilderBuilding extends EndGameBuilding implements BuildingInterface {
 
@@ -16,14 +17,18 @@ public class MultiplierPPBuilderBuilding extends EndGameBuilding implements Buil
     }
 
     @Override
-    public void acceptActivation(Visitor visitor, Player player) {
-        visitor.visit(this, player);
+    public void acceptActivation(ActivationVisitor activationVisitor, Player player) {
+        activationVisitor.visit(this, player);
     }
 
     @Override
     public void printCard() {
         super.printCard();
         System.out.println("icona:"+typeIcons.toString());
+    }
+
+    public String[] print(Printer printer){
+        return printer.print(this);
     }
 
     @Override

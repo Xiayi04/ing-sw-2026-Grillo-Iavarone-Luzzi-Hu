@@ -1,6 +1,11 @@
 package it.polimi.ingsw.Controller;
 
 import it.polimi.ingsw.Buildings.Building;
+import it.polimi.ingsw.Buildings.BuildingVisitor.ActivationVisitor;
+import it.polimi.ingsw.Buildings.BuildingVisitor.ConcreteBuildingActivation;
+import it.polimi.ingsw.Cards.Card;
+import it.polimi.ingsw.Cards.Characters.CharacterVisitor.CharacterVisitor;
+import it.polimi.ingsw.Cards.Characters.CharacterVisitor.AddAndCountCharacter;
 import it.polimi.ingsw.Cards.Events.Event;
 import it.polimi.ingsw.Game.*;
 import it.polimi.ingsw.Cards.Characters.Character;
@@ -446,6 +451,10 @@ public class GameManager {
             player.modifyFood(-cost);
             Building pickedBuilding=  (Building) board.pickCard(rowUpper, true, index);
             player.getBuilding().add(pickedBuilding);
+            //Some buildings need to be activated when picked up from the board
+            ActivationVisitor visitor = new ConcreteBuildingActivation();
+            pickedBuilding.acceptActivation(visitor, player);
+
             System.out.println("The building" + pickedBuilding.getName() + "was purchased by");
             return pickedBuilding;
         }else{
@@ -473,8 +482,13 @@ public class GameManager {
     public boolean takeCharacter(Player player, boolean isUpper,int index){
         Character pickedCharacter = (Character) board.pickCard(isUpper,false,index);
         if(pickedCharacter != null){
-            player.getTribeCard().add(pickedCharacter);
+            //Using visitor to add the Character to the player's list
+            //and automatically increase the counter of the specific character
+            CharacterVisitor visitor = new AddAndCountCharacter();
+            pickedCharacter.addCard(visitor,player);
             System.out.println(player.getName() + "added" + pickedCharacter.getCharacterType());
+            //broadcasting to everyone that the player picked successfully the wanted card
+            notifier.pickedCardBroadcast(player,isUpper,false,index);
             return true;
         }else{
             try{

@@ -1,6 +1,7 @@
 package it.polimi.ingsw.Network.Socket.Server;
 import it.polimi.ingsw.Controller.GameManager;
 import it.polimi.ingsw.Controller.ServerController;
+import it.polimi.ingsw.Network.Socket.Client.MessageFromClient;
 import it.polimi.ingsw.Network.Socket.Server.Command.ServerCommand;
 import it.polimi.ingsw.Network.Socket.Server.Command.CommandFactoryServer;
 import it.polimi.ingsw.Network.VirtualClientInterface;
@@ -8,11 +9,12 @@ import it.polimi.ingsw.Network.VirtualClientInterface;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.io.ObjectInputStream;
 import java.net.Socket;
 
 public class ClientHandler implements Runnable {
     private final Socket socket;
-    private final BufferedReader reader;
+    private final ObjectInputStream reader;
     GameManager gameManager;
     VirtualClientInterface client;
     public Boolean terminationSignal = false;
@@ -21,7 +23,7 @@ public class ClientHandler implements Runnable {
 
     public ClientHandler(Socket socket, GameManager gameManager, VirtualClientInterface client, ServerController serverController) throws IOException {
         this.socket = socket;
-        reader = new BufferedReader(new InputStreamReader(socket.getInputStream()));
+        reader = new ObjectInputStream(socket.getInputStream());
         this.serverController = serverController;
         new Thread(this).start();
         this.client = client;
@@ -34,11 +36,11 @@ public class ClientHandler implements Runnable {
         try{
             while(true){
 
-                String line = reader.readLine();
-                System.out.println(line);
-                ServerCommand cmd = commandFactoryServer.getCommand(line);
+                MessageFromClient msg =(MessageFromClient) reader.readObject();
+                System.out.println(msg.getHeader());
+                ServerCommand cmd = commandFactoryServer.getCommand(msg);
 
-                cmd.execute(gameManager, client, serverController);
+                cmd.execute(client, serverController);
             }
         }catch(Exception e){
             e.printStackTrace();

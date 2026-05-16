@@ -1,8 +1,9 @@
 package it.polimi.ingsw.Buildings;
 
 import it.polimi.ingsw.Buildings.BuildingVisitor.EndGame.EndGameVisitorInterface;
-import it.polimi.ingsw.Buildings.BuildingVisitor.Visitor;
+import it.polimi.ingsw.Buildings.BuildingVisitor.ActivationVisitor;
 import it.polimi.ingsw.Game.Player;
+import it.polimi.ingsw.UI.Printer;
 
 public class MultiplicationBuilding extends EndGameBuilding {
     private final int multiplier;
@@ -18,6 +19,10 @@ public class MultiplicationBuilding extends EndGameBuilding {
         return multiplier;
     }
 
+    public String[] print(Printer printer){
+        return printer.print(this);
+    }
+
     @Override
     public int countPP(Player player){
         if(getTypeIcons().equals("SET")){
@@ -28,8 +33,8 @@ public class MultiplicationBuilding extends EndGameBuilding {
     }
 
     @Override
-    public void acceptActivation(Visitor visitor, Player player) {
-        visitor.visit(this,player);
+    public void acceptActivation(ActivationVisitor activationVisitor, Player player) {
+        activationVisitor.visit(this,player);
     }
     //HO fatto due metodi in player per contare le carte di un tipo e i set completi
     @Override

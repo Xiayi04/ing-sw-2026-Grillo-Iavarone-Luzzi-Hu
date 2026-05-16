@@ -2,23 +2,27 @@ package it.polimi.ingsw.Network.Socket.Client;
 
 import it.polimi.ingsw.Game.Totem;
 import it.polimi.ingsw.Network.ClientController;
+import it.polimi.ingsw.Network.ServerConnection;
 import it.polimi.ingsw.Network.Socket.Client.Command.ClientCommand;
 import it.polimi.ingsw.Network.Socket.Client.Command.CommandFactoryClientSide;
+import it.polimi.ingsw.Network.Socket.Server.Command.Pick;
+import it.polimi.ingsw.Network.Socket.Server.MessageFromServer;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.PrintWriter;
+import java.io.*;
 import java.net.Socket;
-import java.util.Scanner;
 
-public class SocketClient implements Runnable{
+public class SocketClient implements Runnable, ServerConnection {
     //private Socket socket;
-    public static final Object inputLock = new Object();
     public static final Object outputLock = new Object();
+    public ObjectOutputStream out;
     public final ClientController clientController;
     public SocketClient(Socket socket, ClientController clientController) {
         this.clientController = clientController;
+        try {
+            out = new ObjectOutputStream(socket.getOutputStream());
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
         run();
     }
 
@@ -27,29 +31,112 @@ public class SocketClient implements Runnable{
         try {
             Socket socket = new Socket("localhost", 777);
 
-            BufferedReader reader = new BufferedReader(
-                    new InputStreamReader(socket.getInputStream())
-            );
-
-            PrintWriter writer = new PrintWriter(socket.getOutputStream(), true);
-
-            System.out.println("Write your username :");
-            Scanner sc = new Scanner(System.in);
-            String username = sc.nextLine();
-            System.out.println("Select a totem:");
-            String totem = sc.nextLine();
-            writer.println("LOGIN#"+username+","+totem);
+            ObjectInputStream inputStream = new ObjectInputStream(socket.getInputStream());
 
             //implementazione heartbeat
             CommandFactoryClientSide commandFactory = new CommandFactoryClientSide();
             while(true){
-               String line = reader.readLine();
-               ClientCommand cmd = commandFactory.getCommand(line);
-               cmd.execute(socket, clientController);
+                MessageFromServer msg = (MessageFromServer) inputStream.readObject();
+                ClientCommand cmd = commandFactory.getCommand(msg);
+
+                new Thread(()->{
+                    try {
+                        cmd.execute(socket, clientController);
+                    } catch (IOException e) {
+                        throw new RuntimeException(e);
+                    }
+                }).start();
             }
 
         } catch (IOException e) {
             throw new RuntimeException(e);
+        } catch (ClassNotFoundException e) {
+            throw new RuntimeException(e);
         }
     }
+
+    public void sendTotem(Totem totem){
+        new Thread(()->{
+            synchronized (outputLock){
+                try {
+                    out.writeObject(new MessageFromClient<>("totem",totem));
+                } catch (IOException e) {
+                    throw new RuntimeException(e);
+                }
+            }
+        }).start();
+    }
+
+    public void sendUsername(String userName){
+        new Thread(()->{
+            synchronized (outputLock){
+                try {
+                    out.writeObject(new MessageFromClient<>("username",userName));
+                } catch (IOException e) {}
+            }
+        }).start();
+    }
+
+    @Override
+    public void login(String username, Totem chosenTotem) {
+        new Thread(()->{
+            synchronized (outputLock){
+                try {
+                    out.writeObject(new MessageFromClient<>("username",username));
+                } catch (IOException e) {}
+
+                try {
+                    out.writeObject(new MessageFromClient<>("totem", chosenTotem));
+                } catch (IOException e) {
+                    throw new RuntimeException(e);
+                }
+            }
+        }).start();
+    }
+
+    @Override
+    public void setNumPlayers(int numPlayer) {
+        new Thread(()->{
+            synchronized (outputLock){
+                try {
+                    out.writeObject(new MessageFromClient<>("setnumplayers",numPlayer));
+                } catch (IOException e) {
+                    throw new RuntimeException(e);
+                }
+            }
+        }).start();
+    }
+
+    @Override
+    public void pickCard(String username, boolean isUpper, boolean isBuilding, int index) {
+        new Thread(()->{
+            Pick pick = new Pick(username, isUpper, isBuilding, index);
+            synchronized (outputLock){
+                try {
+                    out.writeObject(new MessageFromClient<>("pick",pick));
+                } catch (IOException e) {
+                    throw new RuntimeException(e);
+                }
+            }
+        }).start();
+    }
+
+    @Override
+    public void setTotemPosition(int chosenPosition) {
+        new Thread(()->{
+            synchronized (outputLock){
+                try {
+                    out.writeObject(new MessageFromClient<>("position", chosenPosition));
+                } catch (IOException e) {
+                    throw new RuntimeException(e);
+                }
+            }
+        }).start();
+    }
+
+    @Override
+    public void leave() {
+
+    }
+
 }

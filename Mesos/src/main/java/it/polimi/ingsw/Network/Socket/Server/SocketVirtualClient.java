@@ -17,15 +17,14 @@ import java.util.List;
 
 public class SocketVirtualClient implements VirtualClientInterface {
     private final Socket socket;
-    private final PrintWriter out;
+    private final ObjectOutputStream out;
     //private final BufferedReader in;
     private final Object outputLock = new Object();
-    private final char separator = '#';
     private final GameManager gm;
 
     public SocketVirtualClient(Socket socket, GameManager gameManager) throws IOException {
         this.socket = socket;
-        this.out = new PrintWriter(socket.getOutputStream(), true );
+        this.out = new ObjectOutputStream(socket.getOutputStream());
         //this.in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
         this.gm = gameManager;
     }
@@ -52,9 +51,10 @@ public class SocketVirtualClient implements VirtualClientInterface {
     }
 
     @Override
-    public void showMessage(String message) throws RemoteException {
+    public void showMessage(String message) throws IOException {
         synchronized (outputLock) {
-            out.println("MSG"+separator+message);
+            out.writeObject(new MessageFromServer<>("MSG", message));
+            out.flush();
         }
     }
 
@@ -80,34 +80,38 @@ public class SocketVirtualClient implements VirtualClientInterface {
     }
 
     @Override
-    public void askNumPlayers() throws RemoteException {
+    public void askNumPlayers() throws IOException {
         synchronized (outputLock) {
-            out.println("SETNUMPLAYERS"+separator);
+            out.writeObject(new MessageFromServer<>("SETNUMPLAYERS", null));
+            out.flush();
         }
     }
 
 
 
     @Override
-    public void askForLogin() throws RemoteException {
+    public void askForLogin() throws IOException {
 
         //trovare totem disponibili
         synchronized (outputLock){
-            out.println("LOGIN"+separator);
+            out.writeObject(new MessageFromServer<>("LOGIN",null));
+            out.flush();
         }
     }
 
     @Override
-    public void refuseConnection(){
+    public void refuseConnection() throws IOException {
         synchronized (outputLock){
-            out.println("REFUSECONNECTION"+separator);
+            out.writeObject(new MessageFromServer<>("REFUSECONNECTION", null));
+            out.flush();
         }
     }
 
     @Override
-    public void newPlayer(Player newPlayer) throws RemoteException {
+    public void newPlayer(Player newPlayer) throws IOException {
         synchronized (outputLock){
-            out.println("NEWPLAYER"+separator+newPlayer.getName() + "," +  newPlayer.getTotem().toString());
+            out.writeObject(new MessageFromServer<>("NEWPLAYER",newPlayer));
+            out.flush();
         }
     }
 

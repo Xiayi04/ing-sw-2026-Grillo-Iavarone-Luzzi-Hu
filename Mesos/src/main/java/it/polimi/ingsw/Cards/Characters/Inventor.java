@@ -4,6 +4,7 @@ import it.polimi.ingsw.Cards.Characters.CharacterVisitor.CharacterInterface;
 import it.polimi.ingsw.Cards.Characters.CharacterVisitor.CharacterVisitor;
 import it.polimi.ingsw.Cards.Characters.CharacterVisitor.InventorInterface;
 import it.polimi.ingsw.Game.Player;
+import it.polimi.ingsw.UI.Printer;
 
 import javax.swing.*;
 
@@ -19,6 +20,10 @@ public class Inventor extends Character implements CharacterInterface, InventorI
 
     public String getInventorIcon() {
         return inventorIcon.toLowerCase();
+    }
+
+    public String[] print(Printer printer){
+        return printer.print(this);
     }
 
     public void printCard(){

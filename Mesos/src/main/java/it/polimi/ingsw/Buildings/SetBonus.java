@@ -1,7 +1,8 @@
 package it.polimi.ingsw.Buildings;
 import it.polimi.ingsw.Buildings.BuildingVisitor.BuildingInterface;
-import it.polimi.ingsw.Buildings.BuildingVisitor.Visitor;
+import it.polimi.ingsw.Buildings.BuildingVisitor.ActivationVisitor;
 import it.polimi.ingsw.Game.Player;
+import it.polimi.ingsw.UI.Printer;
 
 public class SetBonus extends Building implements BuildingInterface {
     private int fullSetCounter;
@@ -20,9 +21,13 @@ public class SetBonus extends Building implements BuildingInterface {
         }
     }
 
+    public String[] print(Printer printer){
+        return printer.print(this);
+    }
+
     @Override
-    public void acceptActivation(Visitor visitor, Player player){
-        visitor.visit(this, player);
+    public void acceptActivation(ActivationVisitor activationVisitor, Player player){
+        activationVisitor.visit(this, player);
     }
 
     public int getFullSetCounter(){

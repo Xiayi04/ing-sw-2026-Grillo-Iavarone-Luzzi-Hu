@@ -31,4 +31,8 @@ public abstract class AbstractCharacterVisitor implements CharacterVisitor{
     public String visit(Painter painter) {
         return "";
     }
+    @Override
+    public String visit(Inventor inventor) {
+        return "";
+    }
 }

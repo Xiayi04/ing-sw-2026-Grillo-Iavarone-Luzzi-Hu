@@ -6,6 +6,8 @@ import it.polimi.ingsw.Buildings.BuildingVisitor.EventBuildings.Discount.Discoun
 import it.polimi.ingsw.Buildings.Icons;
 import it.polimi.ingsw.Cards.CardType;
 import it.polimi.ingsw.Game.Player;
+import it.polimi.ingsw.UI.Printer;
+
 import java.util.ArrayList;
 import static java.lang.Math.abs;
 
@@ -19,6 +21,10 @@ public class PaintingEvent extends Event {
         this.PaEveNumMinPainters = minPainters;
         this.PaEveMultiplierPP = multiplierPP;
         this.PaEvePointsLoss = pointsLoss;
+    }
+
+    public String[] print(Printer printer){
+        return printer.print(this);
     }
 
     public Integer getPaEveNumMinPainters() {

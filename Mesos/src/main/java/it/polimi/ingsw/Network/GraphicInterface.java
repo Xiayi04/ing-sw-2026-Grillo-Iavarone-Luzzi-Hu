@@ -16,4 +16,11 @@ public interface GraphicInterface {
     int askPosition(ArrayList<OfferCard> path);
     void updateBoardStatus(Board board);
     void showCurrentPlayer(String username);
+    void welcomeUser(String username);
+    void invalidUsername();
+    void showChosenTotem(Totem totem);
+    void showAvailableTotems(ArrayList<Totem> availableTotems);
+    void totemSelectionError();
+    void showLobbyMenu();
+    
 }

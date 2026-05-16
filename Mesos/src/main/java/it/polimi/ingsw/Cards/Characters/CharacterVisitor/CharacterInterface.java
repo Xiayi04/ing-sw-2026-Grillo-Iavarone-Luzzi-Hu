@@ -1,6 +1,5 @@
 package it.polimi.ingsw.Cards.Characters.CharacterVisitor;
 
-import it.polimi.ingsw.Buildings.BuildingVisitor.Visitor;
 import it.polimi.ingsw.Game.Player;
 
 public interface CharacterInterface {

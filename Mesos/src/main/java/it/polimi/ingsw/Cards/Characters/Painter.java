@@ -3,6 +3,7 @@ import it.polimi.ingsw.Cards.CardType;
 import it.polimi.ingsw.Cards.Characters.CharacterVisitor.CharacterInterface;
 import it.polimi.ingsw.Cards.Characters.CharacterVisitor.CharacterVisitor;
 import it.polimi.ingsw.Game.Player;
+import it.polimi.ingsw.UI.Printer;
 
 public class Painter extends Character implements CharacterInterface {
     public Painter(int era, String cardType, int numPlayers, String characterType){
@@ -11,6 +12,10 @@ public class Painter extends Character implements CharacterInterface {
 
     public void printCard(){
         super.printCard();
+    }
+
+    public String[] print(Printer printer){
+        return printer.print(this);
     }
     //accepter
     @Override

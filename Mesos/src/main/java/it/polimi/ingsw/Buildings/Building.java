@@ -4,7 +4,7 @@ import it.polimi.ingsw.Buildings.BuildingVisitor.BuildingInterface;
 import it.polimi.ingsw.Buildings.BuildingVisitor.EventBuildings.Discount.DiscountVisitorInterface;
 import it.polimi.ingsw.Buildings.BuildingVisitor.EndGame.EndGameVisitorInterface;
 import it.polimi.ingsw.Buildings.BuildingVisitor.EventBuildings.Shamanic.ShamanicVisitorInterface;
-import it.polimi.ingsw.Buildings.BuildingVisitor.Visitor;
+import it.polimi.ingsw.Buildings.BuildingVisitor.ActivationVisitor;
 import it.polimi.ingsw.Cards.Card;
 import it.polimi.ingsw.Cards.Events.HuntingEvent;
 import it.polimi.ingsw.Cards.Events.PaintingEvent;
@@ -42,7 +42,7 @@ public abstract class Building extends Card implements BuildingInterface {
     }
 
     @Override
-    public void acceptActivation(Visitor visitor, Player player) {
+    public void acceptActivation(ActivationVisitor activationVisitor, Player player) {
 
     }
 

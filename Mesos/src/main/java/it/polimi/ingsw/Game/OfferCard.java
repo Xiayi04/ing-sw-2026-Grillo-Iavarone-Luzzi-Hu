@@ -1,5 +1,7 @@
 package it.polimi.ingsw.Game;
 
+import it.polimi.ingsw.UI.Printer;
+
 import java.io.Serializable;
 
 //cambiato il tipo di ID
@@ -60,6 +62,10 @@ public class OfferCard implements Serializable {
     public void release(){ //metodo per liberare l posizione quando il totem viene rimosso
         this.OccupiedBy = null;
         this.IsOccupied = false;
+    }
+
+    public String[] print(Printer printer){
+        return printer.print(this);
     }
 
 

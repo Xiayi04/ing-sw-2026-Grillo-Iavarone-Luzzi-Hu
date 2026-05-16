@@ -2,30 +2,27 @@ package it.polimi.ingsw.Network.Socket.Client.Command;
 
 
 
-import java.util.Arrays;
+import it.polimi.ingsw.Game.Player;
+import it.polimi.ingsw.Network.Socket.Server.MessageFromServer;
+
 import java.util.HashMap;
 import java.util.Map;
 import java.util.function.Function;
 
 public class CommandFactoryClientSide {
-    private static Map<String, Function<String[], ClientCommand>> commands = new HashMap<>();
+    private static Map<String, Function<Object, ClientCommand>> commands = new HashMap<>();
     public CommandFactoryClientSide() {
-        commands.put("setnumplayers", payload -> new NumPlayersCommand( Arrays.toString(payload)));
-        commands.put("login", payload -> new ClientLoginCommand(payload));
-        commands.put("msg", payload-> new ShowMSGCommand(payload));
+        commands.put("setnumplayers", payload -> new NumPlayersCommand());
+        commands.put("login", payload -> new ClientLoginCommand());
+        commands.put("msg", payload-> new ShowMSGCommand((String[]) payload));
         commands.put("refuseconnection", payload-> new RefusedConnectionCommand());
-        commands.put("newplayer", payload-> new NewPlayerCommand(payload));
+        commands.put("newplayer", payload-> new NewPlayerCommand((Player)payload));
     }
 
-    public synchronized ClientCommand getCommand(String command) {
-        command = command.toLowerCase();
-        String[] split = command.split("#");
-
-        String[] payload = null;
-        if (split.length > 1) {
-            payload = split[1].split(",");
+    public synchronized ClientCommand getCommand(MessageFromServer msg) {
+        if(!commands.keySet().contains(msg.getHeader())){
+            return new NotFoundCommand(msg.getHeader());
         }
-
-        return commands.get(split[0]).apply(payload);
+        return commands.get(msg.getHeader()).apply(msg.getPayload());
     }
 }

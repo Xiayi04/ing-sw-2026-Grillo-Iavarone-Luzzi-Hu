@@ -4,6 +4,7 @@ import it.polimi.ingsw.Cards.CardType;
 import it.polimi.ingsw.Cards.Characters.CharacterVisitor.CharacterInterface;
 import it.polimi.ingsw.Cards.Characters.CharacterVisitor.CharacterVisitor;
 import it.polimi.ingsw.Game.Player;
+import it.polimi.ingsw.UI.Printer;
 
 import javax.xml.stream.events.Characters;
 
@@ -23,6 +24,10 @@ public class Hunter extends Character implements CharacterInterface {
     public void printCard(){
         super.printCard();
         System.out.println("simbolo:"+symbol);
+    }
+
+    public String[] print(Printer printer){
+        return printer.print(this);
     }
 
     @Override

@@ -9,28 +9,10 @@ import java.net.Socket;
 import java.util.Scanner;
 
 public class NumPlayersCommand implements ClientCommand {
-    private final String question;
-    public NumPlayersCommand(String question) {
-        this.question = question;
-    }
-    /**
-     *
-     */
+    public NumPlayersCommand() {    }
+
     @Override
     public void execute(Socket socket, ClientController clientController) throws IOException {
-        Scanner sc = new Scanner(System.in);
-        int numPlayers;
-        synchronized (SocketClient.inputLock){
-            System.out.print("Enter number of players that will join the game, from 2 to 5: ");
-            numPlayers = sc.nextInt();
-            while(numPlayers < 2 || numPlayers > 5) {
-                System.out.println("Invalid input.");
-                System.out.print("Enter number of players that will join the game, from 2 to 5: ");
-                numPlayers = sc.nextInt();
-            }
-        }
 
-        PrintWriter out = new PrintWriter(socket.getOutputStream(),true);
-        out.println("SETNUMPLAYERS#"+ numPlayers);
     }
 }
