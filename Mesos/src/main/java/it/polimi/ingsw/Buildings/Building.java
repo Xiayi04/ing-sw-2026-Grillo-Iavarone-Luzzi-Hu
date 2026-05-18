@@ -70,4 +70,8 @@ public abstract class Building extends Card implements BuildingInterface {
     public int acceptEndGame(EndGameVisitorInterface visitor, Player player) {
         return 0;
     }
+
+    public String getImagePath(){
+        return "/images/cards/buildings/"+getName()+".png";
+    }
 }

@@ -19,19 +19,35 @@ public class ClientController {
     private  Totem tmpTotem = null;
     private  final Object tmpLock = new Object();
     private  Board currentBoard;
+    private String localPlayerName;
     String rowName ;
     String cardType;
+
     public void setView(GraphicInterface view){
         this.view = view;
     }
+
     public void setServerConnection(ServerConnection serverConnection){
         this.serverConnection = serverConnection;
     }
 
+    public Board getCurrentBoard() {
+        return currentBoard;
+    }
 
+    public void setLocalPlayerName(String localPlayerName) {
+        this.localPlayerName = localPlayerName;
+    }
 
+    public Player getLocalPlayer() {
+        for(Player p : currentBoard.getPlayers()){
+            if(p.getName().equals(localPlayerName)){
+                return p;
+            }
+        }
+    }
 
-   /* public void login(String username, Totem chosenTotem) {
+    /* public void login(String username, Totem chosenTotem) {
         if (username == null || username.isBlank()) {
             view.showError("Username not valid.");
             return;
