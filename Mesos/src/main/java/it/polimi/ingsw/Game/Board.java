@@ -14,8 +14,8 @@ public class Board  implements Serializable {
     private int era;
     private final ArrayList<Card> upperCardRow;
     private final ArrayList<Card> lowerCardsRow;
-    private final ArrayList<Building> upperBuildingRow;
-    private final ArrayList<Building> lowerBuildingRow;
+    private final ArrayList<Card> upperBuildingRow;
+    private final ArrayList<Card> lowerBuildingRow;
     private final ArrayList<OfferCard> path;
     private final ArrayList<Player> players; //relazione con Player (2..5)
     private final ArrayList<Card> deck;//*associazione 1:1 con Board*/
@@ -39,6 +39,10 @@ public class Board  implements Serializable {
 
     }
 
+    public void setEra(int era) {
+        this.era = era;
+    }
+
     //metodi getter
     public int getEra() {
         return era;
@@ -54,11 +58,11 @@ public class Board  implements Serializable {
         return lowerCardsRow;
     }
 
-    public ArrayList<Building> getUpperBuildingRow() {
+    public ArrayList<Card> getUpperBuildingRow() {
         return upperBuildingRow;
     }
 
-    public ArrayList<Building> getLowerBuildingRow() {
+    public ArrayList<Card> getLowerBuildingRow() {
         return lowerBuildingRow;
     }
 
@@ -106,6 +110,9 @@ public class Board  implements Serializable {
         int lower = NumPlayers+1;
         initializeDeck();
         buildingPerPlayers(NumPlayers);
+
+        upperBuildingRow.addAll(buildingsEra1);
+
         int j= 0;
         for(int i = 0; i<lower;  ){
             Card c = deck.removeFirst();
@@ -136,21 +143,50 @@ public class Board  implements Serializable {
         this.deck.clear();
         this.deck.addAll(deck.createDeck(players.size()));
     }
-
-    //spostamento degli edifici quando cambiano le ere
-    public void shiftBuildingUpToDown() {
-        lowerBuildingRow.clear();
-        lowerBuildingRow.addAll(upperBuildingRow);
+    public void refillUpperBuildingByEra(){
         upperBuildingRow.clear();
+        if(era==2){
+            upperBuildingRow.addAll(buildingsEra2);
+        }else if (era ==3){
+            upperBuildingRow.addAll(buildingsEra3);
+        }
     }
 
-    public void refillCards(Deck deck, ArrayList<Player> players) {
-       /* int cardNeeded = players.size() + 4;
-        while (upperCardRow.size() < cardNeeded && !Deck.isEmpty()) {/*per l'ultimo turno
-            Card newCard = deck.drawCard();// non capisco pk sia sbagliato
+
+   /* public void refillCards(Deck deck, ArrayList<Player> players) {
+       int cardNeeded = players.size() + 4;
+        while (upperCardRow.size() < cardNeeded && !deck.getDeck().isEmpty()) {
+            Card newCard = deck.getDeck().removeFirst();
+            if(newCard.getEra()!= era){
+                shiftBuildingUpToDown();
+                era= newCard.getEra();
+                refillUpperBuildingByEra();
+                upperCardRow.add(newCard);
+                throw new RuntimeException("era changed ");
+            }
             upperCardRow.add(newCard);
-        }*/
-    }
+        }
+    }*/
+   public boolean refillCards() {
+       boolean eraChanged = false;
+
+       int cardNeeded = players.size() + 4;
+
+       while (upperCardRow.size() < cardNeeded && !getDeck().isEmpty()) {
+           Card newCard = getDeck().removeFirst();
+
+           if (newCard.getEra() != era) {
+               shiftBuildingUpToDown();
+               era = newCard.getEra();
+               refillUpperBuildingByEra();
+               eraChanged = true;
+           }
+
+           upperCardRow.add(newCard);
+       }
+
+       return eraChanged;
+   }
 
     //lo si usa per rimuovere gli edifici
     public void removeCards(Card card) {
@@ -159,6 +195,14 @@ public class Board  implements Serializable {
         upperBuildingRow.remove(card);
         lowerBuildingRow.remove(card);
     }
+    //spostamento degli edifici quando cambiano le ere
+    public void shiftBuildingUpToDown() {
+        lowerBuildingRow.clear();
+        lowerBuildingRow.addAll(upperBuildingRow);
+        upperBuildingRow.clear();
+    }
+
+
 
 
     public void moveTotem(Player players, OfferCard offerCard) {
@@ -193,7 +237,7 @@ public class Board  implements Serializable {
     }
 
     public Card pickCard( boolean upper, boolean building, int i){
-        ArrayList<? extends Card> pickCardRow;
+        ArrayList<Card> pickCardRow;
         if(upper){
             if (building){
                 pickCardRow = upperBuildingRow;

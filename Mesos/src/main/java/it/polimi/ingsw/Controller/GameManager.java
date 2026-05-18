@@ -451,7 +451,7 @@ public class GameManager {
      */
 
     public Building buyBuilding(Player player, boolean rowUpper, int index) {
-        ArrayList<Building> buildings;
+        ArrayList<Card> buildings;
         if (rowUpper) {
             buildings = board.getUpperBuildingRow();
         }else{
@@ -467,7 +467,9 @@ public class GameManager {
             return null;
         }
 
-        int cost = buildings.get(index).getPrice();
+        Building selectedBuilding = (Building) buildings.get(index);
+        int cost = selectedBuilding.getPrice();
+
         if(player.getFood() >= cost){
             player.modifyFood(-cost);
             Building pickedBuilding=  (Building) board.pickCard(rowUpper, true, index);
