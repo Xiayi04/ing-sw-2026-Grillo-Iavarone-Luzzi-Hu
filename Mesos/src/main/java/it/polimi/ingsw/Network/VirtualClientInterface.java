@@ -16,6 +16,12 @@ import java.util.List;
 
 public interface VirtualClientInterface extends Remote {
     //parametro passato dal server per dirmi che totem mostrare
+    void updateEra(int era) throws RemoteException;
+
+    void resolvingEvent(Event e) throws RemoteException;
+
+    void returnedTotemOnTurnOrder(Player player,int index);
+
     void askForLogin(List<Totem> availableTotems) throws  RemoteException;
 
     void askNumPlayers() throws IOException;
@@ -69,5 +75,6 @@ public interface VirtualClientInterface extends Remote {
 
     void confirmUsername(String username);
 
+    void confirmTotem(Totem totem);
 
 }

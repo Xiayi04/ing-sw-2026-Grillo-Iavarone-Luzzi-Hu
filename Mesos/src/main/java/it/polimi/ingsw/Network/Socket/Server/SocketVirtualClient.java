@@ -7,6 +7,7 @@ import it.polimi.ingsw.Game.Board;
 import it.polimi.ingsw.Game.OfferCard;
 import it.polimi.ingsw.Game.Player;
 import it.polimi.ingsw.Game.Totem;
+import it.polimi.ingsw.Network.Socket.Server.Command.Pick;
 import it.polimi.ingsw.Network.VirtualClientInterface;
 
 import java.io.*;
@@ -28,27 +29,100 @@ public class SocketVirtualClient implements VirtualClientInterface {
         //this.in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
         this.gm = gameManager;
     }
-
+    public record TotemPosition(Player player,int index){};
 
     @Override
-    public void showCurrentPlayer(String playerName) throws RemoteException {
+    public void returnedTotemOnTurnOrder(Player player,int index){
+        synchronized (outputLock){
+            try {
+                out.writeObject(new MessageFromServer<>("turn_order_card_position", new TotemPosition(player,index) ));
+                out.flush();
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
+        }
+    }
+
+    @Override
+    public void updateEra(int era){
+        synchronized (outputLock){
+            try {
+                out.writeObject(new MessageFromServer<>("new_era", era));
+                out.flush();
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
+        }
+    }
+
+    @Override
+    public void resolvingEvent(Event e){
+        synchronized (outputLock){
+            try {
+                out.writeObject(new MessageFromServer<>("resolving_event", e));
+                out.flush();
+            } catch (IOException ex) {
+                throw new RuntimeException(ex);
+            }
+        }
+    }
+
+    @Override
+    public void confirmUsername(String username) {
+
+            synchronized (outputLock) {
+                try {
+                    out.writeObject(new MessageFromServer<>("confirm_username", username));
+                    out.flush();
+                } catch (IOException e) {
+                    throw new RuntimeException(e);
+                }
+            }
 
     }
 
     @Override
-    public void showError(String message) throws RemoteException {
+    public void confirmTotem(Totem totem){
+
+            synchronized (outputLock) {
+                try {
+                    out.writeObject(new MessageFromServer<>("confirm_totem", totem));
+                    out.flush();
+                } catch (IOException e) {
+                    throw new RuntimeException(e);
+                }
+            }
 
     }
 
     @Override
-    public void updateOtherPlayerStatus(String playerName, List<Card> tribeCards, List<Building> buildings) throws RemoteException {
+    public void setNumPlayersError(){
+
+            synchronized (outputLock) {
+                try {
+                    out.writeObject(new MessageFromServer<>("setnumplayers_error", null));
+                    out.flush();
+                } catch (IOException e) {
+                    throw new RuntimeException(e);
+                }
+            }
 
     }
 
     @Override
-    public void notifyAllPlayers(Player player, Event event) throws RemoteException {
+    public void totemNotAvailableError(ArrayList<Totem> totems) {
+
+            synchronized (outputLock) {
+                try {
+                    out.writeObject(new MessageFromServer<>("totem_error", totems));
+                    out.flush();
+                } catch (IOException e) {
+                    throw new RuntimeException(e);
+                }
+            }
 
     }
+
 
     @Override
     public void showMessage(String message) throws IOException {
@@ -75,6 +149,12 @@ public class SocketVirtualClient implements VirtualClientInterface {
     }
 
     @Override
+    public void askForLogin() throws IOException {
+
+    }
+
+
+    @Override
     public void askForLogin(List<Totem> availableTotems) throws RemoteException {
 
     }
@@ -83,18 +163,6 @@ public class SocketVirtualClient implements VirtualClientInterface {
     public void askNumPlayers() throws IOException {
         synchronized (outputLock) {
             out.writeObject(new MessageFromServer<>("SETNUMPLAYERS", null));
-            out.flush();
-        }
-    }
-
-
-
-    @Override
-    public void askForLogin() throws IOException {
-
-        //trovare totem disponibili
-        synchronized (outputLock){
-            out.writeObject(new MessageFromServer<>("LOGIN",null));
             out.flush();
         }
     }
@@ -117,12 +185,26 @@ public class SocketVirtualClient implements VirtualClientInterface {
 
     @Override
     public void pickedCard(Player player, boolean row, boolean isBuilding, int index) {
-
+        synchronized (outputLock){
+            try {
+                out.writeObject(new MessageFromServer<>("picked_card", new Pick(player.getName(),row,isBuilding,index)));
+                out.flush();
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
+        }
     }
 
     @Override
     public void movedTotem(Player player, int index) {
-
+        synchronized (outputLock){
+            try {
+                out.writeObject(new MessageFromServer<>("moved_totem", new TotemPosition(player,index)));
+                out.flush();
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
+        }
     }
 
     @Override
@@ -163,6 +245,26 @@ public class SocketVirtualClient implements VirtualClientInterface {
 
     @Override
     public void updateBoardStatus(Board board) throws RemoteException {
+
+    }
+
+    @Override
+    public void showCurrentPlayer(String playerName) throws RemoteException {
+
+    }
+
+    @Override
+    public void showError(String message) throws RemoteException {
+
+    }
+
+    @Override
+    public void updateOtherPlayerStatus(String playerName, List<Card> tribeCards, List<Building> buildings) throws RemoteException {
+
+    }
+
+    @Override
+    public void notifyAllPlayers(Player player, Event event) throws RemoteException {
 
     }
 

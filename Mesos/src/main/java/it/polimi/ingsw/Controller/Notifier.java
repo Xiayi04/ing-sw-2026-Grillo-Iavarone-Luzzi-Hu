@@ -1,5 +1,7 @@
 package it.polimi.ingsw.Controller;
 
+import it.polimi.ingsw.Cards.Events.Event;
+import it.polimi.ingsw.Game.Board;
 import it.polimi.ingsw.Game.Player;
 import it.polimi.ingsw.Game.Totem;
 import it.polimi.ingsw.Network.VirtualClientInterface;
@@ -18,7 +20,45 @@ public class Notifier {
 
 
     //messaggi per broadcast
-    public synchronized void gameStartedBroadcast(){
+    public synchronized void returnTotemOnTurnOrderBroadcast(Player player, int index){
+        synchronized (OutputLock){
+            for(VirtualClientInterface client : clients){
+                new Thread(() -> {
+                    client.returnedTotemOnTurnOrder(player,index);
+                }).start();
+            }
+        }
+    }
+
+    public synchronized void resolvingEventBroadcast(Event e){
+        synchronized (OutputLock){
+            for(VirtualClientInterface client: clients){
+                new Thread(() -> {
+                    try {
+                        client.resolvingEvent(e);
+                    } catch (RemoteException ex) {
+                        throw new RuntimeException(ex);
+                    }
+                }).start();
+            }
+        }
+    }
+
+    public synchronized void newEraBroadcast(int era){
+        synchronized (OutputLock){
+            for(VirtualClientInterface client : clients){
+                new Thread(()->{
+                    try {
+                        client.updateEra(era);
+                    } catch (RemoteException e) {
+                        throw new RuntimeException(e);
+                    }
+                }).start();
+            }
+        }
+    }
+
+    public synchronized void gameStartedBroadcast(ArrayList<Player> players, Board board){
         synchronized (OutputLock){
             for(VirtualClientInterface client: clients){
                 client.showStartGame();
