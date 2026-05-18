@@ -2,12 +2,15 @@ package it.polimi.ingsw.Network;
 
 import it.polimi.ingsw.Game.Board;
 import it.polimi.ingsw.Game.OfferCard;
+import it.polimi.ingsw.Game.Player;
 import it.polimi.ingsw.Game.Totem;
 
 
 
 import java.util.ArrayList;
 // riferimento all'if che manda messaggi al server
+// ho bisogno dei metodi chiamati dalla gu
+// e quelli che aggiornano la gui
 
 public class ClientController {
     private  GraphicInterface view;
@@ -16,7 +19,8 @@ public class ClientController {
     private  Totem tmpTotem = null;
     private  final Object tmpLock = new Object();
     private  Board currentBoard;
-
+    String rowName ;
+    String cardType;
     public void setView(GraphicInterface view){
         this.view = view;
     }
@@ -41,7 +45,7 @@ public class ClientController {
     }*/
 
 
-    public void SetNumPlayers(int numPlayers) {
+    public void setNumPlayers(int numPlayers) {
         while (numPlayers < 2 || numPlayers > 5) {
             view.showError("Number of Players is wrong ");
             numPlayers = view.askNumToPlayer();
@@ -49,7 +53,7 @@ public class ClientController {
         serverConnection.setNumPlayers(numPlayers);
     }
 
-    public void moveTotem(ArrayList<OfferCard> path) {
+    public void chooseTotemPosition(ArrayList<OfferCard> path) {
 
         if (path == null || path.isEmpty()) {
             view.showError("Offer card path not available.");
@@ -63,7 +67,7 @@ public class ClientController {
             chosenPosition = view.askPosition(path);
         }
 
-        serverConnection.moveTotem(chosenPosition);
+        serverConnection.setTotemPosition(chosenPosition);
     }
 
     public void pickCard(boolean isUpper, boolean isBuilding, int index) {
@@ -81,31 +85,48 @@ public class ClientController {
         serverConnection.leave();
     }
 
-    public void showMessage(String message) {
-        view.showMessage(message);
-    }
+    //aggiornano la gui
 
-    public void showError(String message) {
-        view.showError(message);
-    }
 
     public void showStartGame() {
         view.showMessage("The game started.");
     }
 
-    public void showMyTurn() {
+    public void showPlayerTurn(Player player) {
         view.showMessage("It's your turn.");
+    }
+
+    public void addedPlayer(Player player) {
+        view.showMessage("New player added: "+player);
+    }
+    public void showPickedCard(Player playerWhoPicked, boolean row, boolean isBuilding, int index){
+        rowName = row? "upperRow" : "lowerRow";
+        cardType = isBuilding ? "building" : "character";
+        view.showMessage(playerWhoPicked + "has taken" + cardType + "from" + rowName);
+    }
+    public void movedTotem(Player player, int path){
+        view.showMessage("Player"+ player + "moved to: "+ path);
+    }
+    public void foodUpdated(Player player, int foodUpdated){
+        view.showMessage(player + "'s food + "+foodUpdated);
+    }
+    public void updatePlayerPP(Player player, int PPUpdated){
+        view.showMessage(player + "'s PP updated: " + PPUpdated);
     }
 
     public void updateBoardStatus(Board updatedBoard) {
         this.currentBoard = updatedBoard;
         view.updateBoardStatus(currentBoard);
     }
+    public void showErrorMessage(String message) {
+        view.showError(message);
+    }
 
 
     public void showEndGame() {
         view.showMessage("Game ended.");
     }
+
 
     //Login management
 
