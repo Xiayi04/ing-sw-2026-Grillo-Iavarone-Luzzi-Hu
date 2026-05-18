@@ -36,11 +36,26 @@ public class GameManager {
     }
 
     //metodi
-    public void gameInitializing(ArrayList<Player> players, int numPlayers, Deck deck) {
+    /*public void gameInitializing(ArrayList<Player> players, int numPlayers, Deck deck) {
         this.numPlayers = numPlayers;
         this.round = 1;
         deck.createDeck(numPlayers);
 
+    }*/
+
+    public void startGame() {
+        synchronized (playersLock) {
+            System.out.println("Starting game");
+            this.round = 1;
+            board.setEra(1);
+            this.board.getPlayers().addAll(this.players);
+            this.board.initializeBoard(numPlayers);
+            System.out.println("Game started");
+            notifier.gameStartedBroadcast(players,board);
+            System.out.println("Avvio della fase di posizionamento dei Totem...");
+            positionPhase();
+
+        }
     }
 
     /**
@@ -79,7 +94,11 @@ public class GameManager {
             resolveEvents(currentEvents);
         }
         board.shiftUpToDown();
-        board.refillCards(this.board.getDeck(),this.players);
+        try{
+            board.refillCards();
+        }catch(Exception e){
+            notifier.
+        }
         positionPhase();
     }
 
@@ -99,7 +118,11 @@ public class GameManager {
             endGame();
         }else{
         board.shiftUpToDown();
-        board.refillCards(board.getDeck(),players);
+        try{
+            board.refillCards();
+        }catch (Exception e){
+            notifier.
+        }
         nextRound();
         }
     }
@@ -201,7 +224,7 @@ public class GameManager {
             System.out.println("Player  " + currentPlayer.getName() + "place your totem");
             if(currentPlayer.getVirtualClient() != null){
                 try{
-                    notifier.showTurnBroadcast (players,currentPlayer);
+                    notifier.showTurnBroadcast (currentPlayer);
                 }catch (Exception e) {
                     System.err.println("Errore di comunicazione con " + currentPlayer.getName());
                 }
@@ -230,7 +253,7 @@ public class GameManager {
             System.out.println(p.getName() + " he positioned himself on the card " + pathIndex);
             newPlayerOrder();
             try{
-                notifier.movedTotemBroadcast(this.players ,p ,pathIndex);
+                notifier.movedTotemBroadcast(p ,pathIndex);
             } catch (RemoteException e) {
                 System.err.println("Errore di rete durante il broadcast del totem");
             }
@@ -331,8 +354,8 @@ public class GameManager {
         if (success) {
             pickingQueue.remove(currentAction);
             try{
-                notifier.pickedCardBroadcast(this.players,p,true,true ,index);
-            }catch(RemoteException e){
+                notifier.pickedCardBroadcast(p,true,true ,index);
+            }catch(Exception e){
                 System.err.println("Errore di rete");
             }
             executeNextPick();
@@ -548,7 +571,7 @@ public class GameManager {
 
     public String[] getAvailableTotems(){
         ArrayList<Totem> takenTotems = new ArrayList<>();
-        Totem[] allTotems = new Totem[]{Totem.RED, Totem.BLACK, Totem.BLUE, Totem.ORANGE, Totem.YELLOW};
+        Totem[] allTotems = new Totem[]{Totem.WHITE, Totem.BLACK, Totem.BLUE, Totem.ORANGE, Totem.YELLOW};
         ArrayList<Totem> totems = (ArrayList<Totem>) Arrays.asList(allTotems);
         synchronized (playersLock) {
             for (Player player : players) {

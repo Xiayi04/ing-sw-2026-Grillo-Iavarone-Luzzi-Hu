@@ -22,7 +22,7 @@ public class ShamanicEventTest {
 
     @Test
     void onlyPlayer(){
-        ShamanicEvent s = new ShamanicEvent(2,CardType.EVENT,EventName.SHAMANIC_EVENT,-2,3);
+        ShamanicEvent s = new ShamanicEvent(2,"EVENT","SHAMANIC_EVENT",-2,3);
         Player p1 = new Player("p1",Totem.RED,5);
         ArrayList<Player> players = new ArrayList<>(List.of(p1));
         assertThrows(IllegalArgumentException.class, ()->{s.getMaxStars(players);});
@@ -30,15 +30,15 @@ public class ShamanicEventTest {
 
     @Test
     void playersWithMoreStars(){
-        ShamanicEvent s = new ShamanicEvent(2, CardType.EVENT, EventName.SHAMANIC_EVENT,-2,3);
+        ShamanicEvent s = new ShamanicEvent(2, "EVENT", "SHAMANIC_EVENT",-2,3);
         Player p1 = new Player("ALFA", Totem.RED,10);
         Player p2 = new Player("BETA", Totem.BLUE,5);
         Player p3 = new Player("JAMMA", Totem.BLACK,10);
 
-        p1.getTribeCard().add(new Shaman(2,CardType.CHARACTER,3, CharacterType.SHAMAN,3));
-        p1.getTribeCard().add(new Shaman(2,CardType.CHARACTER,3, CharacterType.SHAMAN,2));
-        p2.getTribeCard().add(new Shaman(2,CardType.CHARACTER,3, CharacterType.SHAMAN,2));
-        p3.getTribeCard().add(new Shaman(2,CardType.CHARACTER,3, CharacterType.SHAMAN,0));
+        p1.getTribeCard().add(new Shaman(2,"CHARACTER",3, "SHAMAN",3));
+        p1.getTribeCard().add(new Shaman(2,"CHARACTER",3, "SHAMAN",2));
+        p2.getTribeCard().add(new Shaman(2,"CHARACTER",3, "SHAMAN",2));
+        p3.getTribeCard().add(new Shaman(2,"CHARACTER",3, "SHAMAN",0));
 
         ArrayList<Player> players = new ArrayList<>(List.of(p1,p2,p3));
         p1.modifyStarCounter(5);
@@ -51,17 +51,16 @@ public class ShamanicEventTest {
 
     @Test
     void resolveEventShamanic(){
-        ShamanicEvent s = new ShamanicEvent(2, CardType.EVENT, EventName.SHAMANIC_EVENT,-2,3);
+        ShamanicEvent s = new ShamanicEvent(2, "EVENT", "SHAMANIC_EVENT",-2,3);
         Player p1 = new Player("ALFA", Totem.RED,10);
         Player p2 = new Player("BETA", Totem.BLUE,5);
         Player p3 = new Player("JAMMA", Totem.BLACK,10);
         Player p4 = new Player("DELTA", Totem.BLACK,7);
 
-        p1.getTribeCard().add(new Shaman(2,CardType.CHARACTER,3, CharacterType.SHAMAN,3));
-        p1.getTribeCard().add(new Shaman(2,CardType.CHARACTER,3, CharacterType.SHAMAN,2));
-        p2.getTribeCard().add(new Shaman(2,CardType.CHARACTER,3, CharacterType.SHAMAN,2));
-        p3.getTribeCard().add(new Shaman(2,CardType.CHARACTER,3, CharacterType.SHAMAN,0));
-        p4.getTribeCard().add(new Shaman(2,CardType.CHARACTER,3, CharacterType.SHAMAN,0));
+        p1.getTribeCard().add(new Shaman(2,"CHARACTER",3, "SHAMAN",3));
+        p1.getTribeCard().add(new Shaman(2,"CHARACTER",3, "SHAMAN",2));
+        p3.getTribeCard().add(new Shaman(2,"CHARACTER",3, "SHAMAN",0));
+        p4.getTribeCard().add(new Shaman(2,"CHARACTER",3, "SHAMAN",0));
 
         p1.modifyStarCounter(5);
         p2.modifyStarCounter(2);

@@ -18,16 +18,16 @@ public class PaintingEventTest {
 
     @Test
     void paintingEventTest() {
-        PaintingEvent p = new PaintingEvent(1, CardType.EVENT, EventName.PAINTING_EVENT,3,5,-2);
+        PaintingEvent p = new PaintingEvent(1, "EVENT", "PAINTING_EVENT",3,5,-2);
         Player p1 = new Player("p1", Totem.RED,5);
         Player p2 = new Player("p2", Totem.BLUE,5);
 
 
-        p1.getTribeCard().add(new Painter(1,CardType.CHARACTER,2, CharacterType.PAINTER));
-        p1.getTribeCard().add(new Painter(1,CardType.CHARACTER,2, CharacterType.PAINTER));
-        p1.getTribeCard().add(new Painter(2,CardType.CHARACTER,2, CharacterType.PAINTER));
-        p2.getTribeCard().add(new Painter(1,CardType.CHARACTER,2, CharacterType.PAINTER));
-        p2.getTribeCard().add(new Painter(1,CardType.CHARACTER,2, CharacterType.PAINTER));
+        p1.getTribeCard().add(new Painter(1,"CHARACTER",2, "PAINTER"));
+        p1.getTribeCard().add(new Painter(1,"CHARACTER",2, "PAINTER"));
+        p1.getTribeCard().add(new Painter(2,"CHARACTER",2, "PAINTER"));
+        p2.getTribeCard().add(new Painter(1,"CHARACTER",2, "PAINTER"));
+        p2.getTribeCard().add(new Painter(1,"CHARACTER",2, "PAINTER"));
 
         ArrayList<Player> players = new ArrayList<>(List.of(p1,p2));
         p.resolveEvent(players);

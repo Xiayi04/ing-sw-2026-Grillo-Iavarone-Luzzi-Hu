@@ -18,15 +18,15 @@ public class SustenanceEventTest {
 
     @Test
     void payCharacterFoodInTheTribe(){
-        SustenanceEvent s = new SustenanceEvent(2, CardType.EVENT, EventName.SUSTENANCE_EVENT,-2);
+        SustenanceEvent s = new SustenanceEvent(2 , "EVENT", "SUSTENANCE_EVENT",-2);
         Player p1 = new Player("ALFA", Totem.RED,10);
         Player p2 = new Player("BETA", Totem.BLUE,5);
 
-        p1.getTribeCard().add(new Shaman(2,CardType.CHARACTER,3, CharacterType.SHAMAN,3));
-        p1.getTribeCard().add(new Inventor(1,CardType.CHARACTER,2,CharacterType.INVENTOR,"boat"));
-        p1.getTribeCard().add(new Inventor(1,CardType.CHARACTER,2,CharacterType.INVENTOR,"tree"));
-        p2.getTribeCard().add(new Hunter(1,CardType.CHARACTER,2,CharacterType.HUNTER,true));
-        p2.getTribeCard().add(new Painter(1,CardType.CHARACTER,2,CharacterType.PAINTER));
+        p1.getTribeCard().add(new Shaman(2,"CHARACTER",3, "SHAMAN",3));
+        p1.getTribeCard().add(new Inventor(1,"CHARACTER",2,"INVENTOR","boat"));
+        p1.getTribeCard().add(new Inventor(1,"CHARACTER",2,"INVENTOR","tree"));
+        p2.getTribeCard().add(new Hunter(1,"CHARACTER",2,"HUNTER",true));
+        p2.getTribeCard().add(new Painter(1,"CHARACTER",2,"PAINTER "));
 
         ArrayList<Player> players = new ArrayList<>(List.of(p1,p2));
         s.resolveEvent(players);
