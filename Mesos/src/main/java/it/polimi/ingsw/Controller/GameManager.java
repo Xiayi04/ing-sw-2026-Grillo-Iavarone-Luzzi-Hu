@@ -94,10 +94,9 @@ public class GameManager {
             resolveEvents(currentEvents);
         }
         board.shiftUpToDown();
-        try{
-            board.refillCards();
-        }catch(Exception e){
-            notifier.
+        boolean eraChanged = board.refillCards();
+        if(eraChanged){
+            notifier.newEraBroadcast(board.getEra());
         }
         positionPhase();
     }
@@ -118,10 +117,9 @@ public class GameManager {
             endGame();
         }else{
         board.shiftUpToDown();
-        try{
-            board.refillCards();
-        }catch (Exception e){
-            notifier.
+        boolean eraChanged = board.refillCards();
+        if(eraChanged){
+            notifier.newEraBroadcast(board.getEra());
         }
         nextRound();
         }

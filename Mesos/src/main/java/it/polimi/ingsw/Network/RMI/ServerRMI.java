@@ -71,7 +71,7 @@ public class ServerRMI extends UnicastRemoteObject implements VirtualServer,Runn
         lobby.setNumPlayers(numPlayers, new RMIVirtualClient(client));
     }
 
-    public synchronized void setTotemPosition (int index) throws RemoteException{
+    public synchronized void setTotemPosition (String username, int index) throws RemoteException{
 
     }
 
