@@ -11,37 +11,38 @@ public class SetBonus extends Building implements BuildingInterface {
         super(era, price, pp, "SetBonus");
         this.fullSetCounter = 0;
     }
+
     //aggiungere classe per questa roba
-   public void giveExtraFoodSet(Player player){
-        if(fullSetCounter != player.countSet()) {
+    public void giveExtraFoodSet(Player player) {
+        if (fullSetCounter != player.countSet()) {
             fullSetCounter = player.countSet();
-            for(;fullSetCounter < player.countSet();fullSetCounter++){
+            for (; fullSetCounter < player.countSet(); fullSetCounter++) {
                 player.modifyFood(5);
             }
         }
     }
 
-    public String[] print(Printer printer){
+    public String[] print(Printer printer) {
         return printer.print(this);
     }
 
     @Override
-    public void acceptActivation(ActivationVisitor activationVisitor, Player player){
+    public void acceptActivation(ActivationVisitor activationVisitor, Player player) {
         activationVisitor.visit(this, player);
     }
 
-    public int getFullSetCounter(){
+    public int getFullSetCounter() {
         return fullSetCounter;
     }
 
-    public void setFullSetCounter(int fullSetCounter){
+    public void setFullSetCounter(int fullSetCounter) {
         this.fullSetCounter = fullSetCounter;
     }
 
-    public void setUpdater(Player player){
-        synchronized (player.getTribeCard()){
-            while(player.countSet() != fullSetCounter){
-                try{
+    public void setUpdater(Player player) {
+        synchronized (player.getTribeCard()) {
+            while (player.countSet() != fullSetCounter) {
+                try {
                     player.getTribeCard().wait();
                 } catch (Exception e) {
                     throw new RuntimeException(e);
