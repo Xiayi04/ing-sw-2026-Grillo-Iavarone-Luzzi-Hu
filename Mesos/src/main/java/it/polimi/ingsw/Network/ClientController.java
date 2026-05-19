@@ -45,6 +45,11 @@ public class ClientController {
                 return p;
             }
         }
+        return null;
+    }
+
+    public void setCurrentBoard(Board currentBoard) {
+        this.currentBoard = currentBoard;
     }
 
     /* public void login(String username, Totem chosenTotem) {
@@ -94,7 +99,7 @@ public class ClientController {
             return;
         }
 
-        serverConnection.pickCard(isUpper, isBuilding, index);
+        //serverConnection.pickCard(isUpper, isBuilding, index);
     }
 
     public void leave() {
