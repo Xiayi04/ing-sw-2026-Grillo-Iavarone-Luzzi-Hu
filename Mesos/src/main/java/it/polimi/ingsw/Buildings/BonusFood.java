@@ -2,6 +2,7 @@ package it.polimi.ingsw.Buildings;
 
 import it.polimi.ingsw.Buildings.BuildingVisitor.BuildingInterface;
 import it.polimi.ingsw.Buildings.BuildingVisitor.ActivationVisitor;
+import it.polimi.ingsw.Buildings.BuildingVisitor.SpecialBuildings.TurnOrderCardFoodBonus;
 import it.polimi.ingsw.Game.Player;
 import it.polimi.ingsw.UI.Printer;
 
@@ -20,6 +21,11 @@ public class BonusFood extends Building implements BuildingInterface {
     @Override
     public void acceptActivation(ActivationVisitor activationVisitor, Player player){
         activationVisitor.visit( this, player);
+    }
+
+    @Override
+    public int acceptFoodBonus(TurnOrderCardFoodBonus visitor, Player p){
+        return visitor.visit( this, p);
     }
 
     public String[] print(Printer printer){

@@ -5,6 +5,7 @@ import it.polimi.ingsw.Buildings.BuildingVisitor.EventBuildings.Discount.Discoun
 import it.polimi.ingsw.Buildings.BuildingVisitor.EndGame.EndGameVisitorInterface;
 import it.polimi.ingsw.Buildings.BuildingVisitor.EventBuildings.Shamanic.ShamanicVisitorInterface;
 import it.polimi.ingsw.Buildings.BuildingVisitor.ActivationVisitor;
+import it.polimi.ingsw.Buildings.BuildingVisitor.SpecialBuildings.TurnOrderCardFoodBonus;
 import it.polimi.ingsw.Cards.Card;
 import it.polimi.ingsw.Cards.Events.HuntingEvent;
 import it.polimi.ingsw.Cards.Events.PaintingEvent;
@@ -64,6 +65,16 @@ public abstract class Building extends Card implements BuildingInterface {
     @Override
     public void acceptShamanicEvent(ShamanicVisitorInterface visitor, Player player, ShamanicEvent shamanicEvent) {
 
+    }
+
+    @Override
+    public int acceptFoodBonus(TurnOrderCardFoodBonus visitor, Player player){
+        return 0;
+    };
+
+    @Override
+    public int acceptAddCard(TurnOrderCardFoodBonus visitor, Player player) {
+        return 0;
     }
 
     @Override

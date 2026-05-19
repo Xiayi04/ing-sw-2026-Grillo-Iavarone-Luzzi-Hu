@@ -1,6 +1,9 @@
 package it.polimi.ingsw.Game;
 
 import it.polimi.ingsw.Buildings.*;
+import it.polimi.ingsw.Buildings.BuildingVisitor.SpecialBuildings.BonusFoodVisitor;
+import it.polimi.ingsw.Buildings.BuildingVisitor.SpecialBuildings.SpecialBuildingsInterface;
+import it.polimi.ingsw.Buildings.BuildingVisitor.SpecialBuildings.TurnOrderCardFoodBonus;
 import it.polimi.ingsw.UI.Printer;
 
 import java.io.Serializable;
@@ -40,16 +43,23 @@ public class TurnOrderCard implements Serializable {
 
         int foodFirst = (int) ceil(NumPlayers / 2.0);
         order.getFirst().modifyFood(foodFirst);
-        for(Building b : order.getFirst().getBuilding())
-            if(b instanceof BonusFood)
-                order.getFirst().modifyFood(1);
+        TurnOrderCardFoodBonus visitor = new BonusFoodVisitor();
+        for(Building b : order.getFirst().getBuilding()) {
+            if (b.acceptFoodBonus(visitor, order.getFirst()) == 1) {
+                order.getFirst().modifyFood(+1);
+                break;
+            }
+        }
         if(NumPlayers >= 4){
             order.get(1).modifyFood(1);
-            for(Building b : order.get(1).getBuilding())
-                if(b instanceof BonusFood)
-                    order.get(1).modifyFood(1);
+            for(Building b : order.get(1).getBuilding()) {
+                if(b.acceptFoodBonus(visitor,order.get(1))==1){
+                    order.get(1).modifyFood(+1);
+                    break;
+                };
+            }
         }
-        order.get(order.size()-1).modifyFood(-1);
+        order.getLast().modifyFood(-1);
     }
 
     public String[] print(Printer printer){
