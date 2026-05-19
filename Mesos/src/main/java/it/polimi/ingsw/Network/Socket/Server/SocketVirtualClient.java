@@ -151,21 +151,9 @@ public class SocketVirtualClient implements VirtualClientInterface {
         }
     }
 
-    @Override
-    public void askForTotemMove(ArrayList<OfferCard> path) throws RemoteException {
-
-    }
-
-    @Override
-    public void askForLogin() throws IOException {
-
-    }
 
 
-    @Override
-    public void askForLogin(List<Totem> availableTotems) throws RemoteException {
 
-    }
 
     @Override
     public void availableColors(ArrayList<Totem> availableTotems) {
@@ -268,36 +256,12 @@ public class SocketVirtualClient implements VirtualClientInterface {
 
     }
 
-
-    @Override
-    public void showMyTurn() throws RemoteException {
-
-    }
-
-    @Override
-    public void updateBoardStatus(Board board) throws RemoteException {
-
-    }
-
-    @Override
-    public void showCurrentPlayer(String playerName) throws RemoteException {
-
-    }
-
     @Override
     public void showError(String message) throws RemoteException {
 
     }
 
-    @Override
-    public void updateOtherPlayerStatus(String playerName, List<Card> tribeCards, List<Building> buildings) throws RemoteException {
 
-    }
-
-    @Override
-    public void notifyAllPlayers(Player player, Event event) throws RemoteException {
-
-    }
 
 
 }
