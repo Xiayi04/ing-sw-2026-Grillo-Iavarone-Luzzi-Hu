@@ -19,5 +19,5 @@ public interface GraphicInterface {
     void showAvailableTotems(ArrayList<Totem> availableTotems);
     void totemSelectionError();
     void showLobbyMenu();
-    
+    void showErrorMessage(String message);
 }

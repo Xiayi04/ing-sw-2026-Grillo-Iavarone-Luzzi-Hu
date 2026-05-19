@@ -8,13 +8,11 @@ public interface ServerConnection {
 
     void setNumPlayers(int numPlayer) ;
 
-   // void moveTotem(int index);
-
-    void pickCard(String username, boolean isUpper, boolean isBuilding, int index) ;
+    void requestPickCard( boolean isUpper, boolean isBuilding, int index) ;
 
     void setTotemPosition(int chosenPosition);
 
     void leave();  //per comunicare ad altri client che x si è disconnesso
 
-    void availableColorsRequest();
+    //void availableColorsRequest();
 }
