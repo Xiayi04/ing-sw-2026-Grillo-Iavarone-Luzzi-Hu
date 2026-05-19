@@ -3,7 +3,7 @@ package it.polimi.ingsw.Buildings.BuildingVisitor.SpecialBuildings;
 import it.polimi.ingsw.Buildings.*;
 import it.polimi.ingsw.Game.Player;
 
-public abstract class AddCardAbstractVisitor implements SpecialBuildingsInterface {
+public abstract class AddCardAbstractVisitor implements AddCardVisitorInterface {
 
 
     @Override

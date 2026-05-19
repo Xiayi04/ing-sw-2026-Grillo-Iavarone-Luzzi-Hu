@@ -3,7 +3,7 @@ package it.polimi.ingsw.Buildings.BuildingVisitor.SpecialBuildings;
 import it.polimi.ingsw.Buildings.*;
 import it.polimi.ingsw.Game.Player;
 
-public interface SpecialBuildingsInterface {
+public interface AddCardVisitorInterface {
     int visit(AddCard addCard, Player player);
     int visit(BonusStarBuilding bonusStarBuilding, Player player);
     int visit(BonusFood bonusFood, Player player);

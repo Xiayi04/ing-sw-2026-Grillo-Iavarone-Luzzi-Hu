@@ -3,6 +3,7 @@ package it.polimi.ingsw.Buildings;
 import it.polimi.ingsw.Buildings.BuildingVisitor.BuildingInterface;
 import it.polimi.ingsw.Buildings.BuildingVisitor.ActivationVisitor;
 import it.polimi.ingsw.Buildings.BuildingVisitor.SpecialBuildings.AddCardVisitor;
+import it.polimi.ingsw.Buildings.BuildingVisitor.SpecialBuildings.AddCardVisitorInterface;
 import it.polimi.ingsw.Buildings.BuildingVisitor.SpecialBuildings.TurnOrderCardFoodBonus;
 import it.polimi.ingsw.Game.Player;
 import it.polimi.ingsw.UI.Printer;
@@ -21,7 +22,7 @@ public class AddCard extends Building implements BuildingInterface {
         activationVisitor.visit(this, player);
     }
 
-    public int acceptAddCard(TurnOrderCardFoodBonus visitor, Player player){
+    public int acceptAddCard(AddCardVisitorInterface visitor, Player player){
         return visitor.visit(this,player);
     }
 
