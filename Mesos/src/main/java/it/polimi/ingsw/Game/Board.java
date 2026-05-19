@@ -82,6 +82,18 @@ public class Board  implements Serializable {
         return turnOrderCard;
     }
 
+    public ArrayList<Building> getBuildingsEra1(){
+        return buildingsEra1;
+    }
+
+    public ArrayList<Building> getBuildingsEra2() {
+        return buildingsEra2;
+    }
+
+    public ArrayList<Building> getBuildingsEra3() {
+        return buildingsEra3;
+    }
+
     //metodi
     //scorro la lista per individuare carte evento
     public ArrayList<Event> checkEvent() {
@@ -110,7 +122,7 @@ public class Board  implements Serializable {
         int lower = NumPlayers+1;
         initializeDeck();
         buildingPerPlayers(NumPlayers);
-
+        path.addAll(obtainPath(this.getPlayers()));
         upperBuildingRow.addAll(buildingsEra1);
 
         int j= 0;
@@ -143,6 +155,7 @@ public class Board  implements Serializable {
         this.deck.clear();
         this.deck.addAll(deck.createDeck(players.size()));
     }
+
     public void refillUpperBuildingByEra(){
         upperBuildingRow.clear();
         if(era==2){
@@ -152,21 +165,6 @@ public class Board  implements Serializable {
         }
     }
 
-
-   /* public void refillCards(Deck deck, ArrayList<Player> players) {
-       int cardNeeded = players.size() + 4;
-        while (upperCardRow.size() < cardNeeded && !deck.getDeck().isEmpty()) {
-            Card newCard = deck.getDeck().removeFirst();
-            if(newCard.getEra()!= era){
-                shiftBuildingUpToDown();
-                era= newCard.getEra();
-                refillUpperBuildingByEra();
-                upperCardRow.add(newCard);
-                throw new RuntimeException("era changed ");
-            }
-            upperCardRow.add(newCard);
-        }
-    }*/
    public boolean refillCards() {
        boolean eraChanged = false;
 
