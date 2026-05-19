@@ -4,12 +4,13 @@ import it.polimi.ingsw.Game.Board;
 import it.polimi.ingsw.Game.OfferCard;
 import it.polimi.ingsw.Game.Player;
 import it.polimi.ingsw.Game.Totem;
-
+import it.polimi.ingsw.Network.RMI.ClientRMI;
+import it.polimi.ingsw.Network.Socket.Client.SocketClient;
 
 
 import java.util.ArrayList;
 // riferimento all'if che manda messaggi al server
-// ho bisogno dei metodi chiamati dalla gu
+// ho bisogno dei metodi chiamati dalla gui
 // e quelli che aggiornano la gui
 
 public class ClientController {
@@ -27,8 +28,26 @@ public class ClientController {
         this.view = view;
     }
 
-    public void setServerConnection(ServerConnection serverConnection){
+    public void setConnection(ServerConnection serverConnection){
         this.serverConnection = serverConnection;
+    }
+
+    public void setServerConnection(boolean isRMI) {
+        try {
+            if (isRMI) {
+                ClientRMI clientRMI = new ClientRMI("localhost", 1099, "VirtualServer");
+                clientRMI.setClientController(this);
+                clientRMI.run();
+
+                this.serverConnection = clientRMI;
+            } else {
+                SocketClient socketClient = new SocketClient(this);
+                this.serverConnection = socketClient;
+            }
+        } catch (Exception e) {
+            view.showErrorMessage("Connection error.");
+            e.printStackTrace();
+        }
     }
 
     public Board getCurrentBoard() {
@@ -91,15 +110,20 @@ public class ClientController {
         serverConnection.setTotemPosition(chosenPosition);
     }
 
-    public void pickCard(boolean isUpper, boolean isBuilding, int index) {
+    public void PickCard(boolean isUpper, boolean isBuilding, int index) {
 
+        if (isUpper) {
+            if (!(index >= 0 && index < currentBoard.getUpperCardRow().size())) {
+                view.showError("Card index not valid.");
 
-        if (index < 0) {
-            view.showError("Card index not valid.");
-            return;
+            } else {
+                if (!(index >= 0 && index < currentBoard.getLowerCardsRow().size())) {
+                    view.showError("Card index not valid.");
+                    return;
+                }
+            }
+            serverConnection.requestPickCard(isUpper, isBuilding, index);
         }
-
-        //serverConnection.pickCard(isUpper, isBuilding, index);
     }
 
     public void leave() {
@@ -125,6 +149,9 @@ public class ClientController {
         cardType = isBuilding ? "building" : "character";
         view.showMessage(playerWhoPicked + "has taken" + cardType + "from" + rowName);
     }
+
+
+
     public void movedTotem(Player player, int path){
         view.showMessage("Player"+ player + "moved to: "+ path);
     }
