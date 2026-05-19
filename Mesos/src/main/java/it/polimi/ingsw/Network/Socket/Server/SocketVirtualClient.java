@@ -47,7 +47,7 @@ public class SocketVirtualClient implements VirtualClientInterface {
     public void updateEra(int era){
         synchronized (outputLock){
             try {
-                out.writeObject(new MessageFromServer<>("new_era", era));
+                out.writeObject(new MessageFromServer<>("update_era", era));
                 out.flush();
             } catch (IOException e) {
                 throw new RuntimeException(e);
@@ -137,10 +137,18 @@ public class SocketVirtualClient implements VirtualClientInterface {
 
     }
 
+    public record GameStartData(ArrayList<Player> players, Board board) {};
 
     @Override
-    public void showStartGame(String myName, ArrayList<Player> players, Totem myTotem, int myFood) throws RemoteException {
-
+    public void showStartGame( ArrayList<Player> players, Board board) throws RemoteException {
+        synchronized (outputLock){
+            try {
+                out.writeObject(new MessageFromServer<>("game_started", new GameStartData(players,board)));
+                out.flush();
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
+        }
     }
 
     @Override
@@ -160,10 +168,26 @@ public class SocketVirtualClient implements VirtualClientInterface {
     }
 
     @Override
+    public void availableColors(ArrayList<Totem> availableTotems) {
+        synchronized (outputLock) {
+            try {
+                out.writeObject(new MessageFromServer<>("colors", availableTotems));
+                out.flush();
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
+        }
+    }
+
+    @Override
     public void askNumPlayers() throws IOException {
         synchronized (outputLock) {
-            out.writeObject(new MessageFromServer<>("SETNUMPLAYERS", null));
-            out.flush();
+            try {
+                out.writeObject(new MessageFromServer<>("setnumplayers", null));
+                out.flush();
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
         }
     }
 
@@ -224,7 +248,14 @@ public class SocketVirtualClient implements VirtualClientInterface {
 
     @Override
     public void cardPickError() {
-
+        synchronized (outputLock){
+            try {
+                out.writeObject(new MessageFromServer<>("pick_error", null));
+                out.flush();
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
+        }
     }
 
     @Override

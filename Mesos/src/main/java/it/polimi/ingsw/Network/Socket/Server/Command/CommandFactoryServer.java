@@ -16,6 +16,7 @@ public class CommandFactoryServer {
         commands.put("setnumplayers", num-> new SetNumPlayersCommand((int)num));
         commands.put("pick", pick->new PickCommand((Pick)pick));
         commands.put("position", i->new MoveTotemCommand((int)i));
+        commands.put("available_colors",k-> new AvailableColorsCommand());
     }
 
 

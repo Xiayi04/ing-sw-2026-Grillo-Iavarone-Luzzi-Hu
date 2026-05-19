@@ -9,6 +9,6 @@ public class AvailableColorsCommand implements CommandTUI {
 
     @Override
     public void execute(ClientController clientController) {
-
+        clientController.availableColorsRequest();
     }
 }

@@ -11,8 +11,8 @@ public class ConnectionSelectionCommand implements CommandTUI {
 
     @Override
     public void execute(ClientController clientController) {
-        new Thread(() -> {
-            clientController.setConnection(choice);
+        new Thread(()->{
+            clientController.setConnectionChoice(choice == 0);
         }).start();
     }
 }

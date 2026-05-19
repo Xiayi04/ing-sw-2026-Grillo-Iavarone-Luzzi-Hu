@@ -26,7 +26,7 @@ public interface VirtualClientInterface extends Remote {
 
     void askNumPlayers() throws IOException;
 
-    void showStartGame(String myName, ArrayList<Player> players, Totem myTotem, int myFood) throws RemoteException;
+    void showStartGame( ArrayList<Player> players, Board board) throws RemoteException;
 
     void askForTotemMove(ArrayList<OfferCard> path) throws RemoteException;
 
@@ -77,4 +77,5 @@ public interface VirtualClientInterface extends Remote {
 
     void confirmTotem(Totem totem);
 
+    void availableColors(ArrayList<Totem> availableTotems);
 }

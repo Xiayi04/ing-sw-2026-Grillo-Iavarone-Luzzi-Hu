@@ -13,6 +13,6 @@ public class SetUsernameCommand implements ServerCommand{
 
     @Override
     public void execute(VirtualClientInterface client, ServerController serverController) {
-
+        serverController.getLobby().addUsername(username,client);
     }
 }

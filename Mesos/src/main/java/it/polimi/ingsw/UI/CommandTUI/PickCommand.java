@@ -36,6 +36,6 @@ public class PickCommand implements CommandTUI {
 
     @Override
     public void execute(ClientController clientController) {
-        clientController.pickRequest(first, second, third);
+        //clientController.pickRequest(first, second, third);
     }
 }

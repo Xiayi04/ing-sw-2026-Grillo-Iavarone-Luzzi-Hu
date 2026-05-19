@@ -16,14 +16,15 @@ public class CommandFactoryTUI {
     }
 
     public void createNoSepCommandsMap(){
-        noSepCommandsMap.put("colors",key-> (ClientController clientController) -> new AvailableColorsCommand());
+        noSepCommandsMap.put("colors",key -> new AvailableColorsCommand());
 
     }
 
     public void createCommandsMap(){
         commandsMap.put("username", SetUsernameCommand::new);
         commandsMap.put("totem", SelectTotemCommand::new);
-        commandsMap.put("connect", ConnectionSelectionCommand::new);
+//        commandsMap.put("connect", c-> new ConnectionSelectionCommand(c));
+        commandsMap.put("set_num_players", SetNumPlayersRequestCommand::new);
 
     }
 

@@ -16,6 +16,5 @@ public interface ServerConnection {
 
     void leave();  //per comunicare ad altri client che x si è disconnesso
 
-
-
+    void availableColorsRequest();
 }

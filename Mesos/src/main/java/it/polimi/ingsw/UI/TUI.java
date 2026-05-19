@@ -58,6 +58,11 @@ public TUI(ClientController controller) {
     }
 
     @Override
+    public void showLobbyMenu() {
+
+    }
+
+    @Override
     public void showAvailableTotems(ArrayList<Totem> availableTotems) {
         String[] provv = new String [availableTotems.size()];
         for (int i = 0; i < availableTotems.size(); i++) {
@@ -70,26 +75,11 @@ public TUI(ClientController controller) {
         }
     }
 
-    public void showLobbyMenu(){
+    @Override
+    public void showError(String message) {
         synchronized (LOCK) {
-            System.out.println("Lobby Menu");
+            System.out.println("Error: " + message);
         }
-    }
-
-
-    @Override
-    public String askUsername() {
-        return "";
-    }
-
-    @Override
-    public Totem askTotem(List<Totem> availableTotems) {
-        return null;
-    }
-
-    @Override
-    public String showError(String message) {
-        return "";
     }
 
     @Override
@@ -98,9 +88,8 @@ public TUI(ClientController controller) {
     }
 
     @Override
-    public String showMessage(String message) {
+    public void showMessage(String message) {
         System.out.println(message);
-        return "";
     }
 
     @Override
@@ -118,17 +107,25 @@ public TUI(ClientController controller) {
 
     }
 
-    public String[] addCardToRow(String[] row, Card card) {
-        return null;
-    }
 
     public void startMenu(){
-        System.out.println(" === MESOS === ");
-        System.out.println("Command List:");
-        System.out.println("*Insert your username using -> username: 'your username'");
-        System.out.println("*Find the available totem colors using -> colors:");
-        System.out.println("*Select the preferred totem's colore using -> totem: 'chosen color'");
+        new Thread(()->{
+            synchronized (LOCK){
+                System.out.println(" === MESOS === ");
+                System.out.println("Command List:");
+                startMenuCommands();
+            }
+        }).start();
+    }
 
+    public void startMenuCommands(){
+        System.out.println("*Insert your username using -> username: 'your username'");
+        System.out.println("*Find the available totem colors at the moment using -> colors");
+        System.out.println("*Select the preferred totem's color using -> totem: 'chosen color'");
+        System.out.println("*To see the Command List use -> help");
+        System.out.println("*To quit the game use -> quit");
+        System.out.println("Totem's colors : WHITE,ORANGE,BLACK,YELLOW,BLUE");
+        System.out.println("NOTE: The game cannot start until the player selects a correct username and totem");
     }
 
     @Override
@@ -155,9 +152,15 @@ public TUI(ClientController controller) {
             }
         }
 
-        CommandTUI c = new ConnectionSelectionCommand(connection);
+        try {
+            CommandTUI c = new ConnectionSelectionCommand(connection);
+            c.execute(controller);
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+        }
         CommandFactoryTUI factory = new CommandFactoryTUI();
-        this.startMenu();
+        startMenu();
+        sc.nextLine();
         while(true){
             String content = sc.nextLine();
             if(content.equals("quit")){
@@ -174,13 +177,11 @@ public TUI(ClientController controller) {
             }).start();
         }
     }
+
     //Errori
-    public void connectionChoiceError(){
-        System.out.println("Invalid choice or connection not initialized, please try again");
-    }
 
-
-    public String[] printBuildingRow(ArrayList<Building> row) {
+    //Board printing management
+    public String[] printBuildingRow(ArrayList<Card> row) {
         Printer printer = new Printer();
         if(row.isEmpty()){
             return printer.initialize(new String[0]);
@@ -249,7 +250,7 @@ public TUI(ClientController controller) {
         printedBoard.add("BUILDINGS:");
         String[] buildingLowerRow = printBuildingRow(board.getLowerBuildingRow());
         printedBoard.addAll(Arrays.asList(buildingLowerRow));
-        printedBoard.add("HISTORY:");
+        printedBoard.add("UPDATE:");
 
         for(String s : printedBoard){
             System.out.println(s);
@@ -257,6 +258,8 @@ public TUI(ClientController controller) {
     }
 
     public void update(){
-
+        //errore
     }
+
+
 }

@@ -43,24 +43,37 @@ public class Lobby {
 
             if(!present) {
                 tempPlayers.add(new TempPlayer(client));
+                if(tempPlayers.size()==1){
+                    try {
+                        client.askNumPlayers();
+                    } catch (IOException e) {
+                        throw new RuntimeException(e);
+                    }
+                }
             }else
                 throw new RuntimeException("client already in tempPlayers");
         }
     }
 
     public void addUsername(String username, VirtualClientInterface client){
-        serverController.checkUsername(username, client);
+        new Thread(() -> {
+            serverController.checkUsername(username, client);
+        }).start();
     }
 
     public void addTotem(Totem totem, VirtualClientInterface client){
-        serverController.checkTotem(totem, client);
+        new Thread(() -> {
+            serverController.checkTotem(totem, client);
+        }).start();
     }
 
     public void setNumPlayers(Integer numPlayers, VirtualClientInterface client){
-        serverController.checkSetNumPlayers(numPlayers, client);
+        new Thread(()->{
+            serverController.checkSetNumPlayers(numPlayers, client);
+        }).start();
     }
 
-    public ArrayList<Totem> getAvailableTotems(){
+    public synchronized ArrayList<Totem> getAvailableTotems(){
         ArrayList<Totem> totems = new ArrayList<>();
         totems.add(Totem.BLACK);
         totems.add(Totem.BLUE);
@@ -93,5 +106,12 @@ public class Lobby {
             }
         }
         return null;
+    }
+
+    public void sendAvailableColors(VirtualClientInterface client) {
+        synchronized (tempPlayers){
+
+            client.availableColors(getAvailableTotems());
+        }
     }
 }

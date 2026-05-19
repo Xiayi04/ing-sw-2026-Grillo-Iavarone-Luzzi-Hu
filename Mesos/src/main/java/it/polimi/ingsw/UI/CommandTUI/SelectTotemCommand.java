@@ -18,6 +18,7 @@ public class SelectTotemCommand implements CommandTUI {
             t = Totem.valueOf(totem);
         } catch (IllegalArgumentException e) {
             clientController.setTmpTotem(null);
+            return;
         }
 
         clientController.setTmpTotem(t);

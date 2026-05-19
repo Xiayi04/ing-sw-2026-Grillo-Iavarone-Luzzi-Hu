@@ -61,7 +61,13 @@ public class Notifier {
     public synchronized void gameStartedBroadcast(ArrayList<Player> players, Board board){
         synchronized (OutputLock){
             for(VirtualClientInterface client: clients){
-                client.showStartGame();
+                new Thread(()->{
+                    try {
+                        client.showStartGame(players,board);
+                    } catch (RemoteException e) {
+                        throw new RuntimeException(e);
+                    }
+                }).start();
             }
         }
     }
@@ -134,14 +140,7 @@ public class Notifier {
         player.getVirtualClient().totemPositionError();
     }
 
-    //messagi di notifica per inizio e fine gioco
-    public void showStartGameBroadcast (String myName, ArrayList<Player> players, Totem myTotem, int myFood)  throws RemoteException {
-        synchronized (OutputLock) {
-            for (Player p : players) {
-                p.getVirtualClient().showStartGame(myName,  players, myTotem, myFood);
-            }
-        }
-    }
+    //messaggi di notifica per inizio e fine gioco
 
     public void showEndGameBroadcast(ArrayList<Player> players) throws RemoteException {
         synchronized (OutputLock){

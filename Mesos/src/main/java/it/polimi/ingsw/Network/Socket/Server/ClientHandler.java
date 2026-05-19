@@ -6,11 +6,9 @@ import it.polimi.ingsw.Network.Socket.Server.Command.ServerCommand;
 import it.polimi.ingsw.Network.Socket.Server.Command.CommandFactoryServer;
 import it.polimi.ingsw.Network.VirtualClientInterface;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.ObjectInputStream;
+import java.io.*;
 import java.net.Socket;
+import java.net.SocketException;
 
 public class ClientHandler implements Runnable {
     private final Socket socket;
@@ -42,7 +40,9 @@ public class ClientHandler implements Runnable {
 
                 cmd.execute(client, serverController);
             }
-        }catch(Exception e){
+        } catch (EOFException | SocketException e){
+            serverController.handleDisconnection(client);
+        } catch(Exception e){
             e.printStackTrace();
         }
     }

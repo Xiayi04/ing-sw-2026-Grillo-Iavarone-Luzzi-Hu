@@ -16,20 +16,25 @@ public class SocketClient implements Runnable, ServerConnection {
     public static final Object outputLock = new Object();
     public ObjectOutputStream out;
     public final ClientController clientController;
-    public SocketClient(Socket socket, ClientController clientController) {
+
+    public SocketClient( ClientController clientController) {
         this.clientController = clientController;
-        try {
-            out = new ObjectOutputStream(socket.getOutputStream());
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
+        clientController.setServerConnection(this);
         run();
     }
 
     @Override
     public void run(){
         try {
-            Socket socket = new Socket("localhost", 777);
+            Socket socket = new Socket("localhost", 8000);
+            System.out.println("SocketClient started...");
+            synchronized (outputLock) {
+                try {
+                    out = new ObjectOutputStream(socket.getOutputStream());
+                } catch (IOException e) {
+                    throw new RuntimeException(e);
+                }
+            }
 
             ObjectInputStream inputStream = new ObjectInputStream(socket.getInputStream());
 
@@ -83,10 +88,12 @@ public class SocketClient implements Runnable, ServerConnection {
             synchronized (outputLock){
                 try {
                     out.writeObject(new MessageFromClient<>("username",username));
+                    out.flush();
                 } catch (IOException e) {}
 
                 try {
                     out.writeObject(new MessageFromClient<>("totem", chosenTotem));
+                    out.flush();
                 } catch (IOException e) {
                     throw new RuntimeException(e);
                 }
@@ -100,6 +107,7 @@ public class SocketClient implements Runnable, ServerConnection {
             synchronized (outputLock){
                 try {
                     out.writeObject(new MessageFromClient<>("setnumplayers",numPlayer));
+                    out.flush();
                 } catch (IOException e) {
                     throw new RuntimeException(e);
                 }
@@ -110,14 +118,14 @@ public class SocketClient implements Runnable, ServerConnection {
     @Override
     public void pickCard(String username, boolean isUpper, boolean isBuilding, int index) {
         new Thread(()->{
-            Pick pick = new Pick(username, isUpper, isBuilding, index);
-            synchronized (outputLock){
-                try {
-                    out.writeObject(new MessageFromClient<>("pick",pick));
-                } catch (IOException e) {
-                    throw new RuntimeException(e);
-                }
-            }
+//            Pick pick = new Pick(username, isUpper, isBuilding, index);
+//            synchronized (outputLock){
+//                try {
+//                    out.writeObject(new MessageFromClient<>("pick",pick));
+//                } catch (IOException e) {
+//                    throw new RuntimeException(e);
+//                }
+//            }
         }).start();
     }
 
@@ -127,6 +135,7 @@ public class SocketClient implements Runnable, ServerConnection {
             synchronized (outputLock){
                 try {
                     out.writeObject(new MessageFromClient<>("position", chosenPosition));
+                    out.flush();
                 } catch (IOException e) {
                     throw new RuntimeException(e);
                 }
@@ -139,4 +148,15 @@ public class SocketClient implements Runnable, ServerConnection {
 
     }
 
+    @Override
+    public void availableColorsRequest() {
+        synchronized (outputLock){
+            try {
+                out.writeObject(new MessageFromClient<>("available_colors",null));
+                out.flush();
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
+        }
+    }
 }

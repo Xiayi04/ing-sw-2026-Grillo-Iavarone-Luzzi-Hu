@@ -17,7 +17,7 @@ public class Server {
     public static AtomicInteger numConnections = new AtomicInteger(0);
     public static Object lock = new Object();
     static int rmiPort;
-    static int socketPort;
+    static int socketPort=777;
     static String host;
     static GameManager gameManager;
     public static ArrayList<ClientProxy> clientProxies = new ArrayList<>();
@@ -28,15 +28,12 @@ public class Server {
 
         System.out.println("Server starting...");
 
-        Lobby lobby = new Lobby();
         GameManager gameManager = new GameManager(null,0,new Board());
-        ServerController serverController = new ServerController(lobby,gameManager);
+        ServerController serverController = new ServerController(gameManager);
 
 
-        new Thread(new ServerSocket(socketPort,serverController, lobby)).start();
-        new Thread(new ServerRMI(gameManager,serverController,lobby)).start();
-
-
+        new Thread(new ServerSocket(socketPort,serverController, serverController.getLobby())).start();
+        //new Thread(new ServerRMI(gameManager,serverController,serverController.getLobby())).start();
 
     }
 

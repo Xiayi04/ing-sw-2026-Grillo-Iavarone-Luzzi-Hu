@@ -27,7 +27,7 @@ public class ServerSocket implements Runnable {
     public void run() {
         System.out.println("SocketServer starting...");
         try {
-            java.net.ServerSocket serverSocket = new java.net.ServerSocket(port);
+            java.net.ServerSocket serverSocket = new java.net.ServerSocket(8000);
             System.out.println("SocketServer started...");
 
             while (true) {

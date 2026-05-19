@@ -12,13 +12,13 @@ public class MoveTotemCommand implements ServerCommand {
     }
     @Override
     public void execute(VirtualClientInterface client, ServerController serverController) {
-        new Thread(()->{
-            String username = serverController.getUsernameByClient(client);
-            try {
-                serverController.moveTotemRequest(username,position);
-            } catch (RemoteException e) {
-                throw new RuntimeException(e);
-            }
-        }).start();
+//        new Thread(()->{
+//            String username = serverController.getUsernameByClient(client);
+//            try {
+//                serverController.moveTotemRequest(username,position);
+//            } catch (RemoteException e) {
+//                throw new RuntimeException(e);
+//            }
+//        }).start();
     }
 }
