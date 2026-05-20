@@ -21,11 +21,12 @@ public class ClientRMI extends UnicastRemoteObject implements
     private String username;
 
 
-    public ClientRMI(String localHost, int port, String serverName) throws RemoteException {
+    public ClientRMI(String localHost, int port, String serverName,ClientController clientcontroller) throws RemoteException {
         super();
         this.localHost = localHost;
         this.port = port;
         this.serverName = serverName;
+        this.clientController= clientcontroller;
         clientController.setConnection(this);
     }
 
