@@ -19,9 +19,9 @@ public interface VirtualClientInterface extends Remote {
 
     void returnTotemToTOC(Player player,int index) throws RemoteException;
 
-    void showChosenNumPlayers(Player player) throws IOException;
+    void showChosenNumPlayers(int numPlayers) throws IOException;
 
-    void updateFirstPlayer(Player player) throws RemoteException;
+    void updateFirstPlayer() throws RemoteException;
 
     void updateStartGame( ArrayList<Player> players, Board board) throws RemoteException;
 
@@ -35,9 +35,6 @@ public interface VirtualClientInterface extends Remote {
     void showEndGame(Player winner, List<PlayerScore> leaderboard) throws RemoteException;
 
     void refuseConnection() throws IOException;
-    
-    void newPlayer( Player newPlayer) throws IOException;
-
 
     void pickedCard(Player player, boolean row, boolean isBuilding, int index);
 
