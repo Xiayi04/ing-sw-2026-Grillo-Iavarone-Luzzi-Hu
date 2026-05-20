@@ -4,11 +4,13 @@ import it.polimi.ingsw.Cards.Events.Event;
 import it.polimi.ingsw.Game.Board;
 import it.polimi.ingsw.Game.Player;
 import it.polimi.ingsw.Game.Totem;
+import it.polimi.ingsw.Network.PlayerScore;
 import it.polimi.ingsw.Network.VirtualClientInterface;
 
 import java.io.IOException;
 import java.rmi.RemoteException;
 import java.util.ArrayList;
+import java.util.List;
 
 public class Notifier {
     private final Object OutputLock = new Object();
@@ -24,7 +26,11 @@ public class Notifier {
         synchronized (OutputLock){
             for(VirtualClientInterface client : clients){
                 new Thread(() -> {
-                    client.returnedTotemOnTurnOrder(player,index);
+                    try {
+                        client.returnTotemToTOC(player,index);
+                    } catch (RemoteException e) {
+                        throw new RuntimeException(e);
+                    }
                 }).start();
             }
         }
@@ -35,7 +41,7 @@ public class Notifier {
             for(VirtualClientInterface client: clients){
                 new Thread(() -> {
                     try {
-                        client.resolvingEvent(e);
+                        client.updateForEvent(e);
                     } catch (RemoteException ex) {
                         throw new RuntimeException(ex);
                     }
@@ -49,7 +55,7 @@ public class Notifier {
             for(VirtualClientInterface client : clients){
                 new Thread(()->{
                     try {
-                        client.updateEra(era);
+                        client.showUpdateEra(era);
                     } catch (RemoteException e) {
                         throw new RuntimeException(e);
                     }
@@ -63,7 +69,7 @@ public class Notifier {
             for(VirtualClientInterface client: clients){
                 new Thread(()->{
                     try {
-                        client.showStartGame(players,board);
+                        client.updateStartGame(players,board);
                     } catch (RemoteException e) {
                         throw new RuntimeException(e);
                     }
@@ -129,7 +135,7 @@ public class Notifier {
     //messaggi per singoli giocatori
 
     public void invalidCardPick( Player player) throws RemoteException {
-        player.getVirtualClient().cardPickError();
+        player.getVirtualClient().pickCardError();
     }
 
     public void invalidBuildingPurchase( Player player) throws RemoteException {
@@ -142,10 +148,16 @@ public class Notifier {
 
     //messaggi di notifica per inizio e fine gioco
 
-    public void showEndGameBroadcast(ArrayList<Player> players) throws RemoteException {
+    public void showEndGameBroadcast(Player winner, List<PlayerScore> leaderboard) throws RemoteException {
         synchronized (OutputLock){
-            for(Player p : players){
-                p.getVirtualClient().showEndGame();
+            for(VirtualClientInterface client : clients){
+                new Thread(()->{
+                    try {
+                        client.showEndGame(winner,leaderboard);
+                    } catch (RemoteException e) {
+                        throw new RuntimeException(e);
+                    }
+                }).start();
             }
         }
     }
