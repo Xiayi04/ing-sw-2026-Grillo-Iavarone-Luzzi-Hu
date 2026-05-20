@@ -39,7 +39,7 @@ public class ClientController {
     public void setServerConnection(boolean isRMI) {
         try {
             if (isRMI) {
-                ClientRMI clientRMI = new ClientRMI("localhost", 1099, "VirtualServer");
+                ClientRMI clientRMI = new ClientRMI("localhost", 1099, "VirtualServer",this);
                 clientRMI.setClientController(this);
                 clientRMI.run();
 
@@ -75,6 +75,7 @@ public class ClientController {
         this.currentBoard = currentBoard;
     }
 
+  //choice of the number of players
     public void setNumPlayers(int numPlayers) {
         while (numPlayers < 2 || numPlayers > 5) {
             view.showError("Number of Players is wrong,try again ");
@@ -82,70 +83,37 @@ public class ClientController {
         }
         serverConnection.setNumPlayers(numPlayers);
     }
-
-    public void chooseTotemPosition(ArrayList<OfferCard> path) {
-
-        if (path == null || path.isEmpty()) {
-            view.showError("Offer card path not available.");
-            return;
-        }
-
-        int chosenPosition = view.askPosition(path);
-
-        while (chosenPosition < 0 || chosenPosition >= path.size()) {
-            view.showError("Position not valid.");
-            chosenPosition = view.askPosition(path);
-        }
-
-        serverConnection.setTotemPosition(localPlayerName, chosenPosition);
+    public void showNumPlayers(int numPlayers){
+        view.showMessage("Number of Players "+ numPlayers);
+    }
+    public void numPlayersChosenError() {
+        view.showError("players' num not correct");
     }
 
-    public void PickCard(boolean isUpper, boolean isBuilding, int index) {
-
-        if (isUpper) {
-            if (!(index >= 0 && index < currentBoard.getUpperCardRow().size())) {
-                view.showError("Card index not valid.");
-
-            } else {
-                if (!(index >= 0 && index < currentBoard.getLowerCardsRow().size())) {
-                    view.showError("Card index not valid.");
-                    return;
-                }
-            }
-            serverConnection.requestPickCard(localPlayerName, isUpper, isBuilding, index);
-        }
-    }
-
-    public void leave() {
-        serverConnection.leave();
-    }
-
-    //aggiornano la gui
 
 
-    public void showStartGame() {
+    //notifica dal server
+    public void showGameStarted() {
         view.showMessage("The game started.");
     }
+    public void showUpdateFirstPlayer() {
+        view.showMessage("You are the first player.");
+    }
+    public void showAvailableTotems(ArrayList<Totem> availableTotems) {
+        view.showAvailableTotems(availableTotems);
+    }
 
+
+    public void showLocalUpdateEra() {
+        view.showMessage("era updated");
+    }
     public void showPlayerTurn(Player player) {
         view.showMessage("It's your turn.");
     }
-
-    public void addedPlayer(Player player) {
-        view.showMessage("New player added: "+player);
+    public void showLocalReturnToTOC() {
+        view.showMessage("totem returned to turn order card");
     }
 
-    public void showPickedCard(Player playerWhoPicked, boolean row, boolean isBuilding, int index){
-        rowName = row? "upperRow" : "lowerRow";
-        cardType = isBuilding ? "building" : "character";
-        view.showMessage(playerWhoPicked + "has taken" + cardType + "from" + rowName);
-    }
-
-
-
-    public void movedTotem(Player player, int path){
-        view.showMessage("Player"+ player + "moved to: "+ path);
-    }
     public void foodUpdated(Player player, int foodUpdated){
         view.showMessage(player + "'s food + "+foodUpdated);
     }
@@ -153,33 +121,41 @@ public class ClientController {
         view.showMessage(player + "'s PP updated: " + PPUpdated);
     }
 
-    public void updateBoardStatus(Board updatedBoard) {
-        this.currentBoard = updatedBoard;
-        view.updateBoardStatus(currentBoard);
+    public void showUpdateForEvents() {
+        view.showMessage("Round ended, event resolve phase");
     }
     public void showErrorMessage(String message) {
         view.showError(message);
     }
-
+    public void showUpdateNextTurn() {
+        view.showMessage("New turn started");
+    }
 
     public void showEndGame() {
         view.showMessage("Game ended.");
     }
-    
+
     //Login management
 
     public void setTmpUsername(String username) {
-        if(serverConnection==null){
+        if(serverConnection==null  || username.isBlank()){
             view.showErrorMessage("You can't set a username at this moment, please try again");
             return;
         }
             synchronized (tmpLock){
                 if (username == null || username.isBlank()) {
-
+                    view.showError("Username cannot be empty or repetitive");
                 }
                 tmpUsername = username;
                 checkForLogin();
             }
+    }
+    public void showConfirmUsername(String username){
+        this.localPlayerName = username;
+        view.showMessage("Username confirmed: "+ username);
+    }
+    public void showUsernameError() {
+        view.showError("Username choice is wrong");
     }
 
     public void setTmpTotem(Totem totem) {
@@ -189,18 +165,27 @@ public class ClientController {
         }
 
             synchronized (tmpLock){
-                if (tmpTotem == null) {
-
+                if (totem == null) {
+                    view.showError("Totem is null");
                 }
                 tmpTotem = totem;
                 checkForLogin();
             }
 
     }
+    public void showConfirmTotem(Totem totem){
+        view.showMessage("Totem chosen is confirmed"+ totem);
+
+    }
+    public void showTotemChoiceError() {
+        view.showError("Totem chosen not available");
+    }
+
+
 
     public void checkForLogin(){
         synchronized (tmpLock){
-            if(tmpTotem == null && tmpUsername==null){
+            if(tmpTotem == null || tmpUsername==null){
                 return;
             }
             serverConnection.login(tmpUsername, tmpTotem);
@@ -209,9 +194,9 @@ public class ClientController {
         }
     }
 
-    public void confirmTotem(Totem totem) {
-        view.showMessage("Totem confirmed: "+totem);
-    }
+
+
+
 
 
     public void addPlayerToLocalBoard(Player newPlayer) {
@@ -227,9 +212,6 @@ public class ClientController {
         view.showMessage("Number of players: "+num);
     }
 
-    public void askNumPlayers() {
-        view.showMessage("*Insert the number of players that will join this game using-> players:'num of players'");
-    }
 
     //picking management, output and input
     public void requestLocalPickCard(boolean isUpper, boolean isBuilding, int index) {
@@ -262,6 +244,7 @@ public class ClientController {
     public void showPickedCardError() {
         view.showError("You can't pick this card");
     }
+
 
     public Player getPlayerByName(String playerName) {
         synchronized (currentBoard.getPlayers()) {
@@ -316,10 +299,14 @@ public class ClientController {
             }
         }
         view.moveTotem(playerName,index);
+        view.showMessage("Player"+ playerName + "moved to: "+ index);
     }
 
     public void showTotemMovedError() {
         view.showError("You can't move this totem");
+    }
+    public void leave() {
+        serverConnection.leave();
     }
 
 }
