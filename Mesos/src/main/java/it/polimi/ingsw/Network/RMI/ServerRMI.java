@@ -34,7 +34,7 @@ public class ServerRMI extends UnicastRemoteObject implements VirtualServer,Runn
             final String serverName = "---MESOS_SERVER---";
             Registry registry = LocateRegistry.createRegistry(1234);//crea il registro sulla porta 1234
             registry.rebind(serverName, this);//pubblica il server nel registro
-            System.out.println("---Server is ready!---");
+            System.out.println("---Server RMI is ready!---");
         } catch (Exception e) {
             System.err.println("Server configuration error:  " + e.getMessage());
             e.printStackTrace();
@@ -56,27 +56,29 @@ public class ServerRMI extends UnicastRemoteObject implements VirtualServer,Runn
         lobby.addUsername(username,activeClients.get(virtualClient));
         lobby.addTotem(chosenColor,activeClients.get(virtualClient));
     }
-
-    public synchronized void pickCard(String username, boolean isUpper,boolean isBuilding,int index) throws RemoteException{
+    @Override
+    public synchronized void requestPickCardManagement(String username, boolean isUpper,boolean isBuilding,int index) throws RemoteException{
         serverController.genericPick(username,isUpper,isBuilding,index);
     }
 
-
     @Override
-    public synchronized void moveTotem(String username, int pathIndex)throws RemoteException{
+    public synchronized void requestMoveTotemManagement(String username, int pathIndex)throws RemoteException{
         serverController.moveTotemRequest(username,pathIndex);
     }
-
-    public synchronized void setNumPlayers (int numPlayers,RemoteClientInterface client)throws RemoteException{
+    @Override
+    public synchronized void requestSetNumPlayersManagement (int numPlayers,RemoteClientInterface client)throws RemoteException{
         lobby.setNumPlayers(numPlayers, new RMIVirtualClient(client));
     }
 
     public synchronized void setTotemPosition (String username, int index) throws RemoteException{
 
     }
-
+    @Override
     public synchronized void leave () throws RemoteException{
 
+    }
+    @Override
+    public void requestAvailableTotemsManagement(int index){
     }
 
 }
