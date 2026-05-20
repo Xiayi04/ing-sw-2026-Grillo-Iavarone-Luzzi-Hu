@@ -71,20 +71,6 @@ public class ClientController {
         this.currentBoard = currentBoard;
     }
 
-    /* public void login(String username, Totem chosenTotem) {
-        if (username == null || username.isBlank()) {
-            view.showError("Username not valid.");
-            return;
-        }
-
-        if (chosenTotem == null) {
-            view.showError("Totem not valid.");
-            return;
-        }
-        serverConnection.login(username, chosenTotem);
-    }*/
-
-
     public void setNumPlayers(int numPlayers) {
         while (numPlayers < 2 || numPlayers > 5) {
             view.showError("Number of Players is wrong ");

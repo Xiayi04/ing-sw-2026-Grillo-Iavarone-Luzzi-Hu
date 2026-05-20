@@ -1,5 +1,4 @@
 package it.polimi.ingsw.Network.RMI;
-import it.polimi.ingsw.Game.Board;
 import it.polimi.ingsw.Game.Player;
 import it.polimi.ingsw.Game.Totem;
 import it.polimi.ingsw.Network.ClientController;
@@ -19,12 +18,15 @@ public class ClientRMI extends UnicastRemoteObject implements
     private final String localHost;
     private final int port;
     private final String serverName;
+    private String username;
+
 
     public ClientRMI(String localHost, int port, String serverName) throws RemoteException {
         super();
         this.localHost = localHost;
         this.port = port;
         this.serverName = serverName;
+        clientController.setConnection(this);
     }
 
     public void setClientController(ClientController clientController) {
@@ -78,6 +80,7 @@ public class ClientRMI extends UnicastRemoteObject implements
     @Override
     public void login(String username, Totem chosenTotem) {
         try {
+            this.username = username;
             server.login(username, chosenTotem, this);
         } catch (RemoteException e) {
             clientController.showErrorMessage("RMI error during login.");
@@ -87,13 +90,13 @@ public class ClientRMI extends UnicastRemoteObject implements
     @Override
     public void setNumPlayers(int numPlayer) {
         try {
-            server.setNumPlayers(numPlayer);
+            server.setNumPlayers(numPlayer, this);
         } catch (RemoteException e) {
             clientController.showErrorMessage("RMI error while setting number of players.");
         }
     }
     @Override
-    public void pickCard(String username, boolean isUpper, boolean isBuilding, int index) {
+    public void requestPickCard(boolean isUpper, boolean isBuilding, int index) {
         try {
             server.pickCard(username, isUpper, isBuilding, index);
         } catch (RemoteException e) {
@@ -104,7 +107,7 @@ public class ClientRMI extends UnicastRemoteObject implements
     @Override
     public void setTotemPosition(int chosenPosition) {
         try {
-            server.setTotemPosition(chosenPosition);
+            server.setTotemPosition(username, chosenPosition);
         } catch (RemoteException e) {
             clientController.showErrorMessage("RMI error while setting totem position.");
         }
