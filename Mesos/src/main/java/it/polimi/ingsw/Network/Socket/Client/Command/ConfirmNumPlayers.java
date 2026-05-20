@@ -5,13 +5,14 @@ import it.polimi.ingsw.Network.ClientController;
 import java.io.IOException;
 import java.net.Socket;
 
-public class ConfirmUsernameCommand implements ClientCommand{
-    private String username;
-    public ConfirmUsernameCommand(String username) {
-        this.username = username;
+public class ConfirmNumPlayers implements ClientCommand{
+    int num;
+    public ConfirmNumPlayers(int num) {
+        this.num = num;
     }
+
     @Override
     public void execute(Socket socket, ClientController clientController) throws IOException {
-        clientController.setLocalPlayerName(username);
+        clientController.confirmNumPlayers(num);
     }
 }

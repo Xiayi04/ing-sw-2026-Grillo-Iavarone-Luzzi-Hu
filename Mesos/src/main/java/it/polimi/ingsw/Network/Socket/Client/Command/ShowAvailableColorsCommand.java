@@ -27,6 +27,6 @@ public class ShowAvailableColorsCommand implements ClientCommand{
             }
             totemsString.append(totems.get(i).toString()).append(", ");
         }
-        clientController.showMessage("These are the available colors at the moment:"+  totemsString.toString());
+        //clientController.showMessage("These are the available colors at the moment:"+  totemsString.toString());
     }
 }

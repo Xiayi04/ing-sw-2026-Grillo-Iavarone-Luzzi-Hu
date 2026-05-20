@@ -45,7 +45,7 @@ public class Lobby {
                 tempPlayers.add(new TempPlayer(client));
                 if(tempPlayers.size()==1){
                     try {
-                        client.askNumPlayers();
+                        client.updateFirstPlayer();
                     } catch (IOException e) {
                         throw new RuntimeException(e);
                     }

@@ -15,6 +15,6 @@ public class ShowMSGCommand implements ClientCommand{
 
     @Override
     public void execute(Socket socket, ClientController clientController) throws IOException {
-        clientController.showMessage(message);
+        //clientController.showMessage(message);
     }
 }

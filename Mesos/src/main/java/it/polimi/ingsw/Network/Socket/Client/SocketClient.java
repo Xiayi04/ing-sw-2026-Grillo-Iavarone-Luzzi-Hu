@@ -5,7 +5,6 @@ import it.polimi.ingsw.Network.ClientController;
 import it.polimi.ingsw.Network.ServerConnection;
 import it.polimi.ingsw.Network.Socket.Client.Command.ClientCommand;
 import it.polimi.ingsw.Network.Socket.Client.Command.CommandFactoryClientSide;
-import it.polimi.ingsw.Network.Socket.Server.Command.Pick;
 import it.polimi.ingsw.Network.Socket.Server.MessageFromServer;
 
 import java.io.*;
@@ -19,7 +18,7 @@ public class SocketClient implements Runnable, ServerConnection {
 
     public SocketClient( ClientController clientController) {
         this.clientController = clientController;
-        clientController.setServerConnection(this);
+        clientController.setConnection(this);
         run();
     }
 
@@ -53,9 +52,7 @@ public class SocketClient implements Runnable, ServerConnection {
                 }).start();
             }
 
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        } catch (ClassNotFoundException e) {
+        } catch (IOException | ClassNotFoundException e) {
             throw new RuntimeException(e);
         }
     }
@@ -84,7 +81,6 @@ public class SocketClient implements Runnable, ServerConnection {
 
     @Override
     public void login(String username, Totem chosenTotem) {
-        new Thread(()->{
             synchronized (outputLock){
                 try {
                     out.writeObject(new MessageFromClient<>("username",username));
@@ -98,12 +94,12 @@ public class SocketClient implements Runnable, ServerConnection {
                     throw new RuntimeException(e);
                 }
             }
-        }).start();
+
     }
 
     @Override
     public void setNumPlayers(int numPlayer) {
-        new Thread(()->{
+
             synchronized (outputLock){
                 try {
                     out.writeObject(new MessageFromClient<>("setnumplayers",numPlayer));
@@ -112,10 +108,15 @@ public class SocketClient implements Runnable, ServerConnection {
                     throw new RuntimeException(e);
                 }
             }
-        }).start();
+
     }
 
     @Override
+    public void requestPickCard(String localPlayerName, boolean isUpper, boolean isBuilding, int index) {
+
+    }
+
+
     public void pickCard(String username, boolean isUpper, boolean isBuilding, int index) {
         new Thread(()->{
 //            Pick pick = new Pick(username, isUpper, isBuilding, index);
@@ -130,8 +131,8 @@ public class SocketClient implements Runnable, ServerConnection {
     }
 
     @Override
-    public void setTotemPosition(int chosenPosition) {
-        new Thread(()->{
+    public void setTotemPosition(String localPlayerName, int chosenPosition) {
+
             synchronized (outputLock){
                 try {
                     out.writeObject(new MessageFromClient<>("position", chosenPosition));
@@ -140,7 +141,7 @@ public class SocketClient implements Runnable, ServerConnection {
                     throw new RuntimeException(e);
                 }
             }
-        }).start();
+
     }
 
     @Override
@@ -148,7 +149,7 @@ public class SocketClient implements Runnable, ServerConnection {
 
     }
 
-    @Override
+
     public void availableColorsRequest() {
         synchronized (outputLock){
             try {
@@ -159,4 +160,6 @@ public class SocketClient implements Runnable, ServerConnection {
             }
         }
     }
+
+
 }

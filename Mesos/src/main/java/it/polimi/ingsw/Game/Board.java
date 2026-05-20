@@ -118,13 +118,19 @@ public class Board  implements Serializable {
     }
 
     public void initializeBoard(int NumPlayers){
-        int upper = NumPlayers+4;
-        int lower = NumPlayers+1;
         initializeDeck();
         buildingPerPlayers(NumPlayers);
-        path.addAll(obtainPath(this.getPlayers()));
+        obtainPath(players);
         upperBuildingRow.addAll(buildingsEra1);
+        initializeTurnOrderCard();
+        setCardOnBoard();
 
+
+    }
+
+    public void setCardOnBoard(){
+        int upper = players.size()+4;
+        int lower = players.size()+1;
         int j= 0;
         for(int i = 0; i<lower;  ){
             Card c = deck.removeFirst();
@@ -142,6 +148,13 @@ public class Board  implements Serializable {
             Card c = deck.removeFirst();
             upperCardRow.add(c);
         }
+    }
+
+    public void initializeTurnOrderCard(){
+        ArrayList<Player> players = this.players;
+        Collections.shuffle(players);
+        turnOrderCard = new TurnOrderCard(players.size());
+        turnOrderCard.getOrder().addAll(players);
     }
 
     //rimozione degli edifici

@@ -14,6 +14,6 @@ public class NewPlayerCommand  implements ClientCommand {
     }
 
     public void execute(Socket socket, ClientController clientController) throws IOException {
-        //clientController.addPlayer(payload);
+        clientController.addPlayerToLocalBoard(payload);
     }
 }

@@ -1,13 +1,7 @@
 package it.polimi.ingsw.Network;
 
-import it.polimi.ingsw.Network.RMI.ClientRMI;
-import it.polimi.ingsw.Network.RMI.VirtualServer;
-import it.polimi.ingsw.Network.Socket.Client.SocketClient;
 import it.polimi.ingsw.UI.TUI;
 
-import java.net.Socket;
-import java.rmi.registry.LocateRegistry;
-import java.rmi.registry.Registry;
 import java.util.Scanner;
 
 public class ClientMain {

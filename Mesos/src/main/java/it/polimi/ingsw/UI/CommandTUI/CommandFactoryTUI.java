@@ -1,7 +1,5 @@
 package it.polimi.ingsw.UI.CommandTUI;
 
-import it.polimi.ingsw.Network.ClientController;
-
 import java.util.HashMap;
 import java.util.Map;
 import java.util.function.Function;
@@ -24,7 +22,8 @@ public class CommandFactoryTUI {
         commandsMap.put("username", SetUsernameCommand::new);
         commandsMap.put("totem", SelectTotemCommand::new);
 //        commandsMap.put("connect", c-> new ConnectionSelectionCommand(c));
-        commandsMap.put("set_num_players", SetNumPlayersRequestCommand::new);
+        commandsMap.put("players", SetNumPlayersRequestCommand::new);
+        commandsMap.put("pick", PickCommand::new);
 
     }
 

@@ -1,7 +1,5 @@
 package it.polimi.ingsw.Network;
 
-import it.polimi.ingsw.Buildings.Building;
-import it.polimi.ingsw.Cards.Card;
 import it.polimi.ingsw.Cards.Events.Event;
 import it.polimi.ingsw.Game.*;
 
@@ -50,7 +48,7 @@ public interface VirtualClientInterface extends Remote {
 
     void showPlayerTurn(Player player);
 
-    void updateNextTurn (String message) throws RemoteException;
+    void updateNextTurn (Board board) throws RemoteException;
 
     void pickCardError() throws RemoteException;
 
@@ -70,5 +68,7 @@ public interface VirtualClientInterface extends Remote {
 
     void updateConfirmedTotem(Totem totem);
 
+    void confirmNumPlayers(int numPlayers);
 
+    void availableColors(ArrayList<Totem> availableTotems);
 }

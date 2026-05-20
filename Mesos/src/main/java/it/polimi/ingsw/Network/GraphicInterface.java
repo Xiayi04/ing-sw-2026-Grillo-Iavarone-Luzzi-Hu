@@ -8,16 +8,15 @@ import java.util.ArrayList;
 
 public interface GraphicInterface {
     void showError(String message);
-    int askNumToPlayer();
     void showMessage(String message);
-    int askPosition(ArrayList<OfferCard> path);
-    void updateBoardStatus(Board board);
     void showCurrentPlayer(String username);
-    void welcomeUser(String username);
-    void invalidUsername();
-    void showChosenTotem(Totem totem);
     void showAvailableTotems(ArrayList<Totem> availableTotems);
-    void totemSelectionError();
+    void showPlayerFoodUpdate(String playerName, int food);
+    void showPlayerPPUpdate(String playerName, int pp);
     void showLobbyMenu();
     void showErrorMessage(String message);
+    void pickCard(String name, boolean isUpper, boolean isBuilding, int index);
+    void moveTotem(String username, int index);
+    void askNumPlayers();
+    void showNextRound();
 }

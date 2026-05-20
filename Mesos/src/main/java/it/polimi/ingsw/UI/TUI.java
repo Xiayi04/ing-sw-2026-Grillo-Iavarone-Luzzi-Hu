@@ -1,6 +1,5 @@
 package it.polimi.ingsw.UI;
 
-import it.polimi.ingsw.Buildings.Building;
 import it.polimi.ingsw.Cards.Card;
 import it.polimi.ingsw.Game.Board;
 import it.polimi.ingsw.Game.OfferCard;
@@ -17,48 +16,67 @@ import java.util.*;
 public class TUI implements GraphicInterface,Runnable {
 private final Object LOCK = new Object();
 private final ClientController controller;
+private final Printer printer = new Printer();
 
 public TUI(ClientController controller) {
     this.controller = controller;
     controller.setView(this);
     this.run();
 }
-    @Override
-    public void welcomeUser(String username){
-        new Thread(()->{
-            synchronized (LOCK){
-                System.out.println("Welcome " + username);
-            }
-        }).start();
-    }
 
     @Override
-    public void invalidUsername() {
-        new Thread(()->{
-            synchronized (LOCK){
-                System.out.println("The username you entered is invalid or was already used, please try again");
-            }
-        }).start();
-    }
-
-    @Override
-    public void showChosenTotem(Totem totem) {
-        new Thread(()->{
-            synchronized (LOCK){
-                System.out.println("Your totem is " + totem);
-            }
-        }).start();
-    }
-
-    @Override
-    public void totemSelectionError() {
+    public void showPlayerFoodUpdate(String playerName, int food) {
         synchronized (LOCK) {
-            System.out.println("The totem you selected is invalid or was already used, please try again");
+            StringBuilder update = new StringBuilder();
+            update.append((playerName.equals(controller.getLocalPlayer().getName()) ? "You now have " : playerName.toUpperCase()+" now has " ));
+            update.append(food).append("food");
+            synchronized (controller.getLocalPlayer()) {
+                boardPrinter(controller.getCurrentBoard(), update.toString());
+            }
+        }
+    }
+
+    @Override
+    public void showPlayerPPUpdate(String playerName, int pp) {
+        synchronized (LOCK) {
+            StringBuilder update = new StringBuilder();
+            update.append((playerName.equals(controller.getLocalPlayer().getName()) ? "You now have " : (playerName.toUpperCase()+" now has ") ));
+            update.append(pp).append("Prestige Points");
         }
     }
 
     @Override
     public void showLobbyMenu() {
+
+    }
+
+    @Override
+    public void showErrorMessage(String message) {
+        synchronized (LOCK) {
+            System.out.println("Error: " + message);
+        }
+    }
+
+    @Override
+    public void pickCard(String name, boolean isUpper, boolean isBuilding, int index) {
+        synchronized (LOCK){
+            StringBuilder stringBuilder = new StringBuilder();
+
+            if(controller.getLocalPlayer().getName().equals(name)){
+                stringBuilder.append("You selected ");
+            }else
+                stringBuilder.append(name.toUpperCase()).append(" has selected ");
+            stringBuilder.append(isBuilding ? "a Building from the " : "a Character from the ");
+            stringBuilder.append(isUpper ? "Upper" : "Lower");
+            stringBuilder.append(" row");
+            synchronized (controller.getLocalPlayer()) {
+                boardPrinter(controller.getCurrentBoard(), stringBuilder.toString());
+            }
+        }
+    }
+
+    @Override
+    public void moveTotem(String username, int index) {
 
     }
 
@@ -82,25 +100,12 @@ public TUI(ClientController controller) {
         }
     }
 
-    @Override
-    public int askNumToPlayer() {
-        return 0;
-    }
 
     @Override
     public void showMessage(String message) {
         System.out.println(message);
     }
 
-    @Override
-    public int askPosition(ArrayList<OfferCard> path) {
-        return 0;
-    }
-
-    @Override
-    public void updateBoardStatus(Board board) {
-
-    }
 
     @Override
     public void showCurrentPlayer(String username) {
@@ -109,13 +114,13 @@ public TUI(ClientController controller) {
 
 
     public void startMenu(){
-        new Thread(()->{
+
             synchronized (LOCK){
                 System.out.println(" === MESOS === ");
                 System.out.println("Command List:");
                 startMenuCommands();
             }
-        }).start();
+
     }
 
     public void startMenuCommands(){
@@ -189,7 +194,7 @@ public TUI(ClientController controller) {
 
         String[] result = new String[7];
         result = printer.initialize(result);
-        for(Building building : row){
+        for(Card building : row){
             String[] provv = building.print(printer);
             for(int i = 0; i < provv.length; i++){
                 result[i] = result[i]+provv[i];
@@ -232,7 +237,7 @@ public TUI(ClientController controller) {
         return result;
     }
 
-    public void boardPrinter(Board board){
+    public void boardPrinter(Board board, String update){
         ArrayList<String> printedBoard =  new ArrayList<String>();
 
         printedBoard.add("BUILDINGS:");
@@ -251,15 +256,13 @@ public TUI(ClientController controller) {
         String[] buildingLowerRow = printBuildingRow(board.getLowerBuildingRow());
         printedBoard.addAll(Arrays.asList(buildingLowerRow));
         printedBoard.add("UPDATE:");
+        printedBoard.add(update);
 
         for(String s : printedBoard){
             System.out.println(s);
         }
     }
 
-    public void update(){
-        //errore
-    }
 
 
 }
