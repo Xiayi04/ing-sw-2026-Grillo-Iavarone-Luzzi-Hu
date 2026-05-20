@@ -43,9 +43,9 @@ public interface VirtualClientInterface extends Remote {
 
     void movedTotem(Player player, int index);
 
-    void movedTotemError (String message) throws RemoteException;
+    void movedTotemError () throws RemoteException;
 
-    void totemChoiceError (String message) throws RemoteException;
+    void totemChoiceError () throws RemoteException;
 
     void updatePlayerFood(Player player, int update);
 
@@ -55,19 +55,19 @@ public interface VirtualClientInterface extends Remote {
 
     void updateNextTurn (String message) throws RemoteException;
 
-    void pickCardError(String message) throws RemoteException;
+    void pickCardError() throws RemoteException;
 
-    void buildingPurchaseError(String message) throws RemoteException;
+    void buildingPurchaseError() throws RemoteException;
 
-    void totemPositionError(String message) throws RemoteException;
+    void totemPositionError() throws RemoteException;
 
-    void usernameError( String message ) throws RemoteException;
+    void usernameError() throws RemoteException;
 
     void totemNotAvailableError(ArrayList<Totem> availableTotems);
 
     void updateAvailableTotems(ArrayList<Totem> availableTotems);
 
-    void numPlayersError( String message ) throws RemoteException;
+    void numPlayersError() throws RemoteException;
 
     void updateConfirmedUsername(String username);
 
