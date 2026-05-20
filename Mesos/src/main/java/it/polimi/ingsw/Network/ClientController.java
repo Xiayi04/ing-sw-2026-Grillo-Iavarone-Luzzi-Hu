@@ -1,5 +1,7 @@
 package it.polimi.ingsw.Network;
 
+import it.polimi.ingsw.Cards.Card;
+import it.polimi.ingsw.Cards.Characters.Character;
 import it.polimi.ingsw.Game.Board;
 import it.polimi.ingsw.Game.OfferCard;
 import it.polimi.ingsw.Game.Player;
@@ -19,8 +21,10 @@ public class ClientController {
     private  String tmpUsername = null;
     private  Totem tmpTotem = null;
     private  final Object tmpLock = new Object();
+    private final Object BoardLock = new Object();
     private  Board currentBoard;
     private String localPlayerName;
+    private Totem localTotem;
     String rowName ;
     String cardType;
 
@@ -73,7 +77,7 @@ public class ClientController {
 
     public void setNumPlayers(int numPlayers) {
         while (numPlayers < 2 || numPlayers > 5) {
-            view.showError("Number of Players is wrong ");
+            view.showError("Number of Players is wrong,try again ");
             numPlayers = view.askNumToPlayer();
         }
         serverConnection.setNumPlayers(numPlayers);
@@ -93,7 +97,7 @@ public class ClientController {
             chosenPosition = view.askPosition(path);
         }
 
-        serverConnection.setTotemPosition(chosenPosition);
+        serverConnection.setTotemPosition(localPlayerName, chosenPosition);
     }
 
     public void PickCard(boolean isUpper, boolean isBuilding, int index) {
@@ -108,7 +112,7 @@ public class ClientController {
                     return;
                 }
             }
-            serverConnection.requestPickCard(isUpper, isBuilding, index);
+            serverConnection.requestPickCard(localPlayerName, isUpper, isBuilding, index);
         }
     }
 
@@ -130,6 +134,7 @@ public class ClientController {
     public void addedPlayer(Player player) {
         view.showMessage("New player added: "+player);
     }
+
     public void showPickedCard(Player playerWhoPicked, boolean row, boolean isBuilding, int index){
         rowName = row? "upperRow" : "lowerRow";
         cardType = isBuilding ? "building" : "character";
@@ -160,12 +165,14 @@ public class ClientController {
     public void showEndGame() {
         view.showMessage("Game ended.");
     }
-
-
+    
     //Login management
 
     public void setTmpUsername(String username) {
-        new Thread(() -> {
+        if(serverConnection==null){
+            view.showErrorMessage("You can't set a username at this moment, please try again");
+            return;
+        }
             synchronized (tmpLock){
                 if (username == null || username.isBlank()) {
 
@@ -173,13 +180,14 @@ public class ClientController {
                 tmpUsername = username;
                 checkForLogin();
             }
-        }).start();
-
-
     }
 
     public void setTmpTotem(Totem totem) {
-        new Thread(() -> {
+        if(serverConnection==null){
+            view.showErrorMessage("You can't choose a totem at this moment, please try again later");
+            return;
+        }
+
             synchronized (tmpLock){
                 if (tmpTotem == null) {
 
@@ -187,7 +195,7 @@ public class ClientController {
                 tmpTotem = totem;
                 checkForLogin();
             }
-        }).start();
+
     }
 
     public void checkForLogin(){
@@ -200,4 +208,118 @@ public class ClientController {
             tmpTotem = null;
         }
     }
+
+    public void confirmTotem(Totem totem) {
+        view.showMessage("Totem confirmed: "+totem);
+    }
+
+
+    public void addPlayerToLocalBoard(Player newPlayer) {
+        synchronized (currentBoard.getPlayers()) {
+            if(currentBoard.getPlayers().contains(newPlayer)){
+                throw new RuntimeException("Player already exists");
+            }
+            currentBoard.getPlayers().add(newPlayer);
+        }
+    }
+
+    public void confirmNumPlayers(int num) {
+        view.showMessage("Number of players: "+num);
+    }
+
+    public void askNumPlayers() {
+        view.showMessage("*Insert the number of players that will join this game using-> players:'num of players'");
+    }
+
+    //picking management, output and input
+    public void requestLocalPickCard(boolean isUpper, boolean isBuilding, int index) {
+        if (serverConnection==null || localPlayerName!=null ) {
+            view.showError("Command not available in this moment");
+            return;
+        }
+        serverConnection.requestPickCard(localPlayerName,isUpper, isBuilding, index);
+    }
+
+    public void showPickedCard(String playerName,boolean isUpper , boolean isBuilding, int index) {
+        Card pickedCard;
+        synchronized (BoardLock){
+            pickedCard = currentBoard.pickCard(isUpper, isBuilding, index);
+        }
+        Player playerWhoPicked = getPlayerByName(playerName);
+        if(playerWhoPicked==null){
+            throw new RuntimeException("Player "+playerName+" not found");
+        }
+        synchronized (playerWhoPicked.getTribeCard()) {
+            try {
+                playerWhoPicked.getTribeCard().add((Character) pickedCard);
+            } catch (Exception e) {
+                throw new RuntimeException(e);
+            }
+        }
+        view.pickCard(playerName,isUpper, isBuilding, index);
+    }
+
+    public void showPickedCardError() {
+        view.showError("You can't pick this card");
+    }
+
+    public Player getPlayerByName(String playerName) {
+        synchronized (currentBoard.getPlayers()) {
+            for (Player player : currentBoard.getPlayers()) {
+                if (playerName.equals(player.getName())) {
+                    return player;
+                }
+            }
+        }
+        return null;
+    }
+
+    //totem->offerCard
+    public void requestLocalMoveTotem(int index){
+        if(serverConnection==null || localPlayerName==null){
+            view.showError("Command not available in this moment");
+        }
+
+        if(index<0){
+            view.showError("Invalid index");
+        }
+        serverConnection.setTotemPosition(localPlayerName,index);
+    }
+
+    public void showTotemMoved(String playerName, int index){
+        Player player = getPlayerByName(playerName);
+        if(player==null || index < 0){
+            throw new RuntimeException("Player "+playerName+" not found");
+        }
+
+        synchronized (currentBoard.getTurnOrderCard()){
+
+            if(currentBoard.getTurnOrderCard() != null  ){
+
+                if(!currentBoard.getTurnOrderCard().getOrder().getFirst().getName().equals(playerName)){
+                    throw new RuntimeException("Player "+playerName+" is already in this moment");
+                }
+            }
+            player = currentBoard.getTurnOrderCard().getOrder().removeFirst();
+        }
+        synchronized (currentBoard.getPath()){
+            boolean notPresent = currentBoard.getPath().stream()
+                    .filter(OfferCard::isOccupied)
+                    .map(OfferCard::getOccupiedBy)
+                    .findAny()
+                    .isEmpty();
+            if(notPresent){
+                throw new RuntimeException("Player "+playerName+" is already in this moment");
+            }
+            if(!currentBoard.getPath().get(index).isOccupied()){
+                currentBoard.getPath().get(index).setOccupiedBy(player);
+            }
+        }
+        view.moveTotem(playerName,index);
+    }
+
+    public void showTotemMovedError() {
+        view.showError("You can't move this totem");
+    }
+
 }
