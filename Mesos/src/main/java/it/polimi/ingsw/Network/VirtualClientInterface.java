@@ -3,10 +3,7 @@ package it.polimi.ingsw.Network;
 import it.polimi.ingsw.Buildings.Building;
 import it.polimi.ingsw.Cards.Card;
 import it.polimi.ingsw.Cards.Events.Event;
-import it.polimi.ingsw.Game.Board;
-import it.polimi.ingsw.Game.OfferCard;
-import it.polimi.ingsw.Game.Player;
-import it.polimi.ingsw.Game.Totem;
+import it.polimi.ingsw.Game.*;
 
 import java.io.IOException;
 import java.rmi.Remote;
@@ -16,22 +13,26 @@ import java.util.List;
 
 public interface VirtualClientInterface extends Remote {
     //parametro passato dal server per dirmi che totem mostrare
-    void updateEra(int era) throws RemoteException;
+    void showUpdateEra(int era) throws RemoteException;
 
-    void resolvingEvent(Event e) throws RemoteException;
+    void updateForEvent(Event e) throws RemoteException;
 
-    void returnedTotemOnTurnOrder(Player player,int index);
+    void returnTotemToTOC(Player player,int index) throws RemoteException;
 
-    void askNumPlayers() throws IOException;
+    void showChosenNumPlayers(Player player) throws IOException;
 
-    void showStartGame( ArrayList<Player> players, Board board) throws RemoteException;
+    void updateFirstPlayer(Player player) throws RemoteException;
+
+    void updateStartGame( ArrayList<Player> players, Board board) throws RemoteException;
+
+    void setNumPlayers(int numPlayers) throws RemoteException;
 
 
-    void showError(String message) throws RemoteException;
+    //void showError(String message) throws RemoteException;
 
     void showMessage(String message) throws RemoteException, IOException;
 
-    void showEndGame() throws RemoteException;
+    void showEndGame(Player winner, List<PlayerScore> leaderboard) throws RemoteException;
 
     void refuseConnection() throws IOException;
     
@@ -42,25 +43,35 @@ public interface VirtualClientInterface extends Remote {
 
     void movedTotem(Player player, int index);
 
+    void movedTotemError (String message) throws RemoteException;
+
+    void totemChoiceError (String message) throws RemoteException;
+
     void updatePlayerFood(Player player, int update);
 
     void updatePlayerPP(Player player, int update);
 
     void showPlayerTurn(Player player);
 
-    void cardPickError();
+    void updateNextTurn (String message) throws RemoteException;
 
-    void buildingPurchaseError();
+    void pickCardError(String message) throws RemoteException;
 
-    void totemPositionError();
+    void buildingPurchaseError(String message) throws RemoteException;
+
+    void totemPositionError(String message) throws RemoteException;
+
+    void usernameError( String message ) throws RemoteException;
 
     void totemNotAvailableError(ArrayList<Totem> availableTotems);
 
-    void setNumPlayersError();
+    void updateAvailableTotems(ArrayList<Totem> availableTotems);
 
-    void confirmUsername(String username);
+    void numPlayersError( String message ) throws RemoteException;
 
-    void confirmTotem(Totem totem);
+    void updateConfirmedUsername(String username);
 
-    void availableColors(ArrayList<Totem> availableTotems);
+    void updateConfirmedTotem(Totem totem);
+
+
 }
