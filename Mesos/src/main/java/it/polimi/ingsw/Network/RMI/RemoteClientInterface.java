@@ -2,10 +2,12 @@ package it.polimi.ingsw.Network.RMI;
 
 
 import it.polimi.ingsw.Game.Player;
+import it.polimi.ingsw.Network.PlayerScore;
 
 
 import java.rmi.Remote;
 import java.rmi.RemoteException;
+import java.util.List;
 
 
 public interface RemoteClientInterface extends Remote {
@@ -25,7 +27,7 @@ public interface RemoteClientInterface extends Remote {
 
     void showErrorMessage(String message) throws RemoteException;
 
-    void showEndGame() throws RemoteException;
+    void showEndGame(Player winner, List<PlayerScore> leaderboard) throws RemoteException;
 
 //
 }
