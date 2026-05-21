@@ -17,6 +17,7 @@ public interface GraphicInterface {
     void showErrorMessage(String message);
     void pickCard(String name, boolean isUpper, boolean isBuilding, int index);
     void moveTotem(String username, int index);
-    void askNumPlayers();
+    void askNumToPlayer();
     void showNextRound();
+
 }
