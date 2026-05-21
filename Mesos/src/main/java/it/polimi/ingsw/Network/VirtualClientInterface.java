@@ -15,7 +15,7 @@ public interface VirtualClientInterface extends Remote {
 
     void updateForEvent(Event e) throws RemoteException;
 
-    void returnTotemToTOC(String player,int index) throws RemoteException;
+    void returnTotemToTOC(String username,int index) throws RemoteException;
 
     void showChosenNumPlayers(int numPlayers) throws IOException;
 
@@ -39,11 +39,11 @@ public interface VirtualClientInterface extends Remote {
 
     void totemChoiceError () throws RemoteException;
 
-    void updatePlayerFood(String player, int update);
+    void updatePlayerFood(String username, int update);
 
-    void updatePlayerPP(String player, int update);
+    void updatePlayerPP(String username, int update);
 
-    void showPlayerTurn(String player);
+    void showPlayerTurn(String username);
 
     void updateNextTurn (Board board) throws RemoteException;
 
