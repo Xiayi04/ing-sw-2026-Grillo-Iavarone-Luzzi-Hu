@@ -3,13 +3,16 @@ package it.polimi.ingsw.Controller;
 import it.polimi.ingsw.Buildings.Building;
 import it.polimi.ingsw.Buildings.BuildingVisitor.ActivationVisitor;
 import it.polimi.ingsw.Buildings.BuildingVisitor.ConcreteBuildingActivation;
+import it.polimi.ingsw.Buildings.BuildingVisitor.SpecialBuildings.AddCardVisitor;
 import it.polimi.ingsw.Cards.Card;
 import it.polimi.ingsw.Cards.Characters.CharacterVisitor.CharacterVisitor;
 import it.polimi.ingsw.Cards.Characters.CharacterVisitor.AddAndCountCharacter;
 import it.polimi.ingsw.Cards.Events.Event;
 import it.polimi.ingsw.Game.*;
 import it.polimi.ingsw.Cards.Characters.Character;
+import it.polimi.ingsw.Network.PlayerScore;
 
+import java.io.IOException;
 import java.rmi.RemoteException;
 import java.util.*;
 /*La classe GameManager coordina il flusso di gioco, i turni e i cambi di era.*/
@@ -51,8 +54,10 @@ public class GameManager {
             this.board.getPlayers().addAll(this.players);
             this.board.initializeBoard(numPlayers);
             System.out.println("Game started");
-            notifier.gameStartedBroadcast(players,board);
-            System.out.println("Avvio della fase di posizionamento dei Totem...");
+            new Thread(() -> {
+                notifier.gameStartedBroadcast(players,board);
+            }).start();
+            System.out.println("Start of the Totem positioning phase...");
             positionPhase();
 
         }
@@ -70,7 +75,8 @@ public class GameManager {
                 tmpOrder.add(c.getOccupiedBy());
             }
         }
-        this.players = tmpOrder;
+        board.getTurnOrderCard().getOrder().addAll(tmpOrder);
+        //this.players = tmpOrder;
     }
 
     /**
@@ -87,7 +93,7 @@ public class GameManager {
             endGame();
             return;
         }
-        System.out.println(" Inizio Round    " + this.round);
+        System.out.println(" Start of the Round   " + this.round);
         ArrayList<Event> currentEvents = board.checkEvent();
         positionQueue.clear();
         if (!currentEvents.isEmpty()) {
@@ -192,6 +198,25 @@ public class GameManager {
         }
 
         System.out.println("The winner is: " + winner.getName() + "with"+ winner.finalScore()+ "points!");
+        // creazione record per ogni giocatore usando il nome e il punteggio finale
+        List<PlayerScore> tmpLeaderboard = new ArrayList<>();
+        for (Player p : players) {
+            tmpLeaderboard.add(new PlayerScore(p.getName(),p.finalScore()));
+        }
+        tmpLeaderboard.sort((p1,p2) ->Integer.compare(p2.points(),p1.points()));//ordinamento classifica dal punteggio più alto a quello più basso
+
+        //notifico tutti i giocatori
+        final Player finalWinner = winner;
+        if(this.notifier != null){
+            try{
+                this.notifier.showEndGameBroadcast(finalWinner,tmpLeaderboard);
+            }catch(RemoteException e){
+                System.err.println("ERROR");
+                e.printStackTrace();
+            }
+        }
+
+
     }
 
     /**
@@ -201,7 +226,7 @@ public class GameManager {
 
     public void positionPhase(){
         positionQueue.clear();
-        positionQueue.addAll(this.players);
+        positionQueue.addAll(board.getTurnOrderCard().getOrder()); //  provare a passare direttamente lista order invece che una coda generica
         executeNextPosition();
     }
 
@@ -213,7 +238,7 @@ public class GameManager {
     public void executeNextPosition() {
         synchronized (playersLock) {
             if (positionQueue.isEmpty()) {
-                System.out.println("Fase di posizionamento terminata.");
+                System.out.println("Totem positioning phase completed.");
                 pickingPhase(this.players);
                 return;
             }
@@ -221,11 +246,7 @@ public class GameManager {
 
             System.out.println("Player  " + currentPlayer.getName() + "place your totem");
             if(currentPlayer.getVirtualClient() != null){
-                try{
-                    notifier.showTurnBroadcast (currentPlayer);
-                }catch (Exception e) {
-                    System.err.println("Errore di comunicazione con " + currentPlayer.getName());
-                }
+               notifier.showTurnBroadcast (currentPlayer);
             }
         }
     }
@@ -253,7 +274,7 @@ public class GameManager {
             try{
                 notifier.movedTotemBroadcast(p ,pathIndex);
             } catch (RemoteException e) {
-                System.err.println("Errore di rete durante il broadcast del totem");
+                System.err.println("Network error");
             }
             positionQueue.remove(0);
             executeNextPosition();
@@ -269,8 +290,11 @@ public class GameManager {
     public void setNumPlayers(int numPlayers) {
         synchronized (numPlayersLock){
             this.numPlayers = numPlayers;
-            this.board.obtainPath(this.players);
             System.out.println("The game is made up of" + numPlayers + " players");
+            if(players.size() == numPlayers){
+                this.board.obtainPath(this.players);
+                startGame();
+            }
         }
 
     }
@@ -282,7 +306,7 @@ public class GameManager {
      * @param player
      * @param isUpper
      */
-    public record PendingPick(Player player, boolean isUpper) {}
+    public record PendingPick(Player player, boolean isUpper, boolean isEventPick) {}
 
     /**The Picking Phase method is the drawing phase, it is used to establish the exact order in which players
      *  will choose cards from the board. The offerCards are swiped from left to right. If the position is occupied,
@@ -298,15 +322,28 @@ public class GameManager {
         ArrayList<OfferCard> path = board.getPath();
         pickingQueue.clear();
 
+        ArrayList<Player> playersWithBonus = new ArrayList<>();
+
         for(OfferCard offerCard : path ) {
-            if(offerCard.isOccupied()){
-                for(int i = 0; i < offerCard.getUpArrow(); i++){
-                    pickingQueue.add(new PendingPick(offerCard.getOccupiedBy(), true));
+            if(offerCard.isOccupied()) {
+                for (int i = 0; i < offerCard.getUpArrow(); i++) {
+                    pickingQueue.add(new PendingPick(offerCard.getOccupiedBy(), true, false));
                 }
-                for(int i = 0; i < offerCard.getDownArrow(); i++){
-                    pickingQueue.add(new PendingPick(offerCard.getOccupiedBy(), false));
+                for (int i = 0; i < offerCard.getDownArrow(); i++) {
+                    pickingQueue.add(new PendingPick(offerCard.getOccupiedBy(), false, false ));
+                }
+                for (int i = 0; i < offerCard.getOccupiedBy().getBuilding().size(); i++) {
+                    AddCardVisitor addCardVisitor = new AddCardVisitor();
+                    if(offerCard.getOccupiedBy().getBuilding().get(i).acceptAddCard(addCardVisitor,offerCard.getOccupiedBy()) == 1 ){
+                        if(!playersWithBonus.contains(offerCard.getOccupiedBy())) {//evita duplicati
+                            playersWithBonus.add(offerCard.getOccupiedBy());
+                        }
+                    }
                 }
             }
+        }
+        for (Player player : playersWithBonus) {
+                pickingQueue.add(new PendingPick(player, true, true));
         }
         executeNextPick();
     }
@@ -321,9 +358,19 @@ public class GameManager {
     public void resolvePick(String playerName, boolean isUpperRequested, boolean isBuilding, int index){
         Player p = getPlayerByName(playerName);
 
+        if(pickingQueue.isEmpty() || !pickingQueue.get(0).player.equals(p)){
+            System.out.println("It's not your turn   " + playerName);
+            return;
+        }
+        PendingPick currentAction = pickingQueue.get(0);
+        if(!currentAction.isEventPick() && currentAction.isUpper() != isUpperRequested) {
+            System.out.println("Invalid line");
+            return;
+        }
+
         //il giocatore sceglie la riga da dove prendere la carta e nello stream cerchiamo se
         //quel giocatore ha una freccia per la riga(sotto/sopra) scelta
-        PendingPick currentAction = pickingQueue.stream()
+        /*PendingPick currentAction = pickingQueue.stream()
                 .filter(a->a.player().equals(p)) // vedo se il giocatore è giusto
                 .filter(a->a.isUpper() == isUpperRequested)//deve essere della riga che il giocatore ha chiesto
                 .findFirst() //se c'è prendila altrimenti restituisci null
@@ -332,11 +379,11 @@ public class GameManager {
             System.out.println("Failed action");
             return;
 
-        }
+        }*/
 
-        if(index == -1){
-            System.out.println(p.getName() + " non può pescare");
-            pickingQueue.remove(currentAction);
+        if(index < 0 && index > board.getPath().size()){
+            System.out.println(p.getName() + " can't draw the card ");
+            pickingQueue.remove(0);
             executeNextPick();
             return;
         }
@@ -345,16 +392,16 @@ public class GameManager {
         if (isBuilding) {
             success = (buyBuilding(p, isUpperRequested, index) != null);
         } else {
-            takeCharacter(p,isUpperRequested , index);
-            success = true;
+            success = takeCharacter(p,isUpperRequested , index);
         }
 
         if (success) {
-            pickingQueue.remove(currentAction);
-            try{
-                notifier.pickedCardBroadcast(p,true,true ,index);
-            }catch(Exception e){
-                System.err.println("Errore di rete");
+            pickingQueue.remove(0);
+            try {
+
+                notifier.pickedCardBroadcast(p, isUpperRequested, isBuilding, index);
+            } catch (Exception e) {
+                System.err.println("Network error");
             }
             executeNextPick();
         } else {
@@ -373,7 +420,7 @@ public class GameManager {
     private void executeNextPick(){
          synchronized (playersLock) {
              if (pickingQueue.isEmpty()) {
-                 System.out.println("Tutti i giocatori hanno pescato");// se è vuota vuol dire che tutti i giocatori hanno pescato allora si passsa al prossimo turno
+                 System.out.println("All players have drawn");// se è vuota vuol dire che tutti i giocatori hanno pescato allora si passsa al prossimo turno
                  nextRound();
                  return;
              }
@@ -391,7 +438,7 @@ public class GameManager {
                          downCount++;
                      }
                  }
-             System.out.println("Tocca a " + currentPlayer.getName() + ".  Residue : Above =" +upCount+ "Below= " +downCount);
+             System.out.println("It's your turn " + currentPlayer.getName() + ".  Residue : Above =" +upCount+ "Below= " +downCount);
              }
          }
     }
@@ -417,7 +464,7 @@ public class GameManager {
             try{
                 notifier.invalidTotemPosition(p);
             }catch (RemoteException e){
-                System.err.println("Errore di rete durante il posizionamento del totem");
+                System.err.println("Network error while positioning totem");
             }
             return;
         }
@@ -428,7 +475,7 @@ public class GameManager {
             try{
                 notifier.invalidTotemPosition(p);
             }catch(RemoteException e){
-                System.err.println("Errore di rete");
+                System.err.println("Network error");
             }
             return;
         }
@@ -459,11 +506,11 @@ public class GameManager {
         }
         if(index < 0 || index >= buildings.size()|| buildings.get(index) == null){
             System.out.println("Error: building not available in index" + index);
-           try{
-               notifier.invalidBuildingPurchase(player);
-           } catch (RemoteException e) {
-               System.err.println("Errore di rete");
-           }
+            try{
+                notifier.invalidBuildingPurchase(player);
+            } catch (Exception e) {
+                System.err.println("Network error");
+            }
             return null;
         }
 
@@ -485,8 +532,8 @@ public class GameManager {
             System.out.println("Choose another building or move on");
             try{
                 notifier.invalidCardPick(player);
-            }catch (RemoteException e){
-                System.err.println("Errore di rete");
+            }catch (Exception e){
+                System.err.println("Network error");
             }
             return null;
         }
@@ -516,8 +563,8 @@ public class GameManager {
         }else{
             try{
                 notifier.invalidCardPick(player);
-            }catch (RemoteException e){
-                System.err.println("Character not found");
+            }catch (Exception e){
+                    System.err.println("Character not found");
             }
             return false;
         }
