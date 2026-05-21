@@ -10,12 +10,12 @@ import java.util.ArrayList;
 import java.util.List;
 
 public interface VirtualClientInterface extends Remote {
-    //parametro passato dal server per dirmi che totem mostrare
+
     void showUpdateEra(int era) throws RemoteException;
 
     void updateForEvent(Event e) throws RemoteException;
 
-    void returnTotemToTOC(Player player,int index) throws RemoteException;
+    void returnTotemToTOC(String player,int index) throws RemoteException;
 
     void showChosenNumPlayers(int numPlayers) throws IOException;
 
@@ -25,28 +25,25 @@ public interface VirtualClientInterface extends Remote {
 
     void setNumPlayers(int numPlayers) throws RemoteException;
 
-
-    //void showError(String message) throws RemoteException;
-
     void showMessage(String message) throws RemoteException, IOException;
 
-    void showEndGame(Player winner, List<PlayerScore> leaderboard) throws RemoteException;
+    void showEndGame(String winner, List<PlayerScore> leaderboard) throws RemoteException;
 
     void refuseConnection() throws IOException;
 
-    void pickedCard(Player player, boolean row, boolean isBuilding, int index);
+    void pickedCard(String player, boolean row, boolean isBuilding, int index);
 
-    void movedTotem(Player player, int index);
+    void movedTotem(String player, int index);
 
     void movedTotemError () throws RemoteException;
 
     void totemChoiceError () throws RemoteException;
 
-    void updatePlayerFood(Player player, int update);
+    void updatePlayerFood(String player, int update);
 
-    void updatePlayerPP(Player player, int update);
+    void updatePlayerPP(String player, int update);
 
-    void showPlayerTurn(Player player);
+    void showPlayerTurn(String player);
 
     void updateNextTurn (Board board) throws RemoteException;
 
