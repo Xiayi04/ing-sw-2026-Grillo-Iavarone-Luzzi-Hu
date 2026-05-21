@@ -16,15 +16,16 @@ import java.util.function.Function;
 public class CommandFactoryClientSide {
     private static final Map<String, Function<Object, ClientCommand>> commands = new HashMap<>();
     public CommandFactoryClientSide() {
-        commands.put("setnumplayers", payload -> new NumPlayersCommand());
-        commands.put("login", payload -> new ClientLoginCommand());
-        commands.put("msg", payload-> new ShowMSGCommand((String[]) payload));
+        //Updates
+        commands.put("moved_totem",p->new MovedTotemCommand((SocketVirtualClient.TotemPosition) p));
+        commands.put("picked_card",p->new PickedCardCommand((Pick) p));
         commands.put("game_started",data->new StartGameCommand((SocketVirtualClient.GameStartData)  data));
         commands.put("turn_order_card_position", p-> new TurnOrderPositionCommand((SocketVirtualClient.TotemPosition) p));
         commands.put("update_era",e->new UpdateEraCommand((Integer)e));
-        commands.put("newplayer", payload-> new NewPlayerCommand((Player)payload));
-        commands.put("moved_totem",p->new MovedTotemCommand((SocketVirtualClient.TotemPosition) p));
-        commands.put("picked_card",p->new PickedCardCommand((Pick) p));
+
+        //login
+        commands.put("setnumplayers", payload -> new NumPlayersCommand());
+        commands.put("msg", payload-> new ShowMSGCommand((String[]) payload));
         commands.put("colors",c->new ShowAvailableColorsCommand((ArrayList<Totem>) c));
         //Confirms
         commands.put("confirm_username", u-> new ConfirmUsernameCommand((String)u));

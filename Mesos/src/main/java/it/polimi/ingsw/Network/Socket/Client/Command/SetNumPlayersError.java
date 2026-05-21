@@ -8,6 +8,6 @@ import java.net.Socket;
 public class SetNumPlayersError implements ClientCommand{
     @Override
     public void execute(Socket socket, ClientController clientController) throws IOException {
-        clientController.showErrorMessage("You are not the first");
+        clientController.numPlayersChosenError();
     }
 }

@@ -14,6 +14,6 @@ public class TurnOrderPositionCommand implements ClientCommand {
 
     @Override
     public void execute(Socket socket, ClientController clientController) throws IOException {
-        //clientController
+        clientController.showLocalReturnToTOC(totemPosition.player(),totemPosition.index());
     }
 }

@@ -67,7 +67,7 @@ public class ServerController implements LobbyManager {
             if (!alreadyUsed && tempPlayer != null) {
                 tempPlayer.setName(username);
                 try {
-                    client.confirmUsername(username);
+                    client.updateConfirmedUsername(username);
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
@@ -103,16 +103,20 @@ public class ServerController implements LobbyManager {
 
             if (!alreadyUsed && tempPlayer != null) {
                 tempPlayer.setTempPlayerTotem(totem);
-                client.confirmTotem(totem);
+//                try {
+//                    client.updateConfirmedTotem(totem);
+//                } catch (IOException e) {
+//                    //throw new RuntimeException(e);
+//                }
                 new Thread(this::checkStartGame);
             } else if (alreadyUsed) {
                 try {
                     if (lobby.getAvailableTotems().isEmpty()) {
-                        client.totemNotAvailableError(null);
+                        client.totemChoiceError();
                         client.refuseConnection();
                         return;
                     }
-                    client.totemNotAvailableError(lobby.getAvailableTotems());
+                    client.totemChoiceError();
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
@@ -139,7 +143,11 @@ public class ServerController implements LobbyManager {
                 return;
             }
             if (numPlayers < 2 || numPlayers > 5) {
-                client.setNumPlayersError();
+                try {
+                    client.numPlayersError();
+                } catch (IOException e) {
+                    //throw new RuntimeException(e);
+                }
                 return;
             }
             lobby.getNumPlayers().set(numPlayers);
@@ -229,11 +237,6 @@ public class ServerController implements LobbyManager {
         synchronized (gameManager.getPlayers()) {
             gameManager.addPlayer(p);
         }
-        new Thread(() -> {
-            notifier.addedNewPlayerBroadcast(p);
-        }).start();
-
-
     }
 
     public void pushPlayersInGM(ArrayList<TempPlayer> tempPlayers) {

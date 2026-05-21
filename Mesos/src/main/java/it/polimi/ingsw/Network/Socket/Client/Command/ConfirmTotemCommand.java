@@ -14,6 +14,6 @@ public class ConfirmTotemCommand implements ClientCommand{
 
     @Override
     public void execute(Socket socket, ClientController clientController) throws IOException {
-        clientController.confirmTotem(totem);
+        clientController.showConfirmTotem(totem);
     }
 }

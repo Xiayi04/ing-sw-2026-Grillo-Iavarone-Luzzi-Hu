@@ -15,18 +15,6 @@ public class ShowAvailableColorsCommand implements ClientCommand{
 
     @Override
     public void execute(Socket socket, ClientController clientController) throws IOException {
-        if(totems==null ||totems.isEmpty()){
-            clientController.showErrorMessage("No more available totems :( ");
-            return;
-        }
-        StringBuilder totemsString = new StringBuilder();
-        for(int i=0;i<totems.size();i++){
-            if(i== totems.size()-1){
-                totemsString.append(totems.get(i).toString()).append(".");
-                continue;
-            }
-            totemsString.append(totems.get(i).toString()).append(", ");
-        }
-        //clientController.showMessage("These are the available colors at the moment:"+  totemsString.toString());
+       clientController.showAvailableTotems(totems);
     }
 }

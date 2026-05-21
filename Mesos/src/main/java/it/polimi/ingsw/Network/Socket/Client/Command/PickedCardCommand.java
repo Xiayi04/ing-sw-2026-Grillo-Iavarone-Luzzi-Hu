@@ -14,7 +14,6 @@ public class PickedCardCommand implements ClientCommand {
 
     @Override
     public void execute(Socket socket, ClientController clientController) throws IOException {
-
-        //clientController.showPickedCard(p.player(),p.isUpper(),p.isBuilding(),p.index());
+        clientController.showPickedCard(p.username(), p.isUpper(),p.isBuilding(), p.index());
     }
 }

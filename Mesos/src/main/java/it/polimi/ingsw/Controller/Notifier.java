@@ -3,167 +3,214 @@ package it.polimi.ingsw.Controller;
 import it.polimi.ingsw.Cards.Events.Event;
 import it.polimi.ingsw.Game.Board;
 import it.polimi.ingsw.Game.Player;
-import it.polimi.ingsw.Game.Totem;
 import it.polimi.ingsw.Network.PlayerScore;
 import it.polimi.ingsw.Network.VirtualClientInterface;
 
 import java.io.IOException;
-import java.rmi.RemoteException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 public class Notifier {
-    private final Object OutputLock = new Object();
+
+    private final Object outputLock = new Object();
+
     private final ArrayList<VirtualClientInterface> clients;
 
-    public Notifier(ArrayList<VirtualClientInterface> clients){
+    private final ExecutorService pool =
+            Executors.newCachedThreadPool();
+
+    public Notifier(ArrayList<VirtualClientInterface> clients) {
         this.clients = clients;
     }
 
+    private List<VirtualClientInterface> getClients() {
 
-    //messaggi per broadcast
-    public synchronized void returnTotemOnTurnOrderBroadcast(Player player, int index){
-        synchronized (OutputLock){
-            for(VirtualClientInterface client : clients){
-                new Thread(() -> {
-                    try {
-                        client.returnTotemToTOC(player,index);
-                    } catch (RemoteException e) {
-                        throw new RuntimeException(e);
-                    }
-                }).start();
-            }
+        synchronized (outputLock) {
+            return new ArrayList<>(clients);
         }
     }
 
-    public synchronized void resolvingEventBroadcast(Event e){
-        synchronized (OutputLock){
-            for(VirtualClientInterface client: clients){
-                new Thread(() -> {
-                    try {
-                        client.updateForEvent(e);
-                    } catch (RemoteException ex) {
-                        throw new RuntimeException(ex);
-                    }
-                }).start();
-            }
-        }
+    private void handleDisconnect() {
+        //gestione della disconnessione in qualche modo
+
+        System.out.println("Client disconnected");
     }
 
-    public synchronized void newEraBroadcast(int era){
-        synchronized (OutputLock){
-            for(VirtualClientInterface client : clients){
-                new Thread(()->{
-                    try {
-                        client.showUpdateEra(era);
-                    } catch (RemoteException e) {
-                        throw new RuntimeException(e);
-                    }
-                }).start();
-            }
-        }
-    }
+    //BROADCAST
 
-    public synchronized void gameStartedBroadcast(ArrayList<Player> players, Board board){
-        synchronized (OutputLock){
-            for(VirtualClientInterface client: clients){
-                new Thread(()->{
-                    try {
-                        client.updateStartGame(players,board);
-                    } catch (RemoteException e) {
-                        throw new RuntimeException(e);
-                    }
-                }).start();
-            }
-        }
-    }
-
-    public synchronized void addedNewPlayerBroadcast(Player newPlayer)  {
-        synchronized (OutputLock){
-            for (VirtualClientInterface client : clients) {
+    public void returnTotemOnTurnOrderBroadcast(Player player, int index) {
+        for (VirtualClientInterface client : getClients()) {
+            pool.submit(() -> {
                 try {
-                    client.newPlayer(newPlayer);
-                } catch (IOException e) {
-                    throw new RuntimeException(e);
+                    client.returnTotemToTOC(player, index);
+                } catch (RuntimeException | IOException e) {
+                    handleDisconnect();
                 }
-            }
+            });
         }
     }
 
-    public synchronized void pickedCardBroadcast(Player player, boolean row, boolean isBuilding, int index)  {
-        new Thread(()->{
-            synchronized (OutputLock){
-                for(VirtualClientInterface client : clients){
-                    client.pickedCard(player, row, isBuilding,index);
+    public void resolvingEventBroadcast(Event e) {
+        for (VirtualClientInterface client : getClients()) {
+            pool.submit(() -> {
+                try {
+                    client.updateForEvent(e);
+                } catch (RuntimeException | IOException exception) {
+                    handleDisconnect();
                 }
-            }
-        }).start();
-    }
-
-    public synchronized void movedTotemBroadcast(Player player, int index) throws RemoteException {
-        synchronized (OutputLock){
-            for(VirtualClientInterface client : clients){
-               client.movedTotem(player, index);
-            }
+            });
         }
     }
 
-    public void foodUpdateBroadcast( Player player, int update) throws RemoteException {
-        synchronized (OutputLock){
-            for(VirtualClientInterface client : clients){
-                client.updatePlayerFood(player, update);
-            }
+    public void newEraBroadcast(int era) {
+
+        for (VirtualClientInterface client : getClients()) {
+            pool.submit(() -> {
+                try {
+                    client.showUpdateEra(era);
+                } catch (RuntimeException | IOException e) {
+                    handleDisconnect();
+                }
+            });
         }
     }
 
-    public void ppUpdateBroadcast( Player player, int update) throws RemoteException {
-        synchronized (OutputLock){
-            for(VirtualClientInterface client : clients){
-                client.updatePlayerPP(player, update);
-            }
+    public void gameStartedBroadcast(ArrayList<Player> players, Board board) {
+        for (VirtualClientInterface client : getClients()) {
+            pool.submit(() -> {
+                try {
+                    client.updateStartGame(players, board);
+                } catch (RuntimeException | IOException e) {
+                    handleDisconnect();
+                }
+            });
         }
     }
 
-    public void showTurnBroadcast( Player player) throws RemoteException {
-        synchronized (OutputLock){
-            for(VirtualClientInterface client : clients){
-                client.showPlayerTurn(player);
-            }
+    public void pickedCardBroadcast(Player player, boolean row, boolean isBuilding, int index) {
+        for (VirtualClientInterface client : getClients()) {
+            pool.submit(() -> {
+                try {
+                    client.pickedCard(player, row, isBuilding, index);
+                } catch (RuntimeException  e) {
+                    handleDisconnect();
+                }
+            });
         }
     }
 
-    //messaggi per singoli giocatori
-
-    public void invalidCardPick( Player player) throws RemoteException {
-        player.getVirtualClient().pickCardError();
+    public void movedTotemBroadcast(Player player, int index) {
+        for (VirtualClientInterface client : getClients()) {
+            pool.submit(() -> {
+                try {
+                    client.movedTotem(player, index);
+                } catch (RuntimeException e) {
+                    handleDisconnect();
+                }
+            });
+        }
     }
 
-    public void invalidBuildingPurchase( Player player) throws RemoteException {
-        player.getVirtualClient().buildingPurchaseError();
+    public void foodUpdateBroadcast(Player player, int update) {
+
+        for (VirtualClientInterface client : getClients()) {
+            pool.submit(() -> {
+                try {
+                    client.updatePlayerFood(player, update);
+                } catch (RuntimeException e) {
+                    handleDisconnect();
+                }
+            });
+        }
     }
 
-    public synchronized void invalidTotemPosition(Player player) throws RemoteException {
-        player.getVirtualClient().totemPositionError();
+    public void ppUpdateBroadcast(Player player, int update) {
+
+        for (VirtualClientInterface client : getClients()) {
+            pool.submit(() -> {
+                try {
+                    client.updatePlayerPP(player, update);
+                } catch (RuntimeException e) {
+                    handleDisconnect();
+                }
+            });
+        }
     }
 
-    //messaggi di notifica per inizio e fine gioco
+    public void showTurnBroadcast(Player player) {
 
-    public void showEndGameBroadcast(Player winner, List<PlayerScore> leaderboard) throws RemoteException {
-        synchronized (OutputLock){
-            for(VirtualClientInterface client : clients){
-                new Thread(()->{
-                    try {
-                        client.showEndGame(winner,leaderboard);
-                    } catch (RemoteException e) {
-                        throw new RuntimeException(e);
-                    }
-                }).start();
+        for (VirtualClientInterface client : getClients()) {
+
+            pool.submit(() -> {
+                try {
+
+                    client.showPlayerTurn(player);
+
+                } catch (RuntimeException e) {
+
+                    handleDisconnect();
+
+                }
+            });
+        }
+    }
+
+    //SINGLE PLAYER MESSAGES
+
+    public void invalidCardPick(Player player) {
+
+        pool.submit(() -> {
+            try {
+
+                player.getVirtualClient().pickCardError();
+
+            } catch (RuntimeException | IOException e) {
+
+                handleDisconnect();
+
             }
+        });
+    }
+
+    public void invalidBuildingPurchase(Player player) {
+        pool.submit(() -> {
+            try {
+                player.getVirtualClient().pickCardError();
+            } catch (RuntimeException | IOException e) {
+                handleDisconnect();
+            }
+        });
+    }
+
+    public void invalidTotemPosition(Player player) {
+        pool.submit(() -> {
+            try {
+                player.getVirtualClient().movedTotemError();
+            } catch (RuntimeException | IOException e) {
+                handleDisconnect();
+            }
+        });
+    }
+
+    public void showEndGameBroadcast(Player winner, List<PlayerScore> leaderboard) {
+        for (VirtualClientInterface client : getClients()) {
+            pool.submit(() -> {
+                try {
+                    client.showEndGame(winner, leaderboard);
+                } catch (RuntimeException | IOException e) {
+
+                    handleDisconnect();
+
+                }
+            });
         }
     }
 
 
 
-
-
+    public void shutdown() {
+        pool.shutdown();
+    }
 }

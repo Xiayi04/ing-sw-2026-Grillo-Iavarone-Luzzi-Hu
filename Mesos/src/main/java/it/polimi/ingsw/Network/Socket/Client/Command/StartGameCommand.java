@@ -14,6 +14,6 @@ public class StartGameCommand implements ClientCommand {
 
     @Override
     public void execute(Socket socket, ClientController clientController) throws IOException {
-        //clientController.showStartGame(gameStartData.players(),gameStartData.board());
+        clientController.showGameStarted(gameStartData.players(),gameStartData.board());
     }
 }

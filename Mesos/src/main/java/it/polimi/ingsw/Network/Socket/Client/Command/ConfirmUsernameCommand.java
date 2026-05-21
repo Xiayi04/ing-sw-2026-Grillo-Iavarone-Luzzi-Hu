@@ -12,6 +12,6 @@ public class ConfirmUsernameCommand implements ClientCommand{
     }
     @Override
     public void execute(Socket socket, ClientController clientController) throws IOException {
-        clientController.setLocalPlayerName(username);
+        clientController.showConfirmUsername(username);
     }
 }

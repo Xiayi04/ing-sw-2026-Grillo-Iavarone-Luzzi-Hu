@@ -9,6 +9,6 @@ public class PickError implements ClientCommand{
 
     @Override
     public void execute(Socket socket, ClientController clientController) throws IOException {
-
+        clientController.showPickedCardError();
     }
 }

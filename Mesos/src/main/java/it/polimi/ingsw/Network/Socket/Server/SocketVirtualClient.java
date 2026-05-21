@@ -1,12 +1,11 @@
 package it.polimi.ingsw.Network.Socket.Server;
-import it.polimi.ingsw.Buildings.Building;
-import it.polimi.ingsw.Cards.Card;
 import it.polimi.ingsw.Cards.Events.Event;
 import it.polimi.ingsw.Controller.GameManager;
 import it.polimi.ingsw.Game.Board;
-import it.polimi.ingsw.Game.OfferCard;
 import it.polimi.ingsw.Game.Player;
 import it.polimi.ingsw.Game.Totem;
+import it.polimi.ingsw.Network.PlayerScore;
+import it.polimi.ingsw.Network.Socket.Server.Command.EndGameData;
 import it.polimi.ingsw.Network.Socket.Server.Command.Pick;
 import it.polimi.ingsw.Network.VirtualClientInterface;
 
@@ -32,7 +31,53 @@ public class SocketVirtualClient implements VirtualClientInterface {
     public record TotemPosition(Player player,int index){};
 
     @Override
-    public void returnedTotemOnTurnOrder(Player player,int index){
+    public void showChosenNumPlayers(int numPlayers) throws IOException {
+        synchronized (outputLock) {
+            try {
+                out.writeObject(new MessageFromServer<>("chosen_num_players",numPlayers));
+                out.flush();
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
+        }
+    }
+
+    @Override
+    public void showEndGame(Player winner, List<PlayerScore> leaderboard) throws RemoteException {
+        synchronized (outputLock) {
+            try {
+                out.writeObject(new MessageFromServer<>("end_game", new  EndGameData(winner,leaderboard)));
+                out.flush();
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
+        }
+    }
+
+    @Override
+    public void setNumPlayers(int numPlayers) throws RemoteException {
+
+    }
+
+    @Override
+    public void movedTotemError() throws RemoteException {
+        synchronized (outputLock) {
+            try {
+                out.writeObject(new MessageFromServer<>("moved_totem_error",null));
+                out.flush();
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
+        }
+    }
+
+    @Override
+    public void totemChoiceError() {
+
+    }
+
+    @Override
+    public void returnTotemToTOC(Player player, int index) throws RemoteException {
         synchronized (outputLock){
             try {
                 out.writeObject(new MessageFromServer<>("turn_order_card_position", new TotemPosition(player,index) ));
@@ -44,7 +89,7 @@ public class SocketVirtualClient implements VirtualClientInterface {
     }
 
     @Override
-    public void updateEra(int era){
+    public void showUpdateEra(int era) throws RemoteException {
         synchronized (outputLock){
             try {
                 out.writeObject(new MessageFromServer<>("update_era", era));
@@ -56,7 +101,7 @@ public class SocketVirtualClient implements VirtualClientInterface {
     }
 
     @Override
-    public void resolvingEvent(Event e){
+    public void updateForEvent(Event e) throws RemoteException {
         synchronized (outputLock){
             try {
                 out.writeObject(new MessageFromServer<>("resolving_event", e));
@@ -68,45 +113,51 @@ public class SocketVirtualClient implements VirtualClientInterface {
     }
 
     @Override
-    public void confirmUsername(String username) {
-
-            synchronized (outputLock) {
-                try {
-                    out.writeObject(new MessageFromServer<>("confirm_username", username));
-                    out.flush();
-                } catch (IOException e) {
-                    throw new RuntimeException(e);
-                }
+    public void updateConfirmedUsername(String username) {
+        synchronized (outputLock) {
+            try {
+                out.writeObject(new MessageFromServer<>("confirm_username", username));
+                out.flush();
+            } catch (IOException e) {
+                throw new RuntimeException(e);
             }
-
+        }
     }
 
     @Override
-    public void confirmTotem(Totem totem){
-
-            synchronized (outputLock) {
-                try {
-                    out.writeObject(new MessageFromServer<>("confirm_totem", totem));
-                    out.flush();
-                } catch (IOException e) {
-                    throw new RuntimeException(e);
-                }
+    public void updateConfirmedTotem(Totem totem) {
+        synchronized (outputLock) {
+            try {
+                out.writeObject(new MessageFromServer<>("confirm_totem", totem));
+                out.flush();
+            } catch (IOException e) {
+                throw new RuntimeException(e);
             }
-
+        }
     }
 
     @Override
-    public void setNumPlayersError(){
-
-            synchronized (outputLock) {
-                try {
-                    out.writeObject(new MessageFromServer<>("setnumplayers_error", null));
-                    out.flush();
-                } catch (IOException e) {
-                    throw new RuntimeException(e);
-                }
+    public void confirmNumPlayers(int numPlayers) {
+        synchronized (outputLock) {
+            try {
+                out.writeObject(new MessageFromServer<>("confirm_numplayers", numPlayers));
+                out.flush();
+            } catch (IOException e) {
+                throw new RuntimeException(e);
             }
+        }
+    }
 
+    @Override
+    public void numPlayersError() throws RemoteException {
+        synchronized (outputLock) {
+            try {
+                out.writeObject(new MessageFromServer<>("setnumplayers_error", null));
+                out.flush();
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
+        }
     }
 
     @Override
@@ -123,7 +174,6 @@ public class SocketVirtualClient implements VirtualClientInterface {
 
     }
 
-
     @Override
     public void showMessage(String message) throws IOException {
         synchronized (outputLock) {
@@ -132,15 +182,10 @@ public class SocketVirtualClient implements VirtualClientInterface {
         }
     }
 
-    @Override
-    public void showEndGame() throws RemoteException {
-
-    }
-
     public record GameStartData(ArrayList<Player> players, Board board) {};
 
     @Override
-    public void showStartGame( ArrayList<Player> players, Board board) throws RemoteException {
+    public void updateStartGame(ArrayList<Player> players, Board board) throws RemoteException {
         synchronized (outputLock){
             try {
                 out.writeObject(new MessageFromServer<>("game_started", new GameStartData(players,board)));
@@ -150,10 +195,6 @@ public class SocketVirtualClient implements VirtualClientInterface {
             }
         }
     }
-
-
-
-
 
     @Override
     public void availableColors(ArrayList<Totem> availableTotems) {
@@ -168,7 +209,7 @@ public class SocketVirtualClient implements VirtualClientInterface {
     }
 
     @Override
-    public void askNumPlayers() throws IOException {
+    public void updateFirstPlayer() throws RemoteException {
         synchronized (outputLock) {
             try {
                 out.writeObject(new MessageFromServer<>("setnumplayers", null));
@@ -183,14 +224,6 @@ public class SocketVirtualClient implements VirtualClientInterface {
     public void refuseConnection() throws IOException {
         synchronized (outputLock){
             out.writeObject(new MessageFromServer<>("REFUSECONNECTION", null));
-            out.flush();
-        }
-    }
-
-    @Override
-    public void newPlayer(Player newPlayer) throws IOException {
-        synchronized (outputLock){
-            out.writeObject(new MessageFromServer<>("NEWPLAYER",newPlayer));
             out.flush();
         }
     }
@@ -235,7 +268,12 @@ public class SocketVirtualClient implements VirtualClientInterface {
     }
 
     @Override
-    public void cardPickError() {
+    public void updateNextTurn(Board board) {
+
+    }
+
+    @Override
+    public void pickCardError() throws RemoteException {
         synchronized (outputLock){
             try {
                 out.writeObject(new MessageFromServer<>("pick_error", null));
@@ -244,6 +282,16 @@ public class SocketVirtualClient implements VirtualClientInterface {
                 throw new RuntimeException(e);
             }
         }
+    }
+
+    @Override
+    public void usernameError() {
+
+    }
+
+    @Override
+    public void updateAvailableTotems(ArrayList<Totem> availableTotems) {
+
     }
 
     @Override

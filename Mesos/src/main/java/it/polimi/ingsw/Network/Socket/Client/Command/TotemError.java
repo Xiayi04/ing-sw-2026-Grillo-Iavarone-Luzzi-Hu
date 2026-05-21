@@ -15,6 +15,6 @@ public class TotemError implements ClientCommand{
 
     @Override
     public void execute(Socket socket, ClientController clientController) throws IOException {
-        clientController.showErrorMessage("Totem Error");
+        clientController.showTotemChoiceError();
     }
 }

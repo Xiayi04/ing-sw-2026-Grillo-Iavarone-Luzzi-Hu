@@ -13,6 +13,6 @@ public class ConfirmNumPlayers implements ClientCommand{
 
     @Override
     public void execute(Socket socket, ClientController clientController) throws IOException {
-        clientController.confirmNumPlayers(num);
+        clientController.showNumPlayers(num);
     }
 }
