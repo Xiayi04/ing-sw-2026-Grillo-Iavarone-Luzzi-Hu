@@ -31,9 +31,9 @@ public interface VirtualClientInterface extends Remote {
 
     void refuseConnection() throws IOException;
 
-    void pickedCard(String player, boolean row, boolean isBuilding, int index);
+    void pickedCard(String username, boolean row, boolean isBuilding, int index);
 
-    void movedTotem(String player, int index);
+    void movedTotem(String username, int index);
 
     void movedTotemError () throws RemoteException;
 
