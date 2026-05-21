@@ -46,7 +46,7 @@ public class GameManager {
 
     }*/
 
-    public void startGame() {
+    public void startGame() throws RemoteException {
         synchronized (playersLock) {
             System.out.println("Starting game");
             this.round = 1;
@@ -54,9 +54,7 @@ public class GameManager {
             this.board.getPlayers().addAll(this.players);
             this.board.initializeBoard(numPlayers);
             System.out.println("Game started");
-            new Thread(() -> {
-                notifier.gameStartedBroadcast(players,board);
-            }).start();
+            notifier.gameStartedBroadcast(players,board);
             System.out.println("Start of the Totem positioning phase...");
             positionPhase();
 
@@ -287,7 +285,7 @@ public class GameManager {
      * @param numPlayers
      */
 
-    public void setNumPlayers(int numPlayers) {
+    public void setNumPlayers(int numPlayers) throws RemoteException {
         synchronized (numPlayersLock){
             this.numPlayers = numPlayers;
             System.out.println("The game is made up of" + numPlayers + " players");
@@ -355,7 +353,7 @@ public class GameManager {
      * @param isBuilding
      * @param index
      */
-    public void resolvePick(String playerName, boolean isUpperRequested, boolean isBuilding, int index){
+    public void resolvePick(String playerName, boolean isUpperRequested, boolean isBuilding, int index) throws RemoteException {
         Player p = getPlayerByName(playerName);
 
         if(pickingQueue.isEmpty() || !pickingQueue.get(0).player.equals(p)){
@@ -549,7 +547,7 @@ public class GameManager {
      * @return the character taken
      */
 
-    public boolean takeCharacter(Player player, boolean isUpper,int index){
+    public boolean takeCharacter(Player player, boolean isUpper,int index) throws RemoteException {
         Character pickedCharacter = (Character) board.pickCard(isUpper,false,index);
         if(pickedCharacter != null){
             //Using visitor to add the Character to the player's list
