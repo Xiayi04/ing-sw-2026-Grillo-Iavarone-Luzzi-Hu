@@ -12,13 +12,17 @@ public interface VirtualServer extends Remote {
 
     void login(String username, Totem chosenColor, RemoteClientInterface  client) throws RemoteException;
 
-    void moveTotem(String username, int pathIndex) throws RemoteException;
+    void requestMoveTotemManagement(String username, int pathIndex) throws RemoteException;
 
-    void pickCard(String username, boolean isUpper, boolean isBuilding, int index) throws RemoteException;
+    void requestPickCardManagement(String username, boolean isUpper, boolean isBuilding, int index) throws RemoteException;
 
-    void setNumPlayers(int numPlayer, RemoteClientInterface client ) throws RemoteException;
+    void requestSetNumPlayersManagement(int numPlayer, RemoteClientInterface client ) throws RemoteException;
 
-    void setTotemPosition(int index) throws RemoteException;
+    void setTotemPosition(String username, int index) throws RemoteException;
 
     void leave() throws RemoteException;
+
+     void requestAvailableTotemsManagement(int index) throws RemoteException;
+
+    void removeActiveClient (VirtualClientInterface wrappedClient) throws RemoteException;
 }
