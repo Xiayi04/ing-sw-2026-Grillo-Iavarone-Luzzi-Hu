@@ -79,9 +79,9 @@ public class ClientController {
     public void setNumPlayers(int numPlayers) {
         while (numPlayers < 2 || numPlayers > 5) {
             view.showError("Number of Players is wrong,try again ");
-            numPlayers = view.askNumToPlayer();
+            view.askNumToPlayer();
         }
-        serverConnection.setNumPlayers(numPlayers);
+        serverConnection.requestSetNumPlayers(numPlayers);
     }
     public void showNumPlayers(int numPlayers){
         view.showMessage("Number of Players "+ numPlayers);
@@ -93,7 +93,7 @@ public class ClientController {
 
 
     //notifica dal server
-    public void showGameStarted() {
+    public void showGameStarted(ArrayList<Player> players, Board board) {
         view.showMessage("The game started.");
     }
     public void showUpdateFirstPlayer() {
@@ -107,18 +107,18 @@ public class ClientController {
     public void showLocalUpdateEra() {
         view.showMessage("era updated");
     }
-    public void showPlayerTurn(Player player) {
+    public void showPlayerTurn(String player) {
         view.showMessage("It's your turn.");
     }
-    public void showLocalReturnToTOC() {
+    public void showLocalReturnToTOC(String player, int index) {
         view.showMessage("totem returned to turn order card");
-    }
+    }// devo effettivamente spostaerfe il totem indietro
 
-    public void foodUpdated(Player player, int foodUpdated){
-        view.showMessage(player + "'s food + "+foodUpdated);
+    public void foodUpdated(String username, int foodUpdated){
+        view.showMessage(username + "'s food + "+foodUpdated);
     }
-    public void updatePlayerPP(Player player, int PPUpdated){
-        view.showMessage(player + "'s PP updated: " + PPUpdated);
+    public void updatePlayerPP(String username, int PPUpdated){
+        view.showMessage(username + "'s PP updated: " + PPUpdated);
     }
 
     public void showUpdateForEvents() {
@@ -127,8 +127,9 @@ public class ClientController {
     public void showErrorMessage(String message) {
         view.showError(message);
     }
-    public void showUpdateNextTurn() {
-        view.showMessage("New turn started");
+    public void showUpdateTurn(Board board) {
+        currentBoard = board;
+        view.showNextRound();
     }
 
     public void showEndGame() {
@@ -196,17 +197,14 @@ public class ClientController {
 
 
 
-
-
-
-    public void addPlayerToLocalBoard(Player newPlayer) {
+    /*public void addPlayerToLocalBoard(String newPlayer) {
         synchronized (currentBoard.getPlayers()) {
             if(currentBoard.getPlayers().contains(newPlayer)){
                 throw new RuntimeException("Player already exists");
             }
             currentBoard.getPlayers().add(newPlayer);
         }
-    }
+    }*/
 
     public void confirmNumPlayers(int num) {
         view.showMessage("Number of players: "+num);
@@ -266,7 +264,7 @@ public class ClientController {
         if(index<0){
             view.showError("Invalid index");
         }
-        serverConnection.setTotemPosition(localPlayerName,index);
+        serverConnection.requestMoveTotem(localPlayerName,index);
     }
 
     public void showTotemMoved(String playerName, int index){

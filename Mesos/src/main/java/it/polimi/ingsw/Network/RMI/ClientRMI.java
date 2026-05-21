@@ -24,7 +24,7 @@ public class ClientRMI extends UnicastRemoteObject implements
     private final int port;
     private final String serverName;
     private String username;
-
+//
 
     public ClientRMI(String localHost, int port, String serverName,ClientController clientcontroller) throws RemoteException {
         super();
