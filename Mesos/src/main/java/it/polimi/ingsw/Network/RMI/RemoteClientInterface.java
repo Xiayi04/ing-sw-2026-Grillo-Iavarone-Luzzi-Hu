@@ -29,6 +29,8 @@ public interface RemoteClientInterface extends Remote {
 
     void showUpdateFirstPlayer(String player) throws RemoteException;
 
+    void showChosenNumPlayers (int numPlayers) throws RemoteException;
+
     void showPlayerTurn(String player) throws RemoteException;
 
     void showPickedCard (String playerWhoPicked, boolean row, boolean isBuilding, int index) throws RemoteException;
