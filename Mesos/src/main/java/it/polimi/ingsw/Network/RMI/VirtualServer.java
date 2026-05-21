@@ -5,10 +5,12 @@ import it.polimi.ingsw.Network.VirtualClientInterface;
 
 import java.rmi.Remote;
 import java.rmi.RemoteException;
+import java.util.ArrayList;
+
 // Il Client lo usa per mandare comandi verso il Server
 public interface VirtualServer extends Remote {
 
-    void connect(RemoteClientInterface client) throws RemoteException;
+    void connect(RemoteClientInterface virtualclient) throws RemoteException;
 
     void login(String username, Totem chosenColor, RemoteClientInterface  client) throws RemoteException;
 
@@ -22,7 +24,7 @@ public interface VirtualServer extends Remote {
 
     void leave() throws RemoteException;
 
-     void requestAvailableTotemsManagement(int index) throws RemoteException;
+    void requestAvailableTotemsManagement(String player, ArrayList<Totem> availabletotems) throws RemoteException;
 
     void removeActiveClient (VirtualClientInterface wrappedClient) throws RemoteException;
 }
