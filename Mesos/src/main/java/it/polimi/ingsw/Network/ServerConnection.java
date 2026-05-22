@@ -15,7 +15,7 @@ public interface ServerConnection {
 
     void requestMoveTotem(String localPlayerName, int chosenPosition);
 
-    void requestAvailableTotems(String username,ArrayList<Totem> availableTotems);
+    void requestAvailableTotems();
 
     void leave();
 }
