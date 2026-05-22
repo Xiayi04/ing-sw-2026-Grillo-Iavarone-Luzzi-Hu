@@ -60,27 +60,27 @@ public class RMIVirtualClient implements VirtualClientInterface {
     }
 
     @Override
-    public void updateFirstPlayer(String username) throws RemoteException {
+    public void updateFirstPlayer() throws RemoteException {
         try{
-            client.showUpdateFirstPlayer(username);
+            client.showUpdateFirstPlayer();
         }catch(RemoteException e) {
             System.err.println("Error in updateFirstPlayer: " + e.getMessage());
         }
     }
 
-    @Override
+    /*@Override
     public void setNumPlayers(int numPlayers) throws RemoteException {
-            /*try{
+            try{
                // client.setNumPlayers(numPlayers);
             }catch (RemoteException e){
                 System.err.println("Error in setNumPlayers: " + e.getMessage());
-            }*/
-        }
+            }
+        }*/
 
-    @Override
+    /*@Override
     public void ping() throws RemoteException {
         client.ping();
-    }
+    }*/
 
     @Override
     public void updateStartGame(ArrayList<Player> players, Board board) throws RemoteException {
@@ -102,15 +102,20 @@ public class RMIVirtualClient implements VirtualClientInterface {
     }*/
 
     @Override
-    public void showPlayerTurn(String player) {
+    public void showPlayerTurn(String username) {
         try {
-            client.showPlayerTurn(player);
+            client.showPlayerTurn(username);
         } catch (RemoteException e) {
             System.out.println(" ");
         }
     }
 
     @Override
+    public void updateNextRound(Board board) throws RemoteException {
+
+    }
+
+    /*@Override
     public void updateNextTurn(Board board) throws RemoteException {
         try{
             client.updateNextTurn(board);
@@ -118,7 +123,7 @@ public class RMIVirtualClient implements VirtualClientInterface {
             System.err.println("Error in updateNextTurn: " + e.getMessage());
         }
 
-    }
+    }*/
 
     @Override
     public void pickedCard (String username, boolean row, boolean isBuilding, int index) {
@@ -181,22 +186,22 @@ public class RMIVirtualClient implements VirtualClientInterface {
             System.out.println("error card chosen not valid");
         }
     }
-    @Override
+    /*@Override
     public void buildingPurchaseError(){
         try{
             client.showPickCardError("Building not purchasable ");
         } catch (RemoteException e) {
             System.out.println("error: building not purchasable ");
         }
-    }
-    @Override
+    }*/
+    /*@Override
     public void totemPositionError(){
         try{
             client.showTotemMovedError("Position not valid or already chosen");
         } catch (RemoteException e) {
             System.out.println("error:not valid or already chosen: ");
         }
-    }
+    }*/
 
     @Override
     public void usernameError() throws RemoteException {
@@ -208,7 +213,7 @@ public class RMIVirtualClient implements VirtualClientInterface {
 
     }
 
-    @Override
+   /* @Override
     public void totemNotAvailableError(ArrayList<Totem> availableTotems) {
         try{
             client.showTotemMovedError("totem error");
@@ -216,7 +221,7 @@ public class RMIVirtualClient implements VirtualClientInterface {
             System.err.println("Error in totemNotAvailableError: " + e.getMessage());
         }
 
-    }
+    }*/
 
     @Override
     public void updateAvailableTotems(ArrayList<Totem> availableTotems) {
@@ -255,16 +260,6 @@ public class RMIVirtualClient implements VirtualClientInterface {
         }catch(RemoteException e){
             System.err.println("Error in updateConfirmedTotem: " + e.getMessage());
         }
-
-    }
-
-    @Override
-    public void confirmNumPlayers(int numPlayers) {
-
-    }
-
-    @Override
-    public void availableColors(ArrayList<Totem> availableTotems) {
 
     }
 
