@@ -19,5 +19,6 @@ public interface GraphicInterface {
     void moveTotem(String username, int index);
     void askNumToPlayer();
     void showNextRound();
+    void showStartGame();
 
 }

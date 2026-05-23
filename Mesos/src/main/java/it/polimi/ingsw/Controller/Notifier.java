@@ -3,6 +3,7 @@ package it.polimi.ingsw.Controller;
 import it.polimi.ingsw.Cards.Events.Event;
 import it.polimi.ingsw.Game.Board;
 import it.polimi.ingsw.Game.Player;
+import it.polimi.ingsw.Network.ClientDisconnectedException;
 import it.polimi.ingsw.Network.PlayerScore;
 import it.polimi.ingsw.Network.VirtualClientInterface;
 
@@ -44,7 +45,7 @@ public class Notifier {
         for (VirtualClientInterface client : getClients()) {
             pool.submit(() -> {
                 try {
-                    client.returnTotemToTOC(player, index);
+                    client.returnTotemToTOC(player.getName(), index);
                 } catch (RuntimeException | IOException e) {
                     handleDisconnect();
                 }
@@ -70,8 +71,10 @@ public class Notifier {
             pool.submit(() -> {
                 try {
                     client.showUpdateEra(era);
-                } catch (RuntimeException | IOException e) {
+                } catch (ClientDisconnectedException e) {
                     handleDisconnect();
+                }catch (IOException e) {
+                    throw new RuntimeException("Generic Error");
                 }
             });
         }
@@ -82,8 +85,10 @@ public class Notifier {
             pool.submit(() -> {
                 try {
                     client.updateStartGame(players, board);
-                } catch (RuntimeException | IOException e) {
+                } catch (ClientDisconnectedException e) {
                     handleDisconnect();
+                }catch (IOException e) {
+                    throw new RuntimeException("Generic Error");
                 }
             });
         }
@@ -93,9 +98,11 @@ public class Notifier {
         for (VirtualClientInterface client : getClients()) {
             pool.submit(() -> {
                 try {
-                    client.pickedCard(player, row, isBuilding, index);
-                } catch (RuntimeException  e) {
+                    client.pickedCard(player.getName(), row, isBuilding, index);
+                } catch (ClientDisconnectedException e) {
                     handleDisconnect();
+                }catch(RuntimeException e){
+                    System.out.println(e.getMessage());
                 }
             });
         }
@@ -105,7 +112,7 @@ public class Notifier {
         for (VirtualClientInterface client : getClients()) {
             pool.submit(() -> {
                 try {
-                    client.movedTotem(player, index);
+                    client.movedTotem(player.getName(), index);
                 } catch (RuntimeException e) {
                     handleDisconnect();
                 }
@@ -118,7 +125,7 @@ public class Notifier {
         for (VirtualClientInterface client : getClients()) {
             pool.submit(() -> {
                 try {
-                    client.updatePlayerFood(player, update);
+                    client.updatePlayerFood(player.getName(), update);
                 } catch (RuntimeException e) {
                     handleDisconnect();
                 }
@@ -131,7 +138,7 @@ public class Notifier {
         for (VirtualClientInterface client : getClients()) {
             pool.submit(() -> {
                 try {
-                    client.updatePlayerPP(player, update);
+                    client.updatePlayerPP(player.getName(), update);
                 } catch (RuntimeException e) {
                     handleDisconnect();
                 }
@@ -146,7 +153,7 @@ public class Notifier {
             pool.submit(() -> {
                 try {
 
-                    client.showPlayerTurn(player);
+                    client.showPlayerTurn(player.getName());
 
                 } catch (RuntimeException e) {
 
@@ -198,7 +205,7 @@ public class Notifier {
         for (VirtualClientInterface client : getClients()) {
             pool.submit(() -> {
                 try {
-                    client.showEndGame(winner, leaderboard);
+                    client.showEndGame(winner.getName(), leaderboard);
                 } catch (RuntimeException | IOException e) {
 
                     handleDisconnect();

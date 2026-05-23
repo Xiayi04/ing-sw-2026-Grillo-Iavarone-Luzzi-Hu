@@ -1,16 +1,21 @@
 package it.polimi.ingsw.Network.Socket.Server;
+
 import it.polimi.ingsw.Cards.Events.Event;
 import it.polimi.ingsw.Controller.GameManager;
 import it.polimi.ingsw.Game.Board;
 import it.polimi.ingsw.Game.Player;
 import it.polimi.ingsw.Game.Totem;
+import it.polimi.ingsw.Network.ClientDisconnectedException;
 import it.polimi.ingsw.Network.PlayerScore;
 import it.polimi.ingsw.Network.Socket.Server.Command.EndGameData;
 import it.polimi.ingsw.Network.Socket.Server.Command.Pick;
+import it.polimi.ingsw.Network.Socket.Server.Command.UpdateFood;
+import it.polimi.ingsw.Network.Socket.Server.Command.UpdatePP;
 import it.polimi.ingsw.Network.VirtualClientInterface;
 
 import java.io.*;
 import java.net.Socket;
+import java.net.SocketException;
 import java.rmi.RemoteException;
 import java.util.ArrayList;
 import java.util.List;
@@ -28,288 +33,150 @@ public class SocketVirtualClient implements VirtualClientInterface {
         //this.in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
         this.gm = gameManager;
     }
-    public record TotemPosition(Player player,int index){};
+
+
+    private <T> void send(String commandType, T data){
+        synchronized (outputLock) {
+            try {
+                out.writeObject(new MessageFromServer<>(commandType, data));
+                out.flush();
+            } catch (SocketException e) {
+                throw new ClientDisconnectedException("Client network connection lost during command: " + commandType);
+            } catch (IOException e) {
+                throw new RuntimeException("Fatal I/O error while sending command: " + commandType, e);
+            }
+        }
+    }
+
+    public record TotemPosition(String playerName, int index) implements Serializable {};
 
     @Override
     public void showChosenNumPlayers(int numPlayers) throws IOException {
-        synchronized (outputLock) {
-            try {
-                out.writeObject(new MessageFromServer<>("chosen_num_players",numPlayers));
-                out.flush();
-            } catch (IOException e) {
-                throw new RuntimeException(e);
-            }
-        }
+        send("chosen_num_players", numPlayers);
     }
 
     @Override
-    public void showEndGame(Player winner, List<PlayerScore> leaderboard) throws RemoteException {
-        synchronized (outputLock) {
-            try {
-                out.writeObject(new MessageFromServer<>("end_game", new  EndGameData(winner,leaderboard)));
-                out.flush();
-            } catch (IOException e) {
-                throw new RuntimeException(e);
-            }
-        }
-    }
-
-    @Override
-    public void setNumPlayers(int numPlayers) throws RemoteException {
-
+    public void showEndGame(String winnerName, List<PlayerScore> leaderboard) throws RemoteException {
+        send("end_game", new EndGameData(winnerName, leaderboard));
     }
 
     @Override
     public void movedTotemError() throws RemoteException {
-        synchronized (outputLock) {
-            try {
-                out.writeObject(new MessageFromServer<>("moved_totem_error",null));
-                out.flush();
-            } catch (IOException e) {
-                throw new RuntimeException(e);
-            }
-        }
+        send("moved_totem_error", null);
     }
 
     @Override
     public void totemChoiceError() {
-
+        send("totem_error", null);
     }
 
     @Override
-    public void returnTotemToTOC(Player player, int index) throws RemoteException {
-        synchronized (outputLock){
-            try {
-                out.writeObject(new MessageFromServer<>("turn_order_card_position", new TotemPosition(player,index) ));
-                out.flush();
-            } catch (IOException e) {
-                throw new RuntimeException(e);
-            }
-        }
+    public void returnTotemToTOC(String playerName, int index) throws RemoteException {
+        send("turn_order_card_position", new TotemPosition(playerName, index));
     }
 
     @Override
     public void showUpdateEra(int era) throws RemoteException {
-        synchronized (outputLock){
-            try {
-                out.writeObject(new MessageFromServer<>("update_era", era));
-                out.flush();
-            } catch (IOException e) {
-                throw new RuntimeException(e);
-            }
-        }
+        send("update_era", era);
     }
 
     @Override
     public void updateForEvent(Event e) throws RemoteException {
-        synchronized (outputLock){
-            try {
-                out.writeObject(new MessageFromServer<>("resolving_event", e));
-                out.flush();
-            } catch (IOException ex) {
-                throw new RuntimeException(ex);
-            }
-        }
+        send("resolving_event", e);
     }
 
     @Override
     public void updateConfirmedUsername(String username) {
-        synchronized (outputLock) {
-            try {
-                out.writeObject(new MessageFromServer<>("confirm_username", username));
-                out.flush();
-            } catch (IOException e) {
-                throw new RuntimeException(e);
-            }
-        }
+        send("confirm_username", username);
     }
 
     @Override
     public void updateConfirmedTotem(Totem totem) {
-        synchronized (outputLock) {
-            try {
-                out.writeObject(new MessageFromServer<>("confirm_totem", totem));
-                out.flush();
-            } catch (IOException e) {
-                throw new RuntimeException(e);
-            }
-        }
+        send("confirm_totem", totem);
     }
 
-    @Override
+
     public void confirmNumPlayers(int numPlayers) {
-        synchronized (outputLock) {
-            try {
-                out.writeObject(new MessageFromServer<>("confirm_numplayers", numPlayers));
-                out.flush();
-            } catch (IOException e) {
-                throw new RuntimeException(e);
-            }
-        }
+        send("confirm_numplayers", numPlayers);
     }
 
     @Override
-    public void numPlayersError() throws RemoteException {
-        synchronized (outputLock) {
-            try {
-                out.writeObject(new MessageFromServer<>("setnumplayers_error", null));
-                out.flush();
-            } catch (IOException e) {
-                throw new RuntimeException(e);
-            }
-        }
+    public void numPlayersError() {
+        send("setnumplayers_error", null);
     }
 
+
+    public record GameStartData(ArrayList<Player> players, Board board) implements Serializable {}
+
     @Override
-    public void totemNotAvailableError(ArrayList<Totem> totems) {
-
-            synchronized (outputLock) {
-                try {
-                    out.writeObject(new MessageFromServer<>("totem_error", totems));
-                    out.flush();
-                } catch (IOException e) {
-                    throw new RuntimeException(e);
-                }
-            }
-
+    public void updateStartGame(ArrayList<Player> players, Board board)  {
+        send("game_started", new GameStartData(players, board));
     }
 
-    @Override
-    public void showMessage(String message) throws IOException {
-        synchronized (outputLock) {
-            out.writeObject(new MessageFromServer<>("MSG", message));
-            out.flush();
-        }
-    }
-
-    public record GameStartData(ArrayList<Player> players, Board board) {};
-
-    @Override
-    public void updateStartGame(ArrayList<Player> players, Board board) throws RemoteException {
-        synchronized (outputLock){
-            try {
-                out.writeObject(new MessageFromServer<>("game_started", new GameStartData(players,board)));
-                out.flush();
-            } catch (IOException e) {
-                throw new RuntimeException(e);
-            }
-        }
-    }
-
-    @Override
+    //@Override
     public void availableColors(ArrayList<Totem> availableTotems) {
-        synchronized (outputLock) {
-            try {
-                out.writeObject(new MessageFromServer<>("colors", availableTotems));
-                out.flush();
-            } catch (IOException e) {
-                throw new RuntimeException(e);
-            }
-        }
+        send("colors", availableTotems);
     }
 
     @Override
-    public void updateFirstPlayer() throws RemoteException {
-        synchronized (outputLock) {
-            try {
-                out.writeObject(new MessageFromServer<>("setnumplayers", null));
-                out.flush();
-            } catch (IOException e) {
-                throw new RuntimeException(e);
-            }
-        }
+    public void updateFirstPlayer()  {
+        send("setnumplayers", null);
     }
 
-    @Override
-    public void refuseConnection() throws IOException {
-        synchronized (outputLock){
-            out.writeObject(new MessageFromServer<>("REFUSECONNECTION", null));
-            out.flush();
-        }
-    }
 
-    @Override
-    public void pickedCard(Player player, boolean row, boolean isBuilding, int index) {
-        synchronized (outputLock){
-            try {
-                out.writeObject(new MessageFromServer<>("picked_card", new Pick(player.getName(),row,isBuilding,index)));
-                out.flush();
-            } catch (IOException e) {
-                throw new RuntimeException(e);
-            }
-        }
-    }
-
-    @Override
-    public void movedTotem(Player player, int index) {
-        synchronized (outputLock){
-            try {
-                out.writeObject(new MessageFromServer<>("moved_totem", new TotemPosition(player,index)));
-                out.flush();
-            } catch (IOException e) {
-                throw new RuntimeException(e);
-            }
-        }
-    }
-
-    @Override
-    public void updatePlayerFood(Player player, int update) {
-
-    }
-
-    @Override
-    public void updatePlayerPP(Player player, int update) {
-
-    }
-
-    @Override
-    public void showPlayerTurn(Player player) {
-
-    }
-
-    @Override
-    public void updateNextTurn(Board board) {
-
-    }
-
-    @Override
-    public void pickCardError() throws RemoteException {
-        synchronized (outputLock){
-            try {
-                out.writeObject(new MessageFromServer<>("pick_error", null));
-                out.flush();
-            } catch (IOException e) {
-                throw new RuntimeException(e);
-            }
-        }
-    }
 
     @Override
     public void usernameError() {
-
+        send("username_error", null);
     }
 
     @Override
     public void updateAvailableTotems(ArrayList<Totem> availableTotems) {
-
+        send("available_totems", availableTotems);
     }
 
     @Override
-    public void buildingPurchaseError() {
-
+    public void refuseConnection() throws IOException {
+        send("refuse_connection", null);
     }
 
     @Override
-    public void totemPositionError() {
-
+    public void pickedCard(String username, boolean row, boolean isBuilding, int index) {
+        send("picked_card", new Pick(username, row, isBuilding, index));
     }
 
     @Override
-    public void showError(String message) throws RemoteException {
-
+    public void movedTotem(String username, int index) {
+        send("moved_totem", new TotemPosition(username, index));
     }
 
+    @Override
+    public void updatePlayerFood(String username, int update) {
+        //aggiornare client
+        send("update_food", new UpdateFood(username, update));
+    }
 
+    @Override
+    public void updatePlayerPP(String username, int update) {
+        //aggiornare
+        send("update_pp", new UpdatePP(username, update));
+    }
 
+    @Override
+    public void showPlayerTurn(String username) {
+        //aggiornare
+        send("player_turn", username);
+    }
+
+    @Override
+    public void updateNextRound(Board board) throws RemoteException {
+        //aggiornare
+        send("next_turn", board);
+    }
+
+    @Override
+    public void pickCardError() throws RemoteException {
+        send("pick_error", null);
+    }
 
 }

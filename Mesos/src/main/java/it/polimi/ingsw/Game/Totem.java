@@ -1,6 +1,8 @@
 package it.polimi.ingsw.Game;
 
-public enum Totem {
+import java.io.Serializable;
+
+public enum Totem implements Serializable {
     ORANGE,
     BLUE,
     BLACK,

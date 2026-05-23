@@ -14,6 +14,6 @@ public class MovedTotemCommand implements ClientCommand {
 
     @Override
     public void execute(Socket socket, ClientController clientController) throws IOException {
-        clientController.showTotemMoved(pos.player().getName(), pos.index());
+        clientController.showTotemMoved(pos.playerName(), pos.index());
     }
 }

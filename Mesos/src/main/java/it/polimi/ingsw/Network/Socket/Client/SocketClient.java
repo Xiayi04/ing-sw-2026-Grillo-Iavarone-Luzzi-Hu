@@ -9,6 +9,7 @@ import it.polimi.ingsw.Network.Socket.Server.MessageFromServer;
 
 import java.io.*;
 import java.net.Socket;
+import java.util.ArrayList;
 
 public class SocketClient implements Runnable, ServerConnection {
     //private Socket socket;
@@ -98,18 +99,18 @@ public class SocketClient implements Runnable, ServerConnection {
     }
 
     @Override
-    public void setNumPlayers(int numPlayer) {
-
-            synchronized (outputLock){
-                try {
-                    out.writeObject(new MessageFromClient<>("setnumplayers",numPlayer));
-                    out.flush();
-                } catch (IOException e) {
-                    throw new RuntimeException(e);
-                }
+    public void requestSetNumPlayers(int numPlayer) {
+        synchronized (outputLock){
+            try {
+                out.writeObject(new MessageFromClient<>("setnumplayers",numPlayer));
+                out.flush();
+            } catch (IOException e) {
+                throw new RuntimeException(e);
             }
-
+        }
     }
+
+
 
     @Override
     public void requestPickCard(String localPlayerName, boolean isUpper, boolean isBuilding, int index) {
@@ -131,18 +132,17 @@ public class SocketClient implements Runnable, ServerConnection {
     }
 
     @Override
-    public void setTotemPosition(String localPlayerName, int chosenPosition) {
-
-            synchronized (outputLock){
-                try {
-                    out.writeObject(new MessageFromClient<>("position", chosenPosition));
-                    out.flush();
-                } catch (IOException e) {
-                    throw new RuntimeException(e);
-                }
+    public void requestMoveTotem(String localPlayerName, int chosenPosition) {
+        synchronized (outputLock){
+            try {
+                out.writeObject(new MessageFromClient<>("position", chosenPosition));
+                out.flush();
+            } catch (IOException e) {
+                throw new RuntimeException(e);
             }
-
+        }
     }
+
 
     @Override
     public void leave() {
@@ -150,7 +150,7 @@ public class SocketClient implements Runnable, ServerConnection {
     }
 
 
-    public void availableColorsRequest() {
+    public void requestAvailableTotems() {
         synchronized (outputLock){
             try {
                 out.writeObject(new MessageFromClient<>("available_colors",null));
@@ -160,6 +160,5 @@ public class SocketClient implements Runnable, ServerConnection {
             }
         }
     }
-
 
 }

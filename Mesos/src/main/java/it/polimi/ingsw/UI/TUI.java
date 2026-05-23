@@ -25,6 +25,11 @@ public TUI(ClientController controller) {
 }
 
     @Override
+    public void showStartGame() {
+
+    }
+
+    @Override
     public void showPlayerFoodUpdate(String playerName, int food) {
         synchronized (LOCK) {
             StringBuilder update = new StringBuilder();
@@ -69,7 +74,8 @@ public TUI(ClientController controller) {
             stringBuilder.append(isBuilding ? "a Building from the " : "a Character from the ");
             stringBuilder.append(isUpper ? "Upper" : "Lower");
             stringBuilder.append(" row");
-            synchronized (controller.getLocalPlayer()) {
+            synchronized (controller.getCurrentBoard()) {
+                screenCleaner();
                 boardPrinter(controller.getCurrentBoard(), stringBuilder.toString());
             }
         }
@@ -77,7 +83,34 @@ public TUI(ClientController controller) {
 
     @Override
     public void moveTotem(String username, int index) {
+        synchronized (LOCK){
+            StringBuilder stringBuilder = new StringBuilder();
+            if(controller.getLocalPlayer().getName().equals(username)){
+                stringBuilder.append("You moved your totem in position " + index + ".");
+            }else {
+                stringBuilder.append(username.toUpperCase()).append(" has moved his totem in position ").append(index).append(".");
+            }
+            screenCleaner();
+            synchronized (controller.getCurrentBoard()) {
+                pathPrinter(controller.getCurrentBoard(), stringBuilder.toString());
+            }
+        }
+    }
 
+    @Override
+    public void askNumToPlayer() {
+        System.out.println("*You are the first player. Please insert the num of players that will join the game using-> players:'number between 2 and 5'");
+    }
+
+    @Override
+    public void showNextRound() {
+        synchronized (LOCK){
+            screenCleaner();
+            System.out.println("===NEXT ROUND===");
+            synchronized (controller.getCurrentBoard()) {
+                pathPrinter(controller.getCurrentBoard(), "");
+            }
+        }
     }
 
     @Override
@@ -109,18 +142,29 @@ public TUI(ClientController controller) {
 
     @Override
     public void showCurrentPlayer(String username) {
-
+        synchronized (LOCK) {
+            if (username.equals(controller.getLocalPlayer().getName()))
+                System.out.println("It's your turn!");
+            else
+                System.out.println("It's " + username + "'s turn!");
+        }
     }
 
 
     public void startMenu(){
 
             synchronized (LOCK){
+                screenCleaner();
                 System.out.println(" === MESOS === ");
                 System.out.println("Command List:");
                 startMenuCommands();
             }
 
+    }
+
+    public void screenCleaner(){
+        System.out.print("\033[H\033[2J");
+        System.out.flush();
     }
 
     public void startMenuCommands(){
@@ -261,6 +305,20 @@ public TUI(ClientController controller) {
         for(String s : printedBoard){
             System.out.println(s);
         }
+    }
+
+    public void pathPrinter(Board board,String update){
+        ArrayList<String> bluePrint = new ArrayList<>();
+
+        bluePrint.add("PATH:");
+        String[] path = printPath(board.getTurnOrderCard(), board.getPath());
+        bluePrint.addAll(Arrays.asList(path));
+        bluePrint.add("UPDATE:");
+        bluePrint.add(update);
+        for(String s : bluePrint){
+            System.out.println(s);
+        }
+
     }
 
 

@@ -2,9 +2,12 @@ package it.polimi.ingsw.Network.Socket.Client.Command;
 
 
 
+import it.polimi.ingsw.Game.Board;
 import it.polimi.ingsw.Game.Player;
 import it.polimi.ingsw.Game.Totem;
 import it.polimi.ingsw.Network.Socket.Server.Command.Pick;
+import it.polimi.ingsw.Network.Socket.Server.Command.UpdateFood;
+import it.polimi.ingsw.Network.Socket.Server.Command.UpdatePP;
 import it.polimi.ingsw.Network.Socket.Server.MessageFromServer;
 import it.polimi.ingsw.Network.Socket.Server.SocketVirtualClient;
 
@@ -22,6 +25,11 @@ public class CommandFactoryClientSide {
         commands.put("game_started",data->new StartGameCommand((SocketVirtualClient.GameStartData)  data));
         commands.put("turn_order_card_position", p-> new TurnOrderPositionCommand((SocketVirtualClient.TotemPosition) p));
         commands.put("update_era",e->new UpdateEraCommand((Integer)e));
+        commands.put("update_food", u-> new UpdateFoodCommand((UpdateFood) u));
+        commands.put("update_pp", u-> new UpdatePPCommand((UpdatePP) u));
+        commands.put("player_turn", u-> new PlayerTurnCommand((String) u));
+        commands.put("next_turn", u-> new NextTurnCommand((Board) u));
+
 
         //login
         commands.put("setnumplayers", payload -> new NumPlayersCommand());
@@ -32,10 +40,12 @@ public class CommandFactoryClientSide {
         commands.put("confirm_totem", t-> new ConfirmTotemCommand((Totem)t));
         commands.put("confirm_numplayers", p-> new ConfirmNumPlayers((Integer)p));
         //Errors
-        commands.put("refuseconnection", payload-> new RefusedConnectionCommand());
+        commands.put("refuse_connection", payload-> new RefusedConnectionCommand());
         commands.put("setnumplayers_error", e-> new SetNumPlayersError());
         commands.put("totem_error",e->new TotemError((ArrayList<Totem>)e));
         commands.put("pick_error", e->new PickError());
+        commands.put("totem_position_error", e-> new TotemPositionError());
+
     }
 
     public synchronized ClientCommand getCommand(MessageFromServer msg) {

@@ -23,8 +23,8 @@ public class ClientController {
     private  final Object tmpLock = new Object();
     private final Object BoardLock = new Object();
     private  Board currentBoard;
-    private String localPlayerName;
-    private Totem localTotem;
+    private String localPlayerName = null;
+    private Totem localTotem = null;
     String rowName ;
     String cardType;
 
@@ -97,7 +97,7 @@ public class ClientController {
         view.showMessage("The game started.");
     }
     public void showUpdateFirstPlayer() {
-        view.showMessage("You are the first player.");
+        view.askNumToPlayer();
     }
     public void showAvailableTotems(ArrayList<Totem> availableTotems) {
         view.showAvailableTotems(availableTotems);
@@ -143,15 +143,23 @@ public class ClientController {
             view.showErrorMessage("You can't set a username at this moment, please try again");
             return;
         }
+
+        if(localPlayerName!=null){
+            view.showError("You already chose a valid username");
+            return;
+        }
             synchronized (tmpLock){
-                if (username == null || username.isBlank()) {
-                    view.showError("Username cannot be empty or repetitive");
+                if (username.isBlank()) {
+                    view.showError("Username cannot be empty");
                 }
                 tmpUsername = username;
                 checkForLogin();
             }
     }
     public void showConfirmUsername(String username){
+        if(localPlayerName!=null){
+            throw new RuntimeException("Trying to confirm an already confirmed username");
+        }
         this.localPlayerName = username;
         view.showMessage("Username confirmed: "+ username);
     }
@@ -165,6 +173,11 @@ public class ClientController {
             return;
         }
 
+        if(localTotem != null){
+            view.showError("You already choose a totem");
+            return;
+        }
+
             synchronized (tmpLock){
                 if (totem == null) {
                     view.showError("Totem is null");
@@ -175,20 +188,55 @@ public class ClientController {
 
     }
     public void showConfirmTotem(Totem totem){
+        if(localTotem!=null){
+            throw new RuntimeException("Trying to confirm an already confirmed Totem");
+        }
+        localTotem = totem;
         view.showMessage("Totem chosen is confirmed"+ totem);
-
     }
     public void showTotemChoiceError() {
         view.showError("Totem chosen not available");
+    }
+
+    public void requestLocalAvailableTotems(){
+        if(serverConnection==null){
+            view.showError("The connection isn't established, please try again later");
+            return;
+        }
+
+        if(localTotem!=null){
+            view.showError("You already chose a valid Totem");
+            return;
+        }
+
+        serverConnection.requestAvailableTotems();
     }
 
 
 
     public void checkForLogin(){
         synchronized (tmpLock){
+            if(serverConnection==null){
+                view.showErrorMessage("Server Connection not established");
+                return;
+            }
+
             if(tmpTotem == null || tmpUsername==null){
                 return;
             }
+            //case: in the first login the username was confirmed but not the totem
+            if(localTotem==null && localPlayerName!=null){
+                serverConnection.login(localPlayerName, tmpTotem);
+                tmpTotem = null;
+                return;
+            }
+            //case: int the first login the totem was confirmed but not the totem
+            if(localPlayerName==null && localTotem!=null){
+                serverConnection.login(tmpUsername,localTotem);
+                tmpUsername = null;
+                return;
+            }
+
             serverConnection.login(tmpUsername, tmpTotem);
             tmpUsername = null;
             tmpTotem = null;

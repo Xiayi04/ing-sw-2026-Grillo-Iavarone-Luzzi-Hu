@@ -3,9 +3,10 @@ package it.polimi.ingsw.Cards.Events;
 import it.polimi.ingsw.Cards.Card;
 import it.polimi.ingsw.Game.Player;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 
-public abstract class Event extends Card {
+public abstract class Event extends Card implements Serializable {
     private final String eventName;
 
     public String getEventName() {

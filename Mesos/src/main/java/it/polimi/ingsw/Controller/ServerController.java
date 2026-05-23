@@ -2,6 +2,8 @@ package it.polimi.ingsw.Controller;
 
 import it.polimi.ingsw.Game.Player;
 import it.polimi.ingsw.Game.Totem;
+import it.polimi.ingsw.Network.ClientDisconnectedException;
+import it.polimi.ingsw.Network.Server;
 import it.polimi.ingsw.Network.VirtualClientInterface;
 
 import java.io.IOException;
@@ -103,11 +105,13 @@ public class ServerController implements LobbyManager {
 
             if (!alreadyUsed && tempPlayer != null) {
                 tempPlayer.setTempPlayerTotem(totem);
-//                try {
-//                    client.updateConfirmedTotem(totem);
-//                } catch (IOException e) {
-//                    //throw new RuntimeException(e);
-//                }
+                try {
+                    client.updateConfirmedTotem(totem);
+                } catch (RemoteException | ClientDisconnectedException e) {
+                    handleDisconnection(client);
+                } catch (IOException e) {
+                    throw new RuntimeException("Other type of error in connection");
+                }
                 new Thread(this::checkStartGame);
             } else if (alreadyUsed) {
                 try {
@@ -154,9 +158,11 @@ public class ServerController implements LobbyManager {
             lobby.IsNumPlayersSet().set(true);
             new Thread(this::checkStartGame);
             try {
-                client.showMessage("Number of players set correctly");
+                client.showChosenNumPlayers(numPlayers);
+            } catch (RemoteException | ClientDisconnectedException e) {
+                handleDisconnection(client);
             } catch (IOException e) {
-                throw new RuntimeException(e);
+                throw new RuntimeException("Other type of error in connection");
             }
         }
 
@@ -197,16 +203,20 @@ public class ServerController implements LobbyManager {
     }
 
     public synchronized void genericPick(String username, boolean isUpper, boolean isBuilding, int index) {
-        new Thread(() -> {
-            gameManager.resolvePick(username, isUpper, isBuilding, index);
-        }).start();
+
+            try {
+                gameManager.resolvePick(username, isUpper, isBuilding, index);
+            } catch (IOException e) {
+                //handleDisconnection();
+            }
+
     }
 
     //Game Initializing
 
     public void gameInitializer(int numPLayers, ArrayList<TempPlayer> tempPlayers) {
 
-        gameManager.setNumPlayers(numPLayers);
+        //gameManager.setNumPlayers(numPLayers);
         pushPlayersInGM(tempPlayers);
 
         synchronized (gameManager.getPlayers()) {
@@ -226,7 +236,11 @@ public class ServerController implements LobbyManager {
             setNotifier(notifier);
             gameManager.setNotifier(notifier);
             //necessità di far partire la partita
-
+            try {
+                gameManager.startGame();
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
         }
 
     }
@@ -257,7 +271,7 @@ public class ServerController implements LobbyManager {
     }
 
     public void handleDisconnection(VirtualClientInterface client) {
-
+        Server.terminate();
     }
 
 }
