@@ -2,8 +2,10 @@ package it.polimi.ingsw.Cards.Characters;
 
 import it.polimi.ingsw.Cards.Characters.CharacterVisitor.CharacterInterface;
 import it.polimi.ingsw.Cards.Characters.CharacterVisitor.CharacterVisitor;
+import it.polimi.ingsw.Cards.Characters.CharacterVisitor.GuiVisitor;
 import it.polimi.ingsw.Game.Player;
 import it.polimi.ingsw.UI.Printer;
+import javafx.scene.layout.VBox;
 
 public class Builder extends Character implements CharacterInterface {
     private final Integer builderDiscount;
@@ -36,6 +38,11 @@ public class Builder extends Character implements CharacterInterface {
     }
 
     public String getImagePath(){
-        return "/images/cards/characters/"+getCharacterType()+"_"+getPP()+"_"+getBuilderDiscount()+".png";
+        return "images/cards/characters/"+getCharacterType()+"_"+getPP()+"_"+getBuilderDiscount()+".png";
+    }
+
+    @Override
+    public VBox findBox(GuiVisitor visitor) {
+        return visitor.visit(this);
     }
 }

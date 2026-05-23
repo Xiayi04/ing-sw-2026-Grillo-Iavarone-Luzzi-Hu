@@ -2,6 +2,7 @@ package it.polimi.ingsw.Cards.Characters.CharacterVisitor;
 
 import it.polimi.ingsw.Cards.Characters.*;
 import it.polimi.ingsw.Game.Player;
+import javafx.scene.layout.VBox;
 
 public abstract class AbstractCharacterVisitor implements CharacterVisitor{
     public void visit(Inventor inventor, Player player){}

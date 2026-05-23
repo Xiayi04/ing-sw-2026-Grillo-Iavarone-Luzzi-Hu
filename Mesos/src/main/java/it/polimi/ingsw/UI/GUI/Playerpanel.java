@@ -1,12 +1,15 @@
 package it.polimi.ingsw.UI.GUI;
 
 import it.polimi.ingsw.Game.Player;
+import javafx.geometry.Pos;
+import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
+import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.stage.Modality;
@@ -18,16 +21,23 @@ public class Playerpanel extends HBox {
 
     private Label foodLabel;
     private Label PPLabel;
+    private GuiView guiView;
+    private PlayerHandView playerHandView;
+    //private Stage handStage;
+    private Player player;
 
-    public Playerpanel(Player player) {
+    public Playerpanel(Player player, GuiView guiView) {
+        this.guiView = guiView;
+        this.player = player;
         foodLabel = new Label("Food: "+ player.getFood());
         PPLabel = new Label("PP: "+player.getPrestigePoints());
 
-        Image image = new Image(Objects.requireNonNull(getClass().getResourceAsStream("/images/totem/"+player.getTotem().toString().toLowerCase()+"_profilo.png")));
+        /*Image image = new Image(Objects.requireNonNull(getClass().getResourceAsStream("/images/totem/"+player.getTotem().toString().toLowerCase()+"_profilo.png")));
         ImageView imageView = new ImageView(image);
         imageView.setPreserveRatio(true);
-        imageView.setFitHeight(70);
-        imageView.setOnMouseClicked(event -> {openPlayerHand(player);});
+        imageView.setFitHeight(70);*/
+        ImageView imageView = Utils.createImageView("images/totem/"+player.getTotem().toString().toLowerCase()+"_profilo.png", 70);
+        imageView.setOnMouseClicked(event -> {openPlayerHand(player);});  //metto al posto di openPlayerHand(player) showHand()
         this.getChildren().add(imageView);
 
         VBox data = new VBox(5);
@@ -37,6 +47,10 @@ public class Playerpanel extends HBox {
         this.getChildren().add(data);
 
         this.setSpacing(5);
+    }
+
+    public PlayerHandView getPlayerHandView() {
+        return playerHandView;
     }
 
     public void refresh(Player player) {
@@ -51,18 +65,29 @@ public class Playerpanel extends HBox {
         stage.initModality(Modality.WINDOW_MODAL);
         stage.setTitle(player.getName());
 
-        HBox hand = new  HBox(5);
-        hand.setStyle("-fx-background-color: green");
-        VBox inventor = new VBox(10);
-        VBox builder = new VBox(10);
-        VBox painter = new VBox(10);
-        VBox hunter = new VBox(10);
-        VBox picker = new VBox(10);
-        VBox shaman = new VBox(10);
-        hand.getChildren().addAll(inventor, builder, painter, hunter, picker, shaman);
+        this.playerHandView = new PlayerHandView(player);
+        playerHandView.setAlignment(Pos.CENTER);
+        StackPane root = new StackPane(playerHandView);
+        root.setAlignment(Pos.CENTER);
 
-        Scene scene = new Scene(hand, 600, 600);
+        Scene scene = new Scene(root, 670, 600);
         stage.setScene(scene);
         stage.show();
     }
+
+    //metodo per creare una sola playerHandView da aggiornare manualmente
+    /*public void showHand() {
+        if (playerHandView == null) {
+            playerHandView = new PlayerHandView(player);
+            handStage = new  Stage();
+            Stage currentStage = (Stage) getScene().getWindow();
+
+            handStage.initOwner(currentStage);
+            handStage.initModality(Modality.WINDOW_MODAL);
+            handStage.setTitle(player.getName());
+
+            handStage.setScene(new Scene(playerHandView, 600, 600));
+        }
+        handStage.show();
+    }*/
 }

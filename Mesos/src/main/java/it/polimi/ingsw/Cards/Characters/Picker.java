@@ -3,8 +3,10 @@ package it.polimi.ingsw.Cards.Characters;
 import it.polimi.ingsw.Cards.CardType;
 import it.polimi.ingsw.Cards.Characters.CharacterVisitor.CharacterInterface;
 import it.polimi.ingsw.Cards.Characters.CharacterVisitor.CharacterVisitor;
+import it.polimi.ingsw.Cards.Characters.CharacterVisitor.GuiVisitor;
 import it.polimi.ingsw.Game.Player;
 import it.polimi.ingsw.UI.Printer;
+import javafx.scene.layout.VBox;
 
 public class Picker extends Character implements CharacterInterface {
     private final int discount = -3;
@@ -32,6 +34,11 @@ public class Picker extends Character implements CharacterInterface {
     }
 
     public String getImagePath(){
-        return "/images/cards/characters/"+getCharacterType()+".png";
+        return "images/cards/characters/"+getCharacterType()+".png";
+    }
+
+    @Override
+    public VBox findBox(GuiVisitor visitor) {
+        return visitor.visit(this);
     }
 }

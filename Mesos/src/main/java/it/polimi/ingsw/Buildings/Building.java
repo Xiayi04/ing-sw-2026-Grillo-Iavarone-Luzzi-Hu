@@ -84,6 +84,6 @@ public abstract class Building extends Card implements BuildingInterface {
     }
 
     public String getImagePath(){
-        return "/images/cards/buildings/"+getName()+".png";
+        return "images/cards/buildings/"+getName()+".png";
     }
 }

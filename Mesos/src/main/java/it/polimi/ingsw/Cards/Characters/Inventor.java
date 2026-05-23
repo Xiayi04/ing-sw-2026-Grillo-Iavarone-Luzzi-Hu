@@ -2,9 +2,11 @@ package it.polimi.ingsw.Cards.Characters;
 import it.polimi.ingsw.Cards.CardType;
 import it.polimi.ingsw.Cards.Characters.CharacterVisitor.CharacterInterface;
 import it.polimi.ingsw.Cards.Characters.CharacterVisitor.CharacterVisitor;
+import it.polimi.ingsw.Cards.Characters.CharacterVisitor.GuiVisitor;
 import it.polimi.ingsw.Cards.Characters.CharacterVisitor.InventorInterface;
 import it.polimi.ingsw.Game.Player;
 import it.polimi.ingsw.UI.Printer;
+import javafx.scene.layout.VBox;
 
 import javax.swing.*;
 
@@ -41,6 +43,10 @@ public class Inventor extends Character implements CharacterInterface, InventorI
     }
 
     public String getImagePath(){
-        return "/images/cards/characters/"+getCharacterType()+"_"+getInventorIcon()+".png";
+        return "images/cards/characters/"+getCharacterType()+"_"+getInventorIcon()+".png";
+    }
+
+    public VBox findBox(GuiVisitor visitor){
+        return visitor.visit(this);
     }
 }

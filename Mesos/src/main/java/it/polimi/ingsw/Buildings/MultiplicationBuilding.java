@@ -41,6 +41,10 @@ public class MultiplicationBuilding extends EndGameBuilding {
     public int acceptEndGame(EndGameVisitorInterface visitor, Player player){
         return visitor.visit(this,player);
     }
+
+    public String getImagePath(){
+        return "images/cards/buildings/MultiplicationBuilding_"+getName()+"_"+getTypeIcons()+".png";
+    }
 }
 
 
