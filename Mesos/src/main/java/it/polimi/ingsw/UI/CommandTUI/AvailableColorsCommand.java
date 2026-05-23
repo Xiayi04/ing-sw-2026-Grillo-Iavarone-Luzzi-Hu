@@ -6,13 +6,13 @@ import it.polimi.ingsw.Network.ClientController;
 import java.util.ArrayList;
 
 public class AvailableColorsCommand implements CommandTUI {
-    ArrayList<Totem> availableTotems;
-    public AvailableColorsCommand(ArrayList<Totem> availableTotems){
-        this.availableTotems=availableTotems;
+
+    public AvailableColorsCommand(){
+
     }
 
     @Override
     public void execute(ClientController clientController) {
-        clientController.showAvailableTotems(availableTotems);
+        clientController.requestLocalAvailableTotems();
     }
 }
