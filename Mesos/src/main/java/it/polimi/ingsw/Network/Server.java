@@ -11,6 +11,7 @@ import it.polimi.ingsw.Network.Socket.Server.ServerSocket;
 
 import java.rmi.RemoteException;
 import java.util.ArrayList;
+import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicInteger;
 
 public class Server{
@@ -23,6 +24,7 @@ public class Server{
     private static ServerRMI serverRMI;
     private static ServerSocket serverSocket;
     static ServerController serverController;
+    static final AtomicBoolean isTerminationStarted = new AtomicBoolean(false);
 
 
     public static void main(String[] args) throws RemoteException {
@@ -45,7 +47,12 @@ public class Server{
     }
 
 
-    public static void terminate(){
+    public synchronized static void terminate(){
+        if(isTerminationStarted.get()){
+            return;
+        }
+        isTerminationStarted.set(true);
+
         try {
             serverSocket.close();
         } catch (Exception e) {

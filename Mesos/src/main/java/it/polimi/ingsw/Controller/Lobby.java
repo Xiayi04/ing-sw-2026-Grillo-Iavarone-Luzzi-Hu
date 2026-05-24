@@ -56,21 +56,15 @@ public class Lobby {
     }
 
     public void addUsername(String username, VirtualClientInterface client){
-        new Thread(() -> {
             serverController.checkUsername(username, client);
-        }).start();
     }
 
     public void addTotem(Totem totem, VirtualClientInterface client){
-        new Thread(() -> {
             serverController.checkTotem(totem, client);
-        }).start();
     }
 
     public void setNumPlayers(Integer numPlayers, VirtualClientInterface client){
-        new Thread(()->{
             serverController.checkSetNumPlayers(numPlayers, client);
-        }).start();
     }
 
     public synchronized ArrayList<Totem> getAvailableTotems(){
@@ -110,8 +104,7 @@ public class Lobby {
 
     public void sendAvailableColors(VirtualClientInterface client) {
         synchronized (tempPlayers){
-
-            client.availableColors(getAvailableTotems());
+            client.updateAvailableTotems(getAvailableTotems());
         }
     }
 }

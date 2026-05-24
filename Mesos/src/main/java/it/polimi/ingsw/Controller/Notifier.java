@@ -5,6 +5,7 @@ import it.polimi.ingsw.Game.Board;
 import it.polimi.ingsw.Game.Player;
 import it.polimi.ingsw.Network.ClientDisconnectedException;
 import it.polimi.ingsw.Network.PlayerScore;
+import it.polimi.ingsw.Network.Server;
 import it.polimi.ingsw.Network.VirtualClientInterface;
 
 import java.io.IOException;
@@ -12,12 +13,13 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 public class Notifier {
 
     private final Object outputLock = new Object();
-
     private final ArrayList<VirtualClientInterface> clients;
+    private final AtomicBoolean startTermProcedure = new AtomicBoolean(false);
 
     private final ExecutorService pool =
             Executors.newCachedThreadPool();
@@ -33,13 +35,33 @@ public class Notifier {
         }
     }
 
-    private void handleDisconnect() {
-        //gestione della disconnessione in qualche modo
+    private synchronized void handleDisconnect(VirtualClientInterface disconnectedClient) {
+        if(startTermProcedure.get())
+            return;
 
-        System.out.println("Client disconnected");
+        startTermProcedure.set(true);
+        System.out.println("Client disconnected-> The game can't continue");
+        if(!clients.contains(disconnectedClient)){
+            return;
+        }
+        clients.remove(disconnectedClient);
+        terminationSignalBroadcast();
+        Server.terminate();
     }
 
     //BROADCAST
+
+    public void terminationSignalBroadcast(){
+        for(VirtualClientInterface client: clients){
+            pool.submit(() -> {
+                try {
+                    //client.bruteForceEndGame();
+                } catch (RuntimeException | IOException e) {
+                    handleDisconnect(client);
+                }
+            });
+        }
+    }
 
     public void returnTotemOnTurnOrderBroadcast(Player player, int index) {
         for (VirtualClientInterface client : getClients()) {
@@ -47,7 +69,7 @@ public class Notifier {
                 try {
                     client.returnTotemToTOC(player.getName(), index);
                 } catch (RuntimeException | IOException e) {
-                    handleDisconnect();
+                    handleDisconnect(client);
                 }
             });
         }
@@ -59,7 +81,7 @@ public class Notifier {
                 try {
                     client.updateForEvent(e);
                 } catch (RuntimeException | IOException exception) {
-                    handleDisconnect();
+                    handleDisconnect(client);
                 }
             });
         }
@@ -72,7 +94,7 @@ public class Notifier {
                 try {
                     client.showUpdateEra(era);
                 } catch (ClientDisconnectedException e) {
-                    handleDisconnect();
+                    handleDisconnect(client);
                 }catch (IOException e) {
                     throw new RuntimeException("Generic Error");
                 }
@@ -86,7 +108,7 @@ public class Notifier {
                 try {
                     client.updateStartGame(players, board);
                 } catch (ClientDisconnectedException e) {
-                    handleDisconnect();
+                    handleDisconnect(client);
                 }catch (IOException e) {
                     throw new RuntimeException("Generic Error");
                 }
@@ -100,7 +122,7 @@ public class Notifier {
                 try {
                     client.pickedCard(player.getName(), row, isBuilding, index);
                 } catch (ClientDisconnectedException e) {
-                    handleDisconnect();
+                    handleDisconnect(client);
                 }catch(RuntimeException e){
                     System.out.println(e.getMessage());
                 }
@@ -114,7 +136,7 @@ public class Notifier {
                 try {
                     client.movedTotem(player.getName(), index);
                 } catch (RuntimeException e) {
-                    handleDisconnect();
+                    handleDisconnect(client);
                 }
             });
         }
@@ -127,7 +149,7 @@ public class Notifier {
                 try {
                     client.updatePlayerFood(player.getName(), update);
                 } catch (RuntimeException e) {
-                    handleDisconnect();
+                    handleDisconnect(client);
                 }
             });
         }
@@ -140,7 +162,7 @@ public class Notifier {
                 try {
                     client.updatePlayerPP(player.getName(), update);
                 } catch (RuntimeException e) {
-                    handleDisconnect();
+                    handleDisconnect(client);
                 }
             });
         }
@@ -157,7 +179,7 @@ public class Notifier {
 
                 } catch (RuntimeException e) {
 
-                    handleDisconnect();
+                    handleDisconnect(client);
 
                 }
             });
@@ -175,7 +197,7 @@ public class Notifier {
 
             } catch (RuntimeException | IOException e) {
 
-                handleDisconnect();
+                handleDisconnect(player.getVirtualClient());
 
             }
         });
@@ -186,7 +208,7 @@ public class Notifier {
             try {
                 player.getVirtualClient().pickCardError();
             } catch (RuntimeException | IOException e) {
-                handleDisconnect();
+                handleDisconnect(player.getVirtualClient());
             }
         });
     }
@@ -196,7 +218,7 @@ public class Notifier {
             try {
                 player.getVirtualClient().movedTotemError();
             } catch (RuntimeException | IOException e) {
-                handleDisconnect();
+                handleDisconnect(player.getVirtualClient());
             }
         });
     }
@@ -208,7 +230,7 @@ public class Notifier {
                     client.showEndGame(winner.getName(), leaderboard);
                 } catch (RuntimeException | IOException e) {
 
-                    handleDisconnect();
+                    handleDisconnect(client);
 
                 }
             });
