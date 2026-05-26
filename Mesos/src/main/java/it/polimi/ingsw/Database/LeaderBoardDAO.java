@@ -2,7 +2,6 @@ package it.polimi.ingsw.Database;
 
 import java.sql.*;
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
@@ -19,7 +18,7 @@ public class LeaderBoardDAO {
         String sql =
                 "INSERT INTO gamesDB (username, score,game_date, num_players) VALUES (?, ?, ?, ?)";
 
-        try(Connection connection = DatabaseConnectionManager.getConnection();
+        try(Connection connection = DatabaseManager.getConnection();
             PreparedStatement preparedStatement = connection.prepareStatement(sql);){
 
             preparedStatement.setString(1, username);
@@ -35,8 +34,8 @@ public class LeaderBoardDAO {
         String sql= "SELECT COUNT(*)+1 AS position " +
                     "FROM gamesDB WHERE num_players= ? AND score>?";
 
-        try(Connection connection = DatabaseConnectionManager.getConnection();
-        PreparedStatement preparedStatement = connection.prepareStatement(sql);){
+        try(Connection connection = DatabaseManager.getConnection();
+            PreparedStatement preparedStatement = connection.prepareStatement(sql);){
 
             preparedStatement.setInt(1, numPlayers);
             preparedStatement.setInt(2, playerScore);
@@ -61,8 +60,8 @@ public class LeaderBoardDAO {
 
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
 
-        try(Connection connection = DatabaseConnectionManager.getConnection();
-        PreparedStatement preparedStatement = connection.prepareStatement(sql);){
+        try(Connection connection = DatabaseManager.getConnection();
+            PreparedStatement preparedStatement = connection.prepareStatement(sql);){
 
             preparedStatement.setInt(1, numPlayers);
 
