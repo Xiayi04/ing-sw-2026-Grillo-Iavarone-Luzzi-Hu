@@ -4,6 +4,7 @@ import it.polimi.ingsw.Controller.GameManager;
 import it.polimi.ingsw.Controller.Lobby;
 import it.polimi.ingsw.Controller.Notifier;
 import it.polimi.ingsw.Controller.ServerController;
+import it.polimi.ingsw.Database.DatabaseManager;
 import it.polimi.ingsw.Game.Board;
 import it.polimi.ingsw.Game.Player;
 import it.polimi.ingsw.Network.RMI.ServerRMI;
@@ -11,6 +12,7 @@ import it.polimi.ingsw.Network.Socket.Server.ServerSocket;
 
 import java.rmi.RemoteException;
 import java.util.ArrayList;
+import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicInteger;
 
@@ -29,10 +31,11 @@ public class Server{
 
     public static void main(String[] args) throws RemoteException {
 
-
         System.out.println("Server starting...");
 
-        GameManager gameManager = new GameManager(null,0,new Board());
+        DatabaseManager.createTable();
+
+        GameManager gameManager = new GameManager(null,0, new Board());
         serverController = new ServerController(gameManager);
 
         serverSocket = new ServerSocket(socketPort,serverController,serverController.getLobby());
@@ -53,12 +56,19 @@ public class Server{
         }
         isTerminationStarted.set(true);
 
-        try {
-            serverSocket.close();
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
+        serverSocket.close();
 
         //serverRMI.close();
+        System.out.println("The server has been terminated. The program will soon close");
+        try {
+            Thread.sleep(TimeUnit.SECONDS.toMillis(5));
+        } catch (InterruptedException e) {
+            System.out.println("Error while sleeping:" + e.getMessage());
+        }
+        System.exit(0);
+    }
+
+    public synchronized static void closeConnection(VirtualClientInterface disconnectedClient){
+        serverController.closeConnections(disconnectedClient);
     }
 }

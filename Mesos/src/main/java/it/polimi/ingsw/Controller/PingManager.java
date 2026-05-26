@@ -44,7 +44,7 @@ public class PingManager implements AutoCloseable {
                 try {
                     client.ping();
                 } catch (ClientDisconnectedException e) {
-                    Server.terminate();
+                    Server.closeConnection(client);
                     close();
                 }
             }

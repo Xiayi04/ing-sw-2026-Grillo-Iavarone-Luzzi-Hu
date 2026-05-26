@@ -7,4 +7,5 @@ public interface LobbyManager {
     void checkUsername(String username, VirtualClientInterface clientInterface);
     void checkTotem(Totem totem, VirtualClientInterface client);
     void checkSetNumPlayers(int numPlayers, VirtualClientInterface client);
+    PingManager getPingManager();
 }

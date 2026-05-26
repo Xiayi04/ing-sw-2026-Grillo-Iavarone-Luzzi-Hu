@@ -1,6 +1,8 @@
 package it.polimi.ingsw.Controller;
 
 import it.polimi.ingsw.Game.Totem;
+import it.polimi.ingsw.Network.ClientDisconnectedException;
+import it.polimi.ingsw.Network.Server;
 import it.polimi.ingsw.Network.VirtualClientInterface;
 
 import java.io.IOException;
@@ -31,9 +33,7 @@ public class Lobby {
             if(tempPlayers.size()>=5){
                 try {
                     client.refuseConnection();
-                } catch (IOException e) {
-                    throw new RuntimeException(e);
-                }
+                } catch (ClientDisconnectedException ignored) {}
                 return;
             }
 
@@ -46,12 +46,13 @@ public class Lobby {
                 if(tempPlayers.size()==1){
                     try {
                         client.updateFirstPlayer();
-                    } catch (IOException e) {
-                        throw new RuntimeException(e);
+                    } catch (ClientDisconnectedException e) {
+                        Server.terminate();
                     }
                 }
+                serverController.getPingManager().addClientToPingList(client);
             }else
-                throw new RuntimeException("client already in tempPlayers");
+                System.out.println("Error:Client already present in lobby");
         }
     }
 

@@ -16,7 +16,6 @@ import it.polimi.ingsw.Network.VirtualClientInterface;
 import java.io.*;
 import java.net.Socket;
 import java.net.SocketException;
-import java.rmi.RemoteException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -43,7 +42,7 @@ public class SocketVirtualClient implements VirtualClientInterface {
             } catch (SocketException e) {
                 throw new ClientDisconnectedException("Client network connection lost during command: " + commandType);
             } catch (IOException e) {
-                throw new RuntimeException("Fatal I/O error while sending command: " + commandType, e);
+                System.out.println("Generic Error while sending " +  commandType + ": " + e.getMessage());
             }
         }
     }
@@ -51,17 +50,27 @@ public class SocketVirtualClient implements VirtualClientInterface {
     public record TotemPosition(String playerName, int index) implements Serializable {};
 
     @Override
-    public void showChosenNumPlayers(int numPlayers) throws IOException {
+    public void closeConnection() {
+        send("close_connection", null);
+    }
+
+    @Override
+    public void ping() {
+        send("ping", null);
+    }
+
+    @Override
+    public void showChosenNumPlayers(int numPlayers){
         send("chosen_num_players", numPlayers);
     }
 
     @Override
-    public void showEndGame(String winnerName, List<PlayerScore> leaderboard) throws RemoteException {
+    public void showEndGame(String winnerName, List<PlayerScore> leaderboard) {
         send("end_game", new EndGameData(winnerName, leaderboard));
     }
 
     @Override
-    public void movedTotemError() throws RemoteException {
+    public void movedTotemError(){
         send("moved_totem_error", null);
     }
 
@@ -71,17 +80,17 @@ public class SocketVirtualClient implements VirtualClientInterface {
     }
 
     @Override
-    public void returnTotemToTOC(String playerName, int index) throws RemoteException {
+    public void returnTotemToTOC(String playerName, int index){
         send("turn_order_card_position", new TotemPosition(playerName, index));
     }
 
     @Override
-    public void showUpdateEra(int era) throws RemoteException {
+    public void showUpdateEra(int era) {
         send("update_era", era);
     }
 
     @Override
-    public void updateForEvent(Event e) throws RemoteException {
+    public void updateForEvent(Event e){
         send("resolving_event", e);
     }
 
@@ -136,7 +145,7 @@ public class SocketVirtualClient implements VirtualClientInterface {
     }
 
     @Override
-    public void refuseConnection() throws IOException {
+    public void refuseConnection(){
         send("refuse_connection", null);
     }
 
@@ -169,13 +178,13 @@ public class SocketVirtualClient implements VirtualClientInterface {
     }
 
     @Override
-    public void updateNextRound(Board board) throws RemoteException {
+    public void updateNextRound(Board board){
         //aggiornare
         send("next_turn", board);
     }
 
     @Override
-    public void pickCardError() throws RemoteException {
+    public void pickCardError(){
         send("pick_error", null);
     }
 

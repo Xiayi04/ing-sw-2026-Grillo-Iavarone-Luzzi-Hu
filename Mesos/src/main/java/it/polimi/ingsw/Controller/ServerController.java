@@ -10,16 +10,23 @@ import java.io.IOException;
 import java.rmi.RemoteException;
 import java.util.ArrayList;
 
-public class ServerController implements LobbyManager {
+public class ServerController implements LobbyManager,AutoCloseable {
     private final GameManager gameManager;
     private final Lobby lobby;
     private Notifier notifier = null;
+    private final PingManager pingManager = new PingManager();
+
 
     public ServerController(GameManager gameManager) {
         this.gameManager = gameManager;
         this.lobby = new Lobby(this);
     }
     //setters and getters
+
+
+    public PingManager getPingManager() {
+        return pingManager;
+    }
 
     public GameManager getGameManager() {
         return gameManager;
@@ -50,7 +57,7 @@ public class ServerController implements LobbyManager {
         synchronized (tempPlayers) {
 
             if (lobby.getTempPlayerByClient(client) != null &&
-                    lobby.getTempPlayerByClient(client).getName()!=null &&
+                    lobby.getTempPlayerByClient(client).getName() != null &&
                     lobby.getTempPlayerByClient(client).getName().equals(username)) {
                 return;
             }
@@ -73,7 +80,7 @@ public class ServerController implements LobbyManager {
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
-                new Thread(this::checkStartGame);
+                checkStartGame();
             }
         }
 
@@ -85,7 +92,7 @@ public class ServerController implements LobbyManager {
         ArrayList<TempPlayer> tempPlayers = lobby.getTempPlayers();
         synchronized (tempPlayers) {
             if (lobby.getTempPlayerByClient(client) != null &&
-                    lobby.getTempPlayerByClient(client).getTempPlayerTotem()!= null &&
+                    lobby.getTempPlayerByClient(client).getTempPlayerTotem() != null &&
                     lobby.getTempPlayerByClient(client).getTempPlayerTotem().equals(totem)) {
                 return;
             }
@@ -107,12 +114,10 @@ public class ServerController implements LobbyManager {
                 tempPlayer.setTempPlayerTotem(totem);
                 try {
                     client.updateConfirmedTotem(totem);
-                } catch (RemoteException | ClientDisconnectedException e) {
+                } catch (ClientDisconnectedException e) {
                     handleDisconnection(client);
-                } catch (IOException e) {
-                    throw new RuntimeException("Other type of error in connection");
                 }
-                new Thread(this::checkStartGame);
+                checkStartGame();
             } else if (alreadyUsed) {
                 try {
                     if (lobby.getAvailableTotems().isEmpty()) {
@@ -149,20 +154,18 @@ public class ServerController implements LobbyManager {
             if (numPlayers < 2 || numPlayers > 5) {
                 try {
                     client.numPlayersError();
-                } catch (IOException e) {
-                    //throw new RuntimeException(e);
+                } catch (ClientDisconnectedException e) {
+                    handleDisconnection(client);
                 }
                 return;
             }
             lobby.getNumPlayers().set(numPlayers);
             lobby.IsNumPlayersSet().set(true);
-            new Thread(this::checkStartGame);
+            checkStartGame();
             try {
                 client.showChosenNumPlayers(numPlayers);
-            } catch (RemoteException | ClientDisconnectedException e) {
+            } catch ( ClientDisconnectedException e) {
                 handleDisconnection(client);
-            } catch (IOException e) {
-                throw new RuntimeException("Other type of error in connection");
             }
         }
 
@@ -182,14 +185,12 @@ public class ServerController implements LobbyManager {
 
             boolean allReady = lobby.getTempPlayers().stream()
                     .allMatch(p ->
-                            p.getName() != null &&
-                                    p.getTempPlayerTotem() != null);
+                            p.getName() != null && p.getTempPlayerTotem() != null);
 
             if (!allReady) return;
 
-            new Thread(() -> {
-                gameInitializer(lobby.getNumPlayers().get(), tempPlayers);
-            }).start();
+            gameInitializer(lobby.getNumPlayers().get(), tempPlayers);
+
         }
 
     }
@@ -197,19 +198,11 @@ public class ServerController implements LobbyManager {
     //Requests management
 
     public synchronized void moveTotemRequest(String username, int pathIndex) throws RemoteException {
-        new Thread(() -> {
-            gameManager.resolvePosition(username, pathIndex);
-        }).start();
+        gameManager.resolvePosition(username, pathIndex);
     }
 
     public synchronized void genericPick(String username, boolean isUpper, boolean isBuilding, int index) {
-
-            try {
-                gameManager.resolvePick(username, isUpper, isBuilding, index);
-            } catch (IOException e) {
-                //handleDisconnection();
-            }
-
+        //gameManager.resolvePick(username, isUpper, isBuilding, index);
     }
 
     //Game Initializing
@@ -254,24 +247,30 @@ public class ServerController implements LobbyManager {
     }
 
     public void pushPlayersInGM(ArrayList<TempPlayer> tempPlayers) {
-        new Thread(() -> {
-            synchronized (gameManager.getPlayers()) {
-                if (!gameManager.getPlayers().isEmpty()) {
-                    throw new RuntimeException("Players already in GM");
-                }
-                for (TempPlayer tempPlayer : tempPlayers) {
 
-                    new Thread(() -> {
-                        addPlayerToGame(tempPlayer.getName(), tempPlayer.getTempPlayerTotem(), tempPlayer.getClient());
-                    }).start();
-                }
-                gameManager.getPlayers().notifyAll();
-            }
-        }).start();
+        if (!gameManager.getPlayers().isEmpty()) {
+            throw new RuntimeException("Players already in GM");
+        }
+        for (TempPlayer tempPlayer : tempPlayers) {
+
+            addPlayerToGame(tempPlayer.getName(), tempPlayer.getTempPlayerTotem(), tempPlayer.getClient());
+        }
+        gameManager.getPlayers().notifyAll();
+
     }
 
     public void handleDisconnection(VirtualClientInterface client) {
-        Server.terminate();
+        Server.closeConnection(client);
+    }
+
+    @Override
+    public void close(){
+        //non so se ci vada qualcosa dentro
+    }
+
+    public void closeConnections(VirtualClientInterface disconnectedClient) {
+        pingManager.close();
+        notifier.farewell(disconnectedClient);
     }
 
 }
