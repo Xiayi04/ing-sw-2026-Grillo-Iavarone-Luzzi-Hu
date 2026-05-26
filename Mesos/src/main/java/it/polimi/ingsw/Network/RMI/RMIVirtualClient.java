@@ -5,6 +5,7 @@ import it.polimi.ingsw.Cards.Events.Event;
 import it.polimi.ingsw.Game.Board;
 import it.polimi.ingsw.Game.Player;
 import it.polimi.ingsw.Game.Totem;
+import it.polimi.ingsw.Network.ClientDisconnectedException;
 import it.polimi.ingsw.Network.PlayerScore;
 import it.polimi.ingsw.Network.VirtualClientInterface;
 
@@ -22,115 +23,98 @@ public class RMIVirtualClient implements VirtualClientInterface {
         this.client = client;
     }
     @Override
-    public void showUpdateEra(int era) throws RemoteException {
+    public void showUpdateEra(int era)  {
         try{
             client.showLocalUpdateEra(era);
         } catch (RemoteException e) {
-            System.err.println("Error in showUpdateEra: " + e.getMessage());
+            throw new ClientDisconnectedException(e.getMessage());
         }
     }
 
     @Override
-    public void updateForEvent(Event e) throws RemoteException {
+    public void updateForEvent(Event e) {
         try{
             client.showUpdateForEvent(e);
         }catch(RemoteException d){
-            System.err.println("Error in updateForEvent: " + d.getMessage());
+            throw new ClientDisconnectedException (d.getMessage());
         }
     }
 
     @Override
-    public void returnTotemToTOC(String username, int index) throws RemoteException {
+    public void returnTotemToTOC(String username, int index)  {
         try{
             client.showLocalReturnToTOC(username,index);
         }catch(RemoteException e){
-            System.err.println("Error in returnTotemToTOC: " + e.getMessage());
+            throw new ClientDisconnectedException(e.getMessage());
         }
 
     }
 
     @Override
-    public void showChosenNumPlayers(int numPlayers) throws IOException {
+    public void showChosenNumPlayers(int numPlayers)  {
         try {
             client.showChosenNumPlayers(numPlayers);
         }catch(RemoteException e){
-            System.err.println("Error in showChosenNumPlayers: " + e.getMessage());
+            throw new ClientDisconnectedException(e.getMessage());
         }
 
     }
 
     @Override
-    public void updateFirstPlayer() throws RemoteException {
+    public void updateFirstPlayer() {
         try{
             client.showUpdateFirstPlayer();
         }catch(RemoteException e) {
-            System.err.println("Error in updateFirstPlayer: " + e.getMessage());
+            throw new ClientDisconnectedException( e.getMessage());
         }
     }
 
-    /*@Override
-    public void setNumPlayers(int numPlayers) throws RemoteException {
-            try{
-               // client.setNumPlayers(numPlayers);
-            }catch (RemoteException e){
-                System.err.println("Error in setNumPlayers: " + e.getMessage());
-            }
-        }*/
-
-    /*@Override
-    public void ping() throws RemoteException {
-        client.ping();
-    }*/
 
     @Override
-    public void updateStartGame(ArrayList<Player> players, Board board) throws RemoteException {
+    public void ping() {
+        try{
+            client.ping();
+        }catch(RemoteException e){
+            throw new ClientDisconnectedException(e.getMessage());
+        }
+    }
+
+    @Override
+    public void updateStartGame(ArrayList<Player> players, Board board) {
         try{
             client.showGameStarted(players,board);
         } catch (RemoteException e) {
-            System.out.println("Error while sending start game notification");
+            throw new ClientDisconnectedException(e.getMessage());
         }
     }
 
-
-    /*@Override
-    public void showMessage(String message) throws RemoteException, IOException {
-        try{
-           client.showErrorMessage(message);
-        } catch (RemoteException e) {
-            System.err.println("Error in showMessage: " + e.getMessage());
-        }
-    }*/
 
     @Override
     public void showPlayerTurn(String username) {
         try {
             client.showPlayerTurn(username);
         } catch (RemoteException e) {
-            System.out.println(" ");
+            throw new ClientDisconnectedException(e.getMessage());
         }
     }
 
     @Override
-    public void updateNextRound(Board board) throws RemoteException {
-
-    }
-
-    /*@Override
-    public void updateNextTurn(Board board) throws RemoteException {
+    public void updateNextRound(Board board)  {
         try{
             client.updateNextTurn(board);
         }catch(RemoteException e){
-            System.err.println("Error in updateNextTurn: " + e.getMessage());
+            throw new ClientDisconnectedException(e.getMessage());
         }
 
-    }*/
+    }
+
 
     @Override
     public void pickedCard (String username, boolean row, boolean isBuilding, int index) {
         try {
             client.showPickedCard(username, row, isBuilding, index);
         } catch (RemoteException e) {
-            System.out.println(username + " picked a card ");
+            throw new ClientDisconnectedException(e.getMessage());
         }
     }
     @Override
@@ -138,26 +122,26 @@ public class RMIVirtualClient implements VirtualClientInterface {
         try{
             client.showTotemMoved(username, index);
         } catch (RemoteException e) {
-            System.out.println(username + "'s totem moved to: " + index );
+            throw new ClientDisconnectedException(e.getMessage());
         }
     }
 
     @Override
-    public void movedTotemError() throws RemoteException {
+    public void movedTotemError()  {
         try{
             client.showTotemMovedError("MOVED TO THE TOTEM ERROR");
         } catch (RemoteException e) {
-            System.err.println("Error in movedTotemError: " + e.getMessage());
+            throw new ClientDisconnectedException(e.getMessage());
         }
 
     }
 
     @Override
-    public void totemChoiceError() throws RemoteException {
+    public void totemChoiceError()  {
         try{
             client.showTotemChoiceError("ERRORE");
         } catch (RemoteException e) {
-            System.err.println("Error in totemChoiceError: " + e.getMessage());
+            throw new ClientDisconnectedException(e.getMessage());
         }
 
     }
@@ -167,7 +151,7 @@ public class RMIVirtualClient implements VirtualClientInterface {
         try{
             client.showUpdatePlayerFood(username, foodUpdated);
         } catch (RemoteException e) {
-            System.out.println(username +"'s food updated: "+ foodUpdated);
+            throw new ClientDisconnectedException(e.getMessage());
         }
     }
     @Override
@@ -175,7 +159,7 @@ public class RMIVirtualClient implements VirtualClientInterface {
         try{
             client.showUpdatePlayerPP(username,  PPUpdate );
         } catch (RemoteException e) {
-            System.out.println(username +"'s pp updated: "+  PPUpdate);
+            throw new ClientDisconnectedException(e.getMessage());
         }
     }
     @Override
@@ -183,62 +167,38 @@ public class RMIVirtualClient implements VirtualClientInterface {
         try{
             client.showPickCardError("ERROR");
         } catch (RemoteException e) {
-            System.out.println("error card chosen not valid");
+            throw new ClientDisconnectedException(e.getMessage());
         }
     }
-    /*@Override
-    public void buildingPurchaseError(){
-        try{
-            client.showPickCardError("Building not purchasable ");
-        } catch (RemoteException e) {
-            System.out.println("error: building not purchasable ");
-        }
-    }*/
-    /*@Override
-    public void totemPositionError(){
-        try{
-            client.showTotemMovedError("Position not valid or already chosen");
-        } catch (RemoteException e) {
-            System.out.println("error:not valid or already chosen: ");
-        }
-    }*/
+
 
     @Override
-    public void usernameError() throws RemoteException {
+    public void usernameError()  {
         try{
             client.showUsernameError("ERRore USERNAME");
         }catch(RemoteException e){
-            System.err.println("Error in usernameError: " + e.getMessage());
+            throw new ClientDisconnectedException(e.getMessage());
         }
 
     }
 
-   /* @Override
-    public void totemNotAvailableError(ArrayList<Totem> availableTotems) {
-        try{
-            client.showTotemMovedError("totem error");
-        } catch (RemoteException e) {
-            System.err.println("Error in totemNotAvailableError: " + e.getMessage());
-        }
-
-    }*/
 
     @Override
     public void updateAvailableTotems(ArrayList<Totem> availableTotems) {
         try{
             client.showAvailableTotems(availableTotems);
         }catch(RemoteException e){
-            System.err.println("Error in updateAvailableTotems: " + e.getMessage());
+            throw new ClientDisconnectedException(e.getMessage());
         }
 
     }
 
     @Override
-    public void numPlayersError() throws RemoteException {
+    public void numPlayersError()  {
         try{
             client.numPlayersChosenError("Number of players not valid");
         }catch(RemoteException e){
-            System.err.println("Error in numPlayersError: " + e.getMessage());
+            throw new ClientDisconnectedException(e.getMessage());
         }
 
     }
@@ -248,7 +208,7 @@ public class RMIVirtualClient implements VirtualClientInterface {
         try{
             client.showConfirmUsername(username);
         }catch(RemoteException e){
-            System.err.println("Error in updateConfirmedUsername: " + e.getMessage());
+            throw new ClientDisconnectedException(e.getMessage());
         }
 
     }
@@ -258,27 +218,37 @@ public class RMIVirtualClient implements VirtualClientInterface {
         try{
             client.showConfirmTotem(totem);
         }catch(RemoteException e){
-            System.err.println("Error in updateConfirmedTotem: " + e.getMessage());
+            throw new ClientDisconnectedException(e.getMessage());
         }
 
     }
+
 
     @Override
     public void showEndGame(String winner, List<PlayerScore> leaderboard) {
         try {
             client.showEndGame(winner,leaderboard);
         } catch (RemoteException e) {
-            System.out.println(" ");
+            throw new ClientDisconnectedException(e.getMessage());
         }
     }
 
     @Override
-    public void refuseConnection() throws IOException {
-        /*try{
-            client.co
+    public void refuseConnection() {
+        try{
+            client.refuseConnection();
         }catch(RemoteException e ){
-            System.err.println("Error in refuseConnection: " + e.getMessage());
-        }*/
+            throw new ClientDisconnectedException(e.getMessage());
+        }
+    }
+
+    @Override
+    public void closeConnection() {
+        try{
+            client.closeConnection();
+        }catch (RemoteException e){
+            throw new ClientDisconnectedException(e.getMessage());
+        }
     }
 
 }

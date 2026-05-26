@@ -206,12 +206,7 @@ public class GameManager {
         //notifico tutti i giocatori
         final Player finalWinner = winner;
         if(this.notifier != null){
-            try{
-                this.notifier.showEndGameBroadcast(finalWinner,tmpLeaderboard);
-            }catch(RemoteException e){
-                System.err.println("ERROR");
-                e.printStackTrace();
-            }
+            this.notifier.showEndGameBroadcast(finalWinner,tmpLeaderboard);
         }
 
 
@@ -269,11 +264,7 @@ public class GameManager {
             chosenCard.setOccupiedBy(p);
             System.out.println(p.getName() + " he positioned himself on the card " + pathIndex);
             newPlayerOrder();
-            try{
-                notifier.movedTotemBroadcast(p ,pathIndex);
-            } catch (RemoteException e) {
-                System.err.println("Network error");
-            }
+            notifier.movedTotemBroadcast(p ,pathIndex);
             positionQueue.remove(0);
             executeNextPosition();
         }
@@ -366,19 +357,6 @@ public class GameManager {
             return;
         }
 
-        //il giocatore sceglie la riga da dove prendere la carta e nello stream cerchiamo se
-        //quel giocatore ha una freccia per la riga(sotto/sopra) scelta
-        /*PendingPick currentAction = pickingQueue.stream()
-                .filter(a->a.player().equals(p)) // vedo se il giocatore è giusto
-                .filter(a->a.isUpper() == isUpperRequested)//deve essere della riga che il giocatore ha chiesto
-                .findFirst() //se c'è prendila altrimenti restituisci null
-                .orElse(null);
-        if(currentAction == null || !pickingQueue.get(0).player().equals(p)){
-            System.out.println("Failed action");
-            return;
-
-        }*/
-
         if(index < 0 && index > board.getPath().size()){
             System.out.println(p.getName() + " can't draw the card ");
             pickingQueue.remove(0);
@@ -386,7 +364,7 @@ public class GameManager {
             return;
         }
 
-        boolean success = false;
+        boolean success ;
         if (isBuilding) {
             success = (buyBuilding(p, isUpperRequested, index) != null);
         } else {
@@ -459,22 +437,14 @@ public class GameManager {
         //verifica se la posizione è valida e libera
         if( pathIndex<0 || pathIndex >= board.getPath().size()){
             System.out.println("Invalid path index");
-            try{
-                notifier.invalidTotemPosition(p);
-            }catch (RemoteException e){
-                System.err.println("Network error while positioning totem");
-            }
+            notifier.invalidTotemPosition(p);
             return;
         }
 
         OfferCard chosenCard = board.getPath().get(pathIndex);
         if(chosenCard.isOccupied()){
             System.out.println("Position" + pathIndex + "it's already busy");
-            try{
-                notifier.invalidTotemPosition(p);
-            }catch(RemoteException e){
-                System.err.println("Network error");
-            }
+            notifier.invalidTotemPosition(p);
             return;
         }
         //modiifica del Model
@@ -504,11 +474,7 @@ public class GameManager {
         }
         if(index < 0 || index >= buildings.size()|| buildings.get(index) == null){
             System.out.println("Error: building not available in index" + index);
-            try{
-                notifier.invalidBuildingPurchase(player);
-            } catch (Exception e) {
-                System.err.println("Network error");
-            }
+            notifier.invalidBuildingPurchase(player);
             return null;
         }
 
@@ -528,11 +494,7 @@ public class GameManager {
         }else{
             System.out.println("INSUFFICIENT FOOD! (Requested :" + cost +")");
             System.out.println("Choose another building or move on");
-            try{
-                notifier.invalidCardPick(player);
-            }catch (Exception e){
-                System.err.println("Network error");
-            }
+            notifier.invalidCardPick(player);
             return null;
         }
 
@@ -559,11 +521,7 @@ public class GameManager {
             notifier.pickedCardBroadcast(player,isUpper,false,index);
             return true;
         }else{
-            try{
-                notifier.invalidCardPick(player);
-            }catch (Exception e){
-                    System.err.println("Character not found");
-            }
+            notifier.invalidCardPick(player);
             return false;
         }
     }

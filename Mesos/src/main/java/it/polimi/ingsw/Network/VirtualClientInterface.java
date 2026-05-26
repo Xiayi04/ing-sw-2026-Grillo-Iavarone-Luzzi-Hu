@@ -13,14 +13,12 @@ public interface VirtualClientInterface {
     /**
      * server notifies client that the era changed
      * @param era
-     * @throws RemoteException if there is an error
      */
      void showUpdateEra(int era);
 
     /**
      *it notifies that the era ended and
      * @param e has to be solved by the players
-     * @throws RemoteException if there is an error
      */
      void updateForEvent(Event e) ;
      /**
@@ -28,21 +26,18 @@ public interface VirtualClientInterface {
      * a player's totem has been returned to the Turn Order Card.
      * @param username the username of the player whose totem is returned.
      * @param index the position on the Turn Order Card where the totem is placed.
-     * @throws RemoteException if an error occurs.
      */
      void returnTotemToTOC(String username,int index);
 
     /**
      * server notifies that the
      * @param numPlayers chosen by the first player
-     * @throws IOException if an error occurs
      */
      void showChosenNumPlayers(int numPlayers) ;
 
     /**
      *Notifies the client that the game has started and
      * the client updated is the first one
-     * @throws RemoteException
      */
      void updateFirstPlayer();
 
@@ -50,7 +45,6 @@ public interface VirtualClientInterface {
      * Notifies that the game started , list of players and board are sent
      * @param players
      * @param board
-     * @throws RemoteException
      */
      void updateStartGame( ArrayList<Player> players, Board board);
 
@@ -58,13 +52,11 @@ public interface VirtualClientInterface {
      * Notifies the client that the game ended and rhe list of the result
      * @param winner
      * @param leaderboard
-     * @throws RemoteException
      */
      void showEndGame(String winner, List<PlayerScore> leaderboard) ;
 
     /**
      * Notifies the client that the connection request has been refused
-     * @throws IOException
      */
      void refuseConnection();
 
@@ -82,14 +74,14 @@ public interface VirtualClientInterface {
      * @param index the totem position.
      */
      void movedTotem(String username, int index);
-    /**
+
+     /**
      * Notifies the client that  moveTotemRequest is not valid.
-     * @throws RemoteException if a remote communication error occurs.
      */
     void movedTotemError () ;
+
     /**
      * Notifies the client that the chosen totem is not available because it's occupied.
-     * @throws RemoteException if a remote communication error occurs.
      */
 
     void totemChoiceError ();
@@ -113,17 +105,14 @@ public interface VirtualClientInterface {
     /**
      * Notifies the client that a new round has started and sends the updated board.
      * @param board the updated board
-     * @throws RemoteException if an error occurs.
      */
      void updateNextRound (Board board);
     /**
      * Notifies the client that the card-picking request was invalid.
-     * @throws RemoteException if an error occurs.
      */
      void pickCardError();
     /**
      * Notifies the client that the chosen username is already used.
-     * @throws RemoteException if an error occurs.
      */
     void usernameError() ;
     /**
@@ -133,7 +122,6 @@ public interface VirtualClientInterface {
     void updateAvailableTotems(ArrayList<Totem> availableTotems);
     /**
      * Notifies the client that the chosen number of players is not valid.
-     * @throws RemoteException if an error occurs.
      */
     void numPlayersError();
     /**
@@ -144,10 +132,12 @@ public interface VirtualClientInterface {
     /**
      * Confirms to the client that the chosen totem has been accepted.
      * @param totem the confirmed totem.
-     * @throws IOException if  error occurs.
      */
     void updateConfirmedTotem(Totem totem) ;
 
+    /**
+     *
+     */
     void ping() ;
 
     /**
