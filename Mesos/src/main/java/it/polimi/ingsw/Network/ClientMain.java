@@ -1,13 +1,17 @@
 package it.polimi.ingsw.Network;
 
+import com.mysql.cj.xdevapi.Client;
 import it.polimi.ingsw.UI.TUI;
 
 import java.util.Scanner;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 public class ClientMain {
 
     private static String username;
     private static GraphicInterface userInterface;
+    private static AtomicBoolean isTerminated = new AtomicBoolean(false);
+    private static ClientController clientController;
 
     public static String getUsername(){
         return ClientMain.username;
@@ -26,10 +30,22 @@ public class ClientMain {
             UI = sc.nextInt();
         }
 
+        clientController = new ClientController();
         if(UI == 1){
             //GUI
         } else {
-            userInterface = new TUI(new ClientController());
+            userInterface = new TUI(clientController);
         }
     }
+
+    public synchronized static void terminateClient(){
+        if(isTerminated.get()){
+            return;
+        }
+        isTerminated.set(true);
+        clientController.close();
+        System.out.println("Thank you for playing Mesos, we hope to see you again! :)");
+        System.exit(0);
+    }
+
 }

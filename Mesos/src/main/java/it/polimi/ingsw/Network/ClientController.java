@@ -11,11 +11,12 @@ import it.polimi.ingsw.Network.Socket.Client.SocketClient;
 
 
 import java.util.ArrayList;
+import java.util.concurrent.atomic.AtomicBoolean;
 // riferimento all'if che manda messaggi al server
 // ho bisogno dei metodi chiamati dalla gui
 // e quelli che aggiornano la gui
 
-public class ClientController {
+public class ClientController implements AutoCloseable{
     private  GraphicInterface view;
     private  ServerConnection serverConnection;
     private  String tmpUsername = null;
@@ -27,6 +28,7 @@ public class ClientController {
     private Totem localTotem = null;
     String rowName ;
     String cardType;
+    private AtomicBoolean isRunning = new AtomicBoolean(true);
 
     public void setView(GraphicInterface view){
         this.view = view;
@@ -353,6 +355,23 @@ public class ClientController {
     }
     public void leave() {
         serverConnection.leave();
+        ClientMain.terminateClient();
     }
 
+    //Closing Procedure
+
+    /**
+     * Called when the user wants to quit, when the game is finished or when the server
+     * decides to close the game before its natural end.
+     * It closes the connection and the view.
+     */
+    @Override
+    public synchronized void close() {
+        if(!isRunning.get()){
+            return;
+        }
+        isRunning.set(false);
+        serverConnection.close();
+        view.close();
+    }
 }

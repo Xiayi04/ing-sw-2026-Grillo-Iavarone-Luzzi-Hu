@@ -6,7 +6,7 @@ import it.polimi.ingsw.Game.Totem;
 
 import java.util.ArrayList;
 
-public interface GraphicInterface {
+public interface GraphicInterface extends AutoCloseable{
     void showError(String message);
     void showMessage(String message);
     void showCurrentPlayer(String username);
@@ -21,4 +21,6 @@ public interface GraphicInterface {
     void showNextRound();
     void showStartGame();
 
+    @Override
+    void close();
 }

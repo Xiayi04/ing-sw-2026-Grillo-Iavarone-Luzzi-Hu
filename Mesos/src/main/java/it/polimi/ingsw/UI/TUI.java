@@ -6,17 +6,21 @@ import it.polimi.ingsw.Game.OfferCard;
 import it.polimi.ingsw.Game.Totem;
 import it.polimi.ingsw.Game.TurnOrderCard;
 import it.polimi.ingsw.Network.ClientController;
+import it.polimi.ingsw.Network.ClientMain;
 import it.polimi.ingsw.Network.GraphicInterface;
 import it.polimi.ingsw.UI.CommandTUI.CommandFactoryTUI;
 import it.polimi.ingsw.UI.CommandTUI.CommandTUI;
 import it.polimi.ingsw.UI.CommandTUI.ConnectionSelectionCommand;
 
 import java.util.*;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 public class TUI implements GraphicInterface,Runnable {
 private final Object LOCK = new Object();
 private final ClientController controller;
 private final Printer printer = new Printer();
+private Scanner sc;
+private AtomicBoolean isRunning = new AtomicBoolean(true);
 
 public TUI(ClientController controller) {
     this.controller = controller;
@@ -92,7 +96,7 @@ public TUI(ClientController controller) {
             }
             screenCleaner();
             synchronized (controller.getCurrentBoard()) {
-                pathPrinter(controller.getCurrentBoard(), stringBuilder.toString());
+                boardPrinter(controller.getCurrentBoard(), stringBuilder.toString());
             }
         }
     }
@@ -108,7 +112,7 @@ public TUI(ClientController controller) {
             screenCleaner();
             System.out.println("===NEXT ROUND===");
             synchronized (controller.getCurrentBoard()) {
-                pathPrinter(controller.getCurrentBoard(), "");
+               boardPrinter(controller.getCurrentBoard(), "");
             }
         }
     }
@@ -129,14 +133,14 @@ public TUI(ClientController controller) {
     @Override
     public void showError(String message) {
         synchronized (LOCK) {
-            System.out.println("Error: " + message);
+            System.out.println(">Error: " + message);
         }
     }
 
 
     @Override
     public void showMessage(String message) {
-        System.out.println(message);
+        System.out.println("> :" + message);
     }
 
 
@@ -180,7 +184,7 @@ public TUI(ClientController controller) {
     @Override
     public void run(){
         //I need to know which type of connection the user wants
-        Scanner sc = new Scanner(System.in);
+        sc = new Scanner(System.in);
         int connection = -1;
 
         while (true) {
@@ -210,21 +214,28 @@ public TUI(ClientController controller) {
         CommandFactoryTUI factory = new CommandFactoryTUI();
         startMenu();
         sc.nextLine();
-        while(true){
-            String content = sc.nextLine();
-            if(content.equals("quit")){
+        while(isRunning.get()){
+            try {
+                String content = sc.nextLine();
+                if(content.equals("quit")){
+                    controller.close();
+                    break;
+                }
+                CommandTUI command = factory.getCommand(content);
+
+                if(command == null){
+                    continue;
+                }
+
+                new Thread(()->{
+                    command.execute(controller);
+                }).start();
+            } catch (IllegalStateException|NoSuchElementException e) {
+                ClientMain.terminateClient();
                 break;
             }
-            CommandTUI command = factory.getCommand(content);
-
-            if(command == null){
-                continue;
-            }
-
-            new Thread(()->{
-                command.execute(controller);
-            }).start();
         }
+        close();
     }
 
     //Errori
@@ -322,5 +333,15 @@ public TUI(ClientController controller) {
     }
 
 
-
+    @Override
+    public synchronized void close(){
+        if(!isRunning.get()){
+            return;
+        }
+        isRunning.set(false);
+        try {
+            sc.close();
+        } catch (Exception ignored) {}
+        ClientMain.terminateClient();
+    }
 }

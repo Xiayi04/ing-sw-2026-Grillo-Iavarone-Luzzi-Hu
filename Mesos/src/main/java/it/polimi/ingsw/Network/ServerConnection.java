@@ -6,7 +6,7 @@ import java.util.ArrayList;
 
 // LATO CLIENT , VALIDA SIA PER RMI E SOCKET
 //interfaccia DAL CLIENTCONTROLLER per mandare messaggi  al server
-public interface ServerConnection {
+public interface ServerConnection  extends AutoCloseable{
     void login(String username, Totem chosenTotem) ;
 
     void requestSetNumPlayers(int numPlayer) ;
@@ -18,4 +18,7 @@ public interface ServerConnection {
     void requestAvailableTotems();
 
     void leave();
+
+    @Override
+    void close();
 }
