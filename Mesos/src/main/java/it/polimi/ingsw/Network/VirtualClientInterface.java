@@ -149,4 +149,10 @@ public interface VirtualClientInterface {
     void updateConfirmedTotem(Totem totem) ;
 
     void ping() ;
+
+    /**
+     * Lets the client know that the connection will be closed, because of a disconnection
+     * of another client
+     */
+    void closeConnection();
 }
