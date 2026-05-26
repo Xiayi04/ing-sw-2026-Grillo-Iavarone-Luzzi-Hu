@@ -7,10 +7,7 @@ import it.polimi.ingsw.Game.Player;
 import it.polimi.ingsw.Game.Totem;
 import it.polimi.ingsw.Network.ClientDisconnectedException;
 import it.polimi.ingsw.Network.PlayerScore;
-import it.polimi.ingsw.Network.Socket.Server.Command.EndGameData;
-import it.polimi.ingsw.Network.Socket.Server.Command.Pick;
-import it.polimi.ingsw.Network.Socket.Server.Command.UpdateFood;
-import it.polimi.ingsw.Network.Socket.Server.Command.UpdatePP;
+import it.polimi.ingsw.Network.Socket.Server.Command.*;
 import it.polimi.ingsw.Network.VirtualClientInterface;
 
 import java.io.*;
@@ -47,7 +44,7 @@ public class SocketVirtualClient implements VirtualClientInterface {
         }
     }
 
-    public record TotemPosition(String playerName, int index) implements Serializable {};
+    //public record TotemPosition(String playerName, int index) implements Serializable {};
 
     @Override
     public void closeConnection() {

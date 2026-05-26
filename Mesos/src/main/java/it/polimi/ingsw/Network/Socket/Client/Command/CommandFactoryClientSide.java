@@ -6,6 +6,7 @@ import it.polimi.ingsw.Game.Board;
 import it.polimi.ingsw.Game.Player;
 import it.polimi.ingsw.Game.Totem;
 import it.polimi.ingsw.Network.Socket.Server.Command.Pick;
+import it.polimi.ingsw.Network.Socket.Server.Command.TotemPosition;
 import it.polimi.ingsw.Network.Socket.Server.Command.UpdateFood;
 import it.polimi.ingsw.Network.Socket.Server.Command.UpdatePP;
 import it.polimi.ingsw.Network.Socket.Server.MessageFromServer;
@@ -20,10 +21,10 @@ public class CommandFactoryClientSide {
     private static final Map<String, Function<Object, ClientCommand>> commands = new HashMap<>();
     public CommandFactoryClientSide() {
         //Updates
-        commands.put("moved_totem",p->new MovedTotemCommand((SocketVirtualClient.TotemPosition) p));
+        commands.put("moved_totem",p->new MovedTotemCommand((TotemPosition) p));
         commands.put("picked_card",p->new PickedCardCommand((Pick) p));
         commands.put("game_started",data->new StartGameCommand((SocketVirtualClient.GameStartData)  data));
-        commands.put("turn_order_card_position", p-> new TurnOrderPositionCommand((SocketVirtualClient.TotemPosition) p));
+        commands.put("turn_order_card_position", p-> new TurnOrderPositionCommand((TotemPosition) p));
         commands.put("update_era",e->new UpdateEraCommand((Integer)e));
         commands.put("update_food", u-> new UpdateFoodCommand((UpdateFood) u));
         commands.put("update_pp", u-> new UpdatePPCommand((UpdatePP) u));
@@ -45,6 +46,7 @@ public class CommandFactoryClientSide {
         commands.put("totem_error",e->new TotemError((ArrayList<Totem>)e));
         commands.put("pick_error", e->new PickError());
         commands.put("totem_position_error", e-> new TotemPositionError());
+        commands.put("close_connection", e->new CloseConnectionCommand());
 
     }
 

@@ -8,6 +8,6 @@ public class UnknownCommand implements ServerCommand {
 
     @Override
     public void execute(VirtualClientInterface client, ServerController serverController) {
-
+        System.out.println("Unknown Command");
     }
 }

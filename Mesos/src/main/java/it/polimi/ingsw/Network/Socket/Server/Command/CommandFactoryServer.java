@@ -2,6 +2,7 @@ package it.polimi.ingsw.Network.Socket.Server.Command;
 
 import it.polimi.ingsw.Game.Totem;
 import it.polimi.ingsw.Network.Socket.Client.MessageFromClient;
+import it.polimi.ingsw.Network.Socket.Server.SocketVirtualClient;
 
 import java.util.Arrays;
 import java.util.HashMap;
@@ -15,8 +16,9 @@ public class CommandFactoryServer {
         commands.put("totem", t-> new SetTotemCommand((Totem) t));
         commands.put("setnumplayers", num-> new SetNumPlayersCommand((int)num));
         commands.put("pick", pick->new PickCommand((Pick)pick));
-        commands.put("position", i->new MoveTotemCommand((int)i));
+        commands.put("position", i->new MoveTotemCommand((TotemPosition)i));
         commands.put("available_colors",k-> new AvailableColorsCommand());
+        commands.put("quit", k->new QuitCommand());
     }
 
 

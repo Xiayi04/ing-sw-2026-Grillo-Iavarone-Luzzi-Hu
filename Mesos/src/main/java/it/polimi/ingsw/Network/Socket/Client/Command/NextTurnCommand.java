@@ -3,7 +3,6 @@ package it.polimi.ingsw.Network.Socket.Client.Command;
 import it.polimi.ingsw.Game.Board;
 import it.polimi.ingsw.Network.ClientController;
 
-import java.io.IOException;
 import java.net.Socket;
 
 public class NextTurnCommand implements ClientCommand {
@@ -13,7 +12,7 @@ public class NextTurnCommand implements ClientCommand {
     }
 
     @Override
-    public void execute(Socket socket, ClientController clientController) throws IOException {
+    public void execute(Socket socket, ClientController clientController) {
         clientController.showUpdateTurn(board);
     }
 }
