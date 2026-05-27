@@ -12,7 +12,7 @@ import java.rmi.Remote;
 import java.rmi.RemoteException;
 import java.util.ArrayList;
 import java.util.List;
-
+//
 
 public interface RemoteClientInterface extends Remote {
     void showGameStarted(ArrayList<Player> players, Board board) throws RemoteException;
@@ -27,7 +27,7 @@ public interface RemoteClientInterface extends Remote {
 
     void numPlayersChosenError(String message) throws RemoteException;
 
-    void showUpdateFirstPlayer(String player) throws RemoteException;
+    void showUpdateFirstPlayer() throws RemoteException;
 
     void showChosenNumPlayers (int numPlayers) throws RemoteException;
 
@@ -55,7 +55,14 @@ public interface RemoteClientInterface extends Remote {
 
     void showUpdatePlayerPP(String player, int foodUpdated) throws RemoteException;
 
-    void showEndGame(String winner, List<PlayerScore> leaderboard) throws RemoteException;
+    void showEndGameSuccessfully(String winner, List<PlayerScore> leaderboard) throws RemoteException;
 
+   // void showMessage(String message) throws RemoteException;
+
+   void showForcedEndGame() throws RemoteException;
+
+   void ping() throws RemoteException;
+
+   void refuseConnection() throws RemoteException;
 
 }

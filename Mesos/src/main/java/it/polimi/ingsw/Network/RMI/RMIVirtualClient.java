@@ -6,6 +6,7 @@ import it.polimi.ingsw.Game.Board;
 import it.polimi.ingsw.Game.Player;
 import it.polimi.ingsw.Game.Totem;
 import it.polimi.ingsw.Network.ClientDisconnectedException;
+import it.polimi.ingsw.Network.ClientMain;
 import it.polimi.ingsw.Network.PlayerScore;
 import it.polimi.ingsw.Network.VirtualClientInterface;
 
@@ -225,9 +226,9 @@ public class RMIVirtualClient implements VirtualClientInterface {
 
 
     @Override
-    public void showEndGame(String winner, List<PlayerScore> leaderboard) {
+    public void updateEndGame(String winner, List<PlayerScore> leaderboard) {
         try {
-            client.showEndGame(winner,leaderboard);
+            client.showEndGameSuccessfully(winner,leaderboard);
         } catch (RemoteException e) {
             throw new ClientDisconnectedException(e.getMessage());
         }
@@ -243,9 +244,9 @@ public class RMIVirtualClient implements VirtualClientInterface {
     }
 
     @Override
-    public void closeConnection() {
+    public void updateForcedEndGame() {
         try{
-            client.closeConnection();
+            client.showForcedEndGame();
         }catch (RemoteException e){
             throw new ClientDisconnectedException(e.getMessage());
         }

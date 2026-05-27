@@ -11,6 +11,7 @@ import it.polimi.ingsw.Network.Socket.Client.SocketClient;
 
 
 import java.util.ArrayList;
+import java.util.List;
 import java.util.concurrent.atomic.AtomicBoolean;
 // riferimento all'if che manda messaggi al server
 // ho bisogno dei metodi chiamati dalla gui
@@ -41,7 +42,7 @@ public class ClientController implements AutoCloseable{
     public void setServerConnection(boolean isRMI) {
         try {
             if (isRMI) {
-                ClientRMI clientRMI = new ClientRMI("localhost", 1099, "VirtualServer",this);
+                ClientRMI clientRMI = new ClientRMI("localhost", 1234, "VirtualServer",this);
                 clientRMI.setClientController(this);
                 clientRMI.run();
 
@@ -51,11 +52,10 @@ public class ClientController implements AutoCloseable{
                 this.serverConnection = socketClient;
             }
         } catch (Exception e) {
-            view.showErrorMessage("Connection error.");
+            view.showError("Connection error.");
             e.printStackTrace();
         }
     }
-
     public Board getCurrentBoard() {
         return currentBoard;
     }
@@ -72,7 +72,6 @@ public class ClientController implements AutoCloseable{
         }
         return null;
     }
-
     public void setCurrentBoard(Board currentBoard) {
         this.currentBoard = currentBoard;
     }
@@ -112,9 +111,6 @@ public class ClientController implements AutoCloseable{
     public void showPlayerTurn(String player) {
         view.showMessage("It's your turn.");
     }
-    public void showLocalReturnToTOC(String player, int index) {
-        view.showMessage("totem returned to turn order card");
-    }// devo effettivamente spostaerfe il totem indietro
 
     public void foodUpdated(String username, int foodUpdated){
         view.showMessage(username + "'s food + "+foodUpdated);
@@ -126,7 +122,7 @@ public class ClientController implements AutoCloseable{
     public void showUpdateForEvents() {
         view.showMessage("Round ended, event resolve phase");
     }
-    public void showErrorMessage(String message) {
+    public void showError(String message) {
         view.showError(message);
     }
     public void showUpdateTurn(Board board) {
@@ -142,7 +138,7 @@ public class ClientController implements AutoCloseable{
 
     public void setTmpUsername(String username) {
         if(serverConnection==null  || username.isBlank()){
-            view.showErrorMessage("You can't set a username at this moment, please try again");
+            view.showError("You can't set a username at this moment, please try again");
             return;
         }
 
@@ -171,7 +167,7 @@ public class ClientController implements AutoCloseable{
 
     public void setTmpTotem(Totem totem) {
         if(serverConnection==null){
-            view.showErrorMessage("You can't choose a totem at this moment, please try again later");
+            view.showError("You can't choose a totem at this moment, please try again later");
             return;
         }
 
@@ -219,7 +215,7 @@ public class ClientController implements AutoCloseable{
     public void checkForLogin(){
         synchronized (tmpLock){
             if(serverConnection==null){
-                view.showErrorMessage("Server Connection not established");
+                view.showError("Server Connection not established");
                 return;
             }
 
@@ -357,7 +353,29 @@ public class ClientController implements AutoCloseable{
         serverConnection.leave();
         ClientMain.terminateClient();
     }
+    public void showLocalReturnToTOC(String playerName, int indexTOC) {
+        Player player = getPlayerByName(playerName);
 
+        if (player == null) {
+            view.showError("Player " + playerName + " not found.");
+            return;
+        }
+        synchronized (currentBoard.getPath()) {
+            for (OfferCard offerCard : currentBoard.getPath()) {
+                if (offerCard.isOccupied()
+                        && offerCard.getOccupiedBy().getName().equals(playerName)) {
+
+                    offerCard.setOccupiedBy(null);
+                    break;
+                }
+            }
+        }
+        synchronized (currentBoard.getTurnOrderCard()) {
+            currentBoard.getTurnOrderCard().getOrder().add(player);
+        }
+
+        view.showMessage("Player " + playerName + " returned to Turn Order Card position " + indexTOC);
+    }
     //Closing Procedure
 
     /**
@@ -374,4 +392,18 @@ public class ClientController implements AutoCloseable{
         serverConnection.close();
         view.close();
     }
+    public void refuseOfConnection(){
+            view.showError("Connection refused: too many players.");
+            ClientMain.terminateClient();
+    }
+    public void handleForcedEndGame(){
+        view.showError("Connection refused: someone left");
+        ClientMain.terminateClient();
+    }
+    public void handleEndGameNormally(String winner, List<PlayerScore> leaderboard){
+        view.showMessage("Connection closed, the game ended successfully");
+        view.showEndGameSuccessfully(winner, leaderboard);
+        ClientMain.terminateClient();
+    }
 }
+//

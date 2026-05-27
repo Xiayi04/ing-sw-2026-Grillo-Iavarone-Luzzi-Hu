@@ -5,6 +5,7 @@ import it.polimi.ingsw.Game.OfferCard;
 import it.polimi.ingsw.Game.Totem;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public interface GraphicInterface extends AutoCloseable{
     void showError(String message);
@@ -20,7 +21,7 @@ public interface GraphicInterface extends AutoCloseable{
     void askNumToPlayer();
     void showNextRound();
     void showStartGame();
-
+    void showEndGameSuccessfully(String winner, List<PlayerScore> leaderboard);
     @Override
     void close();
 }

@@ -39,7 +39,7 @@ public interface VirtualClientInterface {
      *Notifies the client that the game has started and
      * the client updated is the first one
      */
-     void updateFirstPlayer();
+     void updateFirstPlayer()throws IOException;;
 
     /**
      * Notifies that the game started , list of players and board are sent
@@ -49,16 +49,17 @@ public interface VirtualClientInterface {
      void updateStartGame( ArrayList<Player> players, Board board);
 
     /**
-     * Notifies the client that the game ended and rhe list of the result
+     * Notifies the client that the game successfully ended and The list of the result
      * @param winner
      * @param leaderboard
      */
-     void showEndGame(String winner, List<PlayerScore> leaderboard) ;
+     void updateEndGame(String winner, List<PlayerScore> leaderboard) ;
 
     /**
-     * Notifies the client that the connection request has been refused
+     * Notifies the client that the connection request has been refused,
+     * because of too many players
      */
-     void refuseConnection();
+     void refuseConnection() throws IOException;;
 
     /**
      * Notifies the client that a player has picked a card from the board.
@@ -144,5 +145,20 @@ public interface VirtualClientInterface {
      * Lets the client know that the connection will be closed, because of a disconnection
      * of another client
      */
-    void closeConnection();
+    void updateForcedEndGame();
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 }
