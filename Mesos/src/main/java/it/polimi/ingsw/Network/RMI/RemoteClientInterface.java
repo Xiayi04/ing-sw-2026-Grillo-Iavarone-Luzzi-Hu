@@ -2,6 +2,8 @@ package it.polimi.ingsw.Network.RMI;
 
 
 import it.polimi.ingsw.Cards.Events.Event;
+import it.polimi.ingsw.Database.LeaderBoardDAO;
+import it.polimi.ingsw.Database.LeaderBoardData;
 import it.polimi.ingsw.Game.Board;
 import it.polimi.ingsw.Game.Player;
 import it.polimi.ingsw.Game.Totem;
@@ -64,5 +66,7 @@ public interface RemoteClientInterface extends Remote {
    void ping() throws RemoteException;
 
    void refuseConnection() throws RemoteException;
+
+   void showLeaderboardFromDB(int playerPositionInDB, List<LeaderBoardData> leaderboard) throws RemoteException;
 
 }
