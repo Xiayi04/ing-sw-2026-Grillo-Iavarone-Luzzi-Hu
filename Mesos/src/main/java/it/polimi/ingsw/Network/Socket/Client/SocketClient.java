@@ -2,163 +2,148 @@ package it.polimi.ingsw.Network.Socket.Client;
 
 import it.polimi.ingsw.Game.Totem;
 import it.polimi.ingsw.Network.ClientController;
+import it.polimi.ingsw.Network.ClientMain;
 import it.polimi.ingsw.Network.ServerConnection;
 import it.polimi.ingsw.Network.Socket.Client.Command.ClientCommand;
 import it.polimi.ingsw.Network.Socket.Client.Command.CommandFactoryClientSide;
+import it.polimi.ingsw.Network.Socket.Server.Command.Pick;
 import it.polimi.ingsw.Network.Socket.Server.MessageFromServer;
 
 import java.io.*;
 import java.net.Socket;
-import java.util.ArrayList;
+import java.net.SocketException;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
-public class SocketClient implements Runnable, ServerConnection {
+public class SocketClient implements Runnable, ServerConnection, AutoCloseable{
     //private Socket socket;
-    public static final Object outputLock = new Object();
+    public  final Object outputLock = new Object();
     public ObjectOutputStream out;
     public final ClientController clientController;
+    private volatile boolean closeSignal = false;
+    private ObjectInputStream in;
+    private Socket socket;
+    private final ExecutorService pool = Executors.newCachedThreadPool();
 
     public SocketClient( ClientController clientController) {
         this.clientController = clientController;
         clientController.setConnection(this);
-        run();
+        new Thread(this).start();
     }
 
     @Override
     public void run(){
         try {
-            Socket socket = new Socket("localhost", 8000);
-            System.out.println("SocketClient started...");
+            socket = new Socket("localhost", 8000);
+            //System.out.println("SocketClient started...");
             synchronized (outputLock) {
                 try {
                     out = new ObjectOutputStream(socket.getOutputStream());
+                } catch (SocketException e){
+                    clientController.close();
                 } catch (IOException e) {
                     throw new RuntimeException(e);
                 }
             }
 
-            ObjectInputStream inputStream = new ObjectInputStream(socket.getInputStream());
+            in = new ObjectInputStream(socket.getInputStream());
 
             //implementazione heartbeat
             CommandFactoryClientSide commandFactory = new CommandFactoryClientSide();
-            while(true){
-                MessageFromServer msg = (MessageFromServer) inputStream.readObject();
+
+            while(!closeSignal){
+                MessageFromServer msg = null;
+                try {
+                    msg = (MessageFromServer) in.readObject();
+                } catch (IOException | ClassNotFoundException e) {
+                    close();
+                    ClientMain.terminateClient();
+                    return;
+                }
                 ClientCommand cmd = commandFactory.getCommand(msg);
 
-                new Thread(()->{
-                    try {
-                        cmd.execute(socket, clientController);
-                    } catch (IOException e) {
-                        throw new RuntimeException(e);
-                    }
-                }).start();
+                pool.submit(()->{cmd.execute(socket, clientController);});
             }
 
-        } catch (IOException | ClassNotFoundException e) {
-            throw new RuntimeException(e);
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
         }
     }
 
-    public void sendTotem(Totem totem){
-        new Thread(()->{
-            synchronized (outputLock){
-                try {
-                    out.writeObject(new MessageFromClient<>("totem",totem));
-                } catch (IOException e) {
-                    throw new RuntimeException(e);
-                }
+    public <T> void send (String command, Object payload){
+        synchronized (outputLock) {
+            try{
+                out.writeObject(new MessageFromClient<>(command, payload));
+                out.flush();
+            }catch (IOException e){
+                clientController.close();
             }
-        }).start();
+        }
     }
 
-    public void sendUsername(String userName){
-        new Thread(()->{
-            synchronized (outputLock){
-                try {
-                    out.writeObject(new MessageFromClient<>("username",userName));
-                } catch (IOException e) {}
-            }
-        }).start();
+
+    /**
+     * Checks if the closing procedure was already started checking closeSignal
+     * Closes the output and input related to the socket and then closes the socket itself
+     * The exceptions are ignored because if they have been thrown it means the
+     * socket was already closed by another procedure
+     */
+    @Override
+    public synchronized void close(){
+        if(closeSignal){
+            return;
+        }
+        closeSignal = true;
+        if(in!=null){
+            try {
+                in.close();
+            } catch (IOException ignored){}
+        }
+        if(out!=null){
+            try {
+                out.close();
+            } catch (IOException ignored) {}
+        }
+        if(socket!=null && !socket.isClosed()){
+            try {
+                socket.close();
+            } catch (IOException ignored) {}
+        }
+
+    }
+
+    public void sendTotem(Totem totem){
+        send("totem",totem);
     }
 
     @Override
     public void login(String username, Totem chosenTotem) {
-            synchronized (outputLock){
-                try {
-                    out.writeObject(new MessageFromClient<>("username",username));
-                    out.flush();
-                } catch (IOException e) {}
-
-                try {
-                    out.writeObject(new MessageFromClient<>("totem", chosenTotem));
-                    out.flush();
-                } catch (IOException e) {
-                    throw new RuntimeException(e);
-                }
-            }
-
+        send("username",username);
+        send("totem", chosenTotem);
     }
 
     @Override
     public void requestSetNumPlayers(int numPlayer) {
-        synchronized (outputLock){
-            try {
-                out.writeObject(new MessageFromClient<>("setnumplayers",numPlayer));
-                out.flush();
-            } catch (IOException e) {
-                throw new RuntimeException(e);
-            }
-        }
+        send("setnumplayers",numPlayer);
     }
-
-
 
     @Override
     public void requestPickCard(String localPlayerName, boolean isUpper, boolean isBuilding, int index) {
-
-    }
-
-
-    public void pickCard(String username, boolean isUpper, boolean isBuilding, int index) {
-        new Thread(()->{
-//            Pick pick = new Pick(username, isUpper, isBuilding, index);
-//            synchronized (outputLock){
-//                try {
-//                    out.writeObject(new MessageFromClient<>("pick",pick));
-//                } catch (IOException e) {
-//                    throw new RuntimeException(e);
-//                }
-//            }
-        }).start();
+        send("pick", new Pick(localPlayerName, isUpper, isBuilding, index));
     }
 
     @Override
     public void requestMoveTotem(String localPlayerName, int chosenPosition) {
-        synchronized (outputLock){
-            try {
-                out.writeObject(new MessageFromClient<>("position", chosenPosition));
-                out.flush();
-            } catch (IOException e) {
-                throw new RuntimeException(e);
-            }
-        }
+        send("position", chosenPosition);
     }
-
 
     @Override
     public void leave() {
-
+        send("quit", null);
     }
 
-
+    @Override
     public void requestAvailableTotems() {
-        synchronized (outputLock){
-            try {
-                out.writeObject(new MessageFromClient<>("available_colors",null));
-                out.flush();
-            } catch (IOException e) {
-                throw new RuntimeException(e);
-            }
-        }
+        send("available_colors",null);
     }
-
 }

@@ -1,19 +1,18 @@
 package it.polimi.ingsw.Controller;
 
 import it.polimi.ingsw.Cards.Events.Event;
+import it.polimi.ingsw.Database.LeaderBoardData;
 import it.polimi.ingsw.Game.Board;
 import it.polimi.ingsw.Game.Player;
 import it.polimi.ingsw.Network.ClientDisconnectedException;
 import it.polimi.ingsw.Network.PlayerScore;
 import it.polimi.ingsw.Network.Server;
 import it.polimi.ingsw.Network.VirtualClientInterface;
-
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
-import java.util.concurrent.TimeUnit;
+import java.util.concurrent.RejectedExecutionException;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 public class Notifier{
@@ -39,7 +38,7 @@ public class Notifier{
         Server.closeConnection(disconnectedClient);
     }
 
-    public synchronized void farewell(VirtualClientInterface disconnectedClient) {
+    public synchronized void sendFarewell(VirtualClientInterface disconnectedClient) {
         if(startTermProcedure.get())
             return;
 
@@ -49,7 +48,7 @@ public class Notifier{
             if(clients!=null && !clients.isEmpty() && clients.contains(disconnectedClient)){
                 clients.remove(disconnectedClient);
                 for(VirtualClientInterface client:clients){
-                    pool.submit(client::closeConnection);
+                    pool.submit(client::updateForcedEndGame);
                 }
                 if(!pool.isShutdown())
                     pool.shutdown();
@@ -63,11 +62,16 @@ public class Notifier{
     public void terminationSignalBroadcast(){
 
         for(VirtualClientInterface client: clients){
-            pool.submit(() -> {
-                try {
-                    client.closeConnection();
-                } catch (Exception ignored) {}
-            });
+            try {
+                pool.submit(() -> {
+                    try {
+                        client.updateForcedEndGame();
+                    } catch (Exception ignored) {}
+                });
+            } catch (RejectedExecutionException e) {
+                if(!pool.isShutdown())
+                    System.out.println("Notifier thread RejectedExecutionException catch even if pool is not shutdown:" + e.getMessage());
+            }
         }
     }
 
@@ -219,11 +223,21 @@ public class Notifier{
         for (VirtualClientInterface client : getClients()) {
             pool.submit(() -> {
                 try {
-                    client.showEndGame(winner.getName(), leaderboard);
+                    client.updateEndGame(winner.getName(), leaderboard);
                 } catch (ClientDisconnectedException e) {
                     handleDisconnect(client);
                 }
             });
         }
+    }
+
+    public void sendLeaderBoard(Player player, int leaderBoardPosition,  ArrayList<LeaderBoardData> leaderBoardDB){
+        pool.submit(() -> {
+            try {
+                //player.getVirtualClient().updateLeaderboardFromDB(leaderBoardPosition, leaderBoardDB);
+            } catch (ClientDisconnectedException e) {
+                handleDisconnect(player.getVirtualClient());
+            }
+        });
     }
 }

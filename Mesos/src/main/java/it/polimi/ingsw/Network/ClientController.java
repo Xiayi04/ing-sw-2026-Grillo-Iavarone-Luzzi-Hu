@@ -95,7 +95,7 @@ public class ClientController implements AutoCloseable{
 
     //notifica dal server
     public void showGameStarted(ArrayList<Player> players, Board board) {
-        view.showMessage("The game started.");
+        view.showStartGame();
     }
     public void showUpdateFirstPlayer() {
         view.askNumToPlayer();
@@ -155,11 +155,14 @@ public class ClientController implements AutoCloseable{
             }
     }
     public void showConfirmUsername(String username){
-        if(localPlayerName!=null){
-            throw new RuntimeException("Trying to confirm an already confirmed username");
+        synchronized (tmpLock){
+            if (localPlayerName != null) {
+                throw new RuntimeException("Trying to confirm an already confirmed username");
+            }
+            tmpUsername = username;
+            this.localPlayerName = username;
+            view.showMessage("Username confirmed: " + username);
         }
-        this.localPlayerName = username;
-        view.showMessage("Username confirmed: "+ username);
     }
     public void showUsernameError() {
         view.showError("Username choice is wrong");
@@ -186,11 +189,14 @@ public class ClientController implements AutoCloseable{
 
     }
     public void showConfirmTotem(Totem totem){
-        if(localTotem!=null){
-            throw new RuntimeException("Trying to confirm an already confirmed Totem");
+        synchronized (tmpLock){
+            if (localTotem != null) {
+                throw new RuntimeException("Trying to confirm an already confirmed Totem");
+            }
+            tmpTotem = totem;
+            localTotem = totem;
+            view.showMessage("Totem chosen is confirmed " + totem);
         }
-        localTotem = totem;
-        view.showMessage("Totem chosen is confirmed"+ totem);
     }
     public void showTotemChoiceError() {
         view.showError("Totem chosen not available");
@@ -392,14 +398,17 @@ public class ClientController implements AutoCloseable{
         serverConnection.close();
         view.close();
     }
+
     public void refuseOfConnection(){
             view.showError("Connection refused: too many players.");
             ClientMain.terminateClient();
     }
+
     public void handleForcedEndGame(){
         view.showError("Connection refused: someone left");
         ClientMain.terminateClient();
     }
+
     public void handleEndGameNormally(String winner, List<PlayerScore> leaderboard){
         view.showMessage("Connection closed, the game ended successfully");
         view.showEndGameSuccessfully(winner, leaderboard);

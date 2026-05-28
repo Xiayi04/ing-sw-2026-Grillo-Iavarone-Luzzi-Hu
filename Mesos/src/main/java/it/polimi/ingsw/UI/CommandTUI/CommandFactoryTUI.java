@@ -24,7 +24,7 @@ public class CommandFactoryTUI {
 //        commandsMap.put("connect", c-> new ConnectionSelectionCommand(c));
         commandsMap.put("players", SetNumPlayersRequestCommand::new);
         commandsMap.put("pick", PickCommand::new);
-
+        commandsMap.put("move", MoveTotemCommand::new);
     }
 
 

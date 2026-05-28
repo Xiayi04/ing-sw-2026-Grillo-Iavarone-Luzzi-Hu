@@ -30,7 +30,7 @@ public class Lobby {
 
     public void addClient(VirtualClientInterface client){
         synchronized (tempPlayers){
-            if(tempPlayers.size()>=5){
+            if(isNumPlayersSet.get() && tempPlayers.size() >= numPlayers.get()){
                 try {
                     client.refuseConnection();
                 } catch (ClientDisconnectedException ignored) {}
@@ -106,6 +106,26 @@ public class Lobby {
     public void sendAvailableColors(VirtualClientInterface client) {
         synchronized (tempPlayers){
             client.updateAvailableTotems(getAvailableTotems());
+        }
+    }
+
+    public void checkMoreThenEnoughPlayers(){
+        synchronized (tempPlayers){
+            if(!isNumPlayersSet.get()){
+                System.out.println("Error: num of players not set");
+                return;
+            }
+
+            if(tempPlayers.size() <= numPlayers.get()){ //the number is right or we wait for more players
+                return;
+            }
+
+            for(int i = numPlayers.get(); i < tempPlayers.size(); i++){
+                try {
+                    tempPlayers.get(i).getClient().refuseConnection();
+                } catch (ClientDisconnectedException ignored) {}
+                //we ignore this exception because we only care about disconnections of active players
+            }
         }
     }
 }

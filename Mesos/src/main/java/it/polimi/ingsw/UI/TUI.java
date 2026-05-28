@@ -8,6 +8,7 @@ import it.polimi.ingsw.Game.TurnOrderCard;
 import it.polimi.ingsw.Network.ClientController;
 import it.polimi.ingsw.Network.ClientMain;
 import it.polimi.ingsw.Network.GraphicInterface;
+import it.polimi.ingsw.Network.PlayerScore;
 import it.polimi.ingsw.UI.CommandTUI.CommandFactoryTUI;
 import it.polimi.ingsw.UI.CommandTUI.CommandTUI;
 import it.polimi.ingsw.UI.CommandTUI.ConnectionSelectionCommand;
@@ -29,8 +30,17 @@ public TUI(ClientController controller) {
 }
 
     @Override
-    public void showStartGame() {
+    public void showEndGameSuccessfully(String winner, List<PlayerScore> leaderboard) {
+        synchronized (LOCK){
+            System.out.println("da realizzare");
+        }
+    }
 
+    @Override
+    public void showStartGame() {
+        synchronized (LOCK){
+            boardPrinter(controller.getCurrentBoard(),"Game Started");
+        }
     }
 
     @Override
@@ -104,6 +114,7 @@ public TUI(ClientController controller) {
     @Override
     public void askNumToPlayer() {
         System.out.println("*You are the first player. Please insert the num of players that will join the game using-> players:'number between 2 and 5'");
+        System.out.print(">");
     }
 
     @Override
@@ -121,7 +132,7 @@ public TUI(ClientController controller) {
     public void showAvailableTotems(ArrayList<Totem> availableTotems) {
         String[] provv = new String [availableTotems.size()];
         for (int i = 0; i < availableTotems.size(); i++) {
-            Totem totem = availableTotems.get(i);
+            provv[i] = availableTotems.get(i).toString();
         }
         String totems;
         totems = String.join(", ", provv);
@@ -140,18 +151,20 @@ public TUI(ClientController controller) {
 
     @Override
     public void showMessage(String message) {
-        System.out.println("> :" + message);
+        System.out.println("<:" + message);
     }
 
 
     @Override
     public void showCurrentPlayer(String username) {
         synchronized (LOCK) {
+            boardPrinter(controller.getCurrentBoard(),"");
             if (username.equals(controller.getLocalPlayer().getName()))
                 System.out.println("It's your turn!");
             else
                 System.out.println("It's " + username + "'s turn!");
         }
+
     }
 
 

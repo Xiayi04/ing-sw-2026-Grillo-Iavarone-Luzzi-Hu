@@ -30,6 +30,7 @@ public class CommandFactoryClientSide {
         commands.put("update_pp", u-> new UpdatePPCommand((UpdatePP) u));
         commands.put("player_turn", u-> new PlayerTurnCommand((String) u));
         commands.put("next_turn", u-> new NextTurnCommand((Board) u));
+        commands.put("ping", p->new PingCommand());
 
 
         //login

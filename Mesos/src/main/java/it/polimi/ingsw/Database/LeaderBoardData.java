@@ -1,4 +1,6 @@
 package it.polimi.ingsw.Database;
 
-public record LeaderBoardData(int position,String username,int score, String date) {
+import java.io.Serializable;
+
+public record LeaderBoardData(int position, String username, int score, String date) implements Serializable {
 }
