@@ -2,15 +2,16 @@ package it.polimi.ingsw.Network.RMI;
 
 
 import it.polimi.ingsw.Cards.Events.Event;
+import it.polimi.ingsw.Database.LeaderBoardData;
 import it.polimi.ingsw.Game.Board;
 import it.polimi.ingsw.Game.Player;
 import it.polimi.ingsw.Game.Totem;
 import it.polimi.ingsw.Network.ClientDisconnectedException;
-import it.polimi.ingsw.Network.ClientMain;
+
 import it.polimi.ingsw.Network.PlayerScore;
 import it.polimi.ingsw.Network.VirtualClientInterface;
 
-import java.io.IOException;
+
 import java.rmi.RemoteException;
 import java.util.ArrayList;
 import java.util.List;
@@ -251,6 +252,16 @@ public class RMIVirtualClient implements VirtualClientInterface {
             throw new ClientDisconnectedException(e.getMessage());
         }
     }
+
+    @Override
+    public void updateLeaderboardFromDB(int playerPositionInDB, List<LeaderBoardData> leaderboard) {
+        try{
+            client.showLeaderboardFromDB(playerPositionInDB,leaderboard);
+        }catch(RemoteException e ){
+            throw new ClientDisconnectedException(e.getMessage());
+        }
+    }
+
 
 }
 //
