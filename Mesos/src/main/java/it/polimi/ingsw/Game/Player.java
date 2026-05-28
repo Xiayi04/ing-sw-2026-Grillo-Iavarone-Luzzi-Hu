@@ -24,6 +24,7 @@ public class Player implements Serializable {
     private final ArrayList<Character> tribeCard;
     private final ArrayList<Building> buildings;
     private int starCounter;
+    private int builderDiscount = 0;
     private int hunterCounter;
     private int builderCounter;
     private int pickerCounter;
@@ -108,8 +109,6 @@ public class Player implements Serializable {
         builderCounter = count;
     }
 
-
-
     public void modifyPP(int pp){
         prestigePoints+=pp;
     }
@@ -125,6 +124,10 @@ public class Player implements Serializable {
 
     public void modifyStarCounter(int bonus){
         starCounter+= bonus ;
+    }
+
+    public void increaseBuilderDiscount(int num){
+        builderDiscount += num;
     }
 
     /**
