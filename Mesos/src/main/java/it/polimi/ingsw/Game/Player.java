@@ -89,6 +89,9 @@ public class Player implements Serializable {
     public VirtualClientInterface getVirtualClient() {
         return virtualClient;
     }
+    public int getBuilderDiscount(){
+        return builderDiscount;
+    }
     //setter methods
     public void setHunterCounter(int count){
         hunterCounter=count;
