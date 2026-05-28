@@ -148,7 +148,7 @@ public interface VirtualClientInterface {
      */
     void updateForcedEndGame();
 
-    void updateLeaderboardFromDB(List<LeaderBoardData> leaderboard);
+    void updateLeaderboardFromDB(int PlayerPositionInDB, List<LeaderBoardData> leaderboard);
 
 
 

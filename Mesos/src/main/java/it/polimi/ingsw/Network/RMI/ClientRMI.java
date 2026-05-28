@@ -15,7 +15,7 @@ import java.rmi.server.UnicastRemoteObject;
 import java.util.ArrayList;
 import java.util.List;
 
-
+//
 public class ClientRMI extends UnicastRemoteObject implements
         RemoteClientInterface,ServerConnection, Runnable, AutoCloseable {
 
