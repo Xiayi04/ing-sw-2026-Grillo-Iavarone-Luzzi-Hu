@@ -1,6 +1,7 @@
 package it.polimi.ingsw.Network;
 
 import it.polimi.ingsw.Cards.Events.Event;
+import it.polimi.ingsw.Database.LeaderBoardData;
 import it.polimi.ingsw.Game.*;
 
 import java.io.IOException;
@@ -30,7 +31,7 @@ public interface VirtualClientInterface {
      void returnTotemToTOC(String username,int index);
 
     /**
-     * server notifies that the
+     * server notifies the
      * @param numPlayers chosen by the first player
      */
      void showChosenNumPlayers(int numPlayers) ;
@@ -147,15 +148,7 @@ public interface VirtualClientInterface {
      */
     void updateForcedEndGame();
 
-
-
-
-
-
-
-
-
-
+    void updateLeaderboardFromDB(List<LeaderBoardData> leaderboard);
 
 
 
