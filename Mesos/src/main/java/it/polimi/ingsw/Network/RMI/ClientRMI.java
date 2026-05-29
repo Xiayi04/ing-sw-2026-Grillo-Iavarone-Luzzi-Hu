@@ -1,5 +1,6 @@
 package it.polimi.ingsw.Network.RMI;
 import it.polimi.ingsw.Cards.Events.Event;
+import it.polimi.ingsw.Database.LeaderBoardData;
 import it.polimi.ingsw.Game.Board;
 import it.polimi.ingsw.Game.Player;
 import it.polimi.ingsw.Game.Totem;
@@ -148,10 +149,14 @@ public class ClientRMI extends UnicastRemoteObject implements
         clientController.showNumPlayers(numPlayers);
     }
 
-    //implementazione serverconnection
+    //implementation server connection
     @Override
     public void login(String username, Totem chosenTotem) {
         try {
+            if (server == null) {
+                clientController.showError("RMI server not connected yet.");
+                return;
+            }
             this.username = username;
             server.login(username, chosenTotem, this);
         } catch (RemoteException e) {
@@ -195,7 +200,6 @@ public class ClientRMI extends UnicastRemoteObject implements
         }
     }
 
-
     @Override
     public void leave() {
         try {
@@ -204,7 +208,6 @@ public class ClientRMI extends UnicastRemoteObject implements
             clientController.showError("RMI error while leaving the game.");
         }
     }
-
     @Override
     public void run() {
         try {
@@ -214,7 +217,7 @@ public class ClientRMI extends UnicastRemoteObject implements
             server.connect(this);
             System.out.println("Connected to RMI server.");
 
-            server.ping();
+            server.ping(username);
             System.out.println("Ping sent");
 
         } catch (Exception e) {
@@ -223,8 +226,6 @@ public class ClientRMI extends UnicastRemoteObject implements
         }
 
     }
-
-
     @Override
     public void close() {
         try {
@@ -233,7 +234,6 @@ public class ClientRMI extends UnicastRemoteObject implements
             System.out.println("Client RMI already closed");
         }
     }
-
     @Override
     public void showEndGameSuccessfully(String winner, List<PlayerScore> leaderboard) throws RemoteException {
         clientController.handleEndGameNormally(winner, leaderboard);
@@ -246,8 +246,11 @@ public class ClientRMI extends UnicastRemoteObject implements
     public void refuseConnection()throws RemoteException{
         clientController.refuseOfConnection();
     }
-
+    @Override
+    public void showLeaderboardFromDB(int playerPositionInDB, List<LeaderBoardData> leaderboard) throws RemoteException {
+        clientController.updateLeaderboardFromDB(playerPositionInDB, leaderboard);
     }
+}
 
 
 

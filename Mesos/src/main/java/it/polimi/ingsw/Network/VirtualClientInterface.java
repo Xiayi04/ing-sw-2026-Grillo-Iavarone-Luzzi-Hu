@@ -40,7 +40,7 @@ public interface VirtualClientInterface {
      *Notifies the client that the game has started and
      * the client updated is the first one
      */
-     void updateFirstPlayer()throws IOException;;
+     void updateFirstPlayer();
 
     /**
      * Notifies that the game started , list of players and board are sent
@@ -60,7 +60,7 @@ public interface VirtualClientInterface {
      * Notifies the client that the connection request has been refused,
      * because of too many players
      */
-     void refuseConnection() throws IOException;;
+     void refuseConnection() ;
 
     /**
      * Notifies the client that a player has picked a card from the board.

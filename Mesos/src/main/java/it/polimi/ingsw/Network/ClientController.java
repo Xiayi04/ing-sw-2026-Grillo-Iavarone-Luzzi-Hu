@@ -2,6 +2,7 @@ package it.polimi.ingsw.Network;
 
 import it.polimi.ingsw.Cards.Card;
 import it.polimi.ingsw.Cards.Characters.Character;
+import it.polimi.ingsw.Database.LeaderBoardData;
 import it.polimi.ingsw.Game.Board;
 import it.polimi.ingsw.Game.OfferCard;
 import it.polimi.ingsw.Game.Player;
@@ -412,7 +413,10 @@ public class ClientController implements AutoCloseable{
     public void handleEndGameNormally(String winner, List<PlayerScore> leaderboard){
         view.showMessage("Connection closed, the game ended successfully");
         view.showEndGameSuccessfully(winner, leaderboard);
+
+    }
+    public void updateLeaderboardFromDB(int playerPositionInDB, List<LeaderBoardData>leaderboardFromDB){
+        view. showLeaderboardFromDB(playerPositionInDB, leaderboardFromDB);
         ClientMain.terminateClient();
     }
 }
-//

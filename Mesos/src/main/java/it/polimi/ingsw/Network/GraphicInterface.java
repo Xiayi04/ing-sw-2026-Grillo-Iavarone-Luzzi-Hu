@@ -1,5 +1,6 @@
 package it.polimi.ingsw.Network;
 
+import it.polimi.ingsw.Database.LeaderBoardData;
 import it.polimi.ingsw.Game.Board;
 import it.polimi.ingsw.Game.OfferCard;
 import it.polimi.ingsw.Game.Totem;
@@ -21,6 +22,7 @@ public interface GraphicInterface extends AutoCloseable{
     void askNumToPlayer();
     void showNextRound();
     void showStartGame();
+    void showLeaderboardFromDB(int playerPosition, List<LeaderBoardData> updatedDB);
     void showEndGameSuccessfully(String winner, List<PlayerScore> leaderboard);
     @Override
     void close();
