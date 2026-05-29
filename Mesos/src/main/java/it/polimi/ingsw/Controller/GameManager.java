@@ -8,12 +8,15 @@ import it.polimi.ingsw.Cards.Card;
 import it.polimi.ingsw.Cards.Characters.CharacterVisitor.CharacterVisitor;
 import it.polimi.ingsw.Cards.Characters.CharacterVisitor.AddAndCountCharacter;
 import it.polimi.ingsw.Cards.Events.Event;
+import it.polimi.ingsw.Database.LeaderBoardDAO;
+import it.polimi.ingsw.Database.LeaderBoardData;
 import it.polimi.ingsw.Game.*;
 import it.polimi.ingsw.Cards.Characters.Character;
 import it.polimi.ingsw.Network.PlayerScore;
 
 import java.io.IOException;
 import java.rmi.RemoteException;
+import java.sql.SQLException;
 import java.util.*;
 /*La classe GameManager coordina il flusso di gioco, i turni e i cambi di era.*/
 
@@ -24,10 +27,8 @@ public class GameManager {
     private ArrayList<Player> players;
     public static final Object playersLock = new Object();
     private Board board;
-    private int currentEra;
     private Player currentPlayer;
     private List<PendingPick> pickingQueue = new ArrayList<>();
-    private List<Player> positionQueue = new ArrayList<>();
     private Notifier  notifier = null;
 
     //costruttore
@@ -38,13 +39,11 @@ public class GameManager {
         this.round = 0;
     }
 
-    //metodi
-    /*public void gameInitializing(ArrayList<Player> players, int numPlayers, Deck deck) {
-        this.numPlayers = numPlayers;
-        this.round = 1;
-        deck.createDeck(numPlayers);
-
-    }*/
+    /**
+     * It inizializes all the elements in order to prepare for the start of the game, the round and the
+     * era are set to 1, all players and the number of players set by the first player are added
+     * @throws RemoteException
+     */
 
     public void startGame() throws RemoteException {
         synchronized (playersLock) {
@@ -61,21 +60,6 @@ public class GameManager {
         }
     }
 
-    /**
-     * The new player order method is used to manage the turns of the next round,
-     * it creates a temporary list with the order of the players
-     */
-    private void newPlayerOrder() {
-        ArrayList<Player> tmpOrder = new ArrayList<>();
-        ArrayList<OfferCard> path = board.getPath();
-        for( OfferCard c : path ) {
-            if(c.isOccupied()){
-                tmpOrder.add(c.getOccupiedBy());
-            }
-        }
-        board.getTurnOrderCard().getOrder().addAll(tmpOrder);
-        //this.players = tmpOrder;
-    }
 
     /**
      * Method for moving to the next round.
@@ -92,8 +76,8 @@ public class GameManager {
             return;
         }
         System.out.println(" Start of the Round   " + this.round);
+
         ArrayList<Event> currentEvents = board.checkEvent();
-        positionQueue.clear();
         if (!currentEvents.isEmpty()) {
             resolveEvents(currentEvents);
         }
@@ -131,7 +115,7 @@ public class GameManager {
 
     public void addPlayer(Player player) {
         if (this.players.size() >= 5) {
-            throw new IllegalStateException("You can't add more than 5 players");
+            throw new IllegalStateException("More than 5 players are not available");
         }
         this.players.add(player);
     }
@@ -166,60 +150,55 @@ public class GameManager {
         System.out.println("--- THE GAME IS OVER  ---");
         System.out.println("Final points count...");
 
-        int maxScore = 0;
+        //Data list creation for the ranking
+        List<PlayerScore> leaderboard = new ArrayList<>();
         for (Player p : players) {
-            int finale = p.finalScore();
-            if (finale > maxScore) {
-                maxScore = finale;
+            leaderboard.add(new PlayerScore(p.getName(), p.finalScore(), p.getFood()));
+        }
+
+        // Raking order ( criterion: points and then food)
+        leaderboard.sort((p1, p2) -> {
+            int pointsCompare = Integer.compare(p2.points(), p1.points());
+            if (pointsCompare != 0){
+                return pointsCompare;
+            }else {
+                return Integer.compare(p2.food(), p1.food());
             }
-        }
+        });
+        //The winner is the first of the updated list
+        PlayerScore winner = leaderboard.get(0);
 
-        ArrayList<Player> tmpWinner = new ArrayList<>();
-        for (Player p : players) {
-            if (p.finalScore() == maxScore) {
-                tmpWinner.add(p);
-            }
-        }
-
-        Player winner = null;
-
-        if (tmpWinner.size() == 1) {
-            winner = tmpWinner.getFirst();
-        } else {
-            int maxFood = 0;
-            for (Player p : tmpWinner) {
-                if (p.getFood() > maxFood) {
-                    maxFood = p.getFood();
-                    winner = p;
-                }
-            }
-        }
-
-        System.out.println("The winner is: " + winner.getName() + "with"+ winner.finalScore()+ "points!");
-        // creazione record per ogni giocatore usando il nome e il punteggio finale
-        List<PlayerScore> tmpLeaderboard = new ArrayList<>();
-        for (Player p : players) {
-            tmpLeaderboard.add(new PlayerScore(p.getName(),p.finalScore()));
-        }
-        tmpLeaderboard.sort((p1,p2) ->Integer.compare(p2.points(),p1.points()));//ordinamento classifica dal punteggio più alto a quello più basso
-
-        //notifico tutti i giocatori
-        final Player finalWinner = winner;
+        System.out.println("The winner is: " + winner.username());
         if(this.notifier != null){
-            this.notifier.showEndGameBroadcast(finalWinner,tmpLeaderboard);
+            this.notifier.showEndGameBroadcast(getPlayerByName(winner.username()), leaderboard);
         }
+        // aggiunge il punteggio di un giocatore uno per volta nel database
+        LeaderBoardDAO leaderboardDAO = new LeaderBoardDAO();
+        for (Player p : players) {
+            try{
+                leaderboardDAO.addNewPlayerScore(p.getName(), p.finalScore(), numPlayers);
+            }catch (SQLException e){
+                System.out.println("Error in the record of the points for the player " + p.getName() + ": " + e.getMessage());
+            }
+        }
+        //aggiorna la classifica di tutte le partite fatte con quel numero di giocatori
+        ArrayList<LeaderBoardData> leaderboardData = new ArrayList<>();
+        for(Player p : players){
+            try{
+                notifier.sendLeaderBoard(p,leaderboardDAO.getPositionInLeaderBoard(numPlayers,p.finalScore()),leaderboardData);
+            } catch (SQLException e) {
+                System.out.println("Error while sending the ranking to the player:" + e.getMessage());
+            }
 
+        }
 
     }
 
     /**
-     * The method positionPhase represents the list of players
-     * who must position themselves
+     * The method positionPhase call the method execute next position
      */
 
     public void positionPhase(){
-        positionQueue.clear();
-        positionQueue.addAll(board.getTurnOrderCard().getOrder()); //  provare a passare direttamente lista order invece che una coda generica
         executeNextPosition();
     }
 
@@ -230,12 +209,12 @@ public class GameManager {
 
     public void executeNextPosition() {
         synchronized (playersLock) {
-            if (positionQueue.isEmpty()) {
+            if (board.getTurnOrderCard().getOrder().isEmpty()) {
                 System.out.println("Totem positioning phase completed.");
-                pickingPhase(this.players);
+                pickingPhase();
                 return;
             }
-            this.currentPlayer = positionQueue.get(0);
+            this.currentPlayer = board.getTurnOrderCard().getOrder().get(0);
 
             System.out.println("Player  " + currentPlayer.getName() + "place your totem");
             if(currentPlayer.getVirtualClient() != null){
@@ -245,27 +224,32 @@ public class GameManager {
     }
 
     /**
-     * metodo per il positionamento effettivo
+     * The resolve position method handles the placement of each player on the path.
+     * Players choose an available offer card; if a offer card is already taken, they must choose another.
+     * Once the choice is confirmed, the totem is removed from the turn order card and placed
+     * on the selected offer card , and play proceeds to the next player.
      * @param playerName
      * @param pathIndex
      */
-    public void resolvePosition(String playerName, int pathIndex){
+    public synchronized void resolvePosition(String playerName, int pathIndex){
         synchronized (playersLock){
-            if(positionQueue.isEmpty() || !positionQueue.get(0).getName().equals(playerName)){
+            if(board.getTurnOrderCard().getOrder().isEmpty() || !currentPlayer.getName().equals(playerName)){
+                return;
+            }
+            if(pathIndex < 0 || pathIndex >= board.getPath().size()){
+                notifier.invalidTotemPosition(getPlayerByName(playerName));
                 return;
             }
             OfferCard chosenCard = board.getPath().get(pathIndex);
             if(chosenCard.isOccupied()){
-                System.out.println("The position you have chosen is occupied, please choose another one.");
-                executeNextPosition();
+                System.out.println("The chosen position is occupied, please choose another one.");
+                notifier.invalidTotemPosition(getPlayerByName(playerName));
                 return;
             }
-            Player p = positionQueue.get(0);
+            Player p = board.getTurnOrderCard().getOrder().removeFirst();
             chosenCard.setOccupiedBy(p);
             System.out.println(p.getName() + " he positioned himself on the card " + pathIndex);
-            newPlayerOrder();
             notifier.movedTotemBroadcast(p ,pathIndex);
-            positionQueue.remove(0);
             executeNextPosition();
         }
     }
@@ -297,49 +281,58 @@ public class GameManager {
      */
     public record PendingPick(Player player, boolean isUpper, boolean isEventPick) {}
 
-    /**The Picking Phase method is the drawing phase, it is used to establish the exact order in which players
-     *  will choose cards from the board. The offerCards are swiped from left to right. If the position is occupied,
-     *  it reads how many upward-pointing arrows it has, saves them in the list and associates
-     *  them with the player occupying that position on the list.
-     *  Then it goes back and does the same check for the downward-pointing arrows.
-     *  Once the turn list has been compiled,
-     *  it tells the first player on the list to make his choice.
-     * @param players
+    /**The Picking Phase method handles the draw phase and is used to assign arrows to each player based on the position
+     *  they occupy on the offer card. The positions are analyzed from left to right: if a position is occupied,
+     *  the system detects the number of upward-pointing arrows, saves them in a list,
+     *  and associates them with the corresponding player. Subsequently, the process is repeated for the downward-pointing arrows.
+     *  Additionally, the method checks if the player holds a special event card; if so, an extra arrow is assigned to them,
+     *  granting them the right to an additional draw. Once the turn order list is compiled,
+     *  the system prompts the first player on the list to make their choice.
      */
 
-    public void pickingPhase(ArrayList<Player> players) {
+    public void pickingPhase() {
         ArrayList<OfferCard> path = board.getPath();
-        pickingQueue.clear();
 
-        ArrayList<Player> playersWithBonus = new ArrayList<>();
+        Player playersWithBonus = null;
 
-        for(OfferCard offerCard : path ) {
-            if(offerCard.isOccupied()) {
-                for (int i = 0; i < offerCard.getUpArrow(); i++) {
-                    pickingQueue.add(new PendingPick(offerCard.getOccupiedBy(), true, false));
-                }
-                for (int i = 0; i < offerCard.getDownArrow(); i++) {
-                    pickingQueue.add(new PendingPick(offerCard.getOccupiedBy(), false, false ));
-                }
-                for (int i = 0; i < offerCard.getOccupiedBy().getBuilding().size(); i++) {
-                    AddCardVisitor addCardVisitor = new AddCardVisitor();
-                    if(offerCard.getOccupiedBy().getBuilding().get(i).acceptAddCard(addCardVisitor,offerCard.getOccupiedBy()) == 1 ){
-                        if(!playersWithBonus.contains(offerCard.getOccupiedBy())) {//evita duplicati
-                            playersWithBonus.add(offerCard.getOccupiedBy());
+        synchronized (pickingQueue){
+            AddCardVisitor addCardVisitor = new AddCardVisitor();
+            for (OfferCard offerCard : path) {
+                if (offerCard.isOccupied()) {
+                    for (int i = 0; i < offerCard.getUpArrow(); i++) {
+                        pickingQueue.add(new PendingPick(offerCard.getOccupiedBy(), true,false));
+                    }
+                    for (int i = 0; i < offerCard.getDownArrow(); i++) {
+                        pickingQueue.add(new PendingPick(offerCard.getOccupiedBy(), false,false));
+                    }
+                    /*for (int i = 0; i < offerCard.getOccupiedBy().getBuilding().size(); i++) {
+                        //AddCardVisitor addCardVisitor = new AddCardVisitor();
+                        if (offerCard.getOccupiedBy().getBuilding().get(i).acceptAddCard(addCardVisitor, offerCard.getOccupiedBy()) == 1) {
+                            playersWithBonus = offerCard.getOccupiedBy();
+                        }
+                    }*/
+                    Player player = offerCard.getOccupiedBy();
+                    for(Building b : player.getBuilding()){
+                        if(b.acceptAddCard(addCardVisitor, player)==1){
+                            playersWithBonus = player;
                         }
                     }
                 }
             }
-        }
-        for (Player player : playersWithBonus) {
-                pickingQueue.add(new PendingPick(player, true, true));
+            if (playersWithBonus != null) {
+                pickingQueue.add(new PendingPick(playersWithBonus, true,true));
+            }
         }
         executeNextPick();
     }
 
     /**
-     * The resolve Pick method receives the response from the player
-     * and actually updates the game state.
+     *The Resolve Pick method manages the draw phase for each player on the path, proceeding from left to right based on the arrows previously assigned.
+     *  The system allows the player to choose which arrow to use, without being constrained by the order in which they were stored.
+     *  If a player successfully acquires a building or draws a card, it is added to their inventory.
+     *  Additionally, there is a check to see if the player holds a special card; if so,
+     *  they are allowed to draw another card only after all players have completed their turns.
+     *  Finally, once a player concludes their draw phase, they are returned to the turn order card
      * @param playerName
      * @param isBuilding
      * @param index
@@ -348,19 +341,29 @@ public class GameManager {
         Player p = getPlayerByName(playerName);
 
         if(pickingQueue.isEmpty() || !pickingQueue.get(0).player.equals(p)){
-            System.out.println("It's not your turn   " + playerName);
+            notifier.invalidCardPick(getPlayerByName(playerName));
             return;
         }
         PendingPick currentAction = pickingQueue.get(0);
-        if(!currentAction.isEventPick() && currentAction.isUpper() != isUpperRequested) {
-            System.out.println("Invalid line");
-            return;
+        int i = 0;
+        if(currentAction.isUpper() != isUpperRequested) {
+            boolean flag = false;
+            i++;
+            for(; i< pickingQueue.size();i++){
+                if(pickingQueue.get(i).player.equals(p) && pickingQueue.get(i).isUpper() == isUpperRequested && !pickingQueue.get(i).isEventPick) {
+                    flag=true;
+                    break;
+                }
+            }
+            if(!flag){
+                notifier.invalidCardPick(getPlayerByName(playerName));
+                return;
+            }
         }
 
-        if(index < 0 && index > board.getPath().size()){
+        if(index < 0 || index > board.getPath().size()){
             System.out.println(p.getName() + " can't draw the card ");
-            pickingQueue.remove(0);
-            executeNextPick();
+            notifier.invalidCardPick(getPlayerByName(playerName));
             return;
         }
 
@@ -372,13 +375,34 @@ public class GameManager {
         }
 
         if (success) {
-            pickingQueue.remove(0);
+            pickingQueue.remove(i);
             try {
 
                 notifier.pickedCardBroadcast(p, isUpperRequested, isBuilding, index);
             } catch (Exception e) {
                 System.err.println("Network error");
             }
+
+            if(pickingQueue.size() >= 1){
+                if(!pickingQueue.get(0).player.equals(p) || (pickingQueue.get(0).player().equals(p) &&  pickingQueue.get(0).isEventPick)){
+
+                    if(board.bringBackToTOC(p)>=0){
+                        notifier.returnTotemOnTurnOrderBroadcast(p, board.bringBackToTOC(p));
+                    }else{
+                        System.out.println("Error while bring back to TOC");
+                    }
+                }
+            }else{
+
+                if(!board.getTurnOrderCard().getOrder().contains(p)){
+                    if(board.bringBackToTOC(p)>=0){
+                        notifier.returnTotemOnTurnOrderBroadcast(p, board.bringBackToTOC(p));
+                    }else{
+                        System.out.println("Error while bring back to TOC");
+                    }
+                }
+            }
+
             executeNextPick();
         } else {
             System.out.println("Failed action");
@@ -386,36 +410,19 @@ public class GameManager {
     }
 
 
-    /** The execute Next Pick method advances the turns in the draw phase.
-     * If the list is empty, this means that all players have completed the draw phase
-     * for that round; otherwise, it looks at the first element of the list,
-     * takes the communication interface associated with the specific player
-     * and finally waits for the player to respond.
+    /** The execute next pick method checks if the list is empty:
+     *  if so, it means all players have completed their draw, and the game can proceed to the next turn;
+     *  otherwise, the system notifies all players that it is the current player's turn to perform their draws.
      */
 
     private void executeNextPick(){
-         synchronized (playersLock) {
+         synchronized (pickingQueue) {
              if (pickingQueue.isEmpty()) {
                  System.out.println("All players have drawn");// se è vuota vuol dire che tutti i giocatori hanno pescato allora si passsa al prossimo turno
                  nextRound();
                  return;
              }
-             this.currentPlayer = pickingQueue.get(0).player();
-             int upCount = 0;
-             int downCount = 0;
-
-             for( int i = 0; i < pickingQueue.size();  i++){
-                 PendingPick currentAction = pickingQueue.get(i);
-
-                 if(currentAction.player().equals(this.currentPlayer)) { //per contare solo le frecce del giocatore che deve muovere in quel momento
-                     if (currentAction.isUpper()) {
-                         upCount++;
-                     } else {
-                         downCount++;
-                     }
-                 }
-             System.out.println("It's your turn " + currentPlayer.getName() + ".  Residue : Above =" +upCount+ "Below= " +downCount);
-             }
+             notifier.showTurnBroadcast(pickingQueue.get(0).player);
          }
     }
 
@@ -427,7 +434,7 @@ public class GameManager {
      */
 
 
-    public synchronized void moveTotem(String playerName, int pathIndex) {
+    /*public synchronized void moveTotem(String playerName, int pathIndex) {
         Player p = getPlayerByName(playerName);
         //verifica che sia il turno del giocatore effettivo
         if(positionQueue.isEmpty() || !positionQueue.get(0).getName().equals(playerName)){
@@ -450,19 +457,22 @@ public class GameManager {
         //modiifica del Model
          Player player = positionQueue.get(0);
         chosenCard.setOccupiedBy(player);
-        System.out.println(p.getName() + " he positioned himself on the card " + pathIndex);
+        System.out.println(player.getName() + " he positioned himself on the card " + pathIndex);
         positionQueue.remove(0);
         executeNextPosition();
 
-    }
+    }*/
 
     /**
-     * Method to buy a building from the list of buildings on the board +
-     * make sure you have enough food to buy it.
-     * @param player
-     * @param rowUpper
-     * @param index
-     * @return of the purchased building
+     * Purchases a building from the specified row on the board.
+     * Checks if the player has sufficient food resources to cover the cost,
+     * while applying any available discounts from special cards or effects.
+     *
+     * @param player   The player performing the purchase.
+     * @param rowUpper Boolean indicating if the building is in the upper row (true) or lower row (false).
+     * @param index    The position of the building in the chosen row.
+     * @return The purchased Building object if successful, or null if the purchase fails
+     *         due to invalid index or insufficient food.
      */
 
     public Building buyBuilding(Player player, boolean rowUpper, int index) {
@@ -480,9 +490,12 @@ public class GameManager {
 
         Building selectedBuilding = (Building) buildings.get(index);
         int cost = selectedBuilding.getPrice();
+        int discount = player.getBuilderDiscount();
+        int finalCost= Math.max(0,cost - discount);
 
-        if(player.getFood() >= cost){
-            player.modifyFood(-cost);
+
+        if(player.getFood() >= finalCost){
+            player.modifyFood(-finalCost);
             Building pickedBuilding=  (Building) board.pickCard(rowUpper, true, index);
             player.getBuilding().add(pickedBuilding);
             //Some buildings need to be activated when picked up from the board
@@ -492,8 +505,8 @@ public class GameManager {
             System.out.println("The building" + pickedBuilding.getName() + "was purchased by");
             return pickedBuilding;
         }else{
-            System.out.println("INSUFFICIENT FOOD! (Requested :" + cost +")");
-            System.out.println("Choose another building or move on");
+            System.out.println("INSUFFICIENT FOOD! (Requested :" + finalCost +")");
+            System.out.println("Current food:  " + player.getFood());
             notifier.invalidCardPick(player);
             return null;
         }
@@ -518,7 +531,6 @@ public class GameManager {
             pickedCharacter.addCard(visitor,player);
             System.out.println(player.getName() + "added" + pickedCharacter.getCharacterType());
             //broadcasting to everyone that the player picked successfully the wanted card
-            notifier.pickedCardBroadcast(player,isUpper,false,index);
             return true;
         }else{
             notifier.invalidCardPick(player);
@@ -538,7 +550,7 @@ public class GameManager {
                 .filter(p -> p.getName().equals(name))
                 .findFirst()
                 .orElse(null);
-        }
+    }
 
     public Board getBoard() {
         return board;
@@ -564,30 +576,11 @@ public class GameManager {
         return players;
     }
 
-    public int getCurrentEra() {
-        return currentEra;
-    }
 
     public Player getCurrentPlayer() {
         return this.currentPlayer;
     }
 
-    public String[] getAvailableTotems(){
-        ArrayList<Totem> takenTotems = new ArrayList<>();
-        Totem[] allTotems = new Totem[]{Totem.WHITE, Totem.BLACK, Totem.BLUE, Totem.ORANGE, Totem.YELLOW};
-        ArrayList<Totem> totems = (ArrayList<Totem>) Arrays.asList(allTotems);
-        synchronized (playersLock) {
-            for (Player player : players) {
-                takenTotems.add(player.getTotem());
-            }
-        }
-        totems.removeAll(takenTotems);
-        String[] totemNames = new String[takenTotems.size()];
-        for(int i = 0; i < takenTotems.size(); i++) {
-            totemNames[i] = totems.get(i).toString();
-        }
-        return totemNames;
-    }
 
 }
 

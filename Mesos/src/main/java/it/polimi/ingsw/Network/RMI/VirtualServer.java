@@ -20,11 +20,9 @@ public interface VirtualServer extends Remote {
 
     void requestSetNumPlayersManagement(int numPlayer, RemoteClientInterface client ) throws RemoteException;
 
-    void setTotemPosition(String username, int index) throws RemoteException;
-
-    void leave() throws RemoteException;
+    void leave(RemoteClientInterface client) throws RemoteException;
 
     void requestAvailableTotemsManagement(String player, ArrayList<Totem> availabletotems) throws RemoteException;
 
-    void removeActiveClient (VirtualClientInterface wrappedClient) throws RemoteException;
+
 }
