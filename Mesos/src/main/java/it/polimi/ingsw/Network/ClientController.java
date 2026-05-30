@@ -96,6 +96,9 @@ public class ClientController implements AutoCloseable{
 
     //notifica dal server
     public void showGameStarted(ArrayList<Player> players, Board board) {
+        synchronized (BoardLock){
+            currentBoard = board;
+        }
         view.showStartGame();
     }
     public void showUpdateFirstPlayer() {
@@ -110,7 +113,7 @@ public class ClientController implements AutoCloseable{
         view.showMessage("era updated");
     }
     public void showPlayerTurn(String player) {
-        view.showMessage("It's your turn.");
+        view.showCurrentPlayer(player);
     }
 
     public void foodUpdated(String username, int foodUpdated){
@@ -220,6 +223,8 @@ public class ClientController implements AutoCloseable{
 
 
     public void checkForLogin(){
+        Totem t;
+        String name;
         synchronized (tmpLock){
             if(serverConnection==null){
                 view.showError("Server Connection not established");
@@ -229,23 +234,25 @@ public class ClientController implements AutoCloseable{
             if(tmpTotem == null || tmpUsername==null){
                 return;
             }
+
             //case: in the first login the username was confirmed but not the totem
             if(localTotem==null && localPlayerName!=null){
-                serverConnection.login(localPlayerName, tmpTotem);
+                name = localPlayerName;
+                t = tmpTotem;
                 tmpTotem = null;
-                return;
-            }
-            //case: int the first login the totem was confirmed but not the totem
-            if(localPlayerName==null && localTotem!=null){
-                serverConnection.login(tmpUsername,localTotem);
+            }else  if(localPlayerName==null && localTotem!=null){
+                name = tmpUsername;
+                t = tmpTotem;
                 tmpUsername = null;
-                return;
+            }else {
+                serverConnection.login(tmpUsername, tmpTotem);
+                t = tmpTotem;
+                name = tmpUsername;
+                tmpUsername = null;
+                tmpTotem = null;
             }
-
-            serverConnection.login(tmpUsername, tmpTotem);
-            tmpUsername = null;
-            tmpTotem = null;
         }
+        serverConnection.login(name ,t );
     }
 
 
@@ -337,12 +344,15 @@ public class ClientController implements AutoCloseable{
             player = currentBoard.getTurnOrderCard().getOrder().removeFirst();
         }
         synchronized (currentBoard.getPath()){
-            boolean notPresent = currentBoard.getPath().stream()
-                    .filter(OfferCard::isOccupied)
-                    .map(OfferCard::getOccupiedBy)
-                    .findAny()
-                    .isEmpty();
-            if(notPresent){
+            boolean present = false;
+
+            for(OfferCard c : currentBoard.getPath()){
+                if(c.isOccupied() && c.getOccupiedBy().getName().equals(playerName)){
+                    present = true;
+                    break;
+                }
+            }
+            if(present){
                 throw new RuntimeException("Player "+playerName+" is already in this moment");
             }
             if(!currentBoard.getPath().get(index).isOccupied()){
@@ -350,7 +360,7 @@ public class ClientController implements AutoCloseable{
             }
         }
         view.moveTotem(playerName,index);
-        view.showMessage("Player"+ playerName + "moved to: "+ index);
+//        view.showMessage("Player"+ playerName + "moved to: "+ index);
     }
 
     public void showTotemMovedError() {
