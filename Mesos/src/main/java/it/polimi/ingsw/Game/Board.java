@@ -321,6 +321,25 @@ public class Board  implements Serializable {
             buildingsEra3.addAll(totalBuildingEra3.subList(0,5));
         }
     }
+
+    public int bringBackToTOC(Player p){
+        synchronized (path){
+            for(OfferCard offerCard : path){
+                if(offerCard.isOccupied() && offerCard.getOccupiedBy().equals(p)){
+                    offerCard.release();
+                }
+            }
+        }
+
+        synchronized (turnOrderCard){
+            if(!turnOrderCard.getOrder().contains(p)){
+                turnOrderCard.getOrder().add(p);
+                return turnOrderCard.getOrder().size()-1;
+            }
+            System.out.println("Player already in TOC");
+            return -1;
+        }
+    }
 }
 
 
