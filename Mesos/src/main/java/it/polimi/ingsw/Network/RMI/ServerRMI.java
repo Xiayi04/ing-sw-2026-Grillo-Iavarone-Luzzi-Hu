@@ -44,7 +44,7 @@ public class ServerRMI extends UnicastRemoteObject implements VirtualServer,Runn
         try {
             final String serverName = "---MESOS_SERVER---";
             //It sets the registry to port 1234
-            Registry registry = LocateRegistry.createRegistry(1234);
+            Registry registry = LocateRegistry.createRegistry(2345);
             //Publish the server to the registry
             registry.rebind(serverName, this);
             System.out.println("Server RMI started...");
@@ -89,8 +89,10 @@ public class ServerRMI extends UnicastRemoteObject implements VirtualServer,Runn
         VirtualClientInterface wrappedClient =activeClients.get(virtualClient);
         if(wrappedClient != null) {
             System.out.println("ServerRMI: Username received -> " + username);
+            System.out.println("ServerRMI: Totem received    -> " + chosenColor);
             lobby.addUsername(username, wrappedClient);
             lobby.addTotem(chosenColor, wrappedClient);
+
         }
         else {
             System.err.println("ServerRMI: Invalid login request (missing or incorrect parameters).");
@@ -143,6 +145,7 @@ public class ServerRMI extends UnicastRemoteObject implements VirtualServer,Runn
         VirtualClientInterface wrapped =  activeClients.get(client);
         if(wrapped != null) {
             lobby.setNumPlayers(numPlayers,wrapped);
+            System.out.printf("numPlayers is set" + numPlayers);
         }else{
             VirtualClientInterface newClient = new RMIVirtualClient(client);
             lobby.setNumPlayers(numPlayers,newClient);
@@ -171,19 +174,19 @@ public class ServerRMI extends UnicastRemoteObject implements VirtualServer,Runn
 
     }
 
+
     /**
      * Handles the management request for available totems (player colors)
      * for a specific client.
      * This method identifies the {@code VirtualClientInterface} associated
      * with the first totem in the provided list and triggers the lobby
      * to send the list of available colors to that client.
-     * @param player          The name of the player requesting the totem management.
-     * @param availabletotems An {@link ArrayList} of {@link Totem} objects
+     * @param client {@link ArrayList} of {@link Totem} objects
      *      * representing the available choices.
      */
-    @Override
-    public void requestAvailableTotemsManagement(String player, ArrayList<Totem> availabletotems){
-        VirtualClientInterface wrappedClient =activeClients.get(availabletotems.get(0));
+   @Override
+    public void requestAvailableTotemsManagement(RemoteClientInterface client){
+        VirtualClientInterface wrappedClient =activeClients.get(client);
         lobby.sendAvailableColors(wrappedClient);
     }
 
@@ -205,7 +208,7 @@ public class ServerRMI extends UnicastRemoteObject implements VirtualServer,Runn
 
             try {
                 java.rmi.server.UnicastRemoteObject.unexportObject(this, true);
-                java.rmi.registry.Registry registry = java.rmi.registry.LocateRegistry.getRegistry(1234);
+                java.rmi.registry.Registry registry = java.rmi.registry.LocateRegistry.getRegistry(2345);
                 registry.unbind("---MESOS_SERVER---");
                 activeClients.clear();
 

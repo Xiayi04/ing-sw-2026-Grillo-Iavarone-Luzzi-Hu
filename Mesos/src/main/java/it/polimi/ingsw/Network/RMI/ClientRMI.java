@@ -152,16 +152,20 @@ public class ClientRMI extends UnicastRemoteObject implements
     //implementation server connection
     @Override
     public void login(String username, Totem chosenTotem) {
-        try {
-            if (server == null) {
-                clientController.showError("RMI server not connected yet.");
-                return;
-            }
-            this.username = username;
-            server.login(username, chosenTotem, this);
-        } catch (RemoteException e) {
-            clientController.showError("RMI error during login.");
+        if (server == null) {
+            clientController.showError("RMI server not connected yet.");
+            return;
         }
+        this.username = username;
+        new Thread(()->{
+            try {
+                server.login(username, chosenTotem, this);
+            } catch (RemoteException e) {
+                throw new RuntimeException(e);
+            }
+        }).start();
+
+
     }
 
     @Override
@@ -211,14 +215,13 @@ public class ClientRMI extends UnicastRemoteObject implements
     @Override
     public void run() {
         try {
-            Registry registry = LocateRegistry.getRegistry(localHost, port);
-            server = (VirtualServer) registry.lookup(serverName);
+
+            Registry registry = LocateRegistry.getRegistry(localHost, 1234);
+            server = (VirtualServer) registry.lookup( "---MESOS_SERVER---");
 
             server.connect(this);
             System.out.println("Connected to RMI server.");
 
-            server.ping(username);
-            System.out.println("Ping sent");
 
         } catch (Exception e) {
             System.out.println("Cannot connect to RMI server.");

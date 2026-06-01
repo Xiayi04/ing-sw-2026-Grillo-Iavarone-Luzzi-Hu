@@ -22,7 +22,7 @@ public interface VirtualServer extends Remote {
 
     void leave(RemoteClientInterface client) throws RemoteException;
 
-    void requestAvailableTotemsManagement(String player, ArrayList<Totem> availabletotems) throws RemoteException;
+    void requestAvailableTotemsManagement(RemoteClientInterface client) throws RemoteException;
 
 
 }
