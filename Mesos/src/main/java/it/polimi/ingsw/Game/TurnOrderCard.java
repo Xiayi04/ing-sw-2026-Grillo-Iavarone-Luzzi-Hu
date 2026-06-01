@@ -5,11 +5,13 @@ import it.polimi.ingsw.Buildings.BuildingVisitor.SpecialBuildings.BonusFoodVisit
 import it.polimi.ingsw.Buildings.BuildingVisitor.SpecialBuildings.TurnOrderCardFoodBonus;
 import it.polimi.ingsw.UI.Printer;
 
+import java.io.Serial;
 import java.io.Serializable;
 import java.util.ArrayList;
 import static java.lang.Math.ceil;
 
 public class TurnOrderCard implements Serializable {
+    @Serial
     private static final long serialVersionUID = 1L;
     private final ArrayList<Player> order;
     private final int NumPlayers;

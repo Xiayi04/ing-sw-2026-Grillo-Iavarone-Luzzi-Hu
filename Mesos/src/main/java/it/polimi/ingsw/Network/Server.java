@@ -35,7 +35,7 @@ public class Server{
 
         DatabaseManager.createTable();
 
-        GameManager gameManager = new GameManager(null,0, new Board());
+        GameManager gameManager = new GameManager(new ArrayList<>(),0, new Board());
         serverController = new ServerController(gameManager);
 
         serverSocket = new ServerSocket(socketPort,serverController,serverController.getLobby());

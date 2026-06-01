@@ -2,6 +2,7 @@ package it.polimi.ingsw.Network.Socket.Server;
 
 import it.polimi.ingsw.Cards.Events.Event;
 import it.polimi.ingsw.Controller.GameManager;
+import it.polimi.ingsw.Database.LeaderBoardData;
 import it.polimi.ingsw.Game.Board;
 import it.polimi.ingsw.Game.Player;
 import it.polimi.ingsw.Game.Totem;
@@ -40,14 +41,16 @@ public class SocketVirtualClient implements VirtualClientInterface {
                 throw new ClientDisconnectedException("Client network connection lost during command: " + commandType);
             } catch (IOException e) {
                 System.out.println("Generic Error while sending " +  commandType + ": " + e.getMessage());
+                e.printStackTrace();
             }
         }
     }
 
     //public record TotemPosition(String playerName, int index) implements Serializable {};
 
+
     @Override
-    public void closeConnection() {
+    public void updateForcedEndGame() {
         send("close_connection", null);
     }
 
@@ -62,8 +65,8 @@ public class SocketVirtualClient implements VirtualClientInterface {
     }
 
     @Override
-    public void showEndGame(String winnerName, List<PlayerScore> leaderboard) {
-        send("end_game", new EndGameData(winnerName, leaderboard));
+    public void updateEndGame(String winner, List<PlayerScore> leaderboard) {
+        send("end_game", new EndGameData(winner, leaderboard));
     }
 
     @Override
@@ -138,7 +141,7 @@ public class SocketVirtualClient implements VirtualClientInterface {
 
     @Override
     public void updateAvailableTotems(ArrayList<Totem> availableTotems) {
-        send("available_totems", availableTotems);
+        send("colors", availableTotems);
     }
 
     @Override
@@ -185,4 +188,8 @@ public class SocketVirtualClient implements VirtualClientInterface {
         send("pick_error", null);
     }
 
+    @Override
+    public void updateLeaderboardFromDB(int PlayerPositionInDB, List<LeaderBoardData> leaderboard) {
+        send("db_leaderboard", new DBData(PlayerPositionInDB,leaderboard));
+    }
 }

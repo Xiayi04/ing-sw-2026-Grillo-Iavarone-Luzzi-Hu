@@ -1,6 +1,7 @@
 package it.polimi.ingsw.UI;
 
 import it.polimi.ingsw.Cards.Card;
+import it.polimi.ingsw.Database.LeaderBoardData;
 import it.polimi.ingsw.Game.Board;
 import it.polimi.ingsw.Game.OfferCard;
 import it.polimi.ingsw.Game.Totem;
@@ -16,38 +17,46 @@ import it.polimi.ingsw.UI.CommandTUI.ConnectionSelectionCommand;
 import java.util.*;
 import java.util.concurrent.atomic.AtomicBoolean;
 
-public class TUI implements GraphicInterface,Runnable {
-private final Object LOCK = new Object();
-private final ClientController controller;
-private final Printer printer = new Printer();
-private Scanner sc;
-private AtomicBoolean isRunning = new AtomicBoolean(true);
+import static java.lang.Math.ceil;
+import static java.lang.Math.floor;
 
-public TUI(ClientController controller) {
-    this.controller = controller;
-    controller.setView(this);
-    this.run();
-}
+public class TUI implements GraphicInterface, Runnable {
+    private final Object LOCK = new Object();
+    private final ClientController controller;
+    private final Printer printer = new Printer();
+    private Scanner sc;
+    private AtomicBoolean isRunning = new AtomicBoolean(true);
+
+    public TUI(ClientController controller) {
+        this.controller = controller;
+        controller.setView(this);
+        this.run();
+    }
 
     @Override
     public void showEndGameSuccessfully(String winner, List<PlayerScore> leaderboard) {
-        synchronized (LOCK){
+        synchronized (LOCK) {
             System.out.println("da realizzare");
         }
     }
 
     @Override
     public void showStartGame() {
-        synchronized (LOCK){
-            boardPrinter(controller.getCurrentBoard(),"Game Started");
+        synchronized (LOCK) {
+            boardPrinter(controller.getCurrentBoard(), "Game Started");
         }
+    }
+
+    @Override
+    public void showLeaderboardFromDB(int playerPosition, List<LeaderBoardData> updatedDB) {
+
     }
 
     @Override
     public void showPlayerFoodUpdate(String playerName, int food) {
         synchronized (LOCK) {
             StringBuilder update = new StringBuilder();
-            update.append((playerName.equals(controller.getLocalPlayer().getName()) ? "You now have " : playerName.toUpperCase()+" now has " ));
+            update.append((playerName.equals(controller.getLocalPlayer().getName()) ? "You now have " : playerName.toUpperCase() + " now has "));
             update.append(food).append("food");
             synchronized (controller.getLocalPlayer()) {
                 boardPrinter(controller.getCurrentBoard(), update.toString());
@@ -59,7 +68,7 @@ public TUI(ClientController controller) {
     public void showPlayerPPUpdate(String playerName, int pp) {
         synchronized (LOCK) {
             StringBuilder update = new StringBuilder();
-            update.append((playerName.equals(controller.getLocalPlayer().getName()) ? "You now have " : (playerName.toUpperCase()+" now has ") ));
+            update.append((playerName.equals(controller.getLocalPlayer().getName()) ? "You now have " : (playerName.toUpperCase() + " now has ")));
             update.append(pp).append("Prestige Points");
         }
     }
@@ -78,12 +87,12 @@ public TUI(ClientController controller) {
 
     @Override
     public void pickCard(String name, boolean isUpper, boolean isBuilding, int index) {
-        synchronized (LOCK){
+        synchronized (LOCK) {
             StringBuilder stringBuilder = new StringBuilder();
 
-            if(controller.getLocalPlayer().getName().equals(name)){
+            if (controller.getLocalPlayer().getName().equals(name)) {
                 stringBuilder.append("You selected ");
-            }else
+            } else
                 stringBuilder.append(name.toUpperCase()).append(" has selected ");
             stringBuilder.append(isBuilding ? "a Building from the " : "a Character from the ");
             stringBuilder.append(isUpper ? "Upper" : "Lower");
@@ -97,11 +106,11 @@ public TUI(ClientController controller) {
 
     @Override
     public void moveTotem(String username, int index) {
-        synchronized (LOCK){
+        synchronized (LOCK) {
             StringBuilder stringBuilder = new StringBuilder();
-            if(controller.getLocalPlayer().getName().equals(username)){
+            if (controller.getLocalPlayer().getName().equals(username)) {
                 stringBuilder.append("You moved your totem in position " + index + ".");
-            }else {
+            } else {
                 stringBuilder.append(username.toUpperCase()).append(" has moved his totem in position ").append(index).append(".");
             }
             screenCleaner();
@@ -119,25 +128,26 @@ public TUI(ClientController controller) {
 
     @Override
     public void showNextRound() {
-        synchronized (LOCK){
+        synchronized (LOCK) {
             screenCleaner();
             System.out.println("===NEXT ROUND===");
             synchronized (controller.getCurrentBoard()) {
-               boardPrinter(controller.getCurrentBoard(), "");
+                boardPrinter(controller.getCurrentBoard(), "");
             }
         }
     }
 
     @Override
     public void showAvailableTotems(ArrayList<Totem> availableTotems) {
-        String[] provv = new String [availableTotems.size()];
-        for (int i = 0; i < availableTotems.size(); i++) {
-            provv[i] = availableTotems.get(i).toString();
-        }
-        String totems;
-        totems = String.join(", ", provv);
         synchronized (LOCK) {
-            System.out.println("These are the totems available at the moment: "+totems);
+            String[] provv = new String[availableTotems.size()];
+            for (int i = 0; i < availableTotems.size(); i++) {
+                provv[i] = availableTotems.get(i).toString();
+            }
+            String totems;
+            totems = String.join(", ", provv);
+
+            System.out.println("These are the totems available at the moment: " + totems);
         }
     }
 
@@ -158,7 +168,7 @@ public TUI(ClientController controller) {
     @Override
     public void showCurrentPlayer(String username) {
         synchronized (LOCK) {
-            boardPrinter(controller.getCurrentBoard(),"");
+            //boardPrinter(controller.getCurrentBoard(),"");
             if (username.equals(controller.getLocalPlayer().getName()))
                 System.out.println("It's your turn!");
             else
@@ -168,23 +178,23 @@ public TUI(ClientController controller) {
     }
 
 
-    public void startMenu(){
+    public void startMenu() {
 
-            synchronized (LOCK){
-                screenCleaner();
-                System.out.println(" === MESOS === ");
-                System.out.println("Command List:");
-                startMenuCommands();
-            }
+        synchronized (LOCK) {
+            screenCleaner();
+            System.out.println(" === MESOS === ");
+            System.out.println("Command List:");
+            startMenuCommands();
+        }
 
     }
 
-    public void screenCleaner(){
+    public void screenCleaner() {
         System.out.print("\033[H\033[2J");
         System.out.flush();
     }
 
-    public void startMenuCommands(){
+    public void startMenuCommands() {
         System.out.println("*Insert your username using -> username: 'your username'");
         System.out.println("*Find the available totem colors at the moment using -> colors");
         System.out.println("*Select the preferred totem's color using -> totem: 'chosen color'");
@@ -195,7 +205,7 @@ public TUI(ClientController controller) {
     }
 
     @Override
-    public void run(){
+    public void run() {
         //I need to know which type of connection the user wants
         sc = new Scanner(System.in);
         int connection = -1;
@@ -227,23 +237,23 @@ public TUI(ClientController controller) {
         CommandFactoryTUI factory = new CommandFactoryTUI();
         startMenu();
         sc.nextLine();
-        while(isRunning.get()){
+        while (isRunning.get()) {
             try {
                 String content = sc.nextLine();
-                if(content.equals("quit")){
+                if (content.equals("quit")) {
                     controller.close();
                     break;
                 }
                 CommandTUI command = factory.getCommand(content);
 
-                if(command == null){
+                if (command == null) {
                     continue;
                 }
 
-                new Thread(()->{
+                new Thread(() -> {
                     command.execute(controller);
                 }).start();
-            } catch (IllegalStateException|NoSuchElementException e) {
+            } catch (IllegalStateException | NoSuchElementException e) {
                 ClientMain.terminateClient();
                 break;
             }
@@ -256,82 +266,145 @@ public TUI(ClientController controller) {
     //Board printing management
     public String[] printBuildingRow(ArrayList<Card> row) {
         Printer printer = new Printer();
-        if(row.isEmpty()){
+        if (row.isEmpty()) {
             return printer.initialize(new String[0]);
         }
 
         String[] result = new String[7];
         result = printer.initialize(result);
-        for(Card building : row){
+        for (Card building : row) {
             String[] provv = building.print(printer);
-            for(int i = 0; i < provv.length; i++){
-                result[i] = result[i]+provv[i];
+            for (int i = 0; i < provv.length; i++) {
+                result[i] = result[i] + provv[i];
             }
         }
-        return result;
+
+        return cardMerger(result);
     }
 
     public String[] printCardsRow(ArrayList<Card> row) {
         Printer printer = new Printer();
         String[] result = new String[7];
         result = printer.initialize(result);
-        for(Card card : row){
+        int index = 0;
+        for (Card card : row) {
             String[] provv = card.print(printer);
-            for(int i = 0; i < provv.length; i++){
-                result[i] = result[i]+provv[i];
+            for (int i = 0; i < provv.length; i++) {
+                result[i] = result[i] + provv[i];
             }
         }
-        return result;
+        return cardMerger(result);
     }
 
     public String[] printPath(TurnOrderCard turnOrderCard, ArrayList<OfferCard> path) {
 
         Printer printer = new Printer();
-        String[]  result = new String[7];
+        String[] result = new String[7];
         result = printer.initialize(result);
 
         String[] provv = turnOrderCard.print(printer);
-        for(int i = 0; i < provv.length; i++){
-            result[i] = result[i]+provv[i];
+        for (int i = 0; i < provv.length; i++) {
+            result[i] = result[i] + provv[i];
         }
 
-        for(OfferCard offerCard : path){
-            String[] printedOC =  offerCard.print(printer);
-            for(int i = 0; i < printedOC.length; i++){
-                result[i] = result[i]+printedOC[i];
+        for (OfferCard offerCard : path) {
+            String[] printedOC = offerCard.print(printer);
+            for (int i = 0; i < printedOC.length; i++) {
+                result[i] = result[i] + printedOC[i];
             }
         }
+
+        String lowerRow = result[result.length - 1];
+        List<Integer> junctions = new ArrayList<>();
+        for (int i = 0; i < lowerRow.length(); i++) {
+            char c =  lowerRow.charAt(i);
+            if (c == '└' || c == '┘') {
+                junctions.add(i);
+            }
+        }
+        int j=1;
+        StringBuilder sb = new StringBuilder(lowerRow);
+        for (int i = 2; i < junctions.size()-1; i=i+2) {
+            int distance =  junctions.get(i+1)-junctions.get(i);
+            String index = "<"+j+">";
+            int left = (distance-index.length())/2;
+            int end = junctions.get(i)+left+index.length();
+            sb.replace(junctions.get(i)+left,end,index);
+            j++;
+        }
+        result[result.length-1] = sb.toString();
 
         return result;
     }
 
-    public void boardPrinter(Board board, String update){
-        ArrayList<String> printedBoard =  new ArrayList<String>();
+    public void boardPrinter(Board board, String update) {
+        ArrayList<String> printedBoard = new ArrayList<String>();
 
-        printedBoard.add("BUILDINGS:");
+
+        StringBuilder separator =  new StringBuilder();
+        separator.append("=".repeat(143));
+        printedBoard.add(separator.toString());
+        //printedBoard.add("BUILDINGS:");
         String[] buildingUpperRow = printBuildingRow(board.getUpperBuildingRow());
-        printedBoard.addAll(Arrays.asList(buildingUpperRow));
-        printedBoard.add("CARDS:");
+        //printedBoard.addAll(Arrays.asList(buildingUpperRow));
+        //printedBoard.add("CARDS:");
         String[] cardsUpperRow = printCardsRow(board.getUpperCardRow());
+        for(int i=0; i<buildingUpperRow.length; i++){
+            cardsUpperRow[i] = cardsUpperRow[i] + " " +buildingUpperRow[i];
+        }
         printedBoard.addAll(Arrays.asList(cardsUpperRow));
-        printedBoard.add("PATH:");
+        //printedBoard.add("PATH:");
         String[] path = printPath(board.getTurnOrderCard(), board.getPath());
         printedBoard.addAll(Arrays.asList(path));
-        printedBoard.add("CARDS:");
+        //printedBoard.add("CARDS:");
         String[] cardsLowerRow = printCardsRow(board.getLowerCardsRow());
         printedBoard.addAll(Arrays.asList(cardsLowerRow));
-        printedBoard.add("BUILDINGS:");
+        //printedBoard.add("BUILDINGS:");
         String[] buildingLowerRow = printBuildingRow(board.getLowerBuildingRow());
         printedBoard.addAll(Arrays.asList(buildingLowerRow));
         printedBoard.add("UPDATE:");
         printedBoard.add(update);
 
-        for(String s : printedBoard){
+        for (String s : printedBoard) {
             System.out.println(s);
         }
     }
 
-    public void pathPrinter(Board board,String update){
+    public String[] cardMerger(String[] cards){
+        for (int i = 0; i < cards.length; i++) {
+            if (i==0){
+                cards[i] = cards[i].replace("┐┌", "┬");
+            } else if (i == cards.length-1) {
+                cards[i] = cards[i].replace("┘└", "┴");
+            }else{
+                cards[i] = cards[i].replace("││", "│");
+            }
+        }
+        String lowerRow = cards[cards.length-1];
+        List<Integer> junctions = new ArrayList<>();
+        for (int i = 0; i<lowerRow.length(); i++) {
+            char c =  lowerRow.charAt(i);
+            if (c == '└' || c == '┴' || c == '┘') {
+                junctions.add(i);
+            }
+        }
+
+        StringBuilder provvIdx = new StringBuilder(lowerRow);
+        for(int i = 0; i < junctions.size()-1; i++) {
+            int distance =  junctions.get(i+1)-junctions.get(i);
+            int j=i+1;
+            String index = "<"+j+">";
+            int left = (distance-index.length())/2;
+            int end = junctions.get(i)+left+index.length();
+            provvIdx.replace(junctions.get(i)+left,end,index);
+        }
+
+        cards[cards.length-1] = provvIdx.toString();
+
+        return cards;
+    }
+
+    public void pathPrinter(Board board, String update) {
         ArrayList<String> bluePrint = new ArrayList<>();
 
         bluePrint.add("PATH:");
@@ -339,7 +412,7 @@ public TUI(ClientController controller) {
         bluePrint.addAll(Arrays.asList(path));
         bluePrint.add("UPDATE:");
         bluePrint.add(update);
-        for(String s : bluePrint){
+        for (String s : bluePrint) {
             System.out.println(s);
         }
 
@@ -347,14 +420,15 @@ public TUI(ClientController controller) {
 
 
     @Override
-    public synchronized void close(){
-        if(!isRunning.get()){
+    public synchronized void close() {
+        if (!isRunning.get()) {
             return;
         }
         isRunning.set(false);
         try {
             sc.close();
-        } catch (Exception ignored) {}
+        } catch (Exception ignored) {
+        }
         ClientMain.terminateClient();
     }
 }

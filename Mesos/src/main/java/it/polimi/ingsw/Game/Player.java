@@ -8,6 +8,7 @@ import it.polimi.ingsw.Cards.Characters.CharacterVisitor.CharacterVisitor;
 import it.polimi.ingsw.Cards.Characters.CharacterVisitor.InventorIconCounter;
 import it.polimi.ingsw.Network.VirtualClientInterface;
 
+import java.io.Serial;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -16,6 +17,7 @@ import java.util.Map;
 
 
 public class Player implements Serializable {
+    @Serial
     private static final long serialVersionUID = 1L;
     private final String name;
     private final Totem totem;
@@ -31,7 +33,7 @@ public class Player implements Serializable {
     private int painterCounter;
     private int inventorCounter;
     private int shamanCounter;
-    private final VirtualClientInterface virtualClient;
+    private transient final VirtualClientInterface virtualClient;
     public static Object countersLock = new Object();
 
     //Constructor

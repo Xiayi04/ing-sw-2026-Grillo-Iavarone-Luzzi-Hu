@@ -13,7 +13,7 @@ public class PingManager implements AutoCloseable {
 
     private final ScheduledExecutorService scheduler = Executors.newSingleThreadScheduledExecutor();
     final ArrayList<VirtualClientInterface> clients = new ArrayList<>();
-    private final int delay = 2;
+    private final int delay = 5;
 
     public synchronized void addClientToPingList(VirtualClientInterface client) {
         synchronized (clients) {

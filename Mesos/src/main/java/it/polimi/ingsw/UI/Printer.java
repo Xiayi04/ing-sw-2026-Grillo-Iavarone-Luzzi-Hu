@@ -33,7 +33,7 @@ public class Printer  {
                 max = string[i].length();
             }
         }
-        max = max+2;
+        //max = max+2;
         for(int i = 0; i < string.length; i++){
             if(i==0){
                 string[0] = string[0] + topLeftCorner;
@@ -148,15 +148,16 @@ public class Printer  {
 
     public String[] print(OfferCard offerCard){
         String[] p = new String[height];
-        p= initialize(p);
+        p = initialize(p);
         String occupier;
         if(offerCard.isOccupied()){
-            occupier = offerCard.getOccupiedBy().getTotem().toString().toLowerCase();
+            occupier = offerCard.getOccupiedBy().getTotem().toString().toUpperCase();
         }else{
             occupier = "  ";
         }
         String[] string = new String[3];
         string= initialize(string);
+        string[1] = occupier;
         string = encapsulator(string);
         for(int j=0; j<string.length; j++){
             p[j+1] = string[j];

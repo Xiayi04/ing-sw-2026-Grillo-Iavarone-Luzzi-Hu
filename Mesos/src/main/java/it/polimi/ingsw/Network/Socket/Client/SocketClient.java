@@ -7,6 +7,7 @@ import it.polimi.ingsw.Network.ServerConnection;
 import it.polimi.ingsw.Network.Socket.Client.Command.ClientCommand;
 import it.polimi.ingsw.Network.Socket.Client.Command.CommandFactoryClientSide;
 import it.polimi.ingsw.Network.Socket.Server.Command.Pick;
+import it.polimi.ingsw.Network.Socket.Server.Command.TotemPosition;
 import it.polimi.ingsw.Network.Socket.Server.MessageFromServer;
 
 import java.io.*;
@@ -134,7 +135,7 @@ public class SocketClient implements Runnable, ServerConnection, AutoCloseable{
 
     @Override
     public void requestMoveTotem(String localPlayerName, int chosenPosition) {
-        send("position", chosenPosition);
+        send("position", new TotemPosition(localPlayerName, chosenPosition));
     }
 
     @Override

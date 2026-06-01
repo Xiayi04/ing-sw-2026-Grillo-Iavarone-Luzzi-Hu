@@ -4,9 +4,11 @@ import it.polimi.ingsw.Cards.Characters.CharacterType;
 import it.polimi.ingsw.Game.Totem;
 import it.polimi.ingsw.UI.Printer;
 
+import java.io.Serial;
 import java.io.Serializable;
 
 public abstract class Card implements Serializable {
+    @Serial
     private static final long serialVersionUID = 1L;
     private final int era;
     private final String cardType;

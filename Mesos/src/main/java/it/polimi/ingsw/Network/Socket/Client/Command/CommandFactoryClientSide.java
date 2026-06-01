@@ -40,7 +40,7 @@ public class CommandFactoryClientSide {
         //Confirms
         commands.put("confirm_username", u-> new ConfirmUsernameCommand((String)u));
         commands.put("confirm_totem", t-> new ConfirmTotemCommand((Totem)t));
-        commands.put("confirm_numplayers", p-> new ConfirmNumPlayers((Integer)p));
+        commands.put("chosen_num_players", p-> new ConfirmNumPlayers((Integer)p));
         //Errors
         commands.put("refuse_connection", payload-> new RefusedConnectionCommand());
         commands.put("setnumplayers_error", e-> new SetNumPlayersError());

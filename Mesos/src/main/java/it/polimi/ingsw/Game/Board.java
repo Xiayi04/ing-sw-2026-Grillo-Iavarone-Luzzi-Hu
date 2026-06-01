@@ -1,4 +1,5 @@
 package it.polimi.ingsw.Game;
+import java.io.Serial;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -10,6 +11,7 @@ import it.polimi.ingsw.Factory.BuildingFactory;
 
 
 public class Board  implements Serializable {
+    @Serial
     private static final long serialVersionUID = 1L;
     private int era;
     private final ArrayList<Card> upperCardRow;

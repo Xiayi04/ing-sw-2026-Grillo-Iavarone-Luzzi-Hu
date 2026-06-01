@@ -2,10 +2,12 @@ package it.polimi.ingsw.Game;
 
 import it.polimi.ingsw.UI.Printer;
 
+import java.io.Serial;
 import java.io.Serializable;
 
 //cambiato il tipo di ID
 public class OfferCard implements Serializable {
+    @Serial
     private static final long serialVersionUID = 1L;
     private int ID;
     private int UpArrow;

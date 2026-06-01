@@ -7,10 +7,9 @@ import it.polimi.ingsw.Network.Server;
 import it.polimi.ingsw.Network.VirtualClientInterface;
 
 import java.io.IOException;
-import java.rmi.RemoteException;
 import java.util.ArrayList;
 
-public class ServerController implements LobbyManager,AutoCloseable {
+public class ServerController implements LobbyManager {
     private final GameManager gameManager;
     private final Lobby lobby;
     private Notifier notifier = null;
@@ -94,6 +93,11 @@ public class ServerController implements LobbyManager,AutoCloseable {
             if (lobby.getTempPlayerByClient(client) != null &&
                     lobby.getTempPlayerByClient(client).getTempPlayerTotem() != null &&
                     lobby.getTempPlayerByClient(client).getTempPlayerTotem().equals(totem)) {
+                try {
+                    client.totemChoiceError();
+                } catch (ClientDisconnectedException e) {
+                    Server.closeConnection(client);
+                }
                 return;
             }
 
@@ -161,6 +165,7 @@ public class ServerController implements LobbyManager,AutoCloseable {
             }
             lobby.getNumPlayers().set(numPlayers);
             lobby.IsNumPlayersSet().set(true);
+            lobby.checkMoreThenEnoughPlayers();
             checkStartGame();
             try {
                 client.showChosenNumPlayers(numPlayers);
@@ -197,7 +202,7 @@ public class ServerController implements LobbyManager,AutoCloseable {
 
     //Requests management
 
-    public synchronized void moveTotemRequest(String username, int pathIndex) throws RemoteException {
+    public synchronized void moveTotemRequest(String username, int pathIndex){
         gameManager.resolvePosition(username, pathIndex);
     }
 
@@ -249,13 +254,13 @@ public class ServerController implements LobbyManager,AutoCloseable {
     public void pushPlayersInGM(ArrayList<TempPlayer> tempPlayers) {
 
         if (!gameManager.getPlayers().isEmpty()) {
-            throw new RuntimeException("Players already in GM");
+            System.out.println("Players already in GM");
+            return;
         }
         for (TempPlayer tempPlayer : tempPlayers) {
 
             addPlayerToGame(tempPlayer.getName(), tempPlayer.getTempPlayerTotem(), tempPlayer.getClient());
         }
-        gameManager.getPlayers().notifyAll();
 
     }
 
@@ -263,14 +268,9 @@ public class ServerController implements LobbyManager,AutoCloseable {
         Server.closeConnection(client);
     }
 
-    @Override
-    public void close(){
-        //non so se ci vada qualcosa dentro
-    }
-
     public void closeConnections(VirtualClientInterface disconnectedClient) {
         pingManager.close();
-        notifier.farewell(disconnectedClient);
+        notifier.sendFarewell(disconnectedClient);
     }
 
 }

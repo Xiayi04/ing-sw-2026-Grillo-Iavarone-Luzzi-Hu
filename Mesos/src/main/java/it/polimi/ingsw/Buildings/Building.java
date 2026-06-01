@@ -14,7 +14,12 @@ import it.polimi.ingsw.Cards.Events.ShamanicEvent;
 import it.polimi.ingsw.Cards.Events.SustenanceEvent;
 import it.polimi.ingsw.Game.Player;
 
-public abstract class Building extends Card implements BuildingInterface {
+import java.io.Serial;
+import java.io.Serializable;
+
+public abstract class Building extends Card implements BuildingInterface, Serializable {
+    @Serial
+    private static final long serialVersionUID = 1L;
     private final int price;
     private final int pp;
     private final String name;
