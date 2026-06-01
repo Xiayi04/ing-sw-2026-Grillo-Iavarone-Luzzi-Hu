@@ -5,6 +5,6 @@ import it.polimi.ingsw.Network.ClientController;
 public class InvalidFormatCommand implements CommandTUI{
     @Override
     public void execute(ClientController clientController) {
-        clientController.showErrorMessage("Invalid Format Command");
+        clientController.showError("Invalid Format Command");
     }
 }

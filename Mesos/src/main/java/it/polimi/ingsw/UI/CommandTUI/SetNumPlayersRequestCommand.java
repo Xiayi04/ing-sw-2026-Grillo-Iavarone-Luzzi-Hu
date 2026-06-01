@@ -13,7 +13,7 @@ public class SetNumPlayersRequestCommand implements CommandTUI{
         try {
             clientController.setNumPlayers(Integer.parseInt(numPlayers));
         } catch (NumberFormatException e) {
-            clientController.showErrorMessage("Please enter a number between 2 and 5");
+            clientController.showError("Please enter a number between 2 and 5");
         }
     }
 }

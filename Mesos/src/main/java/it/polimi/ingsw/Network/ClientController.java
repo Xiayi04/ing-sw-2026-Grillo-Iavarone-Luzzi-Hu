@@ -79,7 +79,7 @@ public class ClientController implements AutoCloseable{
 
   //choice of the number of players
     public void setNumPlayers(int numPlayers) {
-        while (numPlayers < 2 || numPlayers > 5) {
+        if (numPlayers < 2 || numPlayers > 5) {
             view.showError("Number of Players is wrong,try again ");
             view.askNumToPlayer();
         }
@@ -245,7 +245,6 @@ public class ClientController implements AutoCloseable{
                 t = tmpTotem;
                 tmpUsername = null;
             }else {
-                serverConnection.login(tmpUsername, tmpTotem);
                 t = tmpTotem;
                 name = tmpUsername;
                 tmpUsername = null;
