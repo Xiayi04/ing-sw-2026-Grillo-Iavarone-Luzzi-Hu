@@ -19,8 +19,8 @@ public class PaintingEventTest {
     @Test
     void paintingEventTest() {
         PaintingEvent p = new PaintingEvent(1, "EVENT", "PAINTING_EVENT",3,5,-2);
-        Player p1 = new Player("p1", Totem.RED,5);
-        Player p2 = new Player("p2", Totem.BLUE,5);
+        Player p1 = new Player("p1", Totem.ORANGE,5,null);
+        Player p2 = new Player("p2", Totem.BLUE,5,null);
 
 
         p1.getTribeCard().add(new Painter(1,"CHARACTER",2, "PAINTER"));

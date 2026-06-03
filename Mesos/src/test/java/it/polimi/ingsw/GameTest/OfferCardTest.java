@@ -19,7 +19,7 @@ public class OfferCardTest {
     Board board = new Board();
     ArrayList<Player> players= new ArrayList<>();
     for(int i=0;i<5;i++){
-        Player p = new Player("aura"+ i, Totem.BLACK,0);
+        Player p = new Player("aura"+ i, Totem.BLACK,0,null);
         players.add(p);
     }
     ArrayList<OfferCard> path =  board.obtainPath(players);
@@ -60,7 +60,7 @@ public class OfferCardTest {
         Board board = new Board();
         ArrayList<Player> players= new ArrayList<>();
         for(int i=0;i<5;i++){
-            Player p = new Player("aura"+ i, Totem.BLACK,0);
+            Player p = new Player("aura"+ i, Totem.BLACK,0,null);
             players.add(p);
         }
         ArrayList<OfferCard> path =  board.obtainPath(players);

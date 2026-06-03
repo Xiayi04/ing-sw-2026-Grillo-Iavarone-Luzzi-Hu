@@ -19,8 +19,8 @@ public class SustenanceEventTest {
     @Test
     void payCharacterFoodInTheTribe(){
         SustenanceEvent s = new SustenanceEvent(2 , "EVENT", "SUSTENANCE_EVENT",-2);
-        Player p1 = new Player("ALFA", Totem.RED,10);
-        Player p2 = new Player("BETA", Totem.BLUE,5);
+        Player p1 = new Player("ALFA", Totem.YELLOW,10,null);
+        Player p2 = new Player("BETA", Totem.BLUE,5,null);
 
         p1.getTribeCard().add(new Shaman(2,"CHARACTER",3, "SHAMAN",3));
         p1.getTribeCard().add(new Inventor(1,"CHARACTER",2,"INVENTOR","boat"));

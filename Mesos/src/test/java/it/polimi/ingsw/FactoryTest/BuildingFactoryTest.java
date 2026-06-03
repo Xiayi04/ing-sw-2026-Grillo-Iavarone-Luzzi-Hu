@@ -28,7 +28,7 @@ public class BuildingFactoryTest {
     @Test
     void testCreateMultiplicationBuilding() {
         BuildingFactory factory = new BuildingFactory();
-        Building building = factory.createMultiplicationBuilding(9, 6, 6, Icons.PICKER, 2);
+        Building building = factory.createMultiplicationBuilding(9, 6, 6, "PICKER", 2);
 
         assertNotNull(building);
         assertTrue(building instanceof MultiplicationBuilding);

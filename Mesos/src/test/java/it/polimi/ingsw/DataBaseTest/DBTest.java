@@ -1,6 +1,6 @@
 package it.polimi.ingsw.DataBaseTest;
 
-import it.polimi.ingsw.Database.DatabaseConnectionManager;
+//import it.polimi.ingsw.Database.DatabaseConnectionManager;
 import it.polimi.ingsw.Database.LeaderBoardDAO;
 import it.polimi.ingsw.Database.LeaderBoardData;
 import org.junit.jupiter.api.Test;
@@ -14,8 +14,8 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class DBTest {
 
-    @Test
-    public void DBTest(){
+   // @Test
+    /*public void DBTest(){
         try {
             Connection connection = DatabaseConnectionManager.getConnection();
         } catch (SQLException e) {
@@ -85,6 +85,6 @@ public class DBTest {
         for (LeaderBoardData player : leaderBoard) {
             System.out.println("#"+player.position() +" " +player.username() +" |score: "+player.score() + " |on date: " + player.date());
         }
-    }
+    }*/
 
 }

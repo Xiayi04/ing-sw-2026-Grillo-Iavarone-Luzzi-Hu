@@ -54,22 +54,22 @@ public class DeckTest {
         for(Card c : deck) {
             if(c.getCardType().equals("CHARACTER")){
                 switch(((it.polimi.ingsw.Cards.Characters.Character)c).getCharacterType()){
-                    case CharacterType.HUNTER:
+                    case "HUNTER":
                         counterHunter++;
                         break;
-                    case CharacterType.INVENTOR:
+                    case "INVENTOR":
                         counterInventor++;
                         break;
-                    case CharacterType.PICKER:
+                    case "PICKER":
                         counterPicker++;
                         break;
-                    case  CharacterType.PAINTER:
+                    case  "PAINTER":
                         counterPainter++;
                         break;
-                    case CharacterType.SHAMAN:
+                    case "SHAMAN":
                         counterShaman++;
                         break;
-                    case  CharacterType.BUILDER:
+                    case  "BUILDER":
                         counterBuilder++;
                         break;
                 }
@@ -160,22 +160,22 @@ public class DeckTest {
         for(Card c : deck) {
             if(c.getCardType().equals("CHARACTER")){
                 switch(((Character)c).getCharacterType()){
-                    case CharacterType.HUNTER:
+                    case "HUNTER":
                         counterHunter++;
                         break;
-                    case CharacterType.INVENTOR:
+                    case "INVENTOR":
                         counterInventor++;
                         break;
-                    case  CharacterType.PICKER:
+                    case  "PICKER":
                         counterPicker++;
                         break;
-                    case  CharacterType.PAINTER:
+                    case  "PAINTER":
                         counterPainter++;
                         break;
-                    case CharacterType.SHAMAN:
+                    case "SHAMAN":
                         counterShaman++;
                         break;
-                    case  CharacterType.BUILDER:
+                    case  "BUILDER":
                         counterBuilder++;
                         break;
                 }
@@ -264,22 +264,22 @@ public class DeckTest {
         for(Card c : deck) {
             if(c.getCardType().equals("CHARACTER")){
                 switch(((Character)c).getCharacterType()){
-                    case CharacterType.HUNTER:
+                    case "HUNTER":
                         counterHunter++;
                         break;
-                    case CharacterType.INVENTOR:
+                    case "INVENTOR":
                         counterInventor++;
                         break;
-                    case  CharacterType.PICKER:
+                    case  "PICKER":
                         counterPicker++;
                         break;
-                    case  CharacterType.PAINTER:
+                    case  "PAINTER":
                         counterPainter++;
                         break;
-                    case CharacterType.SHAMAN:
+                    case "SHAMAN":
                         counterShaman++;
                         break;
-                    case  CharacterType.BUILDER:
+                    case  "BUILDER":
                         counterBuilder++;
                         break;
                 }
@@ -368,22 +368,22 @@ public class DeckTest {
         for(Card c : deck) {
             if(c.getCardType().equals("CHARACTER")){
                 switch(((Character)c).getCharacterType()){
-                    case CharacterType.HUNTER:
+                    case "HUNTER":
                         counterHunter++;
                         break;
-                    case CharacterType.INVENTOR:
+                    case "INVENTOR":
                         counterInventor++;
                         break;
-                    case  CharacterType.PICKER:
+                    case  "PICKER":
                         counterPicker++;
                         break;
-                    case  CharacterType.PAINTER:
+                    case  "PAINTER":
                         counterPainter++;
                         break;
-                    case CharacterType.SHAMAN:
+                    case "SHAMAN":
                         counterShaman++;
                         break;
-                    case  CharacterType.BUILDER:
+                    case  "BUILDER":
                         counterBuilder++;
                         break;
                 }

@@ -23,7 +23,7 @@ public class ShamanicEventTest {
     @Test
     void onlyPlayer(){
         ShamanicEvent s = new ShamanicEvent(2,"EVENT","SHAMANIC_EVENT",-2,3);
-        Player p1 = new Player("p1",Totem.RED,5);
+        Player p1 = new Player("p1",Totem.YELLOW,5,null);
         ArrayList<Player> players = new ArrayList<>(List.of(p1));
         assertThrows(IllegalArgumentException.class, ()->{s.getMaxStars(players);});
     }
@@ -31,9 +31,9 @@ public class ShamanicEventTest {
     @Test
     void playersWithMoreStars(){
         ShamanicEvent s = new ShamanicEvent(2, "EVENT", "SHAMANIC_EVENT",-2,3);
-        Player p1 = new Player("ALFA", Totem.RED,10);
-        Player p2 = new Player("BETA", Totem.BLUE,5);
-        Player p3 = new Player("JAMMA", Totem.BLACK,10);
+        Player p1 = new Player("ALFA", Totem.YELLOW,10,null);
+        Player p2 = new Player("BETA", Totem.BLUE,5,null);
+        Player p3 = new Player("JAMMA", Totem.BLACK,10,null);
 
         p1.getTribeCard().add(new Shaman(2,"CHARACTER",3, "SHAMAN",3));
         p1.getTribeCard().add(new Shaman(2,"CHARACTER",3, "SHAMAN",2));
@@ -52,10 +52,10 @@ public class ShamanicEventTest {
     @Test
     void resolveEventShamanic(){
         ShamanicEvent s = new ShamanicEvent(2, "EVENT", "SHAMANIC_EVENT",-2,3);
-        Player p1 = new Player("ALFA", Totem.RED,10);
-        Player p2 = new Player("BETA", Totem.BLUE,5);
-        Player p3 = new Player("JAMMA", Totem.BLACK,10);
-        Player p4 = new Player("DELTA", Totem.BLACK,7);
+        Player p1 = new Player("ALFA", Totem.YELLOW,10,null);
+        Player p2 = new Player("BETA", Totem.BLUE,5,null);
+        Player p3 = new Player("JAMMA", Totem.BLACK,10,null);
+        Player p4 = new Player("DELTA", Totem.WHITE,7,null);
 
         p1.getTribeCard().add(new Shaman(2,"CHARACTER",3, "SHAMAN",3));
         p1.getTribeCard().add(new Shaman(2,"CHARACTER",3, "SHAMAN",2));

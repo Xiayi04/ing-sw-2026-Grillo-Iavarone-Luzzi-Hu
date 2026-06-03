@@ -507,7 +507,9 @@ public class GameManager {
         }else{
             System.out.println("INSUFFICIENT FOOD! (Requested :" + finalCost +")");
             System.out.println("Current food:  " + player.getFood());
-            notifier.invalidCardPick(player);
+            if (notifier!= null){
+                notifier.invalidCardPick(player);
+            }
             return null;
         }
 

@@ -19,8 +19,8 @@ import java.util.ArrayList;
 public class DiscountBuildingTest {
 
     ArrayList<Player> players = new ArrayList<>();
-    Player p1 = new Player("io", Totem.BLACK, 2);
-    Player p2 = new Player("tu", Totem.ORANGE, 3);
+    Player p1 = new Player("io", Totem.BLACK, 2,null);
+    Player p2 = new Player("tu", Totem.ORANGE, 3,null);
     ConcreteFactoryEra factory = new ConcreteFactoryEra(1);
     ArrayList<Character> characters = factory.createCharacterList();
     ArrayList<Event> events = factory.createEventList();

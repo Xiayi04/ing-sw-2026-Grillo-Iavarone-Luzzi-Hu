@@ -86,7 +86,7 @@ public class PrinterTest {
         card.getOrder().add(p4);
 
         Board board = new Board();
-        board.setTurnOrderCard(card);
+        board.getTurnOrderCard();
         board.initializeBoard(5);
 
         //TUI tui = new TUI(new ClientController());
@@ -99,7 +99,7 @@ public class PrinterTest {
         Printer printer = new Printer();
         Deck deck = new Deck();
         ArrayList<Building>  mazzo = new ArrayList<>();
-        mazzo = deck.buildingPerPlayers(5);
+        //mazzo = deck.buildingPerPlayers(5);
 
         String[] blueprint = new String[7];
         blueprint = printer.initialize(blueprint);

@@ -14,7 +14,7 @@ import static org.junit.jupiter.api.Assertions.*;
 
 public class MultiplicationBuildingTest {
 
-    Player p = new Player("io", Totem.BLACK, 2);
+    Player p = new Player("io", Totem.BLACK, 2,null);
     ConcreteFactoryEra factory = new ConcreteFactoryEra(1);
     ArrayList<Character> characters = factory.createCharacterList();
 
@@ -26,7 +26,7 @@ public class MultiplicationBuildingTest {
         p.getTribeCard().add(characters.get(13)); //painter
         p.getTribeCard().add(characters.get(18)); //inventor
         p.getTribeCard().add(characters.get(25)); //shaman
-        MultiplicationBuilding b = new MultiplicationBuilding(1, 1, 1, Icons.SET, 2);
+        MultiplicationBuilding b = new MultiplicationBuilding(1, 1, 1, "SET", 2);
         p.modifyPP(b.countPP(p));
         assertEquals(2, p.getPrestigePoints());
     }
@@ -36,7 +36,7 @@ public class MultiplicationBuildingTest {
         p.getTribeCard().add(characters.get(1));
         p.getTribeCard().add(characters.get(1));
         p.getTribeCard().add(characters.get(1));
-        MultiplicationBuilding b = new MultiplicationBuilding(1, 1, 1, Icons.BUILDER, 2);
+        MultiplicationBuilding b = new MultiplicationBuilding(1, 1, 1, "BUILDER", 2);
         p.modifyPP(b.countPP(p));
         assertEquals(6, p.getPrestigePoints());
     }

@@ -15,28 +15,28 @@ import java.util.List;
 import static org.junit.jupiter.api.Assertions.*;
 
 public class HuntingEventTest {
-/*
+
     @Test
     void shouldThrowExceptionForSinglePlayer(){
         ArrayList<Player> players = new ArrayList<Player>();
-        HuntingEvent h = new HuntingEvent(1,CardType.EVENT,EventName.HUNTING_EVENT,1);
-        players.add(new Player("X", Totem.BLACK, 10));
+        HuntingEvent h = new HuntingEvent(1,"EVENT","HUNTING_EVENT",1);
+        players.add(new Player("X", Totem.BLACK, 10,null));
         assertThrows(IllegalArgumentException.class, () -> {h.resolveEvent(players);
         });
     }
 
     @Test
     void testHuntingEvent() {
-        HuntingEvent h = new HuntingEvent(2,CardType.EVENT,EventName.HUNTING_EVENT,1);
-        Player p1 = new Player("X", Totem.BLACK,10);
-        Player p2 = new Player("Y", Totem.RED,10);
-        Player p3 = new Player("Z", Totem.ORANGE,10);
-        p1.getTribeCard().add(new Hunter(1,CardType.CHARACTER,3, CharacterType.HUNTER,false));
-        p1.getTribeCard().add(new Hunter(1,CardType.CHARACTER,3, CharacterType.HUNTER,true));
-        p1.getTribeCard().add(new Hunter(1,CardType.CHARACTER,3, CharacterType.HUNTER,false));
-        p2.getTribeCard().add(new Hunter(1,CardType.CHARACTER,3, CharacterType.HUNTER,false));
-        p2.getTribeCard().add(new Hunter(1,CardType.CHARACTER,3, CharacterType.HUNTER,true));
-        p3.getTribeCard().add(new Hunter(1,CardType.CHARACTER,3, CharacterType.HUNTER,true));
+        HuntingEvent h = new HuntingEvent(2,"EVENT","HUNTING_EVENT",1);
+        Player p1 = new Player("X", Totem.BLACK,10,null);
+        Player p2 = new Player("Y", Totem.YELLOW,10,null);
+        Player p3 = new Player("Z", Totem.ORANGE,10,null);
+        p1.getTribeCard().add(new Hunter(1,"CHARACTER",3,"HUNTER",false));
+        p1.getTribeCard().add(new Hunter(1,"CHARACTER",3,"HUNTER",true));
+        p1.getTribeCard().add(new Hunter(1,"CHARACTER",3, "HUNTER",false));
+        p2.getTribeCard().add(new Hunter(1,"CHARACTER",3, "HUNTER",false));
+        p2.getTribeCard().add(new Hunter(1,"CHARACTER",3, "HUNTER",true));
+        p3.getTribeCard().add(new Hunter(1,"CHARACTER",3, "HUNTER",true));
 
         ArrayList<Player> players = new ArrayList<>(List.of(p1,p2,p3));
         h.resolveEvent(players);
@@ -51,5 +51,5 @@ public class HuntingEventTest {
 
 
 
-    }*/
+    }
 }
