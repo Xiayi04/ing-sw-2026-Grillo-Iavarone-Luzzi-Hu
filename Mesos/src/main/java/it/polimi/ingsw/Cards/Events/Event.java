@@ -17,7 +17,7 @@ public abstract class Event extends Card implements Serializable {
     }
     //CONSTRUCTOR
     public Event(int era, String cardType, String eventName) {
-        super(era, "EVENT");
+        super(era, "EVENT", false);
         this.eventName = eventName;
     }
 

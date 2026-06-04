@@ -361,7 +361,24 @@ public class GameManager {
             }
         }
 
-        if(index < 0 || index > board.getPath().size()){
+        int lenght;
+        if(isUpperRequested){
+            if(isBuilding){
+                lenght = board.getUpperBuildingRow().size();
+            }
+            else {
+                lenght = board.getUpperCardRow().size();
+            }
+        }
+        else {
+            if(isBuilding){
+                lenght = board.getLowerBuildingRow().size();
+            }
+            else {
+                lenght = board.getLowerCardsRow().size();
+            }
+        }
+        if(index < 0 || index > lenght) {
             System.out.println(p.getName() + " can't draw the card ");
             notifier.invalidCardPick(getPlayerByName(playerName));
             return;

@@ -8,75 +8,62 @@ import it.polimi.ingsw.Game.OfferCard;
 import it.polimi.ingsw.Game.Player;
 import it.polimi.ingsw.Game.Totem;
 import it.polimi.ingsw.Network.ClientController;
+import it.polimi.ingsw.Network.GraphicInterface;
 import javafx.application.Application;
 import javafx.scene.Scene;
+import javafx.scene.control.Alert;
+import javafx.scene.control.ButtonBar;
+import javafx.scene.control.ButtonType;
 import javafx.scene.control.Label;
+import javafx.scene.image.Image;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 
+import java.io.File;
 import java.util.ArrayList;
+import java.util.Objects;
+import java.util.Optional;
 
 public class MainApp extends Application {
 
     private static ClientController clientController;
+    private BorderPane root;
+
     public static void setController(ClientController c) {
         clientController = c;
     }
 
     @Override
     public void start(Stage mainStage) {
-        ClientController controller = new ClientController();
-        controller.setCurrentBoard(new Board());
-        controller.getCurrentBoard().getPlayers().add(new Player("mattia", Totem.BLACK, 2, null));
-        controller.getCurrentBoard().getPlayers().add(new Player("xiayi", Totem.YELLOW, 2, null));
-        controller.getCurrentBoard().getPlayers().add(new Player("gloria", Totem.BLUE, 2, null));
-        controller.getCurrentBoard().getPlayers().add(new Player("viola", Totem.ORANGE, 2, null));
-        controller.getCurrentBoard().getPlayers().add(new Player("giuseppe", Totem.WHITE, 2, null));
-        controller.getCurrentBoard().obtainPath(controller.getCurrentBoard().getPlayers());
-        controller.getCurrentBoard().initializeBoard(controller.getCurrentBoard().getPlayers().size());
-        controller.setLocalPlayerName("xiayi");
-        controller.getCurrentBoard().getPlayers().get(0).getTribeCard().add(new Painter(1, "character", 2, "PAINTER"));
-        controller.getCurrentBoard().getPlayers().get(0).getTribeCard().add(new Painter(1, "character", 2, "PAINTER"));
-        controller.getCurrentBoard().getPlayers().get(0).getTribeCard().add(new Painter(1, "character", 2, "PAINTER"));
-        controller.getCurrentBoard().getPlayers().get(0).getTribeCard().add(new Painter(1, "character", 2, "PAINTER"));
-        controller.getCurrentBoard().getPlayers().get(0).getTribeCard().add(new Painter(1, "character", 2, "PAINTER"));
-        controller.getCurrentBoard().getPlayers().get(0).getTribeCard().add(new Hunter(1, "character", 2, "HUNTER", false));
-        controller.getCurrentBoard().getPlayers().get(0).getTribeCard().add(new Hunter(1, "character", 2, "HUNTER", false));
-        controller.getCurrentBoard().getPlayers().get(0).getTribeCard().add(new Hunter(1, "character", 2, "HUNTER", false));
-        controller.getCurrentBoard().getPlayers().get(0).getTribeCard().add(new Hunter(1, "character", 2, "HUNTER", false));
-        controller.getCurrentBoard().getPlayers().get(0).getTribeCard().add(new Hunter(1, "character", 2, "HUNTER", false));
-        controller.getCurrentBoard().getPlayers().get(0).getTribeCard().add(new Builder(1, "character", 2, "BUILDER", 1, 3));
-        controller.getCurrentBoard().getPlayers().get(0).getTribeCard().add(new Builder(1, "character", 2, "BUILDER", 1, 3));
-        controller.getCurrentBoard().getPlayers().get(0).getTribeCard().add(new Builder(1, "character", 2, "BUILDER", 1, 3));
-        controller.getCurrentBoard().getPlayers().get(0).getTribeCard().add(new Builder(1, "character", 2, "BUILDER", 1, 3));
-        controller.getCurrentBoard().getPlayers().get(0).getTribeCard().add(new Builder(1, "character", 2, "BUILDER", 1, 3));
-        controller.getCurrentBoard().getPlayers().get(0).getTribeCard().add(new Picker(1, "character", 2, "PICKER"));
-        controller.getCurrentBoard().getPlayers().get(0).getTribeCard().add(new Picker(1, "character", 2, "PICKER"));
-        controller.getCurrentBoard().getPlayers().get(0).getTribeCard().add(new Picker(1, "character", 2, "PICKER"));
-        controller.getCurrentBoard().getPlayers().get(0).getTribeCard().add(new Picker(1, "character", 2, "PICKER"));
-        controller.getCurrentBoard().getPlayers().get(0).getTribeCard().add(new Picker(1, "character", 2, "PICKER"));
-        controller.getCurrentBoard().getPlayers().get(0).getTribeCard().add(new Inventor(1, "character", 2, "INVENTOR", "TREE"));
-        controller.getCurrentBoard().getPlayers().get(0).getTribeCard().add(new Inventor(1, "character", 2, "INVENTOR", "TREE"));
-        controller.getCurrentBoard().getPlayers().get(0).getTribeCard().add(new Inventor(1, "character", 2, "INVENTOR", "TREE"));
-        controller.getCurrentBoard().getPlayers().get(0).getTribeCard().add(new Inventor(1, "character", 2, "INVENTOR", "TREE"));
-        controller.getCurrentBoard().getPlayers().get(0).getTribeCard().add(new Inventor(1, "character", 2, "INVENTOR", "TREE"));
-        controller.getCurrentBoard().getPlayers().get(0).getTribeCard().add(new Shaman(1, "character", 2, "SHAMAN", 1));
-        controller.getCurrentBoard().getPlayers().get(0).getTribeCard().add(new Shaman(1, "character", 2, "SHAMAN", 1));
-        controller.getCurrentBoard().getPlayers().get(0).getTribeCard().add(new Shaman(1, "character", 2, "SHAMAN", 1));
-        controller.getCurrentBoard().getPlayers().get(0).getTribeCard().add(new Shaman(1, "character", 2, "SHAMAN", 1));
-        controller.getCurrentBoard().getPlayers().get(0).getTribeCard().add(new Shaman(1, "character", 2, "SHAMAN", 1));
-        controller.getCurrentBoard().getPlayers().get(0).getBuilding().add(new SameIconBuilding(1, 3, 4));
-        GuiView gui =  new GuiView(controller);
-        BorderPane root = gui.createDivision();
+        root = new BorderPane();
+        GraphicInterface view =  new GuiView(clientController, root);
+        clientController.setView(view);
 
         Scene scene = new Scene(root, 300, 200);
 
         mainStage.setScene(scene);
+        mainStage.setOnCloseRequest(event -> {
+            ButtonType yes = new ButtonType("yes", ButtonBar.ButtonData.YES);
+            ButtonType no = new ButtonType("no", ButtonBar.ButtonData.NO);
+            Alert alert = new Alert(Alert.AlertType.CONFIRMATION, "Do you want to log out?", yes, no);
+            alert.setGraphic(null);
+            alert.setHeaderText(null);
+            alert.setTitle("Disconnection");
+            Optional<ButtonType> result = alert.showAndWait();
+            if (result.isPresent() && result.get() == yes){
+                clientController.leave();
+            }
+            else{
+                event.consume();
+            }
+        });
         mainStage.setTitle("Mesos");
-        mainStage.setFullScreen(true);
+        mainStage.setMaximized(true);
+        mainStage.getIcons().add(new Image(new File("images/logo/logo_cranio.png").toURI().toString()));
         mainStage.show();
+        view.showLobbyMenu();
     }
 
     public static void main(String[] args) {

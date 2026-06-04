@@ -2,6 +2,7 @@ package it.polimi.ingsw.UI.GUI;
 
 import it.polimi.ingsw.Game.Player;
 import javafx.geometry.Pos;
+import javafx.scene.Cursor;
 import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.Label;
@@ -32,11 +33,8 @@ public class Playerpanel extends HBox {
         foodLabel = new Label("Food: "+ player.getFood());
         PPLabel = new Label("PP: "+player.getPrestigePoints());
 
-        /*Image image = new Image(Objects.requireNonNull(getClass().getResourceAsStream("/images/totem/"+player.getTotem().toString().toLowerCase()+"_profilo.png")));
-        ImageView imageView = new ImageView(image);
-        imageView.setPreserveRatio(true);
-        imageView.setFitHeight(70);*/
         ImageView imageView = Utils.createImageView("images/totem/"+player.getTotem().toString().toLowerCase()+"_profilo.png", 70);
+        imageView.setCursor(Cursor.HAND);
         imageView.setOnMouseClicked(event -> {openPlayerHand(player);});  //metto al posto di openPlayerHand(player) showHand()
         this.getChildren().add(imageView);
 
@@ -53,8 +51,11 @@ public class Playerpanel extends HBox {
         return playerHandView;
     }
 
-    public void refresh(Player player) {
+    public void refreshFood(Player player) {
         foodLabel.setText("Food: "+ player.getFood());
+    }
+
+    public void refreshPP(Player player) {
         PPLabel.setText("PP: "+player.getPrestigePoints());
     }
 
@@ -70,8 +71,9 @@ public class Playerpanel extends HBox {
         StackPane root = new StackPane(playerHandView);
         root.setAlignment(Pos.CENTER);
 
-        Scene scene = new Scene(root, 670, 600);
+        Scene scene = new Scene(root, 670, 620);
         stage.setScene(scene);
+        stage.setResizable(false);
         stage.show();
     }
 

@@ -1,7 +1,9 @@
 package it.polimi.ingsw.Network;
 
 import com.mysql.cj.xdevapi.Client;
+import it.polimi.ingsw.UI.GUI.MainApp;
 import it.polimi.ingsw.UI.TUI;
+import javafx.application.Application;
 
 import java.util.Scanner;
 import java.util.concurrent.atomic.AtomicBoolean;
@@ -32,7 +34,8 @@ public class ClientMain {
 
         clientController = new ClientController();
         if(UI == 1){
-            //GUI
+            MainApp.setController(clientController);
+            Application.launch(MainApp.class);
         } else {
             userInterface = new TUI(clientController);
         }

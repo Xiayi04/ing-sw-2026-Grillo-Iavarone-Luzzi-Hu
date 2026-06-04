@@ -12,12 +12,12 @@ public abstract class Card implements Serializable {
     private static final long serialVersionUID = 1L;
     private final int era;
     private final String cardType;
-    private boolean isFaceDown;
+    private boolean isPickable;
 
-    public Card(int era, String cardType) {
+    public Card(int era, String cardType, boolean isPickable) {
         this.era = era;
         this.cardType = cardType;
-        this.isFaceDown = true;
+        this.isPickable = isPickable;
     }
 
     public int getEra() {
@@ -26,12 +26,8 @@ public abstract class Card implements Serializable {
 
     public String getCardType() { return cardType; }
 
-    public boolean isFaceDown() {
-        return isFaceDown;
-    }
-
-    public void setFaceUp(){
-        isFaceDown=false;
+    public boolean getIsPickable() {
+        return isPickable;
     }
 
     public void printCard(){

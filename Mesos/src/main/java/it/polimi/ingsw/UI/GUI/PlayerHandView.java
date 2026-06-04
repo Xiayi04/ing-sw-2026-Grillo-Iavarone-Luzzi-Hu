@@ -78,10 +78,6 @@ public class PlayerHandView extends VBox {
     public void fillPlayerHand(){
         GuiVisitor visitor = new GuiCharacterVisitor(boxes);
         for(Character c : player.getTribeCard()){
-            /*Image image = new Image(Objects.requireNonNull(getClass().getResourceAsStream(c.getImagePath())));
-            ImageView imageView = new ImageView(image);
-            imageView.setPreserveRatio(true);
-            imageView.setFitHeight(150);*/
             ImageView imageView = Utils.createImageView(c.getImagePath(), 150);
             imageView.setOnMouseEntered(event -> {
                 imageView.setViewOrder(-1);
@@ -96,10 +92,6 @@ public class PlayerHandView extends VBox {
             c.findBox(visitor).getChildren().add(imageView);
         }
         for(Building b : player.getBuilding()){
-            /*Image image = new Image(Objects.requireNonNull(getClass().getResourceAsStream(b.getImagePath())));
-            ImageView imageView = new ImageView(image);
-            imageView.setPreserveRatio(true);
-            imageView.setFitHeight(150);*/
             ImageView imageView = Utils.createImageView(b.getImagePath(), 150);
             building.getChildren().add(imageView);
         }

@@ -25,7 +25,7 @@ public abstract class Building extends Card implements BuildingInterface, Serial
     private final String name;
 /*costruttore */
     public Building(int era, int price, int pp, String name){
-        super(era, "BUILDING");
+        super(era, "BUILDING", true);
         this.price = price;
         this.pp = pp;
         this.name = name;

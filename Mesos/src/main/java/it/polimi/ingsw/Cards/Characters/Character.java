@@ -13,7 +13,7 @@ public abstract class Character extends Card implements CharacterInterface, Inve
     private final String characterType;
 
     public Character(int era, String cardType, int numPlayers, String characterType) {
-        super( era, "CHARACTER");
+        super(era, "CHARACTER", true);
         this.numPlayers = numPlayers;
         this.characterType = characterType;
     }
