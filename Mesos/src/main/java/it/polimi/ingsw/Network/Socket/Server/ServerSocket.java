@@ -9,7 +9,6 @@ import java.net.Socket;
 import java.util.ArrayList;
 
 public class ServerSocket implements Runnable,AutoCloseable {
-    private final Integer port;
     private final ServerController serverController;
     private final GameManager gameManager;
     private final Lobby lobby;
@@ -17,11 +16,10 @@ public class ServerSocket implements Runnable,AutoCloseable {
     public java.net.ServerSocket  serverSocket;
     public final ArrayList<ClientHandler> clientHandlers = new ArrayList<>();
 
-    public ServerSocket(Integer port, ServerController serverController, Lobby lobby) {
-        this.port = port;
+    public ServerSocket(ServerController serverController) {
         this.serverController = serverController;
         this.gameManager= serverController.getGM();
-        this.lobby = lobby;
+        this.lobby = serverController.getLobby();
     }
 
 

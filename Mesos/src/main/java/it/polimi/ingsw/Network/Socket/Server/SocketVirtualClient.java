@@ -151,7 +151,7 @@ public class SocketVirtualClient implements VirtualClientInterface {
 
     @Override
     public void pickedCard(String username, boolean row, boolean isBuilding, int index) {
-        send("picked_card", new Pick(username, row, isBuilding, index));
+        send("picked_card", new Pick(username, row, isBuilding, index, false));
     }
 
     @Override

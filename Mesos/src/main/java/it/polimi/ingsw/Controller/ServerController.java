@@ -6,18 +6,18 @@ import it.polimi.ingsw.Network.ClientDisconnectedException;
 import it.polimi.ingsw.Network.Server;
 import it.polimi.ingsw.Network.VirtualClientInterface;
 
-import java.io.IOException;
 import java.util.ArrayList;
-
+//
 public class ServerController implements LobbyManager {
     private final GameManager gameManager;
     private final Lobby lobby;
-    private Notifier notifier = null;
     private final PingManager pingManager = new PingManager();
+    private Notifier notifier;
 
 
-    public ServerController(GameManager gameManager) {
+    public ServerController(GameManager gameManager, Notifier notifier) {
         this.gameManager = gameManager;
+        this.notifier = notifier;
         this.lobby = new Lobby(this);
     }
     //setters and getters
@@ -135,8 +135,7 @@ public class ServerController implements LobbyManager {
                 }
             }
         }
-
-    }
+    }//
 
     @Override
     public void checkSetNumPlayers(int numPlayers, VirtualClientInterface client) {
@@ -169,7 +168,7 @@ public class ServerController implements LobbyManager {
             checkStartGame();
             try {
                 client.showChosenNumPlayers(numPlayers);
-            } catch ( ClientDisconnectedException e) {
+            } catch (ClientDisconnectedException e) {
                 handleDisconnection(client);
             }
         }
@@ -200,47 +199,32 @@ public class ServerController implements LobbyManager {
 
     }
 
+    @Override
+    public void connectionInitializer(VirtualClientInterface client) {
+        pingManager.addClientToPingList(client);
+        notifier.addClientToNotifier(client);
+    }
+
     //Requests management
 
-    public synchronized void moveTotemRequest(String username, int pathIndex){
+    public synchronized void moveTotemRequest(String username, int pathIndex) {
         gameManager.resolvePosition(username, pathIndex);
     }
 
-    public synchronized void genericPick(String username, boolean isUpper, boolean isBuilding, int index) {
-        //gameManager.resolvePick(username, isUpper, isBuilding, index);
+    public synchronized void genericPick(String username, boolean isUpper, boolean isBuilding, int index, boolean skip) {
+            gameManager.resolvePick(username, isUpper, isBuilding, index);
     }
 
     //Game Initializing
 
     public void gameInitializer(int numPLayers, ArrayList<TempPlayer> tempPlayers) {
-
-        //gameManager.setNumPlayers(numPLayers);
         pushPlayersInGM(tempPlayers);
 
-        synchronized (gameManager.getPlayers()) {
-            while (gameManager.getPlayers().size() < numPLayers) {
-                try {
-                    gameManager.getPlayers().wait();
-                } catch (InterruptedException e) {
-                    throw new RuntimeException(e);
-                }
-            }
-            ArrayList<VirtualClientInterface> clients = new ArrayList<>();
-
-            for (TempPlayer p : tempPlayers) {
-                clients.add(p.getClient());
-            }
-            Notifier notifier = new Notifier(clients);
-            setNotifier(notifier);
-            gameManager.setNotifier(notifier);
-            //necessità di far partire la partita
-            try {
-                gameManager.startGame();
-            } catch (IOException e) {
-                throw new RuntimeException(e);
-            }
-        }
-
+        setNotifier(notifier);
+        gameManager.setNumPlayers(numPLayers);
+        gameManager.setNotifier(notifier);
+        //necessità di far partire la partita
+        gameManager.startGame();
     }
 
     public synchronized void addPlayerToGame(String username, Totem totem, VirtualClientInterface virtualClient) {

@@ -1,6 +1,8 @@
 package it.polimi.ingsw.Network.Socket.Server.Command;
 
-public record Pick(String username, boolean isUpper, boolean isBuilding, int index) {
+import java.io.Serializable;
+
+public record Pick(String username, boolean isUpper, boolean isBuilding, int index, boolean skip) implements Serializable {
     public Pick{
         if(username == null || username.isBlank()){
             throw new IllegalArgumentException();

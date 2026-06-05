@@ -1,43 +1,64 @@
 package it.polimi.ingsw.Network;
 
-import com.mysql.cj.xdevapi.Client;
 import it.polimi.ingsw.UI.GUI.MainApp;
 import it.polimi.ingsw.UI.TUI;
+import org.jline.reader.EndOfFileException;
+import org.jline.reader.LineReader;
+import org.jline.reader.LineReaderBuilder;
+import org.jline.reader.UserInterruptException;
+import org.jline.terminal.Terminal;
+import org.jline.terminal.TerminalBuilder;
 import javafx.application.Application;
-
-import java.util.Scanner;
+import java.io.IOException;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 public class ClientMain {
 
-    private static String username;
-    private static GraphicInterface userInterface;
-    private static AtomicBoolean isTerminated = new AtomicBoolean(false);
+    private static final AtomicBoolean isTerminated = new AtomicBoolean(false);
     private static ClientController clientController;
+    private static Terminal terminal;
+    private static GraphicInterface userInterface;
 
-    public static String getUsername(){
-        return ClientMain.username;
-    }
 
-    public static void main(String[] args) throws InterruptedException {
-        System.out.println("Welcome user");
-        //System.out.print("Please write your username:");
+    public static void main(String[] args){
+        try {
+            terminal = TerminalBuilder.builder().system(true).build();
+        } catch (IOException e) {
+            System.out.println("Failed to create terminal");
+            ClientMain.terminateClient();
+            return;
+        }
+        LineReader reader = LineReaderBuilder.builder().terminal(terminal).build();
 
-        Scanner sc = new Scanner(System.in);
-        System.out.print("Select the preferred User Interface that you want to use [0:Textual/1:Graphic]:");
-        int UI = sc.nextInt();
-        while(!(UI == 1 || UI == 0) ){
-            System.out.println("Invalid input");
-            System.out.print("Select the preferred User Interface that you want to use [0:Textual/1:Graphic]:");
-            UI = sc.nextInt();
+        String ip = reader.readLine("Insert here the server IP please or press ENTER to use localhost :");
+        ip = ip.trim();
+
+        if(ip.isEmpty()){
+            ip = "localhost";
+        }
+        int UI = -1;
+        while (!isTerminated.get()) {
+            try{
+                String input = reader.readLine("Select the preferred User Interface that you want to use [0:Textual/1:Graphic]:");
+                input = input.trim();
+                if(input.equals("0") || input.equals("1")){
+                    UI = Integer.parseInt(input);
+                    break;
+                }
+                terminal.writer().println("Invalid input. Please try again.");
+                terminal.writer().flush();
+            }catch (UserInterruptException | EndOfFileException e){
+                System.exit(0);
+            }
         }
 
-        clientController = new ClientController();
+        clientController = new ClientController(ip);
+
         if(UI == 1){
             MainApp.setController(clientController);
             Application.launch(MainApp.class);
         } else {
-            userInterface = new TUI(clientController);
+            userInterface = new TUI(terminal ,clientController);
         }
     }
 

@@ -24,18 +24,20 @@ public class SocketClient implements Runnable, ServerConnection, AutoCloseable{
     private volatile boolean closeSignal = false;
     private ObjectInputStream in;
     private Socket socket;
+    private final String serverIP;
+    private final int socketPort = 8000;
     private final ExecutorService pool = Executors.newCachedThreadPool();
 
-    public SocketClient( ClientController clientController) {
+    public SocketClient( ClientController clientController, String serverIP) {
+        this.serverIP = serverIP;
         this.clientController = clientController;
-        clientController.setConnection(this);
         new Thread(this).start();
     }
 
     @Override
     public void run(){
         try {
-            socket = new Socket("localhost", 8000);
+            socket = new Socket(serverIP, socketPort);
             //System.out.println("SocketClient started...");
             synchronized (outputLock) {
                 try {
@@ -57,8 +59,7 @@ public class SocketClient implements Runnable, ServerConnection, AutoCloseable{
                 try {
                     msg = (MessageFromServer) in.readObject();
                 } catch (IOException | ClassNotFoundException e) {
-                    close();
-                    ClientMain.terminateClient();
+                    clientController.handleForcedEndGame();
                     return;
                 }
                 ClientCommand cmd = commandFactory.getCommand(msg);
@@ -67,7 +68,8 @@ public class SocketClient implements Runnable, ServerConnection, AutoCloseable{
             }
 
         } catch (Exception e) {
-            System.out.println(e.getMessage());
+            System.out.println("Connection failed");
+            ClientMain.terminateClient();
         }
     }
 
@@ -77,7 +79,7 @@ public class SocketClient implements Runnable, ServerConnection, AutoCloseable{
                 out.writeObject(new MessageFromClient<>(command, payload));
                 out.flush();
             }catch (IOException e){
-                clientController.close();
+                clientController.handleForcedEndGame();
             }
         }
     }
@@ -129,8 +131,8 @@ public class SocketClient implements Runnable, ServerConnection, AutoCloseable{
     }
 
     @Override
-    public void requestPickCard(String localPlayerName, boolean isUpper, boolean isBuilding, int index) {
-        send("pick", new Pick(localPlayerName, isUpper, isBuilding, index));
+    public void requestPickCard(String localPlayerName, boolean isUpper, boolean isBuilding, int index, boolean skip) {
+        send("pick", new Pick(localPlayerName, isUpper, isBuilding, index, skip));
     }
 
     @Override

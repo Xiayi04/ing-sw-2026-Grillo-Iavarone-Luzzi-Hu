@@ -30,7 +30,14 @@ public class ClientController implements AutoCloseable{
     private Totem localTotem = null;
     String rowName ;
     String cardType;
-    private AtomicBoolean isRunning = new AtomicBoolean(true);
+    private final AtomicBoolean isRunning = new AtomicBoolean(true);
+
+    //connection management
+    private final String serverIP;
+
+    public ClientController(String serverIP) {
+        this.serverIP = serverIP;
+    }
 
     public void setView(GraphicInterface view){
         this.view = view;
@@ -43,13 +50,13 @@ public class ClientController implements AutoCloseable{
     public void setServerConnection(boolean isRMI) {
         try {
             if (isRMI) {
-                ClientRMI clientRMI = new ClientRMI("localhost", 1234, "VirtualServer",this);
+                ClientRMI clientRMI = new ClientRMI(serverIP, 1234, "VirtualServer",this);
                 clientRMI.setClientController(this);
                 clientRMI.run();
 
                 this.serverConnection = clientRMI;
             } else {
-                SocketClient socketClient = new SocketClient(this);
+                SocketClient socketClient = new SocketClient(this, serverIP);
                 this.serverConnection = socketClient;
             }
         } catch (Exception e) {
@@ -270,13 +277,24 @@ public class ClientController implements AutoCloseable{
     }
 
 
+    //skipping management
+    public void requestSkip(){
+        if(serverConnection==null || localPlayerName==null || localTotem==null) {
+            view.showError("Function not available at this moment");
+            return;
+        }
+        serverConnection.requestPickCard(localPlayerName,false, false,-1,true);
+    }
+
+
+
     //picking management, output and input
     public void requestLocalPickCard(boolean isUpper, boolean isBuilding, int index) {
-        if (serverConnection==null || localPlayerName!=null ) {
+        if (serverConnection == null || localPlayerName == null ) {
             view.showError("Command not available in this moment");
             return;
         }
-        serverConnection.requestPickCard(localPlayerName,isUpper, isBuilding, index);
+        serverConnection.requestPickCard(localPlayerName,isUpper, isBuilding, index,false );
     }
 
     public void showPickedCard(String playerName,boolean isUpper , boolean isBuilding, int index) {
@@ -415,7 +433,7 @@ public class ClientController implements AutoCloseable{
     }
 
     public void handleForcedEndGame(){
-        view.showError("Connection refused: someone left");
+        view.showError("The Game is about to end due to another player disconnection");
         ClientMain.terminateClient();
     }
 

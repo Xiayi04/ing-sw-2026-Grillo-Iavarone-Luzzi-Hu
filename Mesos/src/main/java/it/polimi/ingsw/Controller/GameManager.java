@@ -42,10 +42,10 @@ public class GameManager {
     /**
      * It inizializes all the elements in order to prepare for the start of the game, the round and the
      * era are set to 1, all players and the number of players set by the first player are added
-     * @throws RemoteException
+     * @throws RemoteException;
      */
 
-    public void startGame() throws RemoteException {
+    public void startGame(){
         synchronized (playersLock) {
             System.out.println("Starting game");
             this.round = 1;
@@ -260,7 +260,7 @@ public class GameManager {
      * @param numPlayers
      */
 
-    public void setNumPlayers(int numPlayers) throws RemoteException {
+    public void setNumPlayers(int numPlayers){
         synchronized (numPlayersLock){
             this.numPlayers = numPlayers;
             System.out.println("The game is made up of" + numPlayers + " players");
@@ -337,7 +337,7 @@ public class GameManager {
      * @param isBuilding
      * @param index
      */
-    public void resolvePick(String playerName, boolean isUpperRequested, boolean isBuilding, int index) throws RemoteException {
+    public void resolvePick(String playerName, boolean isUpperRequested, boolean isBuilding, int index) {
         Player p = getPlayerByName(playerName);
 
         if(pickingQueue.isEmpty() || !pickingQueue.get(0).player.equals(p)){
@@ -541,7 +541,7 @@ public class GameManager {
      * @return the character taken
      */
 
-    public boolean takeCharacter(Player player, boolean isUpper,int index) throws RemoteException {
+    public boolean takeCharacter(Player player, boolean isUpper,int index) {
         Character pickedCharacter = (Character) board.pickCard(isUpper,false,index);
         if(pickedCharacter != null){
             //Using visitor to add the Character to the player's list

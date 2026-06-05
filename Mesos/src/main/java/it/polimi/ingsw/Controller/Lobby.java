@@ -4,10 +4,7 @@ import it.polimi.ingsw.Game.Totem;
 import it.polimi.ingsw.Network.ClientDisconnectedException;
 import it.polimi.ingsw.Network.Server;
 import it.polimi.ingsw.Network.VirtualClientInterface;
-
-import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Objects;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicInteger;
 
@@ -50,7 +47,7 @@ public class Lobby {
                         Server.terminate();
                     }
                 }
-                serverController.getPingManager().addClientToPingList(client);
+                serverController.connectionInitializer(client);
             }else
                 System.out.println("Error:Client already present in lobby");
         }
