@@ -42,10 +42,10 @@ public class GameManager {
     /**
      * It inizializes all the elements in order to prepare for the start of the game, the round and the
      * era are set to 1, all players and the number of players set by the first player are added
-     * @throws RemoteException;
+     * @throws RemoteException
      */
 
-    public void startGame(){
+    public void startGame() throws RemoteException {
         synchronized (playersLock) {
             System.out.println("Starting game");
             this.round = 1;
@@ -276,7 +276,7 @@ public class GameManager {
      * @param player
      * @param isUpper
      */
-    public record PendingPick(Player player, boolean isUpper, boolean isEventPick) {}
+    public record PendingPick(Player player, boolean isUpper, boolean isEventPick, boolean isSkippable) {}
 
     /**The Picking Phase method handles the draw phase and is used to assign arrows to each player based on the position
      *  they occupy on the offer card. The positions are analyzed from left to right: if a position is occupied,
@@ -297,10 +297,10 @@ public class GameManager {
             for (OfferCard offerCard : path) {
                 if (offerCard.isOccupied()) {
                     for (int i = 0; i < offerCard.getUpArrow(); i++) {
-                        pickingQueue.add(new PendingPick(offerCard.getOccupiedBy(), true,false));
+                        pickingQueue.add(new PendingPick(offerCard.getOccupiedBy(), true,false,false ));
                     }
                     for (int i = 0; i < offerCard.getDownArrow(); i++) {
-                        pickingQueue.add(new PendingPick(offerCard.getOccupiedBy(), false,false));
+                        pickingQueue.add(new PendingPick(offerCard.getOccupiedBy(), false,false,false));
                     }
                     /*for (int i = 0; i < offerCard.getOccupiedBy().getBuilding().size(); i++) {
                         //AddCardVisitor addCardVisitor = new AddCardVisitor();
@@ -317,7 +317,7 @@ public class GameManager {
                 }
             }
             if (playersWithBonus != null) {
-                pickingQueue.add(new PendingPick(playersWithBonus, true,true));
+                pickingQueue.add(new PendingPick(playersWithBonus, true,true,false));
             }
         }
         executeNextPick();
@@ -325,7 +325,7 @@ public class GameManager {
 
     /**
      *The Resolve Pick method manages the draw phase for each player on the path, proceeding from left to right based on the arrows previously assigned.
-     *  The system allows the player to choose which arrow to use, without being constrained by the order in which they were stored.
+     *  The system allows the player to choose which arrow to use, it's not requested that the player has to follow the order in which the arrows were stored.
      *  If a player successfully acquires a building or draws a card, it is added to their inventory.
      *  Additionally, there is a check to see if the player holds a special card; if so,
      *  they are allowed to draw another card only after all players have completed their turns.
@@ -347,7 +347,7 @@ public class GameManager {
             boolean flag = false;
             i++;
             for(; i< pickingQueue.size();i++){
-                if(pickingQueue.get(i).player.equals(p) && pickingQueue.get(i).isUpper() == isUpperRequested && !pickingQueue.get(i).isEventPick) {
+                if(pickingQueue.get(i).player().equals(p) && pickingQueue.get(i).isUpper() == isUpperRequested && !pickingQueue.get(i).isEventPick()) {
                     flag=true;
                     break;
                 }
@@ -424,6 +424,104 @@ public class GameManager {
     }
 
 
+
+    public boolean isDirectionPickable() {
+        PendingPick currentPick = pickingQueue.get(0);
+        ArrayList<Card> isCharactersListAvailable = new ArrayList<>();
+        ArrayList<Card> isBuildingListEmpty = new ArrayList<>();
+        boolean isUpper = currentPick.isUpper();
+
+
+        if (isUpper) {
+            isCharactersListAvailable = board.getUpperCardRow();
+            isBuildingListEmpty = board.getUpperBuildingRow();
+        }else{
+            isCharactersListAvailable = board.getLowerCardsRow();
+            isBuildingListEmpty = board.getLowerBuildingRow();
+        }
+        boolean hasCharacters = availableCharacters(isCharactersListAvailable);
+        boolean hasBuildings = availableBuilding(isBuildingListEmpty );
+       //when it's all empty
+        if (!hasCharacters && !hasBuildings) {
+            removeAllPendingPick(isUpper);
+            return false;
+        }
+        //else
+        boolean canSkip = !hasCharacters && hasBuildings;
+
+        PendingPick updatedPick = new PendingPick(currentPick.player(), currentPick.isUpper(), currentPick.isEventPick(), canSkip);
+
+        pickingQueue.set(0, updatedPick);
+
+        return true;
+
+    }
+    public void removeAllPendingPick(boolean isUpper) {
+        if (isUpper) {
+            pickingQueue.removeIf(pick -> pick.isUpper() );
+        } else {
+            pickingQueue.removeIf(pick -> !pick.isUpper() );
+        }
+    }
+
+
+
+
+    private boolean availableCharacters(ArrayList<Card> cards) {
+        if (cards == null || cards.isEmpty()) {
+            return false;
+        }
+
+        for (Card card : cards) {
+            if (card != null && !card.getCardType().equals("EVENT")) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    private boolean availableBuilding(ArrayList<Card> buildings) {
+        return buildings != null && !buildings.isEmpty();
+    }
+
+    public void skipPick(String playerName) throws RemoteException {
+        Player p = getPlayerByName(playerName);
+
+        synchronized (pickingQueue) {
+
+            if (pickingQueue.isEmpty() || !pickingQueue.get(0).player().equals(p)) {
+                notifier.invalidCardPick(p);
+                return;
+            }
+
+            PendingPick currentPick = pickingQueue.get(0);
+
+            if (!currentPick.isSkippable()) {
+                notifier.invalidCardPick(p);
+                return;
+            }
+
+            pickingQueue.remove(0);
+
+            if (pickingQueue.isEmpty() || !pickingQueue.get(0).player().equals(p)  || pickingQueue.get(0).isEventPick()) {
+
+                if (!board.getTurnOrderCard().getOrder().contains(p)) {
+                    int indexTOC = board.bringBackToTOC(p);
+
+                    if (indexTOC >= 0) {
+                        notifier.returnTotemOnTurnOrderBroadcast(p, indexTOC);
+                    } else {
+                        System.out.println("Error while bring back to TOC");
+                    }
+                }
+            }
+        }
+
+        executeNextPick();
+    }
+
+
     /** The execute next pick method checks if the list is empty:
      *  if so, it means all players have completed their draw, and the game can proceed to the next turn;
      *  otherwise, the system notifies all players that it is the current player's turn to perform their draws.
@@ -431,12 +529,21 @@ public class GameManager {
 
     public void executeNextPick(){
          synchronized (pickingQueue) {
-             if (pickingQueue.isEmpty()) {
-                 System.out.println("All players have drawn");// se è vuota vuol dire che tutti i giocatori hanno pescato allora si passsa al prossimo turno
-                 nextRound();
-                 return;
+             while (!pickingQueue.isEmpty()) {
+
+                 if (isDirectionPickable()) {
+                     PendingPick currentPick = pickingQueue.get(0);
+
+                     notifier.showTurnBroadcast(pickingQueue.get(0).player());
+
+                     return;
+                 }
+
              }
-             notifier.showTurnBroadcast(pickingQueue.get(0).player);
+
+             System.out.println("All players have drawn");
+             nextRound();
+
          }
     }
 

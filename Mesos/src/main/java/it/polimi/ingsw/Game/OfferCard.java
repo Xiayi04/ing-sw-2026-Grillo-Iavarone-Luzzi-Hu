@@ -47,7 +47,10 @@ public class OfferCard implements Serializable {
      * @param player
      */
     public void setOccupiedBy(Player player) {
-            if (!IsOccupied) {
+        if (player == null) {
+            throw new IllegalArgumentException("Player cannot be null");
+        }
+        if (!IsOccupied) {
                 this.OccupiedBy = player;
                 this.IsOccupied = true;
             }
@@ -61,7 +64,11 @@ public class OfferCard implements Serializable {
         return OccupiedBy;
     }
 
-    public void release(){ //metodo per liberare l posizione quando il totem viene rimosso
+    /**
+     * the method is used to release an offerCard
+     * when a totem is removed from it and moved to the TOC
+     */
+    public void release(){
         this.OccupiedBy = null;
         this.IsOccupied = false;
     }
