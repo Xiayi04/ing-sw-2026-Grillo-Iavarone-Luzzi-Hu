@@ -22,15 +22,15 @@ public class ClientRMI extends UnicastRemoteObject implements
 
     private ClientController clientController;
     private VirtualServer server;
-    private final String localHost;
+    private final String ipAddress;
     private final int port;
     private final String serverName;
     private String username;
 //
 
-    public ClientRMI(String localHost, int port, String serverName, ClientController clientcontroller) throws RemoteException {
+    public ClientRMI(String ipAddress, int port, String serverName, ClientController clientcontroller) throws RemoteException {
         super();
-        this.localHost = localHost;
+        this.ipAddress = "192.168.1.230";
         this.port = port;
         this.serverName = serverName;
         this.clientController = clientcontroller;
@@ -178,9 +178,9 @@ public class ClientRMI extends UnicastRemoteObject implements
     }
 
     @Override
-    public void requestPickCard(String localPlayerName, boolean isUpper, boolean isBuilding, int index) {
+    public void requestPickCard(String localPlayerName, boolean isUpper, boolean isBuilding, int index, boolean skip) {
         try {
-            server.requestPickCardManagement(username, isUpper, isBuilding, index);
+            server.requestPickCardManagement(username, isUpper, isBuilding, index,skip);
         } catch (RemoteException e) {
             clientController.showPickedCardError();
         }
@@ -216,7 +216,7 @@ public class ClientRMI extends UnicastRemoteObject implements
     public void run() {
         try {
 
-            Registry registry = LocateRegistry.getRegistry(localHost, 1234);
+            Registry registry = LocateRegistry.getRegistry(ipAddress, 1234);
             server = (VirtualServer) registry.lookup( "---MESOS_SERVER---");
 
             server.connect(this);

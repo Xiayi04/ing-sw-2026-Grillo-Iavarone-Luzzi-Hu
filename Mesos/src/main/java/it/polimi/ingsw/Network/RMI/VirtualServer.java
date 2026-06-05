@@ -16,7 +16,7 @@ public interface VirtualServer extends Remote {
 
     void requestMoveTotemManagement(String username, int pathIndex) throws RemoteException;
 
-    void requestPickCardManagement(String username, boolean isUpper, boolean isBuilding, int index) throws RemoteException;
+    void requestPickCardManagement(String username, boolean isUpper, boolean isBuilding, int index, boolean skip ) throws RemoteException;
 
     void requestSetNumPlayersManagement(int numPlayer, RemoteClientInterface client ) throws RemoteException;
 

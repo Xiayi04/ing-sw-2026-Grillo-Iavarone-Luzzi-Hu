@@ -429,7 +429,7 @@ public class GameManager {
      *  otherwise, the system notifies all players that it is the current player's turn to perform their draws.
      */
 
-    private void executeNextPick(){
+    public void executeNextPick(){
          synchronized (pickingQueue) {
              if (pickingQueue.isEmpty()) {
                  System.out.println("All players have drawn");// se è vuota vuol dire che tutti i giocatori hanno pescato allora si passsa al prossimo turno

@@ -43,8 +43,10 @@ public class ServerRMI extends UnicastRemoteObject implements VirtualServer,Runn
     public void run() {
         try {
             final String serverName = "---MESOS_SERVER---";
+            //rendo accessibile il mio local host agli altri
+            System.setProperty("java.rmi.server.hostname","192.168.1.230");
             //It sets the registry to port 1234
-            Registry registry = LocateRegistry.createRegistry(2345);
+            Registry registry = LocateRegistry.createRegistry(1234);
             //Publish the server to the registry
             registry.rebind(serverName, this);
             System.out.println("Server RMI started...");
@@ -69,7 +71,7 @@ public class ServerRMI extends UnicastRemoteObject implements VirtualServer,Runn
         VirtualClientInterface wrappedClient = new RMIVirtualClient(virtualClient);
         activeClients.put(virtualClient, wrappedClient);
         lobby.addClient(wrappedClient);
-        System.out.println("Nuovo client RMI connesso e inserito in Lobby.");
+        System.out.println("\n Nuovo client RMI connesso e inserito in Lobby.");
 
     }
 
@@ -112,8 +114,8 @@ public class ServerRMI extends UnicastRemoteObject implements VirtualServer,Runn
      * @throws RemoteException If a communication error occurs during the RMI call.
      */
     @Override
-    public synchronized void requestPickCardManagement(String username, boolean isUpper,boolean isBuilding,int index) throws RemoteException{
-        serverController.genericPick(username,isUpper,isBuilding,index);
+    public synchronized void requestPickCardManagement(String username, boolean isUpper,boolean isBuilding,int index, boolean skip) throws RemoteException{
+        serverController.genericPick(username,isUpper,isBuilding,index,skip);
     }
 
     /**
