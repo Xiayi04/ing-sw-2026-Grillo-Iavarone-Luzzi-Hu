@@ -18,13 +18,17 @@ import java.util.concurrent.atomic.AtomicBoolean;
 public class Notifier{
 
     private final Object outputLock = new Object();
-    private final ArrayList<VirtualClientInterface> clients;
+    private final ArrayList<VirtualClientInterface> clients =  new ArrayList<>();
     private final AtomicBoolean startTermProcedure = new AtomicBoolean(false);
 
     private final ExecutorService pool = Executors.newCachedThreadPool();
 
-    public Notifier(ArrayList<VirtualClientInterface> clients) {
-        this.clients = clients;
+    public Notifier(){}
+
+    public void addClientToNotifier(VirtualClientInterface client){
+        synchronized (clients){
+            clients.add(client);
+        }
     }
 
     private List<VirtualClientInterface> getClients() {
@@ -45,7 +49,7 @@ public class Notifier{
         startTermProcedure.set(true);
 
         synchronized (clients){
-            if(clients!=null && !clients.isEmpty() && clients.contains(disconnectedClient)){
+            if(!clients.isEmpty() && clients.contains(disconnectedClient)){
                 clients.remove(disconnectedClient);
                 for(VirtualClientInterface client:clients){
                     pool.submit(client::updateForcedEndGame);
@@ -60,129 +64,147 @@ public class Notifier{
     //BROADCAST
 
     public void terminationSignalBroadcast(){
-
-        for(VirtualClientInterface client: clients){
-            try {
-                pool.submit(() -> {
-                    try {
-                        client.updateForcedEndGame();
-                    } catch (Exception ignored) {}
-                });
-            } catch (RejectedExecutionException e) {
-                if(!pool.isShutdown())
-                    System.out.println("Notifier thread RejectedExecutionException catch even if pool is not shutdown:" + e.getMessage());
+        synchronized (outputLock) {
+            for (VirtualClientInterface client : clients) {
+                try {
+                    pool.submit(() -> {
+                        try {
+                            client.updateForcedEndGame();
+                        } catch (Exception ignored) {
+                        }
+                    });
+                } catch (RejectedExecutionException e) {
+                    if (!pool.isShutdown())
+                        System.out.println("Notifier thread RejectedExecutionException catch even if pool is not shutdown:" + e.getMessage());
+                }
             }
         }
     }
 
     public void returnTotemOnTurnOrderBroadcast(Player player, int index) {
-        for (VirtualClientInterface client : getClients()) {
-            pool.submit(() -> {
-                try {
-                    client.returnTotemToTOC(player.getName(), index);
-                } catch (ClientDisconnectedException e) {
-                    handleDisconnect(client);
-                }
-            });
+        synchronized (outputLock) {
+            for (VirtualClientInterface client : getClients()) {
+                pool.submit(() -> {
+                    try {
+                        client.returnTotemToTOC(player.getName(), index);
+                    } catch (ClientDisconnectedException e) {
+                        handleDisconnect(client);
+                    }
+                });
+            }
         }
     }
 
     public void resolvingEventBroadcast(Event e) {
-        for (VirtualClientInterface client : getClients()) {
-            pool.submit(() -> {
-                try {
-                    client.updateForEvent(e);
-                } catch (ClientDisconnectedException exception) {
-                    handleDisconnect(client);
-                }
-            });
+        synchronized (outputLock) {
+            for (VirtualClientInterface client : getClients()) {
+                pool.submit(() -> {
+                    try {
+                        client.updateForEvent(e);
+                    } catch (ClientDisconnectedException exception) {
+                        handleDisconnect(client);
+                    }
+                });
+            }
         }
     }
 
     public void newEraBroadcast(int era) {
-
-        for (VirtualClientInterface client : getClients()) {
-            pool.submit(() -> {
-                try {
-                    client.showUpdateEra(era);
-                } catch (ClientDisconnectedException e) {
-                    handleDisconnect(client);
-                }
-            });
+        synchronized (outputLock) {
+            for (VirtualClientInterface client : getClients()) {
+                pool.submit(() -> {
+                    try {
+                        client.showUpdateEra(era);
+                    } catch (ClientDisconnectedException e) {
+                        handleDisconnect(client);
+                    }
+                });
+            }
         }
     }
 
     public void gameStartedBroadcast(ArrayList<Player> players, Board board) {
-        for (VirtualClientInterface client : getClients()) {
-            pool.submit(() -> {
-                try {
-                    client.updateStartGame(players, board);
-                } catch (ClientDisconnectedException e) {
-                    handleDisconnect(client);
-                }
-            });
+        synchronized (outputLock) {
+            for (VirtualClientInterface client : getClients()) {
+                pool.submit(() -> {
+                    try {
+                        client.updateStartGame(players, board);
+                    } catch (ClientDisconnectedException e) {
+                        handleDisconnect(client);
+                    }
+                });
+            }
         }
     }
 
     public void pickedCardBroadcast(Player player, boolean row, boolean isBuilding, int index) {
-        for (VirtualClientInterface client : getClients()) {
-            pool.submit(() -> {
-                try {
-                    client.pickedCard(player.getName(), row, isBuilding, index);
-                } catch (ClientDisconnectedException e) {
-                    handleDisconnect(client);
-                }
-            });
+        synchronized (outputLock) {
+            for (VirtualClientInterface client : getClients()) {
+                pool.submit(() -> {
+                    try {
+                        client.pickedCard(player.getName(), row, isBuilding, index);
+                    } catch (ClientDisconnectedException e) {
+                        handleDisconnect(client);
+                    }
+                });
+            }
         }
     }
 
     public void movedTotemBroadcast(Player player, int index) {
-        for (VirtualClientInterface client : getClients()) {
-            pool.submit(() -> {
-                try {
-                    client.movedTotem(player.getName(), index);
-                } catch (ClientDisconnectedException e) {
-                    handleDisconnect(client);
-                }
-            });
+        synchronized (outputLock) {
+            for (VirtualClientInterface client : getClients()) {
+                pool.submit(() -> {
+                    try {
+                        client.movedTotem(player.getName(), index);
+                    } catch (ClientDisconnectedException e) {
+                        handleDisconnect(client);
+                    }
+                });
+            }
         }
     }
 
-    public void foodUpdateBroadcast(Player player, int update) {
 
-        for (VirtualClientInterface client : getClients()) {
-            pool.submit(() -> {
-                try {
-                    client.updatePlayerFood(player.getName(), update);
-                } catch (ClientDisconnectedException e) {
-                    handleDisconnect(client);
-                }
-            });
+    public void foodUpdateBroadcast(Player player, int update) {
+        synchronized (outputLock) {
+            for (VirtualClientInterface client : getClients()) {
+                pool.submit(() -> {
+                    try {
+                        client.updatePlayerFood(player.getName(), update);
+                    } catch (ClientDisconnectedException e) {
+                        handleDisconnect(client);
+                    }
+                });
+            }
         }
     }
 
     public void ppUpdateBroadcast(Player player, int update) {
-        for (VirtualClientInterface client : getClients()) {
-            pool.submit(() -> {
-                try {
-                    client.updatePlayerPP(player.getName(), update);
-                } catch (ClientDisconnectedException e) {
-                    handleDisconnect(client);
-                }
-            });
+        synchronized (outputLock) {
+            for (VirtualClientInterface client : getClients()) {
+                pool.submit(() -> {
+                    try {
+                        client.updatePlayerPP(player.getName(), update);
+                    } catch (ClientDisconnectedException e) {
+                        handleDisconnect(client);
+                    }
+                });
+            }
         }
     }
 
     public void showTurnBroadcast(Player player) {
-        for (VirtualClientInterface client : getClients()) {
-
-            pool.submit(() -> {
-                try {
-                    client.showPlayerTurn(player.getName());
-                } catch (ClientDisconnectedException e) {
-                    handleDisconnect(client);
-                }
-            });
+        synchronized (outputLock) {
+            for (VirtualClientInterface client : getClients()) {
+                pool.submit(() -> {
+                    try {
+                        client.showPlayerTurn(player.getName());
+                    } catch (ClientDisconnectedException e) {
+                        handleDisconnect(client);
+                    }
+                });
+            }
         }
     }
 
