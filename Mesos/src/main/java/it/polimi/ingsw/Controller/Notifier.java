@@ -58,6 +58,7 @@ public class Notifier{
                     pool.shutdown();
             }
         }
+        terminationSignalBroadcast();
         Server.terminate();
     }
 
