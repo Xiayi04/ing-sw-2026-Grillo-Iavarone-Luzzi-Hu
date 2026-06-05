@@ -263,12 +263,9 @@ public class GameManager {
     public void setNumPlayers(int numPlayers){
         synchronized (numPlayersLock){
             this.numPlayers = numPlayers;
-            System.out.println("The game is made up of" + numPlayers + " players");
-            if(players.size() == numPlayers){
-                this.board.obtainPath(this.players);
-                startGame();
-            }
+            System.out.println("This game has " + numPlayers + " players.");
         }
+
 
     }
 

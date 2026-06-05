@@ -220,7 +220,7 @@ public class ServerController implements LobbyManager {
     public void gameInitializer(int numPLayers, ArrayList<TempPlayer> tempPlayers) {
         pushPlayersInGM(tempPlayers);
 
-        setNotifier(notifier);
+        //setNotifier(notifier);
         gameManager.setNumPlayers(numPLayers);
         gameManager.setNotifier(notifier);
         //necessità di far partire la partita
