@@ -42,10 +42,10 @@ public class GameManager {
     /**
      * It inizializes all the elements in order to prepare for the start of the game, the round and the
      * era are set to 1, all players and the number of players set by the first player are added
-     * @throws RemoteException
+
      */
 
-    public void startGame() throws RemoteException {
+    public void startGame()  {
         synchronized (playersLock) {
             System.out.println("Starting game");
             this.round = 1;
@@ -424,7 +424,13 @@ public class GameManager {
     }
 
 
-
+    /**
+     * the method checks if the direction of the currentPick has card to pick, it controls the
+     * list of Buildings and of the Characters, if both lists are available it returns true.
+     * If the list of characters is not available to pick, but the buildings list is available, the parameter
+     * canSkip is set to true, and the current pick is updated with the new value of canSkip.
+     * @return
+     */
     public boolean isDirectionPickable() {
         PendingPick currentPick = pickingQueue.get(0);
         ArrayList<Card> isCharactersListAvailable = new ArrayList<>();
@@ -456,6 +462,11 @@ public class GameManager {
         return true;
 
     }
+
+    /**
+     * the method allows to remove all pick which the same directions
+     * @param isUpper
+     */
     public void removeAllPendingPick(boolean isUpper) {
         if (isUpper) {
             pickingQueue.removeIf(pick -> pick.isUpper() );
@@ -464,8 +475,14 @@ public class GameManager {
         }
     }
 
-
-
+    /**
+     * the method cheks if the list
+     * @param cards
+     * contains character, it checks that the list is not empty, and it exists at least one character card
+     * if so it returns a boolean.
+     * @return
+     *
+     */
 
     private boolean availableCharacters(ArrayList<Card> cards) {
         if (cards == null || cards.isEmpty()) {
@@ -481,11 +498,26 @@ public class GameManager {
         return false;
     }
 
+    /**
+     * the method checks if the list
+     * @param buildings
+     * is empty or not
+     * @return
+     */
     private boolean availableBuilding(ArrayList<Card> buildings) {
-        return buildings != null && !buildings.isEmpty();
+        boolean buildingsAvailable = buildings != null && !buildings.isEmpty();
+        return buildingsAvailable;
     }
 
-    public void skipPick(String playerName) throws RemoteException {
+
+    /** the method allows the player
+     *  @param playerName ,
+     *  who owns the value isSkippable = true, the possibility
+     *  to skip the pick. After all the checks, the currentPick is removed
+     * If the currentPlayer finished his turn, the queue is empty or the next pick is a special pick, then
+     * the player comes back to TOC.
+     */
+    public void skipPick(String playerName)  {
         Player p = getPlayerByName(playerName);
 
         synchronized (pickingQueue) {
@@ -524,7 +556,8 @@ public class GameManager {
 
     /** The execute next pick method checks if the list is empty:
      *  if so, it means all players have completed their draw, and the game can proceed to the next turn;
-     *  otherwise, the system notifies all players that it is the current player's turn to perform their draws.
+     *  otherwise, it checks if the list in which the pick points out still has pickable cards, if so
+     *  all players are notified that it is the current player's turn to perform their draws.
      */
 
     public void executeNextPick(){
@@ -532,7 +565,7 @@ public class GameManager {
              while (!pickingQueue.isEmpty()) {
 
                  if (isDirectionPickable()) {
-                     PendingPick currentPick = pickingQueue.get(0);
+                   //  PendingPick currentPick = pickingQueue.get(0);
 
                      notifier.showTurnBroadcast(pickingQueue.get(0).player());
 
@@ -548,41 +581,6 @@ public class GameManager {
     }
 
 
-    /**
-     * The method MoveTotem  move a player's totem to a position on the offer card
-     * @param playerName
-     * @param pathIndex
-     */
-
-
-    /*public synchronized void moveTotem(String playerName, int pathIndex) {
-        Player p = getPlayerByName(playerName);
-        //verifica che sia il turno del giocatore effettivo
-        if(positionQueue.isEmpty() || !positionQueue.get(0).getName().equals(playerName)){
-            System.out.println(" Error: It's not your turn ");
-            return;
-        }
-        //verifica se la posizione è valida e libera
-        if( pathIndex<0 || pathIndex >= board.getPath().size()){
-            System.out.println("Invalid path index");
-            notifier.invalidTotemPosition(p);
-            return;
-        }
-
-        OfferCard chosenCard = board.getPath().get(pathIndex);
-        if(chosenCard.isOccupied()){
-            System.out.println("Position" + pathIndex + "it's already busy");
-            notifier.invalidTotemPosition(p);
-            return;
-        }
-        //modiifica del Model
-         Player player = positionQueue.get(0);
-        chosenCard.setOccupiedBy(player);
-        System.out.println(player.getName() + " he positioned himself on the card " + pathIndex);
-        positionQueue.remove(0);
-        executeNextPosition();
-
-    }*/
 
     /**
      * Purchases a building from the specified row on the board.
