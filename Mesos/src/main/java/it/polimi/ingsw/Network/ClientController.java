@@ -411,8 +411,9 @@ public class ClientController implements AutoCloseable{
         synchronized (currentBoard.getTurnOrderCard()) {
             currentBoard.getTurnOrderCard().getOrder().add(player);
         }
+        view.showReturnToTOC(playerName);
+     //   view.showMessage("Player " + playerName + " returned to Turn Order Card position " + indexTOC);
 
-        view.showMessage("Player " + playerName + " returned to Turn Order Card position " + indexTOC);
     }
     //Closing Procedure
 
