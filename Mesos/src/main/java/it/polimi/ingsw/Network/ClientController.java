@@ -403,7 +403,7 @@ public class ClientController implements AutoCloseable{
                 if (offerCard.isOccupied()
                         && offerCard.getOccupiedBy().getName().equals(playerName)) {
 
-                    offerCard.setOccupiedBy(null);
+                    offerCard.release();
                     break;
                 }
             }
