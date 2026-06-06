@@ -13,30 +13,52 @@ import it.polimi.ingsw.Network.PlayerScore;
 import it.polimi.ingsw.UI.CommandTUI.CommandFactoryTUI;
 import it.polimi.ingsw.UI.CommandTUI.CommandTUI;
 import it.polimi.ingsw.UI.CommandTUI.ConnectionSelectionCommand;
+import it.polimi.ingsw.UI.CommandTUI.SetNumPlayersRequestCommand;
+import org.jline.terminal.Terminal;
+import org.jline.utils.AttributedStyle;
 
+import java.io.IOException;
 import java.util.*;
 import java.util.concurrent.atomic.AtomicBoolean;
-
-import static java.lang.Math.ceil;
-import static java.lang.Math.floor;
 
 public class TUI implements GraphicInterface, Runnable {
     private final Object LOCK = new Object();
     private final ClientController controller;
     private final Printer printer = new Printer();
+    private final Terminal terminal;
     private Scanner sc;
     private AtomicBoolean isRunning = new AtomicBoolean(true);
+    private Totem[] TOC;
 
-    public TUI(ClientController controller) {
+
+    public TUI(Terminal terminal, ClientController controller) {
+        this.terminal = terminal;
         this.controller = controller;
         controller.setView(this);
         this.run();
+    }
+
+    private void initializeTOC(){
+        TurnOrderCard toc = controller.getCurrentBoard().getTurnOrderCard();
+        Totem[] newTOC = new Totem[toc.getOrder().size()];
+        synchronized (toc){
+            for (int i = 0; i < newTOC.length; i++){
+                newTOC[i] = toc.getOrder().get(i).getTotem();
+            }
+        }
     }
 
     @Override
     public void showEndGameSuccessfully(String winner, List<PlayerScore> leaderboard) {
         synchronized (LOCK) {
             System.out.println("da realizzare");
+        }
+    }
+
+    @Override
+    public void showReturnToTOC(String playerName) {
+        synchronized (LOCK) {
+            System.out.println(playerName + " returned to TOC");
         }
     }
 
@@ -122,8 +144,24 @@ public class TUI implements GraphicInterface, Runnable {
 
     @Override
     public void askNumToPlayer() {
-        System.out.println("*You are the first player. Please insert the num of players that will join the game using-> players:'number between 2 and 5'");
-        System.out.print(">");
+//        synchronized (LOCK){
+//            int numPlayers;
+//            while (true){
+//                System.out.println("You are the first player, please select the number of players that will play the game (between 2 and 5)");
+//                System.out.print(">");
+//                Scanner sc = new Scanner(System.in);
+//                numPlayers = sc.nextInt();
+//                if (numPlayers >= 2 &&  numPlayers <= 5) {
+//                    System.out.println("<Choice confirmed");
+//                    break;
+//                }
+//                System.out.println("<Invalid choice");
+//            }
+//            CommandTUI cmd = new SetNumPlayersRequestCommand(numPlayers);
+//
+//
+//        }
+        System.out.println("First Player (pup-up work in progress)");
     }
 
     @Override
@@ -317,22 +355,22 @@ public class TUI implements GraphicInterface, Runnable {
         String lowerRow = result[result.length - 1];
         List<Integer> junctions = new ArrayList<>();
         for (int i = 0; i < lowerRow.length(); i++) {
-            char c =  lowerRow.charAt(i);
+            char c = lowerRow.charAt(i);
             if (c == '└' || c == '┘') {
                 junctions.add(i);
             }
         }
-        int j=1;
+        int j = 1;
         StringBuilder sb = new StringBuilder(lowerRow);
-        for (int i = 2; i < junctions.size()-1; i=i+2) {
-            int distance =  junctions.get(i+1)-junctions.get(i);
-            String index = "<"+j+">";
-            int left = (distance-index.length())/2;
-            int end = junctions.get(i)+left+index.length();
-            sb.replace(junctions.get(i)+left,end,index);
+        for (int i = 2; i < junctions.size() - 1; i = i + 2) {
+            int distance = junctions.get(i + 1) - junctions.get(i);
+            String index = "<" + j + ">";
+            int left = (distance - index.length()) / 2;
+            int end = junctions.get(i) + left + index.length();
+            sb.replace(junctions.get(i) + left, end, index);
             j++;
         }
-        result[result.length-1] = sb.toString();
+        result[result.length - 1] = sb.toString();
 
         return result;
     }
@@ -341,7 +379,7 @@ public class TUI implements GraphicInterface, Runnable {
         ArrayList<String> printedBoard = new ArrayList<String>();
 
 
-        StringBuilder separator =  new StringBuilder();
+        StringBuilder separator = new StringBuilder();
         separator.append("=".repeat(143));
         printedBoard.add(separator.toString());
         //printedBoard.add("BUILDINGS:");
@@ -349,8 +387,8 @@ public class TUI implements GraphicInterface, Runnable {
         //printedBoard.addAll(Arrays.asList(buildingUpperRow));
         //printedBoard.add("CARDS:");
         String[] cardsUpperRow = printCardsRow(board.getUpperCardRow());
-        for(int i=0; i<buildingUpperRow.length; i++){
-            cardsUpperRow[i] = cardsUpperRow[i] + " " +buildingUpperRow[i];
+        for (int i = 0; i < buildingUpperRow.length; i++) {
+            cardsUpperRow[i] = cardsUpperRow[i] + " " + buildingUpperRow[i];
         }
         printedBoard.addAll(Arrays.asList(cardsUpperRow));
         //printedBoard.add("PATH:");
@@ -370,36 +408,36 @@ public class TUI implements GraphicInterface, Runnable {
         }
     }
 
-    public String[] cardMerger(String[] cards){
+    public String[] cardMerger(String[] cards) {
         for (int i = 0; i < cards.length; i++) {
-            if (i==0){
+            if (i == 0) {
                 cards[i] = cards[i].replace("┐┌", "┬");
-            } else if (i == cards.length-1) {
+            } else if (i == cards.length - 1) {
                 cards[i] = cards[i].replace("┘└", "┴");
-            }else{
+            } else {
                 cards[i] = cards[i].replace("││", "│");
             }
         }
-        String lowerRow = cards[cards.length-1];
+        String lowerRow = cards[cards.length - 1];
         List<Integer> junctions = new ArrayList<>();
-        for (int i = 0; i<lowerRow.length(); i++) {
-            char c =  lowerRow.charAt(i);
+        for (int i = 0; i < lowerRow.length(); i++) {
+            char c = lowerRow.charAt(i);
             if (c == '└' || c == '┴' || c == '┘') {
                 junctions.add(i);
             }
         }
 
         StringBuilder provvIdx = new StringBuilder(lowerRow);
-        for(int i = 0; i < junctions.size()-1; i++) {
-            int distance =  junctions.get(i+1)-junctions.get(i);
-            int j=i+1;
-            String index = "<"+j+">";
-            int left = (distance-index.length())/2;
-            int end = junctions.get(i)+left+index.length();
-            provvIdx.replace(junctions.get(i)+left,end,index);
+        for (int i = 0; i < junctions.size() - 1; i++) {
+            int distance = junctions.get(i + 1) - junctions.get(i);
+            int j = i + 1;
+            String index = "<" + j + ">";
+            int left = (distance - index.length()) / 2;
+            int end = junctions.get(i) + left + index.length();
+            provvIdx.replace(junctions.get(i) + left, end, index);
         }
 
-        cards[cards.length-1] = provvIdx.toString();
+        cards[cards.length - 1] = provvIdx.toString();
 
         return cards;
     }
@@ -425,10 +463,11 @@ public class TUI implements GraphicInterface, Runnable {
             return;
         }
         isRunning.set(false);
-        try {
-            sc.close();
-        } catch (Exception ignored) {
+
+        sc.close();
+        IOException ex = sc.ioException();
+        if (ex != null) {
+            System.err.println(ex.getMessage());
         }
-        ClientMain.terminateClient();
     }
 }
