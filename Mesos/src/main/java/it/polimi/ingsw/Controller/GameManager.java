@@ -86,6 +86,7 @@ public class GameManager {
         if(eraChanged){
             notifier.newEraBroadcast(board.getEra());
         }
+        notifier.nextRoundBroadcast(board);
         positionPhase();
     }
 

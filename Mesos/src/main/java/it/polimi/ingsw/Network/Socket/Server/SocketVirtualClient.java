@@ -180,7 +180,7 @@ public class SocketVirtualClient implements VirtualClientInterface {
     @Override
     public void updateNextRound(Board board){
         //aggiornare
-        send("next_turn", board);
+        send("next_round", board);
     }
 
     @Override

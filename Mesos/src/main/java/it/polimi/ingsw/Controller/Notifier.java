@@ -82,6 +82,20 @@ public class Notifier{
         }
     }
 
+    public void nextRoundBroadcast(Board board){
+        synchronized (outputLock) {
+            for(VirtualClientInterface client:clients){
+                pool.submit(()->{
+                    try {
+                        client.updateNextRound(board);
+                    } catch (ClientDisconnectedException e) {
+                        handleDisconnect(client);
+                    }
+                });
+            }
+        }
+    }
+
     public void returnTotemOnTurnOrderBroadcast(Player player, int index) {
         synchronized (outputLock) {
             for (VirtualClientInterface client : getClients()) {
