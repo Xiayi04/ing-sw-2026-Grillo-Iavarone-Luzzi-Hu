@@ -47,6 +47,10 @@ public class ClientController implements AutoCloseable{
         this.serverConnection = serverConnection;
     }
 
+    public ServerConnection getConnection(){
+        return serverConnection;
+    }
+
     public void setServerConnection(boolean isRMI) {
         try {
             if (isRMI) {
