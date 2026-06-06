@@ -26,7 +26,7 @@ public class BoardView extends VBox {
     private final HBox centerRow = new  HBox(20);
     private final HBox downRow =  new  HBox(10);
     private final ArrayList<StackPane> TOCSlots = new ArrayList<>();
-    private final VBox totems = new VBox(-12);
+    private final VBox totems = new VBox(-21);
     private final ArrayList<StackPane> OCSlots = new ArrayList<>();
     private final ExecutorService pool;
     private final Map<Integer, Integer> YCoordinates = Map.of(
@@ -155,7 +155,6 @@ public class BoardView extends VBox {
         totems.setAlignment(Pos.CENTER);
         for(int i=0; i<clientController.getCurrentBoard().getPlayers().size(); i++){
             StackPane TOCslot = new StackPane();
-            //TOCslot.setPrefSize(70, 50);
             TOCslot.setMinSize(70, 50);
             TOCSlots.add(TOCslot);
             totems.getChildren().add(TOCslot);

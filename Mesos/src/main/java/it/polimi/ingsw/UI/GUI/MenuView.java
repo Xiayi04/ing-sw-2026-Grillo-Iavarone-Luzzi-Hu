@@ -24,15 +24,13 @@ public class MenuView extends VBox {
     private final VBox totemsLine = new VBox(10);
     private final HBox login = new HBox();
     private final VBox numPlayers = new VBox(5);
-    private final Label label;
     private final ExecutorService pool;
     private Label provaUsername = new Label();
     private Label provaTotem = new Label();
 
-    public MenuView(ClientController clientController, GuiView guiView, Label label, ExecutorService pool) {
+    public MenuView(ClientController clientController, GuiView guiView, ExecutorService pool) {
         this.clientController = clientController;
         this.guiView = guiView;
-        this.label = label;
         this.pool = pool;
     }
 
@@ -49,7 +47,6 @@ public class MenuView extends VBox {
         this.getChildren().add(chooseConnection());
         this.getChildren().add(chooseUsername());
         this.getChildren().add(showAvailableTotems(totems));
-        this.getChildren().add(label);
         this.getChildren().add(provaTotem);
         this.getChildren().add(provaUsername);
     }

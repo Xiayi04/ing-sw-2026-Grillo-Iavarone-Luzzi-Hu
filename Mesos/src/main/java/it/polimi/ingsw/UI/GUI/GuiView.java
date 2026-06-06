@@ -8,7 +8,9 @@ import it.polimi.ingsw.Game.Totem;
 import it.polimi.ingsw.Network.ClientController;
 import it.polimi.ingsw.Network.GraphicInterface;
 import it.polimi.ingsw.Network.PlayerScore;
+import javafx.animation.FadeTransition;
 import javafx.animation.PauseTransition;
+import javafx.animation.SequentialTransition;
 import javafx.application.Platform;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
@@ -17,12 +19,15 @@ import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
+import javafx.scene.effect.GaussianBlur;
+import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.*;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.util.Duration;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -35,25 +40,53 @@ public class GuiView implements GraphicInterface {
     private final BoardView boardView;
     private final MenuView menuView;
     private final Map<String, Playerpanel> panels = new HashMap<>();
-    private final BorderPane root;
-    private final Label label = new Label();
+    private final StackPane root;
+    private final VBox vboxMessage = new  VBox();
+    private final Label currentPlayerLabel = new Label();
     private final ExecutorService pool = Executors.newCachedThreadPool();
     //private final Label labelError = new Label("prova");
 
-    public GuiView(ClientController clientController, BorderPane root) {
+    public GuiView(ClientController clientController, StackPane root) {
         this.clientController = clientController;
-        this.menuView = new MenuView(clientController, this, label, pool);
+        this.menuView = new MenuView(clientController, this, pool);
         this.boardView = new BoardView(clientController, this, pool);
         this.root = root;
     }
 
     public void showMainStage() {
+        System.out.println("DEBUG: metodo showMainStage chiamato");
         root.getChildren().clear();
-        root.setStyle("-fx-background-color: red");
-        root.setTop(showPlayersBar());
+        ImageView background = new ImageView(new Image(new File("images/background/background.png").toURI().toString()));
+        background.setPreserveRatio(false);
+        background.setFitWidth(root.getWidth());
+        background.setFitHeight(root.getHeight());
+        background.fitWidthProperty().bind(root.widthProperty().multiply(1.05));
+        background.fitHeightProperty().bind(root.heightProperty().multiply(1.05));
+        background.setEffect(new GaussianBlur(20));
+        root.getChildren().add(background);
+        //root.setStyle("-fx-background-color: red");
+        BorderPane borderPane = new BorderPane();
+        borderPane.setTop(showPlayersBar());
         boardView.showBoard();
-        root.setCenter(boardView);
-        HBox bottomBar = new HBox();
+        borderPane.setCenter(boardView);
+        borderPane.setBottom(showLocalPlayer());
+        root.getChildren().add(borderPane);
+        root.getChildren().add(vboxMessage);
+        vboxMessage.setMouseTransparent(true);
+        vboxMessage.setAlignment(Pos.BOTTOM_RIGHT);
+        StackPane.setAlignment(vboxMessage, Pos.BOTTOM_RIGHT);
+        currentPlayerLabel.setStyle(
+                "-fx-background-color: transparent;" +
+                "-fx-text-fill: red;" +
+                "-fx-font-size: 50px;" +
+                "-fx-font-weight: bold;" +
+                "-fx-effect: dropshadow(gaussian, red, 6, 0.2, 0, 0);"
+        );
+        currentPlayerLabel.setVisible(false);
+        currentPlayerLabel.setMouseTransparent(true);
+        root.getChildren().add(currentPlayerLabel);
+        //root.setRight(vboxMessage);
+        /*HBox bottomBar = new HBox();
         bottomBar.setPrefWidth(Double.MAX_VALUE);
         Node localPlayer = showLocalPlayer();
         StackPane centerWrapper = new StackPane(localPlayer);
@@ -61,18 +94,33 @@ public class GuiView implements GraphicInterface {
         Region spacer = new Region();
         HBox.setHgrow(spacer, Priority.ALWAYS);
         bottomBar.getChildren().addAll(centerWrapper, spacer, label);
-        root.setBottom(bottomBar);
+        root.setBottom(bottomBar);*/
         //root.setBottom(labelError);
     }
 
     public void showLobbyMenu() {
         root.setStyle("-fx-background-color: red");
+        /*ImageView background = new ImageView(new Image(new File("images/background/background.png").toURI().toString()));
+        background.setPreserveRatio(false);
+        background.setFitWidth(root.getWidth());
+        background.setFitHeight(root.getHeight());
+        background.fitWidthProperty().bind(root.widthProperty().multiply(1.05));
+        background.fitHeightProperty().bind(root.heightProperty().multiply(1.05));
+        background.setEffect(new GaussianBlur(20));
+        root.getChildren().add(background);*/
+        BorderPane borderPane = new BorderPane();
         menuView.createSchema();
-        root.setCenter(menuView);
+        borderPane.setCenter(menuView);
         HBox hBox = new HBox(10);
         hBox.setAlignment(Pos.BOTTOM_RIGHT);
-        hBox.getChildren().addAll(label/*labelError*/);
-        root.setBottom(hBox);
+        //hBox.getChildren().addAll(label/*labelError*/);
+        borderPane.setBottom(hBox);
+        root.getChildren().add(borderPane);
+        root.getChildren().add(vboxMessage);
+        vboxMessage.setMouseTransparent(true);
+        vboxMessage.setAlignment(Pos.BOTTOM_RIGHT);
+        StackPane.setAlignment(vboxMessage, Pos.BOTTOM_RIGHT);
+        //borderPane.setRight(vboxMessage);
     }
 
     public void showErrorMessage(String message) {
@@ -158,9 +206,9 @@ public class GuiView implements GraphicInterface {
     public void showNextRound(){
         Platform.runLater(() -> {
             boardView.getDownCharacterRow().getChildren().clear();
-            while(!boardView.getUpperCharacterRow().getChildren().isEmpty()){
-                Node card = boardView.getUpperCharacterRow().getChildren().remove(0);
-                boardView.getDownCharacterRow().getChildren().add(card);
+            if(!boardView.getUpperCharacterRow().getChildren().isEmpty()){
+                //Node card = boardView.getUpperCharacterRow().getChildren().remove(0);
+                boardView.getDownCharacterRow().getChildren().addAll(boardView.getUpperCharacterRow().getChildren());
             }
             boardView.showUpperRow();
             boardView.getDeck().getChildren().clear();
@@ -183,7 +231,69 @@ public class GuiView implements GraphicInterface {
 
     @Override
     public void showEndGameSuccessfully(String winner, List<PlayerScore> leaderboard) {
-
+        root.getChildren().clear();
+        ImageView background = new ImageView(new Image(new File("images/background/background.png").toURI().toString()));
+        background.setPreserveRatio(false);
+        background.setFitWidth(root.getWidth());
+        background.setFitHeight(root.getHeight());
+        background.fitWidthProperty().bind(root.widthProperty().multiply(1.05));
+        background.fitHeightProperty().bind(root.heightProperty().multiply(1.05));
+        background.setEffect(new GaussianBlur(20));
+        root.getChildren().add(background);
+        //root.setStyle("-fx-background-color: red");
+        VBox scoreboard = new VBox(10);
+        scoreboard.setStyle("-fx-background-color: black");
+        scoreboard.setAlignment(Pos.CENTER);
+        ArrayList<Label> labels = new ArrayList<>();
+        for(int i=0; i<leaderboard.size(); i++){
+            PlayerScore p = leaderboard.get(i);
+            Label position = new Label();
+            position.setText(i+1+"°" + p.username() + "  -  " + p.points() + "  -  " + p.food());
+            switch(i){
+                case 0:
+                    position.setStyle(
+                            "-fx-font-size: 36px;" +
+                            "-fx-font-weight: bold;" +
+                            "-fx-text-fill: gold;"
+                    );
+                    break;
+                case 1:
+                    position.setStyle(
+                            "-fx-font-size: 36px;" +
+                            "-fx-font-weight: bold;" +
+                            "-fx-text-fill: silver;"
+                    );
+                    break;
+                case 2:
+                    position.setStyle(
+                            "-fx-font-size: 36px;" +
+                            "-fx-font-weight: bold;" +
+                            "-fx-text-fill: #cd7f32;"
+                    );
+                    break;
+                default:
+                    position.setStyle(
+                            "-fx-font-size: 36px;" +
+                            "-fx-font-weight: bold;" +
+                            "-fx-text-fill: white;"
+                    );
+                    break;
+            }
+            position.setOpacity(0);
+            labels.add(position);
+            scoreboard.getChildren().add(position);
+        }
+        root.getChildren().add(scoreboard);
+        StackPane.setAlignment(scoreboard, Pos.CENTER);
+        SequentialTransition sequence = new SequentialTransition();
+        for(int i= labels.size()-1; i>=0; i--){
+            Label label = labels.get(i);
+            FadeTransition fadeTransition = new FadeTransition(Duration.seconds(3), label);
+            fadeTransition.setFromValue(0);
+            fadeTransition.setToValue(1);
+            sequence.getChildren().add(fadeTransition);
+        }
+        sequence.play();
     }
 
     @Override
@@ -226,7 +336,7 @@ public class GuiView implements GraphicInterface {
             hbox.setAlignment(Pos.CENTER);
             ComboBox<String> comboBox = new ComboBox<>();
             comboBox.getItems().addAll("2", "3", "4", "5");
-            Button button = new Button("confirm");
+            Button button = new Button("Confirm");
             button.setOnAction(event -> {
                 pool.submit(() -> {
                     if (!comboBox.getValue().equals(null)){
@@ -278,28 +388,49 @@ public class GuiView implements GraphicInterface {
     public void showMessage(String message){
         System.out.println("DEBUG: il messaggio è "+message);
         Platform.runLater(() -> {
+            Label label = new Label();
             label.setText(message);
             label.setPrefWidth(400);
             label.setPrefHeight(100);
             label.setAlignment(Pos.CENTER);
             label.setStyle(
                     "-fx-background-color: white;" +
-                            "-fx-text-fill: black;" +
-                            "-fx-font-size: 15px;" +
-                            "-fx-background-radius: 10;" +
-                            "-fx-padding: 10;"
+                    "-fx-text-fill: black;" +
+                    "-fx-font-size: 15px;" +
+                    "-fx-background-radius: 10;" +
+                    "-fx-padding: 10;" +
+                    "-fx-border-color: black;" +
+                    "-fx-border-radius: 10;" +
+                    "-fx-border-width: 4;"
             );
-            label.setVisible(true);
+            vboxMessage.getChildren().add(label);
+            if(vboxMessage.getChildren().size()>3){
+                vboxMessage.getChildren().remove(0);
+            }
             PauseTransition pause = new PauseTransition(Duration.seconds(5));
             pause.setOnFinished(event -> {
-                label.setVisible(false);
+                vboxMessage.getChildren().remove(label);
             });
             pause.play();
         });
     }
 
     public void showCurrentPlayer(String username) {
-
+        Platform.runLater(() -> {
+            //currentPlayerLabel.setText("PROVA");
+            if(username.equals(clientController.getLocalPlayer().getName())){
+                currentPlayerLabel.setText("It's your turn");
+            }
+            else{
+                currentPlayerLabel.setText("It's " + username +  "'s turn");
+            }
+            currentPlayerLabel.setVisible(true);
+            PauseTransition pause = new PauseTransition(Duration.seconds(5));
+            pause.setOnFinished(event -> {
+                currentPlayerLabel.setVisible(false);
+            });
+            pause.play();
+        });
     }
 
     public void showAvailableTotems(ArrayList<Totem> availableTotems) {
@@ -309,6 +440,7 @@ public class GuiView implements GraphicInterface {
     public void showError(String message){
         System.out.println("DEBUG: il messaggio è "+message);
         Platform.runLater(() -> {
+            Label label = new Label();
             label.setText(message);
             label.setPrefWidth(400);
             label.setPrefHeight(100);
@@ -318,23 +450,36 @@ public class GuiView implements GraphicInterface {
                             "-fx-text-fill: white;" +
                             "-fx-font-size: 15px;" +
                             "-fx-background-radius: 10;" +
-                            "-fx-padding: 10;"
+                            "-fx-padding: 10;" +
+                            "-fx-border-color: white;" +
+                            "-fx-border-radius: 10;" +
+                            "-fx-border-width: 4;"
             );
-            label.setVisible(true);
+            vboxMessage.getChildren().add(label);
+            if(vboxMessage.getChildren().size()>3){
+                vboxMessage.getChildren().remove(0);
+            }
             PauseTransition pause = new PauseTransition(Duration.seconds(5));
             pause.setOnFinished(event -> {
-                label.setVisible(false);
+                vboxMessage.getChildren().remove(label);
             });
             pause.play();
         });
     }
 
-    public void showReturnToTOC(String username, int index){
+    public void showReturnToTOC(String username){
+        System.out.println("DEBUG: metodo showReturnToTOC chiamato");
         Platform.runLater(() -> {
-           for(int i=0; i<boardView.getOCSlots().size(); i++){
+           Node thisTotemView = null;
+            for(int i=0; i<boardView.getOCSlots().size(); i++){
                if(!boardView.getOCSlots().get(i).getChildren().isEmpty()){
-                   Node thisTotemView = boardView.getOCSlots().get(i).getChildren().remove(0);
-                   boardView.getTOCSlots().get(index).getChildren().add(thisTotemView);
+                   thisTotemView = boardView.getOCSlots().get(i).getChildren().remove(0);
+                   break;
+               }
+           }
+           for(int i=0; i<boardView.getTOCSlots().size(); i++){
+               if(boardView.getTOCSlots().get(i).getChildren().isEmpty()){
+                   boardView.getTOCSlots().get(i).getChildren().add(thisTotemView);
                    break;
                }
            }
