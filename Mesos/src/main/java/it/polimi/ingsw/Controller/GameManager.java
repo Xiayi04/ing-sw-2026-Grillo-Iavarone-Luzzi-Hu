@@ -397,11 +397,11 @@ public class GameManager {
                 System.err.println("Network error");
             }
 
-            if(pickingQueue.size() >= 1){
-                if(!pickingQueue.get(0).player.equals(p) || (pickingQueue.get(0).player().equals(p) &&  pickingQueue.get(0).isEventPick)){
-
-                    if(board.bringBackToTOC(p)>=0){
-                        notifier.returnTotemOnTurnOrderBroadcast(p, board.bringBackToTOC(p));
+            if(!pickingQueue.isEmpty()){
+                if(!pickingQueue.getFirst().player.equals(p) || (pickingQueue.getFirst().player().equals(p) &&  pickingQueue.getFirst().isEventPick)){
+                    int idx = board.bringBackToTOC(p);
+                    if(idx>=0){
+                        notifier.returnTotemOnTurnOrderBroadcast(p, idx);
                     }else{
                         System.out.println("Error while bring back to TOC");
                     }
@@ -409,8 +409,9 @@ public class GameManager {
             }else{
 
                 if(!board.getTurnOrderCard().getOrder().contains(p)){
-                    if(board.bringBackToTOC(p)>=0){
-                        notifier.returnTotemOnTurnOrderBroadcast(p, board.bringBackToTOC(p));
+                    int idx = board.bringBackToTOC(p);
+                    if(idx>=0){
+                        notifier.returnTotemOnTurnOrderBroadcast(p, idx);
                     }else{
                         System.out.println("Error while bring back to TOC");
                     }
