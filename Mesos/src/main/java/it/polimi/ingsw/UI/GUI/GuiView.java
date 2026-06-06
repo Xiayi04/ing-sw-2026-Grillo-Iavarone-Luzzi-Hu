@@ -14,6 +14,7 @@ import javafx.animation.SequentialTransition;
 import javafx.application.Platform;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
+import javafx.scene.Cursor;
 import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
@@ -204,18 +205,41 @@ public class GuiView implements GraphicInterface {
     }
 
     public void showNextRound(){
+        System.out.println("DEBUG: metodo  showNextRound chiamato");
         Platform.runLater(() -> {
             boardView.getDownCharacterRow().getChildren().clear();
             if(!boardView.getUpperCharacterRow().getChildren().isEmpty()){
                 //Node card = boardView.getUpperCharacterRow().getChildren().remove(0);
                 boardView.getDownCharacterRow().getChildren().addAll(boardView.getUpperCharacterRow().getChildren());
+                boardView.getUpperCharacterRow().getChildren().clear();
             }
-            boardView.showUpperRow();
+            boardView.getUpperCharacterRow().getChildren().addAll(newUpperCharacterRow());
             boardView.getDeck().getChildren().clear();
             Card c = clientController.getCurrentBoard().getDeck().getFirst();
             ImageView imageView = Utils.createImageView("images/cards/back/era"+c.getEra()+".png", 150);
             boardView.getDeck().getChildren().add(imageView);
         });
+    }
+
+    public ArrayList newUpperCharacterRow(){
+        ArrayList<Node> newCards = new ArrayList<>();
+        for(Card c : clientController.getCurrentBoard().getUpperCardRow()){
+            ImageView cardView = Utils.createImageView(c.getImagePath(), 150);
+            cardView.setCursor(Cursor.HAND);
+            cardView.setOnMouseClicked(event ->
+            {
+                //getUpperCharacterRow().getChildren().remove(getUpperCharacterRow().getChildren().indexOf(imageView));
+                clientController.requestLocalPickCard(true, false, boardView.getUpperCharacterRow().getChildren().indexOf(cardView));
+            });
+            cardView.setOnMouseEntered(event -> {
+                cardView.setStyle(" -fx-scale-x: 1.2; -fx-scale-y: 1.2;");
+            });
+            cardView.setOnMouseExited(event -> {
+                cardView.setStyle("");
+            });
+            newCards.add(cardView);
+        }
+        return newCards;
     }
 
     public void showStartGame() {
@@ -429,7 +453,8 @@ public class GuiView implements GraphicInterface {
             pause.setOnFinished(event -> {
                 currentPlayerLabel.setVisible(false);
             });
-            pause.play();
+            pause.stop();
+            pause.playFromStart();
         });
     }
 
