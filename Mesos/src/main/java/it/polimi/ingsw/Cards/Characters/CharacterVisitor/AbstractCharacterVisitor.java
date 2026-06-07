@@ -4,13 +4,8 @@ import it.polimi.ingsw.Cards.Characters.*;
 import it.polimi.ingsw.Game.Player;
 import javafx.scene.layout.VBox;
 
-public abstract class AbstractCharacterVisitor implements CharacterVisitor{
-    public void visit(Inventor inventor, Player player){}
-    public void visit(Builder builder, Player player){}
-    public void visit(Shaman shaman, Player player){}
-    public void visit(Picker picker, Player player){}
-    public void visit(Hunter hunter, Player player){}
-    public void visit(Painter painter, Player player){}
+public  class AbstractCharacterVisitor implements CharacterVisitor{
+
 
     @Override
     public String visit(Builder builder) {
@@ -31,6 +26,24 @@ public abstract class AbstractCharacterVisitor implements CharacterVisitor{
     @Override
     public String visit(Painter painter) {
         return "";
+    }
+    public boolean visit(Inventor inventor, Player player) {
+        return false;
+    }
+    public boolean visit(Builder builder, Player player) {
+        return false;
+    }
+    public boolean visit(Shaman shaman, Player player) {
+        return false;
+    }
+    public boolean visit(Picker picker, Player player) {
+        return false;
+    }
+    public boolean visit(Hunter hunter, Player player) {
+        return false;
+    }
+    public boolean visit(Painter painter, Player player) {
+        return false;
     }
     @Override
     public String visit(Inventor inventor) {

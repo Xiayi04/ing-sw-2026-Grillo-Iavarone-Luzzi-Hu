@@ -1,5 +1,4 @@
 package it.polimi.ingsw.Cards.Characters;
-import it.polimi.ingsw.Cards.CardType;
 import it.polimi.ingsw.Cards.Characters.CharacterVisitor.CharacterInterface;
 import it.polimi.ingsw.Cards.Characters.CharacterVisitor.CharacterVisitor;
 import it.polimi.ingsw.Cards.Characters.CharacterVisitor.GuiVisitor;
@@ -21,8 +20,8 @@ public class Painter extends Character implements CharacterInterface {
     }
     //accepter
     @Override
-    public void addCard(CharacterVisitor visitor, Player player){
-        visitor.visit(this, player);
+    public boolean addCard(CharacterVisitor visitor, Player player){
+        return visitor.visit(this, player);
     }
 
     public String getImagePath(){

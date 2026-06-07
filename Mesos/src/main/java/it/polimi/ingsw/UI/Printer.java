@@ -8,6 +8,7 @@ import it.polimi.ingsw.Cards.Events.ShamanicEvent;
 import it.polimi.ingsw.Cards.Events.SustenanceEvent;
 import it.polimi.ingsw.Game.OfferCard;
 import it.polimi.ingsw.Game.Player;
+import it.polimi.ingsw.Game.Totem;
 import it.polimi.ingsw.Game.TurnOrderCard;
 
 import static java.lang.Math.ceil;
@@ -359,6 +360,19 @@ public class Printer  {
             }
             for(int i = 0; i < turnOrderCard.getOrder().size(); i++){
                 p[i+delta+1] = p[i+delta+1] + "="+turnOrderCard.getOrder().get(i).getTotem().toString().toUpperCase()+"=";
+            }
+        }
+        return encapsulator(p);
+    }
+
+    public String[] printTOC(Totem[] toc){
+        String[] p = new String[height];
+        p = initialize(p);
+        for(int i = 0; i < toc.length; i++){
+            if(toc[i] == null){
+                p[i+1] = p[i+1] + "=   =";
+            }else{
+                p[i+1] = p[i+1] + "=" +  toc[i].toString().toUpperCase() + "=";
             }
         }
         return encapsulator(p);

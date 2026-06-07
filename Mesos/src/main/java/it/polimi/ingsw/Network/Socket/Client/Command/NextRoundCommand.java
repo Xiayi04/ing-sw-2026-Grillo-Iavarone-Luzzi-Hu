@@ -5,9 +5,9 @@ import it.polimi.ingsw.Network.ClientController;
 
 import java.net.Socket;
 
-public class NextTurnCommand implements ClientCommand {
+public class NextRoundCommand implements ClientCommand {
     private final Board board;
-    public NextTurnCommand(Board board) {
+    public NextRoundCommand(Board board) {
         this.board = board;
     }
 

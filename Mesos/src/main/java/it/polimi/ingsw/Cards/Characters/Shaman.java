@@ -1,14 +1,11 @@
 package it.polimi.ingsw.Cards.Characters;
 
-import it.polimi.ingsw.Cards.CardType;
 import it.polimi.ingsw.Cards.Characters.CharacterVisitor.CharacterInterface;
 import it.polimi.ingsw.Cards.Characters.CharacterVisitor.CharacterVisitor;
 import it.polimi.ingsw.Cards.Characters.CharacterVisitor.GuiVisitor;
 import it.polimi.ingsw.Game.Player;
 import it.polimi.ingsw.UI.Printer;
 import javafx.scene.layout.VBox;
-
-import java.util.ArrayList;
 
 public class Shaman extends Character implements CharacterInterface {
     private final Integer shamanStars;
@@ -31,8 +28,8 @@ public class Shaman extends Character implements CharacterInterface {
         System.out.println("stelle:"+shamanStars);
     }
     @Override
-    public void addCard(CharacterVisitor visitor, Player player){
-        visitor.visit(this, player);
+    public boolean addCard(CharacterVisitor visitor, Player player){
+        return visitor.visit(this, player);
     }
 
 //    /**

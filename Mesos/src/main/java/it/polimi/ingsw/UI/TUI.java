@@ -38,6 +38,32 @@ public class TUI implements GraphicInterface, Runnable {
         this.run();
     }
 
+    private void addInHead(Totem totem) {
+        int i = 0;
+        for(; i<TOC.length; i++){
+            if(TOC[i]==null)
+                break;
+        }
+        TOC[i] = totem;
+    }
+
+    private void removeToTOC(Totem totem) {
+        for (int i = 0; i < TOC.length; i++) {
+            if (TOC[i] == totem) {
+                TOC[i] = null;
+            }
+        }
+    }
+
+    private void resetTOC(){
+        TurnOrderCard toc = controller.getCurrentBoard().getTurnOrderCard();
+        synchronized (toc){
+            for (int i = 0; i < toc.getOrder().size(); i++) {
+                TOC[i] = toc.getOrder().get(i).getTotem();
+            }
+        }
+    }
+
     private void initializeTOC(){
         TurnOrderCard toc = controller.getCurrentBoard().getTurnOrderCard();
         Totem[] newTOC = new Totem[toc.getOrder().size()];
@@ -45,6 +71,7 @@ public class TUI implements GraphicInterface, Runnable {
             for (int i = 0; i < newTOC.length; i++){
                 newTOC[i] = toc.getOrder().get(i).getTotem();
             }
+            TOC = newTOC;
         }
     }
 
@@ -57,14 +84,17 @@ public class TUI implements GraphicInterface, Runnable {
 
     @Override
     public void showReturnToTOC(String playerName) {
+        addInHead(controller.getPlayerByName(playerName).getTotem());
         synchronized (LOCK) {
-            System.out.println(playerName + " returned to TOC");
+            boardPrinter(controller.getCurrentBoard(), playerName);
         }
     }
 
     @Override
     public void showStartGame() {
         synchronized (LOCK) {
+            initializeTOC();
+            screenCleaner();
             boardPrinter(controller.getCurrentBoard(), "Game Started");
         }
     }
@@ -128,6 +158,7 @@ public class TUI implements GraphicInterface, Runnable {
 
     @Override
     public void moveTotem(String username, int index) {
+        removeToTOC(controller.getPlayerByName(username).getTotem());
         synchronized (LOCK) {
             StringBuilder stringBuilder = new StringBuilder();
             if (controller.getLocalPlayer().getName().equals(username)) {
@@ -166,11 +197,11 @@ public class TUI implements GraphicInterface, Runnable {
 
     @Override
     public void showNextRound() {
+        resetTOC();
         synchronized (LOCK) {
             screenCleaner();
-            System.out.println("===NEXT ROUND===");
             synchronized (controller.getCurrentBoard()) {
-                boardPrinter(controller.getCurrentBoard(), "");
+                boardPrinter(controller.getCurrentBoard(), "Next Round is started");
             }
         }
     }
@@ -198,7 +229,7 @@ public class TUI implements GraphicInterface, Runnable {
 
 
     @Override
-    public void showMessage(String message) {
+    public void showMessage(String message){
         System.out.println("<:" + message);
     }
 
@@ -340,7 +371,7 @@ public class TUI implements GraphicInterface, Runnable {
         String[] result = new String[7];
         result = printer.initialize(result);
 
-        String[] provv = turnOrderCard.print(printer);
+        String[] provv = printer.printTOC(TOC);
         for (int i = 0; i < provv.length; i++) {
             result[i] = result[i] + provv[i];
         }

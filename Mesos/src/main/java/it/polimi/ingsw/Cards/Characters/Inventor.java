@@ -1,5 +1,4 @@
 package it.polimi.ingsw.Cards.Characters;
-import it.polimi.ingsw.Cards.CardType;
 import it.polimi.ingsw.Cards.Characters.CharacterVisitor.CharacterInterface;
 import it.polimi.ingsw.Cards.Characters.CharacterVisitor.CharacterVisitor;
 import it.polimi.ingsw.Cards.Characters.CharacterVisitor.GuiVisitor;
@@ -7,8 +6,6 @@ import it.polimi.ingsw.Cards.Characters.CharacterVisitor.InventorInterface;
 import it.polimi.ingsw.Game.Player;
 import it.polimi.ingsw.UI.Printer;
 import javafx.scene.layout.VBox;
-
-import javax.swing.*;
 
 public class Inventor extends Character implements CharacterInterface, InventorInterface {
     private final String inventorIcon;
@@ -38,8 +35,8 @@ public class Inventor extends Character implements CharacterInterface, InventorI
     }
 
     @Override
-    public void addCard(CharacterVisitor visitor, Player player){
-        visitor.visit(this, player);
+    public boolean addCard(CharacterVisitor visitor, Player player){
+        return visitor.visit(this, player);
     }
 
     public String getImagePath(){
