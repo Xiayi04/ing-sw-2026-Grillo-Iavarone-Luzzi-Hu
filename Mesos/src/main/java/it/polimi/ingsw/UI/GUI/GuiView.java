@@ -145,6 +145,7 @@ public class GuiView implements GraphicInterface {
         for(Player p : clientController.getCurrentBoard().getPlayers()){
             if(p.getName().equals(clientController.getLocalPlayer().getName())){
                 Playerpanel localPlayer = new Playerpanel(p, this);
+                panels.put(p.getName(), localPlayer);
                 localPlayer.setAlignment(Pos.CENTER);
                 localPlayer.setPadding(new Insets(0, 0, 20, 0));
                 return localPlayer;
@@ -249,25 +250,15 @@ public class GuiView implements GraphicInterface {
             Card c = clientController.getCurrentBoard().getDeck().getFirst();
             ImageView imageView = Utils.createImageView("images/cards/back/era"+c.getEra()+".png", 150);
             boardView.getDeck().getChildren().add(imageView);
+            updateReferences();
         });
     }
 
-//    public ImageView newCharacterCard(Card c){
-//        ImageView cardView = Utils.createImageView(c.getImagePath(), 150);
-//        cardView.setCursor(Cursor.HAND);
-//        cardView.setOnMouseClicked(event ->
-//        {
-//            //getUpperCharacterRow().getChildren().remove(getUpperCharacterRow().getChildren().indexOf(imageView));
-//            clientController.requestLocalPickCard(true, false, boardView.getUpperCharacterRow().getChildren().indexOf(cardView));
-//        });
-//        cardView.setOnMouseEntered(event -> {
-//            cardView.setStyle(" -fx-scale-x: 1.2; -fx-scale-y: 1.2;");
-//        });
-//        cardView.setOnMouseExited(event -> {
-//            cardView.setStyle("");
-//        });
-//        return cardView;
-//    }
+    public void updateReferences(){
+        for(Player p : clientController.getCurrentBoard().getPlayers()){
+            panels.get(p.getName()).setPlayer(p);
+        }
+    }
 
     public void showStartGame() {
         Platform.runLater(() -> {

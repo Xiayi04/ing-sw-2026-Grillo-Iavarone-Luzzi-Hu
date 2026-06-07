@@ -27,15 +27,17 @@ public class Playerpanel extends HBox {
     //private Stage handStage;
     private Player player;
 
-    public Playerpanel(Player player, GuiView guiView) {
+    public Playerpanel(Player p, GuiView guiView) {
         this.guiView = guiView;
-        this.player = player;
+        this.player = p;
         foodLabel = new Label("Food: "+ player.getFood());
         PPLabel = new Label("PP: "+player.getPrestigePoints());
 
         ImageView imageView = Utils.createImageView("images/totem/"+player.getTotem().toString().toLowerCase()+"_profilo.png", 70);
         imageView.setCursor(Cursor.HAND);
-        imageView.setOnMouseClicked(event -> {openPlayerHand(player);});  //metto al posto di openPlayerHand(player) showHand()
+        imageView.setOnMouseClicked(event -> {
+            openPlayerHand(player);
+        });  //metto al posto di openPlayerHand(player) showHand()
         this.getChildren().add(imageView);
 
         VBox data = new VBox(5);
@@ -45,6 +47,10 @@ public class Playerpanel extends HBox {
         this.getChildren().add(data);
 
         this.setSpacing(5);
+    }
+
+    public void setPlayer(Player p) {
+        this.player = p;
     }
 
     public PlayerHandView getPlayerHandView() {

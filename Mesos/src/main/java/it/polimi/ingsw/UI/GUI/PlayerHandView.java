@@ -35,9 +35,9 @@ public class PlayerHandView extends VBox {
         this.setStyle("-fx-background-color: red");
         this.setAlignment(Pos.CENTER);
 
-        building = new  HBox(10);
+        building = new HBox(10);
 
-        hand = new  HBox(10);
+        hand = new HBox(10);
         hand.setAlignment(Pos.CENTER);
         hand.setMaxWidth(Region.USE_PREF_SIZE);
 

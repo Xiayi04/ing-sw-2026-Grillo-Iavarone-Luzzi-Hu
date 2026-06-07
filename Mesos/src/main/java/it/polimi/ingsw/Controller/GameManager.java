@@ -52,11 +52,26 @@ public class GameManager {
             board.setEra(1);
             this.board.getPlayers().addAll(this.players);
             this.board.initializeBoard(numPlayers);
+            initializeFood();
             System.out.println("Game started");
             notifier.gameStartedBroadcast(players,board);
             System.out.println("Start of the Totem positioning phase...");
             positionPhase();
 
+        }
+    }
+
+    public void initializeFood(){
+        board.getTurnOrderCard().getOrder().get(0).modifyFood(2);
+        board.getTurnOrderCard().getOrder().get(1).modifyFood(3);
+        if(numPlayers>=3){
+            board.getTurnOrderCard().getOrder().get(2).modifyFood(3);
+            if(numPlayers>=4){
+                board.getTurnOrderCard().getOrder().get(3).modifyFood(4);
+                if(numPlayers>=5){
+                    board.getTurnOrderCard().getOrder().get(4).modifyFood(4);
+                }
+            }
         }
     }
 
