@@ -208,12 +208,43 @@ public class GuiView implements GraphicInterface {
         System.out.println("DEBUG: metodo  showNextRound chiamato");
         Platform.runLater(() -> {
             boardView.getDownCharacterRow().getChildren().clear();
-            if(!boardView.getUpperCharacterRow().getChildren().isEmpty()){
+            /*if(!boardView.getUpperCharacterRow().getChildren().isEmpty()){
                 //Node card = boardView.getUpperCharacterRow().getChildren().remove(0);
                 boardView.getDownCharacterRow().getChildren().addAll(boardView.getUpperCharacterRow().getChildren());
                 boardView.getUpperCharacterRow().getChildren().clear();
+            }*/
+            boardView.getUpperCharacterRow().getChildren().clear();
+            for(Card c : clientController.getCurrentBoard().getUpperCardRow()){
+                ImageView cardView = Utils.createImageView(c.getImagePath(), 150);
+
+                cardView.setCursor(Cursor.HAND);
+                cardView.setOnMouseClicked(event ->
+                {
+                    //getUpperCharacterRow().getChildren().remove(getUpperCharacterRow().getChildren().indexOf(imageView));
+                    clientController.requestLocalPickCard(true, false, boardView.getUpperCharacterRow().getChildren().indexOf(cardView));
+                });
+                cardView.setOnMouseEntered(event -> {
+                    cardView.setStyle(" -fx-scale-x: 1.2; -fx-scale-y: 1.2;");
+                });
+                cardView.setOnMouseExited(event -> {
+                    cardView.setStyle("");
+                });
+                boardView.getUpperCharacterRow().getChildren().add(cardView);
             }
-            boardView.getUpperCharacterRow().getChildren().addAll(newUpperCharacterRow());
+            for(Card c : clientController.getCurrentBoard().getLowerCardsRow()){
+                ImageView cardView = Utils.createImageView(c.getImagePath(), 150);
+                cardView.setCursor(Cursor.HAND);
+                cardView.setOnMouseClicked(event -> {
+                    clientController.requestLocalPickCard(false, false, boardView.getDownCharacterRow().getChildren().indexOf(cardView));
+                });
+                cardView.setOnMouseEntered(event -> {
+                    cardView.setStyle("-fx-scale-x: 1.2; -fx-scale-y: 1.2;");
+                });
+                cardView.setOnMouseExited(event -> {
+                    cardView.setStyle("");
+                });
+                boardView.getDownCharacterRow().getChildren().add(cardView);
+            }
             boardView.getDeck().getChildren().clear();
             Card c = clientController.getCurrentBoard().getDeck().getFirst();
             ImageView imageView = Utils.createImageView("images/cards/back/era"+c.getEra()+".png", 150);
@@ -221,26 +252,22 @@ public class GuiView implements GraphicInterface {
         });
     }
 
-    public ArrayList newUpperCharacterRow(){
-        ArrayList<Node> newCards = new ArrayList<>();
-        for(Card c : clientController.getCurrentBoard().getUpperCardRow()){
-            ImageView cardView = Utils.createImageView(c.getImagePath(), 150);
-            cardView.setCursor(Cursor.HAND);
-            cardView.setOnMouseClicked(event ->
-            {
-                //getUpperCharacterRow().getChildren().remove(getUpperCharacterRow().getChildren().indexOf(imageView));
-                clientController.requestLocalPickCard(true, false, boardView.getUpperCharacterRow().getChildren().indexOf(cardView));
-            });
-            cardView.setOnMouseEntered(event -> {
-                cardView.setStyle(" -fx-scale-x: 1.2; -fx-scale-y: 1.2;");
-            });
-            cardView.setOnMouseExited(event -> {
-                cardView.setStyle("");
-            });
-            newCards.add(cardView);
-        }
-        return newCards;
-    }
+//    public ImageView newCharacterCard(Card c){
+//        ImageView cardView = Utils.createImageView(c.getImagePath(), 150);
+//        cardView.setCursor(Cursor.HAND);
+//        cardView.setOnMouseClicked(event ->
+//        {
+//            //getUpperCharacterRow().getChildren().remove(getUpperCharacterRow().getChildren().indexOf(imageView));
+//            clientController.requestLocalPickCard(true, false, boardView.getUpperCharacterRow().getChildren().indexOf(cardView));
+//        });
+//        cardView.setOnMouseEntered(event -> {
+//            cardView.setStyle(" -fx-scale-x: 1.2; -fx-scale-y: 1.2;");
+//        });
+//        cardView.setOnMouseExited(event -> {
+//            cardView.setStyle("");
+//        });
+//        return cardView;
+//    }
 
     public void showStartGame() {
         Platform.runLater(() -> {
