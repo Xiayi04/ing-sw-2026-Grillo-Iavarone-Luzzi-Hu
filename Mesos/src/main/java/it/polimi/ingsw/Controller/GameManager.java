@@ -75,7 +75,7 @@ public class GameManager {
             endGame();
             return;
         }
-        System.out.println(" Start of the Round   " + this.round);
+        System.out.println(" Start of the Round " + this.round);
 
         ArrayList<Event> currentEvents = board.checkEvent();
         if (!currentEvents.isEmpty()) {
@@ -129,7 +129,7 @@ public class GameManager {
      */
 
 
-    public static void resolveEvents(ArrayList<Event> events) {
+    public void resolveEvents(ArrayList<Event> events) {
         if (events == null || events.isEmpty()) {
             return;
         }
@@ -139,6 +139,15 @@ public class GameManager {
                         .thenComparing(Event :: getEventName)
                         .thenComparing(Event::getEra)
         );
+
+        for (Event event : events) {
+            event.resolveEvent(board.getPlayers());
+
+            for(Player player : this.players){
+                notifier.foodUpdateBroadcast(player, player.getFood());
+                notifier.ppUpdateBroadcast(player, player.getPrestigePoints());
+            }
+        }
     }
 
     /**
@@ -397,25 +406,23 @@ public class GameManager {
             } catch (Exception e) {
                 System.err.println("Network error");
             }
-
+            int idx = -1;
             if(!pickingQueue.isEmpty()){
                 if(!pickingQueue.getFirst().player.equals(p) || (pickingQueue.getFirst().player().equals(p) &&  pickingQueue.getFirst().isEventPick)){
-                    int idx = board.bringBackToTOC(p);
-                    if(idx>=0){
-                        notifier.returnTotemOnTurnOrderBroadcast(p, idx);
-                    }else{
-                        System.out.println("Error while bring back to TOC");
-                    }
+                    idx = board.bringBackToTOC(p);
                 }
             }else{
-
                 if(!board.getTurnOrderCard().getOrder().contains(p)){
-                    int idx = board.bringBackToTOC(p);
-                    if(idx>=0){
-                        notifier.returnTotemOnTurnOrderBroadcast(p, idx);
-                    }else{
-                        System.out.println("Error while bring back to TOC");
-                    }
+                    idx = board.bringBackToTOC(p);
+                }
+            }
+            if(idx>=0){
+                notifier.returnTotemOnTurnOrderBroadcast(p, idx);
+                try {
+                    board.giveFoodForTOC(p, idx);
+                    notifier.foodUpdateBroadcast(p, p.getFood());
+                } catch (Exception e) {
+                    System.out.println(e.getMessage());
                 }
             }
 
@@ -651,7 +658,9 @@ public class GameManager {
             //Using visitor to add the Character to the player's list
             //and automatically increase the counter of the specific character
             CharacterVisitor visitor = new AddAndCountCharacter();
-            pickedCharacter.addCard(visitor,player);
+            if (pickedCharacter.addCard(visitor,player)) {
+                notifier.foodUpdateBroadcast(player, player.getFood());
+            }
             System.out.println(player.getName() + "added" + pickedCharacter.getCharacterType());
             //broadcasting to everyone that the player picked successfully the wanted card
             return true;

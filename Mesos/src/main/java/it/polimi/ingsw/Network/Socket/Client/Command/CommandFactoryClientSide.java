@@ -3,7 +3,6 @@ package it.polimi.ingsw.Network.Socket.Client.Command;
 
 
 import it.polimi.ingsw.Game.Board;
-import it.polimi.ingsw.Game.Player;
 import it.polimi.ingsw.Game.Totem;
 import it.polimi.ingsw.Network.Socket.Server.Command.Pick;
 import it.polimi.ingsw.Network.Socket.Server.Command.TotemPosition;
@@ -29,7 +28,7 @@ public class CommandFactoryClientSide {
         commands.put("update_food", u-> new UpdateFoodCommand((UpdateFood) u));
         commands.put("update_pp", u-> new UpdatePPCommand((UpdatePP) u));
         commands.put("player_turn", u-> new PlayerTurnCommand((String) u));
-        commands.put("next_round", u-> new NextTurnCommand((Board) u));
+        commands.put("next_round", u-> new NextRoundCommand((Board) u));
         commands.put("ping", p->new PingCommand());
 
 

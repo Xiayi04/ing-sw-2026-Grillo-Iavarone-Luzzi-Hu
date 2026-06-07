@@ -342,6 +342,14 @@ public class Board  implements Serializable {
             return -1;
         }
     }
+
+    public void giveFoodForTOC(Player p, int idx){
+        int food = turnOrderCard.getFoodByIndex(idx);
+        if(food<-1){
+            throw new RuntimeException("Invalid Index in giveFoodForTOC");
+        }
+        p.modifyFood(food);
+    }
 }
 
 

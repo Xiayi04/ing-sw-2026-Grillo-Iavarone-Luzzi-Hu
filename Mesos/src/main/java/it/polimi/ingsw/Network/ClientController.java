@@ -127,11 +127,31 @@ public class ClientController implements AutoCloseable{
         view.showCurrentPlayer(player);
     }
 
-    public void foodUpdated(String username, int foodUpdated){
-        view.showMessage(username + "'s food + "+foodUpdated);
+    public void foodUpdated(String username, int updatedFood){
+        Player player = getPlayerByName(username);
+        synchronized (player){
+            if(player.getFood()== updatedFood)
+                return;
+
+            int deltaFood = updatedFood - player.getFood();
+            player.modifyFood(deltaFood);
+            if(!player.getName().equals(localPlayerName))
+                return;
+        }
+        view.showMessage("You now have " + updatedFood + " food");
     }
-    public void updatePlayerPP(String username, int PPUpdated){
-        view.showMessage(username + "'s PP updated: " + PPUpdated);
+    public void updatePlayerPP(String username, int updatedPPs){
+        Player player = getPlayerByName(username);
+        synchronized (player){
+            if(player.getPrestigePoints()== updatedPPs)
+                return;
+
+            int deltaPPs = updatedPPs - player.getPrestigePoints();
+            player.modifyPP(deltaPPs);
+            if(!player.getName().equals(localPlayerName))
+                return;
+        }
+        view.showMessage("You now have " + updatedPPs + " Prestige Points");
     }
 
     public void showUpdateForEvents() {

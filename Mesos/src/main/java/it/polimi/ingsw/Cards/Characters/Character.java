@@ -1,7 +1,6 @@
 package it.polimi.ingsw.Cards.Characters;
 
 import it.polimi.ingsw.Cards.Card;
-import it.polimi.ingsw.Cards.CardType;
 import it.polimi.ingsw.Cards.Characters.CharacterVisitor.CharacterInterface;
 import it.polimi.ingsw.Cards.Characters.CharacterVisitor.CharacterVisitor;
 import it.polimi.ingsw.Cards.Characters.CharacterVisitor.InventorInterface;
@@ -38,10 +37,11 @@ public abstract class Character extends Card implements CharacterInterface, Inve
     /**
      * @param visitor
      * @param player
+     * @return
      */
     @Override
-    public void addCard(CharacterVisitor visitor, Player player) {
-
+    public boolean addCard(CharacterVisitor visitor, Player player) {
+        return false;
     }
 
     /**
