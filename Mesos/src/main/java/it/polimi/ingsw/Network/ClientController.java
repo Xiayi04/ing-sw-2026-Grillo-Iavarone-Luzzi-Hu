@@ -77,12 +77,14 @@ public class ClientController implements AutoCloseable{
     }
 
     public Player getLocalPlayer() {
-        for(Player p : currentBoard.getPlayers()){
-            if(p.getName().equals(localPlayerName)){
+        synchronized (BoardLock){
+        for (Player p : currentBoard.getPlayers()) {
+            if (p.getName().equals(localPlayerName)) {
                 return p;
             }
         }
         return null;
+        }
     }
     public void setCurrentBoard(Board currentBoard) {
         this.currentBoard = currentBoard;
@@ -111,8 +113,18 @@ public class ClientController implements AutoCloseable{
             currentBoard = board;
         }
         view.showStartGame();
+
+        Player player =getLocalPlayer();
+        if (player!=null){
+            view.showMessage("YOU start the game with "+ player.getFood() + "food");
+        }
+
     }
+
+
+
     public void showUpdateFirstPlayer() {
+
         view.askNumToPlayer();
     }
     public void showAvailableTotems(ArrayList<Totem> availableTotems) {
