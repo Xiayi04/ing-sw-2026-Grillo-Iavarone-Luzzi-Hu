@@ -147,6 +147,7 @@ public class ClientController implements AutoCloseable{
 
             int deltaFood = updatedFood - player.getFood();
             player.modifyFood(deltaFood);
+            view.showPlayerFoodUpdate(username, updatedFood);
             if(!player.getName().equals(localPlayerName))
                 return;
         }
@@ -160,6 +161,7 @@ public class ClientController implements AutoCloseable{
 
             int deltaPPs = updatedPPs - player.getPrestigePoints();
             player.modifyPP(deltaPPs);
+            view.showPlayerPPUpdate(username, updatedPPs);
             if(!player.getName().equals(localPlayerName))
                 return;
         }
