@@ -2,7 +2,7 @@ package it.polimi.ingsw.Network.RMI;
 
 import it.polimi.ingsw.Controller.GameManager;
 import it.polimi.ingsw.Controller.Lobby;
-import it.polimi.ingsw.Controller.Notifier;
+
 import it.polimi.ingsw.Controller.ServerController;
 import it.polimi.ingsw.Game.Totem;
 import it.polimi.ingsw.Network.VirtualClientInterface;
@@ -29,7 +29,9 @@ public class ServerRMI extends UnicastRemoteObject implements VirtualServer,Runn
         this.gameManager = gameManager;
         this.serverController = serverController;
         this.lobby = lobby;
+
     }
+
 
     /**
      * Initializes and starts the RMI server.
@@ -44,10 +46,10 @@ public class ServerRMI extends UnicastRemoteObject implements VirtualServer,Runn
         try {
             final String serverName = "---MESOS_SERVER---";
             //rendo accessibile il mio local host agli altri
-            System.setProperty("java.rmi.server.hostname","192.168.1.230");
+            //System.setProperty("java.rmi.server.hostname","192.168.1.230");
             //It sets the registry to port 1234
             Registry registry = LocateRegistry.createRegistry(1234);
-            //Publish the server to the registry
+
             registry.rebind(serverName, this);
             System.out.println("Server RMI started...");
         } catch (Exception e) {

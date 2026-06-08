@@ -16,7 +16,7 @@ import java.rmi.server.UnicastRemoteObject;
 import java.util.ArrayList;
 import java.util.List;
 
-//
+
 public class ClientRMI extends UnicastRemoteObject implements
         RemoteClientInterface,ServerConnection, Runnable, AutoCloseable {
 
@@ -26,11 +26,10 @@ public class ClientRMI extends UnicastRemoteObject implements
     private final int port;
     private final String serverName;
     private String username;
-//
 
     public ClientRMI(String ipAddress, int port, String serverName, ClientController clientcontroller) throws RemoteException {
         super();
-        this.ipAddress = "192.168.1.230";
+        this.ipAddress = ipAddressChoice(ipAddress);
         this.port = port;
         this.serverName = serverName;
         this.clientController = clientcontroller;
@@ -39,6 +38,13 @@ public class ClientRMI extends UnicastRemoteObject implements
 
     public void setClientController(ClientController clientController) {
         this.clientController = clientController;
+    }
+
+    private String ipAddressChoice(String ipAddress) {
+        if (ipAddress == null || ipAddress.isBlank()) {
+            return "localhost";
+        }
+        return ipAddress;
     }
 
     @Override
