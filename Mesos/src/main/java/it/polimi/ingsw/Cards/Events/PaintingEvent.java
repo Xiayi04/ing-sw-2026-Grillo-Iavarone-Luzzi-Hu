@@ -53,7 +53,7 @@ public class PaintingEvent extends Event {
     public void resolveEvent(ArrayList<Player> players){
         DiscountVisitorInterface v = new DiscountVisitor();
         for(Player player : players){
-            Integer numPainters = player.countTribeCardsByIcon(Icons.PAINTER.toString());
+            Integer numPainters = player.getPainterCounter(); //player.countTribeCardsByIcon("PAINTER");
 
             if(numPainters >= PaEveNumMinPainters){
                 player.modifyPP(abs(numPainters*PaEveMultiplierPP));

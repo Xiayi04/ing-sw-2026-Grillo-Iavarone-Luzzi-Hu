@@ -1,6 +1,7 @@
 package it.polimi.ingsw.UI.GUI;
 
 
+import it.polimi.ingsw.Buildings.Building;
 import it.polimi.ingsw.Cards.Card;
 import it.polimi.ingsw.Database.LeaderBoardData;
 import it.polimi.ingsw.Game.Player;
@@ -46,6 +47,7 @@ public class GuiView implements GraphicInterface {
     private final Label currentPlayerLabel = new Label();
     private final ExecutorService pool = Executors.newCachedThreadPool();
     //private final Label labelError = new Label("prova");
+    private final Label label = new Label();
 
     public GuiView(ClientController clientController, StackPane root) {
         this.clientController = clientController;
@@ -55,7 +57,7 @@ public class GuiView implements GraphicInterface {
     }
 
     public void showMainStage() {
-        System.out.println("DEBUG: metodo showMainStage chiamato");
+        //System.out.println("DEBUG: metodo showMainStage chiamato");
         root.getChildren().clear();
         ImageView background = new ImageView(new Image(new File("images/background/background.png").toURI().toString()));
         background.setPreserveRatio(false);
@@ -192,7 +194,7 @@ public class GuiView implements GraphicInterface {
     }
 
     public void moveTotem(String username, int index) {
-        System.out.println("DEBUG: totem mosso");
+        //System.out.println("DEBUG: totem mosso");
         Platform.runLater(() -> {
             //String thisTotem = clientController.getPlayerByName(username).getTotem().toString();
             for(int i=0; i<boardView.getTOCSlots().size(); i++){
@@ -206,23 +208,20 @@ public class GuiView implements GraphicInterface {
     }
 
     public void showNextRound(){
-        System.out.println("DEBUG: metodo  showNextRound chiamato");
+        //System.out.println("DEBUG: metodo  showNextRound chiamato");
         Platform.runLater(() -> {
             boardView.getDownCharacterRow().getChildren().clear();
-            /*if(!boardView.getUpperCharacterRow().getChildren().isEmpty()){
-                //Node card = boardView.getUpperCharacterRow().getChildren().remove(0);
-                boardView.getDownCharacterRow().getChildren().addAll(boardView.getUpperCharacterRow().getChildren());
-                boardView.getUpperCharacterRow().getChildren().clear();
-            }*/
             boardView.getUpperCharacterRow().getChildren().clear();
+            boardView.getUpperBuildingRow().getChildren().clear();
+            boardView.getDownBuildingRow().getChildren().clear();
             for(Card c : clientController.getCurrentBoard().getUpperCardRow()){
                 ImageView cardView = Utils.createImageView(c.getImagePath(), 150);
-
                 cardView.setCursor(Cursor.HAND);
                 cardView.setOnMouseClicked(event ->
                 {
-                    //getUpperCharacterRow().getChildren().remove(getUpperCharacterRow().getChildren().indexOf(imageView));
-                    clientController.requestLocalPickCard(true, false, boardView.getUpperCharacterRow().getChildren().indexOf(cardView));
+                    pool.submit(() -> {
+                        clientController.requestLocalPickCard(true, false, boardView.getUpperCharacterRow().getChildren().indexOf(cardView));
+                    });
                 });
                 cardView.setOnMouseEntered(event -> {
                     cardView.setStyle(" -fx-scale-x: 1.2; -fx-scale-y: 1.2;");
@@ -232,11 +231,29 @@ public class GuiView implements GraphicInterface {
                 });
                 boardView.getUpperCharacterRow().getChildren().add(cardView);
             }
+            for(Card c : clientController.getCurrentBoard().getUpperBuildingRow()){
+                ImageView buildingView = Utils.createImageView(c.getImagePath(), 150);
+                buildingView.setCursor(Cursor.HAND);
+                buildingView.setOnMouseClicked(event ->{
+                    pool.submit(() -> {
+                        clientController.requestLocalPickCard(true, true, boardView.getUpperBuildingRow().getChildren().indexOf(buildingView));
+                    });
+                });
+                buildingView.setOnMouseEntered(event -> {
+                    buildingView.setStyle(" -fx-scale-x: 1.2; -fx-scale-y: 1.2;");
+                });
+                buildingView.setOnMouseExited(event -> {
+                    buildingView.setStyle("");
+                });
+                boardView.getUpperBuildingRow().getChildren().add(buildingView);
+            }
             for(Card c : clientController.getCurrentBoard().getLowerCardsRow()){
                 ImageView cardView = Utils.createImageView(c.getImagePath(), 150);
                 cardView.setCursor(Cursor.HAND);
                 cardView.setOnMouseClicked(event -> {
-                    clientController.requestLocalPickCard(false, false, boardView.getDownCharacterRow().getChildren().indexOf(cardView));
+                    pool.submit(() -> {
+                        clientController.requestLocalPickCard(false, false, boardView.getDownCharacterRow().getChildren().indexOf(cardView));
+                    });
                 });
                 cardView.setOnMouseEntered(event -> {
                     cardView.setStyle("-fx-scale-x: 1.2; -fx-scale-y: 1.2;");
@@ -245,6 +262,24 @@ public class GuiView implements GraphicInterface {
                     cardView.setStyle("");
                 });
                 boardView.getDownCharacterRow().getChildren().add(cardView);
+            }
+            if(!clientController.getCurrentBoard().getLowerBuildingRow().isEmpty()){
+                for(Card c : clientController.getCurrentBoard().getLowerBuildingRow()){
+                    ImageView buildingView = Utils.createImageView(c.getImagePath(), 150);
+                    buildingView.setCursor(Cursor.HAND);
+                    buildingView.setOnMouseClicked(event ->{
+                        pool.submit(() -> {
+                            clientController.requestLocalPickCard(false, true, boardView.getDownCharacterRow().getChildren().indexOf(buildingView));
+                        });
+                    });
+                    buildingView.setOnMouseEntered(event -> {
+                        buildingView.setStyle("-fx-scale-x: 1.2; -fx-scale-y: 1.2;");
+                    });
+                    buildingView.setOnMouseExited(event -> {
+                        buildingView.setStyle("");
+                    });
+                    boardView.getDownBuildingRow().getChildren().add(buildingView);
+                }
             }
             boardView.getDeck().getChildren().clear();
             Card c = clientController.getCurrentBoard().getDeck().getFirst();
@@ -273,6 +308,7 @@ public class GuiView implements GraphicInterface {
 
     @Override
     public void showEndGameSuccessfully(String winner, List<PlayerScore> leaderboard) {
+        System.out.println("il metodo showEndGameSuccessfully è stato chiamato");
         root.getChildren().clear();
         ImageView background = new ImageView(new Image(new File("images/background/background.png").toURI().toString()));
         background.setPreserveRatio(false);
@@ -384,7 +420,7 @@ public class GuiView implements GraphicInterface {
                     if (!comboBox.getValue().equals(null)){
                         int numPlayers = Integer.parseInt(comboBox.getValue());
                         clientController.setNumPlayers(numPlayers);
-                        System.out.println("DEBUG: il numero di giocatori è "+ numPlayers);
+                        //System.out.println("DEBUG: il numero di giocatori è "+ numPlayers);
                     }
                     else{
                         event.consume();
@@ -481,7 +517,7 @@ public class GuiView implements GraphicInterface {
     }
 
     public void showError(String message){
-        System.out.println("DEBUG: il messaggio è "+message);
+        System.out.println("DEBUG: l'errore  è "+message);
         Platform.runLater(() -> {
             Label label = new Label();
             label.setText(message);
@@ -511,7 +547,7 @@ public class GuiView implements GraphicInterface {
     }
 
     public void showReturnToTOC(String username){
-        System.out.println("DEBUG: metodo showReturnToTOC chiamato");
+        //System.out.println("DEBUG: metodo showReturnToTOC chiamato");
         Platform.runLater(() -> {
            Node thisTotemView = null;
             for(int i=0; i<boardView.getOCSlots().size(); i++){

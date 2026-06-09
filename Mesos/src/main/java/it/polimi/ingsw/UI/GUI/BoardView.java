@@ -6,6 +6,7 @@ import it.polimi.ingsw.Network.ClientController;
 import javafx.geometry.Pos;
 import javafx.scene.Cursor;
 import javafx.scene.Node;
+import javafx.scene.control.Label;
 import javafx.scene.effect.Glow;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.HBox;
@@ -35,6 +36,7 @@ public class BoardView extends VBox {
             4, 57,
             5, 60
     );
+    private final Label label = new Label();
 
     public BoardView(ClientController clientController, GuiView guiView, ExecutorService pool) {
         this.clientController  = clientController;
@@ -88,8 +90,9 @@ public class BoardView extends VBox {
             imageView.setCursor(Cursor.HAND);
             imageView.setOnMouseClicked(event ->
                 {
-                    //getUpperCharacterRow().getChildren().remove(getUpperCharacterRow().getChildren().indexOf(imageView));
-                    clientController.requestLocalPickCard(true, false, getUpperCharacterRow().getChildren().indexOf(imageView));
+                    pool.submit(() -> {
+                        clientController.requestLocalPickCard(true, false, getUpperCharacterRow().getChildren().indexOf(imageView));
+                    });
                 });
             imageView.setOnMouseEntered(event -> {
                 imageView.setStyle(" -fx-scale-x: 1.2; -fx-scale-y: 1.2;");
@@ -104,8 +107,9 @@ public class BoardView extends VBox {
             imageView.setCursor(Cursor.HAND);
             imageView.setOnMouseClicked(event ->
                 {
-                    //getUpperBuildingRow().getChildren().remove(getUpperBuildingRow().getChildren().indexOf(imageView));
-                    clientController.requestLocalPickCard(true, true, getUpperBuildingRow().getChildren().indexOf(imageView));
+                    pool.submit(() -> {
+                        clientController.requestLocalPickCard(true, true, getUpperBuildingRow().getChildren().indexOf(imageView));
+                    });
                 });
             imageView.setOnMouseEntered(event -> {
                 imageView.setStyle(" -fx-scale-x: 1.2; -fx-scale-y: 1.2;");
@@ -128,8 +132,9 @@ public class BoardView extends VBox {
             imageView.setCursor(Cursor.HAND);
             imageView.setOnMouseClicked(event ->
                 {
-                    //getDownCharacterRow().getChildren().remove(getDownCharacterRow().getChildren().indexOf(imageView));
-                    clientController.requestLocalPickCard(false, false, getDownCharacterRow().getChildren().indexOf(imageView));
+                    pool.submit(() -> {
+                        clientController.requestLocalPickCard(false, false, getDownCharacterRow().getChildren().indexOf(imageView));
+                    });
                 });
             imageView.setOnMouseEntered(event -> {
                 imageView.setStyle(" -fx-scale-x: 1.2; -fx-scale-y: 1.2;");
@@ -208,6 +213,7 @@ public class BoardView extends VBox {
         Card c = clientController.getCurrentBoard().getDeck().getFirst();
         ImageView imageView = Utils.createImageView("images/cards/back/era"+c.getEra()+".png", 150);
         deck.getChildren().add(imageView);
+        deck.getChildren().add(label);
         return centerRow;
     }
 }

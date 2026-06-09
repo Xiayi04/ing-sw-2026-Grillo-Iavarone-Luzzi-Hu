@@ -74,9 +74,9 @@ public class GameManager {
             board.getTurnOrderCard().getOrder().get(2).modifyFood(3);
             if(numPlayers>=4){
                 board.getTurnOrderCard().getOrder().get(3).modifyFood(4);
-                if(numPlayers>=5){
-                    board.getTurnOrderCard().getOrder().get(4).modifyFood(4);
-                }
+            }
+            else{
+                board.getTurnOrderCard().getOrder().get(4).modifyFood(4);
             }
         }
     }
@@ -101,6 +101,10 @@ public class GameManager {
         System.out.println(" Start of the Round " + this.round);
 
         ArrayList<Event> currentEvents = board.checkEvent();
+        if(round==10){
+            ArrayList<Event> upperEvents = board.checkUpperEvent();
+            currentEvents.addAll(upperEvents);
+        }
         if (!currentEvents.isEmpty()) {
             resolveEvents(currentEvents);
         }

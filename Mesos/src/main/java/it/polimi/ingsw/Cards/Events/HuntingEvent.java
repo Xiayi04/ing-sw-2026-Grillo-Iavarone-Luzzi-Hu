@@ -41,7 +41,7 @@ public class HuntingEvent extends Event {
 
 
         for(Player p : players){
-            int numHunters = p.countTribeCardsByIcon(Icons.HUNTER.toString());
+            int numHunters = p.getHunterCounter(); //player.countTribeCardsByIcon("HUNTER");
             int foodBonus = numHunters;
             int bonusPP = HuEvePP * numHunters;
             DiscountVisitorInterface v = new DiscountVisitor();

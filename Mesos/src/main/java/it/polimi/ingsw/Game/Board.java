@@ -108,6 +108,16 @@ public class Board  implements Serializable {
         return events;
 
     }
+
+    public ArrayList<Event> checkUpperEvent() {
+        ArrayList<Event> UpperEvents = new ArrayList<>();
+        for (Card c : upperCardRow) {
+            if (c instanceof Event e) {
+                UpperEvents.add(e);
+            }
+        }
+        return UpperEvents;
+    }
     public void chooseTurnOrderCard(int numPlayers) {
         this.turnOrderCard = new TurnOrderCard(numPlayers);
     }

@@ -116,7 +116,7 @@ public class ClientController implements AutoCloseable{
 
         Player player =getLocalPlayer();
         if (player!=null){
-            view.showMessage("YOU start the game with "+ player.getFood() + "food");
+            view.showMessage("You start the game with "+ player.getFood() + " food");
         }
 
     }

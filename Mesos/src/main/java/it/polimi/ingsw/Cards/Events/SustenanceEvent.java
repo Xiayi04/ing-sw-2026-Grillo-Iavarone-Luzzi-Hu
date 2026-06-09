@@ -64,14 +64,13 @@ public class SustenanceEvent extends Event {
                 int penalty = numCards - pickerDiscount - buildingDiscount;
 
                 if (penalty > player.getFood()) {
-                    penalty -= player.getFood();
+                    penalty = penalty - player.getFood();   //>0
                     player.modifyFood(-player.getFood());
 
-                    player.modifyPP(-penalty * this.SuEvePointsLossMultiplier);
+                    player.modifyPP(penalty * this.SuEvePointsLossMultiplier); //SuEvePointsLossMultiplier<0    penalty * this.SuEvePointsLossMultiplier<0
                 } else
                     player.modifyFood(-penalty);
             }
-            player.getVirtualClient().notifyAll();
         }
     }
 }
