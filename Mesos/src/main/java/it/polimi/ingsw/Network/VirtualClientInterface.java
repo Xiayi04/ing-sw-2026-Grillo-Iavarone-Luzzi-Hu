@@ -3,17 +3,15 @@ package it.polimi.ingsw.Network;
 import it.polimi.ingsw.Cards.Events.Event;
 import it.polimi.ingsw.Database.LeaderBoardData;
 import it.polimi.ingsw.Game.*;
-
-import java.io.IOException;
-import java.rmi.Remote;
-import java.rmi.RemoteException;
 import java.util.ArrayList;
 import java.util.List;
 
 public interface VirtualClientInterface {
+    void skipTurn();
+
     /**
      * server notifies client that the era changed
-     * @param era
+     * @param era:
      */
      void showUpdateEra(int era);
 
@@ -44,15 +42,15 @@ public interface VirtualClientInterface {
 
     /**
      * Notifies that the game started , list of players and board are sent
-     * @param players
-     * @param board
+     * @param players:
+     * @param board:
      */
      void updateStartGame( ArrayList<Player> players, Board board);
 
     /**
      * Notifies the client that the game successfully ended and The list of the result
-     * @param winner
-     * @param leaderboard
+     * @param winner:
+     * @param leaderboard:
      */
      void updateEndGame(String winner, List<PlayerScore> leaderboard) ;
 

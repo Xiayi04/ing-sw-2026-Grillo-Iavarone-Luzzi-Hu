@@ -13,23 +13,24 @@ import it.polimi.ingsw.Database.LeaderBoardData;
 import it.polimi.ingsw.Game.*;
 import it.polimi.ingsw.Cards.Characters.Character;
 import it.polimi.ingsw.Network.PlayerScore;
-
-import java.io.IOException;
-import java.rmi.RemoteException;
 import java.sql.SQLException;
 import java.util.*;
+import java.util.concurrent.atomic.AtomicBoolean;
 /*La classe GameManager coordina il flusso di gioco, i turni e i cambi di era.*/
 
 public class GameManager {
     private int round;
     private int numPlayers;
     public final static Object numPlayersLock = new Object();
-    private ArrayList<Player> players;
+    private final ArrayList<Player> players;
     public static final Object playersLock = new Object();
     private Board board;
     private Player currentPlayer;
-    private List<PendingPick> pickingQueue = new ArrayList<>();
+    private final List<PendingPick> pickingQueue = new ArrayList<>();
     private Notifier  notifier = null;
+    private final AtomicBoolean pickingPhase = new AtomicBoolean(false);
+    private final AtomicBoolean positioningPhase = new AtomicBoolean(false);
+    private final AtomicBoolean isGameStarted = new AtomicBoolean(false);
 
     //costruttore
     public GameManager(ArrayList<Player> players, int numPlayers, Board board) {
@@ -46,6 +47,11 @@ public class GameManager {
      */
 
     public void startGame()  {
+        if(isGameStarted.get()){
+            return;
+        }
+        isGameStarted.set(true);
+
         synchronized (playersLock) {
             System.out.println("Starting game");
             this.round = 1;
@@ -81,12 +87,14 @@ public class GameManager {
      * Resolve the events on the bottom row,
      * then move the cards from the top row to the bottom row,
      * and finally refill the cards from the deck in the top row.
-     * @return next Round.
+     * next Round.
      */
     public void nextRound() {
         this.round++;
 
         if(this.round > 10){
+            positioningPhase.set(false);
+            pickingPhase.set(false);
             endGame();
             return;
         }
@@ -109,7 +117,7 @@ public class GameManager {
      * The method to handle the end or a round : I sort events,
      * those with the same name are sorted by era
      * and the sustenance is resolved last.
-     * @return endRound;
+     *  endRound;
      * */
 
     public void endRound() {
@@ -140,10 +148,8 @@ public class GameManager {
      *  needs to be resolved first with a comparator in true or false,
      *  i.e. if the event is marked as true it resolves
      *  it last otherwise they are resolved first.
-     * @param events
+     * @param events:
      */
-
-
     public void resolveEvents(ArrayList<Event> events) {
         if (events == null || events.isEmpty()) {
             return;
@@ -156,6 +162,7 @@ public class GameManager {
         );
 
         for (Event event : events) {
+            notifier.resolvingEventBroadcast(event);
             event.resolveEvent(board.getPlayers());
 
             for(Player player : this.players){
@@ -167,10 +174,8 @@ public class GameManager {
 
     /**
      * the method for managing the end of the game and the various calculations
-     * to establish the winner.
-     * @return the winner
+     * to establish the winner
      */
-
     public void endGame() {
         System.out.println("--- THE GAME IS OVER  ---");
         System.out.println("Final points count...");
@@ -191,7 +196,7 @@ public class GameManager {
             }
         });
         //The winner is the first of the updated list
-        PlayerScore winner = leaderboard.get(0);
+        PlayerScore winner = leaderboard.getFirst();
 
         System.out.println("The winner is: " + winner.username());
         if(this.notifier != null){
@@ -224,6 +229,7 @@ public class GameManager {
      */
 
     public void positionPhase(){
+        positioningPhase.set(true);
         executeNextPosition();
     }
 
@@ -233,13 +239,14 @@ public class GameManager {
      */
 
     public void executeNextPosition() {
-        synchronized (playersLock) {
+        synchronized (board.getTurnOrderCard().getOrder()) {
             if (board.getTurnOrderCard().getOrder().isEmpty()) {
+                positioningPhase.set(false);
                 System.out.println("Totem positioning phase completed.");
                 pickingPhase();
                 return;
             }
-            this.currentPlayer = board.getTurnOrderCard().getOrder().get(0);
+            this.currentPlayer = board.getTurnOrderCard().getOrder().getFirst();
 
             System.out.println("Player  " + currentPlayer.getName() + "place your totem");
             if(currentPlayer.getVirtualClient() != null){
@@ -253,10 +260,14 @@ public class GameManager {
      * Players choose an available offer card; if a offer card is already taken, they must choose another.
      * Once the choice is confirmed, the totem is removed from the turn order card and placed
      * on the selected offer card , and play proceeds to the next player.
-     * @param playerName
-     * @param pathIndex
+     * @param playerName:
+     * @param pathIndex:
      */
     public synchronized void resolvePosition(String playerName, int pathIndex){
+        if(!positioningPhase.get()){
+            notifier.invalidTotemPosition(getPlayerByName(playerName));
+            return;
+        }
         synchronized (playersLock){
             if(board.getTurnOrderCard().getOrder().isEmpty() || !currentPlayer.getName().equals(playerName)){
                 return;
@@ -282,7 +293,7 @@ public class GameManager {
     /**
      * The method setNumPlayers determines how many players the server should
      * wait before declaring the lobby "full" and starting rounds.
-     * @param numPlayers
+     * @param numPlayers:
      */
 
     public void setNumPlayers(int numPlayers){
@@ -345,6 +356,7 @@ public class GameManager {
                 pickingQueue.add(new PendingPick(playersWithBonus, true,true,false));
             }
         }
+        pickingPhase.set(true);
         executeNextPick();
     }
 
@@ -355,18 +367,22 @@ public class GameManager {
      *  Additionally, there is a check to see if the player holds a special card; if so,
      *  they are allowed to draw another card only after all players have completed their turns.
      *  Finally, once a player concludes their draw phase, they are returned to the turn order card
-     * @param playerName
-     * @param isBuilding
-     * @param index
+     * @param playerName:
+     * @param isBuilding:
+     * @param index:
      */
     public void resolvePick(String playerName, boolean isUpperRequested, boolean isBuilding, int index) {
         Player p = getPlayerByName(playerName);
+        if(!pickingPhase.get()){
+            notifier.invalidCardPick(p);
+            return;
+        }
 
-        if(pickingQueue.isEmpty() || !pickingQueue.get(0).player.equals(p)){
+        if(pickingQueue.isEmpty() || !pickingQueue.getFirst().player.equals(p)){
             notifier.invalidCardPick(getPlayerByName(playerName));
             return;
         }
-        PendingPick currentAction = pickingQueue.get(0);
+        PendingPick currentAction = pickingQueue.getFirst();
         int i = 0;
         if(currentAction.isUpper() != isUpperRequested) {
             boolean flag = false;
@@ -453,7 +469,6 @@ public class GameManager {
      * list of Buildings and of the Characters, if both lists are available it returns true.
      * If the list of characters is not available to pick, but the buildings list is available, the parameter
      * canSkip is set to true, and the current pick is updated with the new value of canSkip.
-     * @return
      */
     public boolean isDirectionPickable() {
         PendingPick currentPick = pickingQueue.get(0);
@@ -489,7 +504,7 @@ public class GameManager {
 
     /**
      * the method allows to remove all pick which the same directions
-     * @param isUpper
+     * @param isUpper:
      */
     public void removeAllPendingPick(boolean isUpper) {
         if (isUpper) {
@@ -504,7 +519,6 @@ public class GameManager {
      * @param cards
      * contains character, it checks that the list is not empty, and it exists at least one character card
      * if so it returns a boolean.
-     * @return
      *
      */
 
@@ -526,7 +540,7 @@ public class GameManager {
      * the method checks if the list
      * @param buildings
      * is empty or not
-     * @return
+     * @return :
      */
     private boolean availableBuilding(ArrayList<Card> buildings) {
         boolean buildingsAvailable = buildings != null && !buildings.isEmpty();
@@ -599,6 +613,7 @@ public class GameManager {
              }
 
              System.out.println("All players have drawn");
+             pickingPhase.set(false);
              nextRound();
 
          }

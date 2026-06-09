@@ -225,6 +225,18 @@ public class Notifier{
 
     //SINGLE PLAYER MESSAGES
 
+    public void allowSkipTurn(Player player) {
+        synchronized (outputLock) {
+            pool.submit(()->{
+                try{
+                    player.getVirtualClient().skipTurn();
+                }catch(ClientDisconnectedException e){
+                    handleDisconnect(player.getVirtualClient());
+                }
+            });
+        }
+    }
+
     public void invalidCardPick(Player player) {
 
         pool.submit(() -> {

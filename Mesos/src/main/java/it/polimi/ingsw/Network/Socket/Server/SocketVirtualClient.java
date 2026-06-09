@@ -35,6 +35,7 @@ public class SocketVirtualClient implements VirtualClientInterface {
     private <T> void send(String commandType, T data){
         synchronized (outputLock) {
             try {
+                out.reset();
                 out.writeObject(new MessageFromServer<>(commandType, data));
                 out.flush();
             } catch (SocketException e) {
@@ -48,6 +49,12 @@ public class SocketVirtualClient implements VirtualClientInterface {
 
     //public record TotemPosition(String playerName, int index) implements Serializable {};
 
+
+    @Override
+    public void skipTurn() {
+        //da implementare lato client
+        send("skip", null);
+    }
 
     @Override
     public void updateForcedEndGame() {

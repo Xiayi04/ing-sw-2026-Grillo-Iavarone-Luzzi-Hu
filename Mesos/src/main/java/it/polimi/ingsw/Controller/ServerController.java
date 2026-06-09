@@ -81,6 +81,9 @@ public class ServerController implements LobbyManager {
                 }
                 checkStartGame();
             }
+            if(alreadyUsed){
+                client.usernameError();
+            }
         }
 
     }
@@ -212,7 +215,11 @@ public class ServerController implements LobbyManager {
     }
 
     public synchronized void genericPick(String username, boolean isUpper, boolean isBuilding, int index, boolean skip) {
-            gameManager.resolvePick(username, isUpper, isBuilding, index);
+            if(skip){
+                gameManager.skipPick(username);
+            }else{
+                gameManager.resolvePick(username, isUpper, isBuilding, index);
+            }
     }
 
     //Game Initializing
