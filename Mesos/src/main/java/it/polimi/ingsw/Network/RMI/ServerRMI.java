@@ -45,7 +45,6 @@ public class ServerRMI extends UnicastRemoteObject implements VirtualServer,Runn
     public void run() {
         try {
             final String serverName = "---MESOS_SERVER---";
-            //rendo accessibile il mio local host agli altri
             //System.setProperty("java.rmi.server.hostname","192.168.1.230");
             //It sets the registry to port 1234
             Registry registry = LocateRegistry.createRegistry(1234);
@@ -208,20 +207,18 @@ public class ServerRMI extends UnicastRemoteObject implements VirtualServer,Runn
      */
 
     public void closeRMI(){
-            //System.out.println("Ricevuto ordine di terminazione dal Server Padre...");
+        try {
+            java.rmi.server.UnicastRemoteObject.unexportObject(this, true);
+            java.rmi.registry.Registry registry = java.rmi.registry.LocateRegistry.getRegistry(1234);
+            registry.unbind("---MESOS_SERVER---");
+            activeClients.clear();
 
-            try {
-                java.rmi.server.UnicastRemoteObject.unexportObject(this, true);
-                java.rmi.registry.Registry registry = java.rmi.registry.LocateRegistry.getRegistry(2345);
-                registry.unbind("---MESOS_SERVER---");
-                activeClients.clear();
-
-                System.out.println("RMI module closed successfully.");
-            } catch (java.rmi.NoSuchObjectException e) {
-                // Happens if the server is already closed, safe to ignore.
-            } catch (Exception e) {
-                System.err.println("Error while closing RMI : " + e.getMessage());
-            }
+            System.out.println("RMI module closed successfully.");
+        } catch (java.rmi.NoSuchObjectException e) {
+            // Happens if the server is already closed, safe to ignore.
+        } catch (Exception e) {
+            System.err.println("Error while closing RMI : " + e.getMessage());
+        }
     }
 
 
