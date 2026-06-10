@@ -67,14 +67,17 @@ public class LeaderBoardDAO {
 
             try(ResultSet resultSet = preparedStatement.executeQuery()){
                 int position = 1;
-                while(resultSet.next()){
+                for(int i = 0; resultSet.next(); i++){
                     String username = resultSet.getString("username");
                     int score = resultSet.getInt("score");
                     LocalDate gameDate = resultSet.getDate("game_date").toLocalDate();
                     String date = gameDate.format(formatter);
                     int num_players = resultSet.getInt("num_players");
+                    if(!leaderBoard.isEmpty() && leaderBoard.get(i-1).score() != score){
+                        position++;
+                    }
                     leaderBoard.addLast(new LeaderBoardData(position,username,score,date));
-                    position++;
+
                 }
             }
         }
