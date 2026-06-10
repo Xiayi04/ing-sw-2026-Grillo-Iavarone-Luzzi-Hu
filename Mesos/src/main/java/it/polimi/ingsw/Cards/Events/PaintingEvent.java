@@ -53,15 +53,17 @@ public class PaintingEvent extends Event {
     public void resolveEvent(ArrayList<Player> players){
         DiscountVisitorInterface v = new DiscountVisitor();
         for(Player player : players){
-            Integer numPainters = player.getPainterCounter(); //player.countTribeCardsByIcon("PAINTER");
+            synchronized(player.getTribeCard()) {
+                Integer numPainters = player.getPainterCounter(); //player.countTribeCardsByIcon("PAINTER");
 
-            if(numPainters >= PaEveNumMinPainters){
-                player.modifyPP(abs(numPainters*PaEveMultiplierPP));
-            }else{
-                player.modifyPP(-abs(PaEvePointsLoss));
-            }
-            for(Building b : player.getBuilding()){
-                b.acceptDiscountEvent(v,player,this);
+                if (numPainters >= PaEveNumMinPainters) {
+                    player.modifyPP(abs(numPainters * PaEveMultiplierPP));
+                } else {
+                    player.modifyPP(-abs(PaEvePointsLoss));
+                }
+                for (Building b : player.getBuilding()) {
+                    b.acceptDiscountEvent(v, player, this);
+                }
             }
         }
     }

@@ -52,20 +52,25 @@ public class ClientController implements AutoCloseable{
     }
 
     public void setServerConnection(boolean isRMI) {
-        try {
-            if (isRMI) {
-                ClientRMI clientRMI = new ClientRMI(serverIP, 1234, "VirtualServer",this);
-                clientRMI.setClientController(this);
-                clientRMI.run();
+        if(this.serverConnection == null) {
+            try {
+                if (isRMI) {
+                    ClientRMI clientRMI = new ClientRMI(serverIP, 1234, "VirtualServer",this);
+                    clientRMI.setClientController(this);
+                    clientRMI.run();
 
-                this.serverConnection = clientRMI;
-            } else {
-                SocketClient socketClient = new SocketClient(this, serverIP);
-                this.serverConnection = socketClient;
+                    this.serverConnection = clientRMI;
+                } else {
+                    SocketClient socketClient = new SocketClient(this, serverIP);
+                    this.serverConnection = socketClient;
+                }
+            } catch (Exception e) {
+                view.showError("Connection error.");
+                e.printStackTrace();
             }
-        } catch (Exception e) {
-            view.showError("Connection error.");
-            e.printStackTrace();
+        }
+        else{
+            view.showError("Connection already established");
         }
     }
     public Board getCurrentBoard() {

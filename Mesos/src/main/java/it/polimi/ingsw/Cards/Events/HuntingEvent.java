@@ -41,16 +41,18 @@ public class HuntingEvent extends Event {
 
 
         for(Player p : players){
-            int numHunters = p.getHunterCounter(); //player.countTribeCardsByIcon("HUNTER");
-            int foodBonus = numHunters;
-            int bonusPP = HuEvePP * numHunters;
-            DiscountVisitorInterface v = new DiscountVisitor();
+            synchronized (p.getTribeCard()) {
+                int numHunters = p.getHunterCounter(); //player.countTribeCardsByIcon("HUNTER");
+                int foodBonus = numHunters;
+                int bonusPP = HuEvePP * numHunters;
+                DiscountVisitorInterface v = new DiscountVisitor();
 
-            for(Building b : p.getBuilding()){
-                b.acceptDiscountEvent(v,p,this);
+                for (Building b : p.getBuilding()) {
+                    b.acceptDiscountEvent(v, p, this);
+                }
+                p.modifyPP(abs(bonusPP));
+                p.modifyFood(abs(foodBonus));
             }
-            p.modifyPP(abs(bonusPP));
-            p.modifyFood(abs(foodBonus));
         }
     }
 
