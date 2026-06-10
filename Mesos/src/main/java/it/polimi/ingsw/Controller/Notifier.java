@@ -283,7 +283,7 @@ public class Notifier{
     public void sendLeaderBoard(Player player, int leaderBoardPosition,  ArrayList<LeaderBoardData> leaderBoardDB){
         pool.submit(() -> {
             try {
-                //player.getVirtualClient().updateLeaderboardFromDB(leaderBoardPosition, leaderBoardDB);
+                player.getVirtualClient().updateLeaderboardFromDB(leaderBoardPosition, leaderBoardDB);
             } catch (ClientDisconnectedException e) {
                 handleDisconnect(player.getVirtualClient());
             }
