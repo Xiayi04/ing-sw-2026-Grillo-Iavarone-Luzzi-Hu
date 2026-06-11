@@ -11,6 +11,6 @@ public class RefusedConnectionCommand implements ClientCommand{
 
     @Override
     public void execute(Socket socket, ClientController clientController) {
-        //clientController.refuseConnection();
+        clientController.refuseOfConnection();
     }
 }

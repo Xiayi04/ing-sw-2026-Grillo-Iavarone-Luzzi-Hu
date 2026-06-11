@@ -2,6 +2,7 @@ package it.polimi.ingsw.Network.Socket.Client.Command;
 
 
 
+import it.polimi.ingsw.Cards.Events.Event;
 import it.polimi.ingsw.Game.Board;
 import it.polimi.ingsw.Game.Totem;
 import it.polimi.ingsw.Network.Socket.Server.Command.*;
@@ -28,7 +29,8 @@ public class CommandFactoryClientSide {
         commands.put("next_round", u-> new NextRoundCommand((Board) u));
         commands.put("ping", _ ->new PingCommand());
         commands.put("end_game", d->new EndGameCommand((EndGameData) d));
-
+        commands.put("resolving_event", e->new ResolvingEventCommand((Event) e));
+        commands.put("db_leaderboard", d-> new DBLeaderBoardCommand((DBData) d));
 
         //login
         commands.put("setnumplayers", _ -> new NumPlayersCommand());
@@ -38,12 +40,13 @@ public class CommandFactoryClientSide {
         commands.put("confirm_username", u-> new ConfirmUsernameCommand((String)u));
         commands.put("confirm_totem", t-> new ConfirmTotemCommand((Totem)t));
         commands.put("chosen_num_players", p-> new ConfirmNumPlayers((Integer)p));
+        commands.put("confirm_numplayers", n->new ConfirmNumPlayers((Integer)n));
         //Errors
         commands.put("refuse_connection", _ -> new RefusedConnectionCommand());
         commands.put("setnumplayers_error", _ -> new SetNumPlayersError());
         commands.put("totem_error",e->new TotemError((ArrayList<Totem>)e));
         commands.put("pick_error", _ ->new PickError());
-        commands.put("totem_position_error", _ -> new TotemPositionError());
+        commands.put("moved_totem_error", _ -> new TotemPositionError());
         commands.put("close_connection", _ ->new CloseConnectionCommand());
         commands.put("username_error", _ ->new UsernameErrorCommand());
 

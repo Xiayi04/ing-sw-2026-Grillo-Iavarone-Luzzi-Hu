@@ -5,7 +5,6 @@ import it.polimi.ingsw.Game.Board;
 import it.polimi.ingsw.Game.Player;
 import it.polimi.ingsw.Game.Totem;
 import it.polimi.ingsw.Network.ClientController;
-import it.polimi.ingsw.Network.ClientMain;
 import it.polimi.ingsw.Network.PlayerScore;
 import it.polimi.ingsw.Network.ServerConnection;
 
@@ -120,7 +119,7 @@ public class ClientRMI extends UnicastRemoteObject implements
 
     @Override
     public void showUpdateForEvent(Event e) throws RemoteException {
-        clientController.showUpdateForEvents();
+        clientController.showUpdateForEvents(e);
     }
 
     @Override

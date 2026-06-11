@@ -2,6 +2,7 @@ package it.polimi.ingsw.Network;
 
 import it.polimi.ingsw.Cards.Card;
 import it.polimi.ingsw.Cards.Characters.Character;
+import it.polimi.ingsw.Cards.Events.Event;
 import it.polimi.ingsw.Database.LeaderBoardData;
 import it.polimi.ingsw.Game.Board;
 import it.polimi.ingsw.Game.OfferCard;
@@ -173,8 +174,8 @@ public class ClientController implements AutoCloseable{
         view.showMessage("You now have " + updatedPPs + " Prestige Points");
     }
 
-    public void showUpdateForEvents() {
-        view.showMessage("Round ended, event resolve phase");
+    public void showUpdateForEvents(Event event) {
+        view.showMessage("Resolving " + event.getEventName());
     }
     public void showError(String message) {
         view.showError(message);

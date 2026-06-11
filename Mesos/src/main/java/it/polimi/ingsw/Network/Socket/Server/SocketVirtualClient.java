@@ -111,7 +111,6 @@ public class SocketVirtualClient implements VirtualClientInterface {
         send("confirm_totem", totem);
     }
 
-
     public void confirmNumPlayers(int numPlayers) {
         send("confirm_numplayers", numPlayers);
     }
@@ -129,17 +128,10 @@ public class SocketVirtualClient implements VirtualClientInterface {
         send("game_started", new GameStartData(players, board));
     }
 
-    //@Override
-    public void availableColors(ArrayList<Totem> availableTotems) {
-        send("colors", availableTotems);
-    }
-
     @Override
     public void updateFirstPlayer()  {
         send("setnumplayers", null);
     }
-
-
 
     @Override
     public void usernameError() {
@@ -168,25 +160,21 @@ public class SocketVirtualClient implements VirtualClientInterface {
 
     @Override
     public void updatePlayerFood(String username, int update) {
-        //aggiornare client
         send("update_food", new UpdateFood(username, update));
     }
 
     @Override
     public void updatePlayerPP(String username, int update) {
-        //aggiornare
         send("update_pp", new UpdatePP(username, update));
     }
 
     @Override
     public void showPlayerTurn(String username) {
-        //aggiornare
         send("player_turn", username);
     }
 
     @Override
     public void updateNextRound(Board board){
-        //aggiornare
         send("next_round", board);
     }
 

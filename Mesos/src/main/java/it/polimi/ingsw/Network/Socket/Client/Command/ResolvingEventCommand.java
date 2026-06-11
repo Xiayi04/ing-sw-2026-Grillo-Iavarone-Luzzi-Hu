@@ -13,6 +13,6 @@ public class ResolvingEventCommand implements ClientCommand {
 
     @Override
     public void execute(Socket socket, ClientController clientController) {
-        //clientController.showUpdateForEvents(e);
+        clientController.showUpdateForEvents(e);
     }
 }
