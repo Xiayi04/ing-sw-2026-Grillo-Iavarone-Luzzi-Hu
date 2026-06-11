@@ -4,10 +4,7 @@ package it.polimi.ingsw.Network.Socket.Client.Command;
 
 import it.polimi.ingsw.Game.Board;
 import it.polimi.ingsw.Game.Totem;
-import it.polimi.ingsw.Network.Socket.Server.Command.Pick;
-import it.polimi.ingsw.Network.Socket.Server.Command.TotemPosition;
-import it.polimi.ingsw.Network.Socket.Server.Command.UpdateFood;
-import it.polimi.ingsw.Network.Socket.Server.Command.UpdatePP;
+import it.polimi.ingsw.Network.Socket.Server.Command.*;
 import it.polimi.ingsw.Network.Socket.Server.MessageFromServer;
 import it.polimi.ingsw.Network.Socket.Server.SocketVirtualClient;
 
@@ -29,11 +26,12 @@ public class CommandFactoryClientSide {
         commands.put("update_pp", u-> new UpdatePPCommand((UpdatePP) u));
         commands.put("player_turn", u-> new PlayerTurnCommand((String) u));
         commands.put("next_round", u-> new NextRoundCommand((Board) u));
-        commands.put("ping", p->new PingCommand());
+        commands.put("ping", _ ->new PingCommand());
+        commands.put("end_game", d->new EndGameCommand((EndGameData) d));
 
 
         //login
-        commands.put("setnumplayers", payload -> new NumPlayersCommand());
+        commands.put("setnumplayers", _ -> new NumPlayersCommand());
         commands.put("msg", payload-> new ShowMSGCommand((String[]) payload));
         commands.put("colors",c->new ShowAvailableColorsCommand((ArrayList<Totem>) c));
         //Confirms
@@ -41,12 +39,13 @@ public class CommandFactoryClientSide {
         commands.put("confirm_totem", t-> new ConfirmTotemCommand((Totem)t));
         commands.put("chosen_num_players", p-> new ConfirmNumPlayers((Integer)p));
         //Errors
-        commands.put("refuse_connection", payload-> new RefusedConnectionCommand());
-        commands.put("setnumplayers_error", e-> new SetNumPlayersError());
+        commands.put("refuse_connection", _ -> new RefusedConnectionCommand());
+        commands.put("setnumplayers_error", _ -> new SetNumPlayersError());
         commands.put("totem_error",e->new TotemError((ArrayList<Totem>)e));
-        commands.put("pick_error", e->new PickError());
-        commands.put("totem_position_error", e-> new TotemPositionError());
-        commands.put("close_connection", e->new CloseConnectionCommand());
+        commands.put("pick_error", _ ->new PickError());
+        commands.put("totem_position_error", _ -> new TotemPositionError());
+        commands.put("close_connection", _ ->new CloseConnectionCommand());
+        commands.put("username_error", _ ->new UsernameErrorCommand());
 
     }
 
