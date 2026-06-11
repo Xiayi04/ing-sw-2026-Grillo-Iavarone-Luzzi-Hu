@@ -1,5 +1,6 @@
 package it.polimi.ingsw.Network;
 
+import it.polimi.ingsw.Buildings.Building;
 import it.polimi.ingsw.Cards.Card;
 import it.polimi.ingsw.Cards.Characters.Character;
 import it.polimi.ingsw.Cards.Events.Event;
@@ -352,7 +353,13 @@ public class ClientController implements AutoCloseable{
         }
         synchronized (playerWhoPicked.getTribeCard()) {
             try {
-                playerWhoPicked.getTribeCard().add((Character) pickedCard);
+                if(!isBuilding){
+                    playerWhoPicked.getTribeCard().add((Character) pickedCard);
+                }
+                else{
+                    playerWhoPicked.getBuilding().add((Building) pickedCard);
+                }
+
             } catch (Exception e) {
                 throw new RuntimeException(e);
             }
