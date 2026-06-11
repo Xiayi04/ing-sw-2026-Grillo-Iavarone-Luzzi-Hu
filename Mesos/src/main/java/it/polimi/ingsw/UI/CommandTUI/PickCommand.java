@@ -4,26 +4,34 @@ import it.polimi.ingsw.Network.ClientController;
 
 public class PickCommand implements CommandTUI {
 
-    private final boolean first;
-    private final boolean second;
-    private final int third;
+    private  boolean first;
+    private  boolean second;
+    private  int third;
+    boolean success = true;
 
     public PickCommand(String payload) {
 
         String[] args = payload.split("\\s+");
 
         if(args.length != 3){
-            throw new IllegalArgumentException();
+            success = false;
         }
 
-        this.first = parseBoolean(args[0]);
-        this.second = parseBoolean(args[1]);
+        try {
+            this.first = parseBoolean(args[0]);
+            this.second = parseBoolean(args[1]);
+        } catch (IllegalArgumentException e) {
+            success = false;
+        }
 
         try {
             this.third = Integer.parseInt(args[2]);
         } catch (NumberFormatException e) {
-            throw new IllegalArgumentException("Terzo parametro deve essere un numero");
+            success = false;
         }
+        if(this.third<=0)
+            success = false;
+
     }
 
     private boolean parseBoolean(String s){
@@ -36,6 +44,10 @@ public class PickCommand implements CommandTUI {
 
     @Override
     public void execute(ClientController clientController) {
-        clientController.requestLocalPickCard(first, second, third);
+        if(!success){
+            clientController.showError("Invalid pick format, please try again.");
+            return;
+        }
+        clientController.requestLocalPickCard(first, second, third-1);
     }
 }

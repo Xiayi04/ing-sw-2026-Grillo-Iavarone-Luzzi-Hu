@@ -11,9 +11,9 @@ public class MoveTotemCommand implements CommandTUI {
     @Override
     public void execute(ClientController clientController) {
         try {
-            clientController.requestLocalMoveTotem(Integer.parseInt(provvIndex));
+            clientController.requestLocalMoveTotem(Integer.parseInt(provvIndex)-1);
         } catch (NumberFormatException e) {
-            //clientController.showErrorMessage("Please enter a valid index");
+            clientController.showError("Invalid index, please try again.");
         }
     }
 }

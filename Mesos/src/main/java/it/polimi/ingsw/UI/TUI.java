@@ -29,6 +29,7 @@ public class TUI implements GraphicInterface, Runnable {
     private Scanner sc;
     private AtomicBoolean isRunning = new AtomicBoolean(true);
     private Totem[] TOC;
+    private String currentPlayer;
 
 
     public TUI(Terminal terminal, ClientController controller) {
@@ -38,6 +39,7 @@ public class TUI implements GraphicInterface, Runnable {
         this.run();
     }
 
+    //TOC management
     private void addInHead(Totem totem) {
         int i = 0;
         for(; i<TOC.length; i++){
@@ -75,6 +77,7 @@ public class TUI implements GraphicInterface, Runnable {
         }
     }
 
+    //show managers
     @Override
     public void showEndGameSuccessfully(String winner, List<PlayerScore> leaderboard) {
         synchronized (LOCK) {
@@ -162,6 +165,7 @@ public class TUI implements GraphicInterface, Runnable {
         synchronized (LOCK) {
             StringBuilder stringBuilder = new StringBuilder();
             if (controller.getLocalPlayer().getName().equals(username)) {
+                index++;
                 stringBuilder.append("You moved your totem in position " + index + ".");
             } else {
                 stringBuilder.append(username.toUpperCase()).append(" has moved his totem in position ").append(index).append(".");
