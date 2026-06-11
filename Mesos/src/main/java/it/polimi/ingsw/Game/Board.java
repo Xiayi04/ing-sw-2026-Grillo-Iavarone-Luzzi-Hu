@@ -198,7 +198,7 @@ public class Board  implements Serializable {
        while (upperCardRow.size() < cardNeeded && !getDeck().isEmpty()) {
            Card newCard = getDeck().removeFirst();
 
-           if (newCard.getEra() != era) {
+           if (newCard.getEra() != era && newCard.getEra()!=4) {
                shiftBuildingUpToDown();
                era = newCard.getEra();
                refillUpperBuildingByEra();
