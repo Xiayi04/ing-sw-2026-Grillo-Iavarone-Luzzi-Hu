@@ -269,7 +269,7 @@ public class GuiView implements GraphicInterface {
                     buildingView.setCursor(Cursor.HAND);
                     buildingView.setOnMouseClicked(event ->{
                         pool.submit(() -> {
-                            clientController.requestLocalPickCard(false, true, boardView.getDownCharacterRow().getChildren().indexOf(buildingView));
+                            clientController.requestLocalPickCard(false, true, boardView.getDownBuildingRow().getChildren().indexOf(buildingView));
                         });
                     });
                     buildingView.setOnMouseEntered(event -> {
@@ -282,9 +282,11 @@ public class GuiView implements GraphicInterface {
                 }
             }
             boardView.getDeck().getChildren().clear();
-            Card c = clientController.getCurrentBoard().getDeck().getFirst();
-            ImageView imageView = Utils.createImageView("images/cards/back/era"+c.getEra()+".png", 150);
-            boardView.getDeck().getChildren().add(imageView);
+            if(!clientController.getCurrentBoard().getDeck().isEmpty()){
+                Card c = clientController.getCurrentBoard().getDeck().getFirst();
+                ImageView imageView = Utils.createImageView("images/cards/back/era"+c.getEra()+".png", 150);
+                boardView.getDeck().getChildren().add(imageView);
+            }
             updateReferences();
         });
     }
@@ -309,69 +311,71 @@ public class GuiView implements GraphicInterface {
     @Override
     public void showEndGameSuccessfully(String winner, List<PlayerScore> leaderboard) {
         System.out.println("il metodo showEndGameSuccessfully è stato chiamato");
-        root.getChildren().clear();
-        ImageView background = new ImageView(new Image(new File("images/background/background.png").toURI().toString()));
-        background.setPreserveRatio(false);
-        background.setFitWidth(root.getWidth());
-        background.setFitHeight(root.getHeight());
-        background.fitWidthProperty().bind(root.widthProperty().multiply(1.05));
-        background.fitHeightProperty().bind(root.heightProperty().multiply(1.05));
-        background.setEffect(new GaussianBlur(20));
-        root.getChildren().add(background);
-        //root.setStyle("-fx-background-color: red");
-        VBox scoreboard = new VBox(10);
-        scoreboard.setStyle("-fx-background-color: black");
-        scoreboard.setAlignment(Pos.CENTER);
-        ArrayList<Label> labels = new ArrayList<>();
-        for(int i=0; i<leaderboard.size(); i++){
-            PlayerScore p = leaderboard.get(i);
-            Label position = new Label();
-            position.setText(i+1+"°" + p.username() + "  -  " + p.points() + "  -  " + p.food());
-            switch(i){
-                case 0:
-                    position.setStyle(
-                            "-fx-font-size: 36px;" +
-                            "-fx-font-weight: bold;" +
-                            "-fx-text-fill: gold;"
-                    );
-                    break;
-                case 1:
-                    position.setStyle(
-                            "-fx-font-size: 36px;" +
-                            "-fx-font-weight: bold;" +
-                            "-fx-text-fill: silver;"
-                    );
-                    break;
-                case 2:
-                    position.setStyle(
-                            "-fx-font-size: 36px;" +
-                            "-fx-font-weight: bold;" +
-                            "-fx-text-fill: #cd7f32;"
-                    );
-                    break;
-                default:
-                    position.setStyle(
-                            "-fx-font-size: 36px;" +
-                            "-fx-font-weight: bold;" +
-                            "-fx-text-fill: white;"
-                    );
-                    break;
+        Platform.runLater(() -> {
+            root.getChildren().clear();
+            ImageView background = new ImageView(new Image(new File("images/background/background.png").toURI().toString()));
+            background.setPreserveRatio(false);
+            background.setFitWidth(root.getWidth());
+            background.setFitHeight(root.getHeight());
+            background.fitWidthProperty().bind(root.widthProperty().multiply(1.05));
+            background.fitHeightProperty().bind(root.heightProperty().multiply(1.05));
+            background.setEffect(new GaussianBlur(20));
+            root.getChildren().add(background);
+            //root.setStyle("-fx-background-color: red");
+            VBox scoreboard = new VBox(10);
+            scoreboard.setStyle("-fx-background-color: black");
+            scoreboard.setAlignment(Pos.CENTER);
+            ArrayList<Label> labels = new ArrayList<>();
+            for(int i=0; i<leaderboard.size(); i++){
+                PlayerScore p = leaderboard.get(i);
+                Label position = new Label();
+                position.setText(i+1+"°" + p.username() + "  -  " + p.points() + "  -  " + p.food());
+                switch(i){
+                    case 0:
+                        position.setStyle(
+                                "-fx-font-size: 36px;" +
+                                        "-fx-font-weight: bold;" +
+                                        "-fx-text-fill: gold;"
+                        );
+                        break;
+                    case 1:
+                        position.setStyle(
+                                "-fx-font-size: 36px;" +
+                                        "-fx-font-weight: bold;" +
+                                        "-fx-text-fill: silver;"
+                        );
+                        break;
+                    case 2:
+                        position.setStyle(
+                                "-fx-font-size: 36px;" +
+                                        "-fx-font-weight: bold;" +
+                                        "-fx-text-fill: #cd7f32;"
+                        );
+                        break;
+                    default:
+                        position.setStyle(
+                                "-fx-font-size: 36px;" +
+                                        "-fx-font-weight: bold;" +
+                                        "-fx-text-fill: white;"
+                        );
+                        break;
+                }
+                position.setOpacity(0);
+                labels.add(position);
+                scoreboard.getChildren().add(position);
             }
-            position.setOpacity(0);
-            labels.add(position);
-            scoreboard.getChildren().add(position);
-        }
-        root.getChildren().add(scoreboard);
-        StackPane.setAlignment(scoreboard, Pos.CENTER);
-        SequentialTransition sequence = new SequentialTransition();
-        for(int i= labels.size()-1; i>=0; i--){
-            Label label = labels.get(i);
-            FadeTransition fadeTransition = new FadeTransition(Duration.seconds(3), label);
-            fadeTransition.setFromValue(0);
-            fadeTransition.setToValue(1);
-            sequence.getChildren().add(fadeTransition);
-        }
-        sequence.play();
+            root.getChildren().add(scoreboard);
+            StackPane.setAlignment(scoreboard, Pos.CENTER);
+            SequentialTransition sequence = new SequentialTransition();
+            for(int i= labels.size()-1; i>=0; i--){
+                Label label = labels.get(i);
+                FadeTransition fadeTransition = new FadeTransition(Duration.seconds(3), label);
+                fadeTransition.setFromValue(0);
+                fadeTransition.setToValue(1);
+                sequence.getChildren().add(fadeTransition);
+            }
+            sequence.play();
+        });
     }
 
     @Override
