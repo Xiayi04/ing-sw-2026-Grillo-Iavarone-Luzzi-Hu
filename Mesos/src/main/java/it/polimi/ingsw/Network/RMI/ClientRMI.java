@@ -187,6 +187,10 @@ public class ClientRMI extends UnicastRemoteObject implements
         try {
             server.requestPickCardManagement(username, isUpper, isBuilding, index,skip);
         } catch (RemoteException e) {
+            if(index == -1) {
+                clientController.showError("You still have some characters to pick");
+                return;
+            }
             clientController.showPickedCardError();
         }
     }

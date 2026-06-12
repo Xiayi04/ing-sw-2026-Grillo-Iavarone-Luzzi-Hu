@@ -6,6 +6,7 @@ import it.polimi.ingsw.Network.ClientController;
 import javafx.geometry.Pos;
 import javafx.scene.Cursor;
 import javafx.scene.Node;
+import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.effect.Glow;
 import javafx.scene.image.ImageView;
@@ -214,6 +215,13 @@ public class BoardView extends VBox {
         ImageView imageView = Utils.createImageView("images/cards/back/era"+c.getEra()+".png", 150);
         deck.getChildren().add(imageView);
         deck.getChildren().add(label);
+        Button skip = new Button("SKIP");
+        skip.setOnAction(event -> {
+            pool.submit(() -> {
+                clientController.requestSkip();
+            });
+        });
+        centerRow.getChildren().add(skip);
         return centerRow;
     }
 }
