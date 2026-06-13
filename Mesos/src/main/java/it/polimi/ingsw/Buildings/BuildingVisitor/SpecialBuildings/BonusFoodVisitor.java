@@ -5,7 +5,7 @@ import it.polimi.ingsw.Game.Player;
 
 public class BonusFoodVisitor extends BonusFoodAbstractVisitor {
     @Override
-    public int visit(BonusFood bonusFood, Player player) {
-        return bonusFood.giveExtraFood();
+    public void visit(BonusFood bonusFood, Player player) {
+        player.modifyFood(bonusFood.giveExtraFood());
     }
 }

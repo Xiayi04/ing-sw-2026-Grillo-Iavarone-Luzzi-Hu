@@ -33,6 +33,9 @@ public class ClientController implements AutoCloseable{
     String rowName ;
     String cardType;
     private final AtomicBoolean isRunning = new AtomicBoolean(true);
+    private List<LeaderBoardData> leaderboardDB = null;
+    private Integer playerPosition = null;
+    private AtomicBoolean isGameFinished = new AtomicBoolean(false);
 
     //connection management
     private final String serverIP;
@@ -490,12 +493,18 @@ public class ClientController implements AutoCloseable{
     }
 
     public void handleEndGameNormally(String winner, List<PlayerScore> leaderboard){
+        if(isGameFinished.get()){
+            return;
+        }
+        isGameFinished.set(true);
+
         view.showMessage("Connection closed, the game ended successfully");
         view.showEndGameSuccessfully(winner, leaderboard);
 
     }
     public void updateLeaderboardFromDB(int playerPositionInDB, List<LeaderBoardData>leaderboardFromDB){
-        view. showLeaderboardFromDB(playerPositionInDB, leaderboardFromDB);
-        ClientMain.terminateClient();
+        playerPosition = playerPositionInDB;
+        leaderboardDB = leaderboardFromDB;
+        //gestione chiusura sole connessioni
     }
 }

@@ -5,58 +5,48 @@ import it.polimi.ingsw.Game.Player;
 
 public abstract class BonusFoodAbstractVisitor implements TurnOrderCardFoodBonus{
 
-    @Override
-    public int visit(AddCard addCard, Player player) {
-        return 0;
+
+    public void visit(AddCard addCard, Player player) {
+
     }
 
-    @Override
-    public int visit(BonusStarBuilding bonusStarBuilding, Player player) {
-        return 0;
+    public void visit(BonusStarBuilding bonusStarBuilding, Player player) {
+
     }
 
-    @Override
-    public int visit(BonusFood bonusFood, Player player) {
-        return 0;
+    public void visit(BonusFood bonusFood, Player player) {
+
     }
 
-    @Override
-    public int visit(BonusPPBuilding bonusPPBuilding, Player player) {
-        return 0;
+    public void visit(BonusPPBuilding bonusPPBuilding, Player player) {
+
     }
 
-    @Override
-    public int visit(DiscountBuilding discountBuilding, Player player) {
-        return 0;
+    public void visit(DiscountBuilding discountBuilding, Player player) {
+
     }
 
-    @Override
-    public int visit(DoubleBonusBuilding doubleBonusBuilding, Player player) {
-        return 0;
+    public void visit(DoubleBonusBuilding doubleBonusBuilding, Player player) {
+
     }
 
-    @Override
-    public int visit(MultiplicationBuilding multiplicationBuilding, Player player) {
-        return 0;
+    public void visit(MultiplicationBuilding multiplicationBuilding, Player player) {
+
     }
 
-    @Override
-    public int visit(MultiplierPPBuilderBuilding multiplierPPBuilderBuilding, Player player) {
-        return 0;
+    public void visit(MultiplierPPBuilderBuilding multiplierPPBuilderBuilding, Player player) {
+
     }
 
-    @Override
-    public int visit(NoMalusBuilding noMalusBuilding, Player player) {
-        return 0;
+    public void visit(NoMalusBuilding noMalusBuilding, Player player) {
+
     }
 
-    @Override
-    public int visit(SameIconBuilding sameIconBuilding, Player player) {
-        return 0;
+    public void visit(SameIconBuilding sameIconBuilding, Player player) {
+
     }
 
-    @Override
-    public int visit(SetBonus setBonus, Player player) {
-        return 0;
+    public void visit(SetBonus setBonus, Player player) {
+
     }
 }

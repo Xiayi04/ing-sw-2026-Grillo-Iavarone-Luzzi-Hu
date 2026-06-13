@@ -15,6 +15,7 @@ import it.polimi.ingsw.Cards.Characters.Character;
 import it.polimi.ingsw.Network.PlayerScore;
 import java.sql.SQLException;
 import java.util.*;
+import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicBoolean;
 /*La classe GameManager coordina il flusso di gioco, i turni e i cambi di era.*/
 
@@ -216,10 +217,22 @@ public class GameManager {
             }
         }
         //aggiorna la classifica di tutte le partite fatte con quel numero di giocatori
-        ArrayList<LeaderBoardData> leaderboardData = new ArrayList<>();
+        ArrayList<LeaderBoardData> leaderboardFromDB = new ArrayList<>();
+
+        try {
+            leaderboardFromDB = (ArrayList<LeaderBoardData>) leaderboardDAO.getAllTimeLeaderBoard(numPlayers);
+        } catch (SQLException e) {
+            System.out.println("Error while connecting to the database");
+            return;
+        }
+
+        try {
+            Thread.sleep(TimeUnit.SECONDS.toMillis(1));
+        } catch (InterruptedException ignored) {}
+
         for(Player p : players){
             try{
-                notifier.sendLeaderBoard(p,leaderboardDAO.getPositionInLeaderBoard(numPlayers,p.finalScore()),leaderboardData);
+                notifier.sendLeaderBoard(p,leaderboardDAO.getPositionInLeaderBoard(numPlayers,p.finalScore()), leaderboardFromDB);
             } catch (SQLException e) {
                 System.out.println("Error while sending the ranking to the player:" + e.getMessage());
             }
@@ -252,7 +265,7 @@ public class GameManager {
             }
             this.currentPlayer = board.getTurnOrderCard().getOrder().getFirst();
 
-            System.out.println("Player  " + currentPlayer.getName() + "place your totem");
+            System.out.println("Player  " + currentPlayer.getName() + " move your totem");
             if(currentPlayer.getVirtualClient() != null){
                notifier.showTurnBroadcast (currentPlayer);
             }
@@ -288,7 +301,7 @@ public class GameManager {
             }
             Player p = board.getTurnOrderCard().getOrder().removeFirst();
             chosenCard.setOccupiedBy(p);
-            System.out.println(p.getName() + " he positioned himself on the card " + pathIndex);
+            System.out.println(p.getName() + " moved on the card " + pathIndex);
             notifier.movedTotemBroadcast(p ,pathIndex);
             executeNextPosition();
         }
@@ -589,6 +602,9 @@ public class GameManager {
                     int indexTOC = board.bringBackToTOC(p);
                     if (indexTOC >= 0) {
                         notifier.returnTotemOnTurnOrderBroadcast(p, indexTOC);
+                        board.giveFoodForTOC(p, indexTOC);
+                        notifier.foodUpdateBroadcast(p, p.getFood());
+                        notifier.ppUpdateBroadcast(p, p.getPrestigePoints());
                     }
                 }
             }
@@ -657,7 +673,7 @@ public class GameManager {
             ActivationVisitor visitor = new ConcreteBuildingActivation();
             pickedBuilding.acceptActivation(visitor, player);
 
-            System.out.println("The building  " + pickedBuilding.getName() + "  was purchased by");
+            System.out.println("The building " + pickedBuilding.getName() + " was purchased by " + player);
             return pickedBuilding;
         }else{
             System.out.println("INSUFFICIENT FOOD! (Requested :" + finalCost +")");

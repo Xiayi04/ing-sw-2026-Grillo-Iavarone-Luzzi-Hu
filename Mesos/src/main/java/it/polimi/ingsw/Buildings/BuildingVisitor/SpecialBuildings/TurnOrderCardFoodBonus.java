@@ -5,15 +5,15 @@ import it.polimi.ingsw.Buildings.SetBonus;
 import it.polimi.ingsw.Game.Player;
 
 public interface TurnOrderCardFoodBonus {
-    int visit(AddCard addCard, Player player);
-    int visit(BonusStarBuilding bonusStarBuilding, Player player);
-    int visit(BonusFood bonusFood, Player player);
-    int visit(BonusPPBuilding bonusPPBuilding, Player player);
-    int visit(DiscountBuilding discountBuilding, Player player);
-    int visit(DoubleBonusBuilding doubleBonusBuilding, Player player);
-    int visit(MultiplicationBuilding multiplicationBuilding, Player player);
-    int visit(MultiplierPPBuilderBuilding multiplierPPBuilderBuilding, Player player);
-    int visit(NoMalusBuilding noMalusBuilding, Player player);
-    int visit(SameIconBuilding sameIconBuilding, Player player);
-    int visit(SetBonus setBonus, Player player);
+    void visit(AddCard addCard, Player player);
+    void visit(BonusStarBuilding bonusStarBuilding, Player player);
+    void visit(BonusFood bonusFood, Player player);
+    void visit(BonusPPBuilding bonusPPBuilding, Player player);
+    void visit(DiscountBuilding discountBuilding, Player player);
+    void visit(DoubleBonusBuilding doubleBonusBuilding, Player player);
+    void visit(MultiplicationBuilding multiplicationBuilding, Player player);
+    void visit(MultiplierPPBuilderBuilding multiplierPPBuilderBuilding, Player player);
+    void visit(NoMalusBuilding noMalusBuilding, Player player);
+    void visit(SameIconBuilding sameIconBuilding, Player player);
+    void visit(SetBonus setBonus, Player player);
 }

@@ -5,6 +5,8 @@ import java.util.ArrayList;
 import java.util.Collections;
 
 import it.polimi.ingsw.Buildings.Building;
+import it.polimi.ingsw.Buildings.BuildingVisitor.SpecialBuildings.BonusFoodVisitor;
+import it.polimi.ingsw.Buildings.BuildingVisitor.SpecialBuildings.TurnOrderCardFoodBonus;
 import it.polimi.ingsw.Cards.Card;
 import it.polimi.ingsw.Cards.Events.Event;
 import it.polimi.ingsw.Factory.BuildingFactory;
@@ -357,6 +359,12 @@ public class Board  implements Serializable {
         int food = turnOrderCard.getFoodByIndex(idx);
         if(food<-1){
             throw new RuntimeException("Invalid Index in giveFoodForTOC");
+        }
+        if(food > 0){
+            TurnOrderCardFoodBonus visitor = new BonusFoodVisitor();
+            for(Building b : p.getBuilding()){
+                b.acceptFoodBonus(visitor,p);
+            }
         }
         p.modifyFood(food);
     }
