@@ -374,6 +374,15 @@ public class GameManager {
             }
         }
         pickingPhase.set(true);
+        //I need to check if there is a player on the offer card that has only the food
+        if(numPlayers == 5 && board.getPath().getFirst().isOccupied()){
+            Player player = board.getPath().getFirst().getOccupiedBy();
+            int index = board.bringBackToTOC(player);
+            if(index >= 0){
+                notifier.returnTotemOnTurnOrderBroadcast(player, index);
+                notifier.foodUpdateBroadcast(player, player.getFood());
+            }
+        }
         executeNextPick();
     }
 
