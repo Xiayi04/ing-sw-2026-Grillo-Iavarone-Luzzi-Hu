@@ -22,6 +22,6 @@ public interface BuildingInterface {
     //end game buildings
     int acceptEndGame(EndGameVisitorInterface visitor, Player player);
     //for
-    int acceptFoodBonus(TurnOrderCardFoodBonus visitor, Player player);
+    void acceptFoodBonus(TurnOrderCardFoodBonus visitor, Player player);
     int acceptAddCard(AddCardVisitorInterface visitor, Player player);
 }

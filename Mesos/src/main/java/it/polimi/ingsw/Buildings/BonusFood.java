@@ -24,8 +24,8 @@ public class BonusFood extends Building implements BuildingInterface {
     }
 
     @Override
-    public int acceptFoodBonus(TurnOrderCardFoodBonus visitor, Player p){
-        return visitor.visit( this, p);
+    public void acceptFoodBonus(TurnOrderCardFoodBonus visitor, Player p){
+        visitor.visit( this, p);
     }
 
     public String[] print(Printer printer){

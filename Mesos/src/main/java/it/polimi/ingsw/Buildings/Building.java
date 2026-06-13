@@ -74,8 +74,7 @@ public abstract class Building extends Card implements BuildingInterface, Serial
     }
 
     @Override
-    public int acceptFoodBonus(TurnOrderCardFoodBonus visitor, Player player){
-        return 0;
+    public void acceptFoodBonus(TurnOrderCardFoodBonus visitor, Player player){
     };
 
     @Override
