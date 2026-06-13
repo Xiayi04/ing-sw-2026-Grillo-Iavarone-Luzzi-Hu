@@ -113,7 +113,6 @@ public class GameManager {
             pickingPhase.set(false);
             endGame();
             return;
-
         }
         positionPhase();
     }
@@ -421,7 +420,8 @@ public class GameManager {
                 lenght = board.getLowerCardsRow().size();
             }
         }
-        if(index < 0 || index > lenght) {
+
+        if(index < 0 || index >= lenght) {
             System.out.println(p.getName() + " can't draw the card ");
             notifier.invalidCardPick(getPlayerByName(playerName));
             return;
@@ -436,30 +436,12 @@ public class GameManager {
 
         if (success) {
             pickingQueue.remove(i);
+            checkAndReturnToTOC(p);
             try {
 
                 notifier.pickedCardBroadcast(p, isUpperRequested, isBuilding, index);
             } catch (Exception e) {
                 System.err.println("Network error");
-            }
-            int idx = -1;
-            if(!pickingQueue.isEmpty()){
-                if(!pickingQueue.getFirst().player.equals(p) || (pickingQueue.getFirst().player().equals(p) &&  pickingQueue.getFirst().isEventPick)){
-                    idx = board.bringBackToTOC(p);
-                }
-            }else{
-                if(!board.getTurnOrderCard().getOrder().contains(p)){
-                    idx = board.bringBackToTOC(p);
-                }
-            }
-            if(idx>=0){
-                notifier.returnTotemOnTurnOrderBroadcast(p, idx);
-                try {
-                    board.giveFoodForTOC(p, idx);
-                    notifier.foodUpdateBroadcast(p, p.getFood());
-                } catch (Exception e) {
-                    System.out.println(e.getMessage());
-                }
             }
 
             executeNextPick();
@@ -578,6 +560,7 @@ public class GameManager {
             }
 
             pickingQueue.remove(0);
+            checkAndReturnToTOC(p);
 
             if (pickingQueue.isEmpty() || !pickingQueue.get(0).player().equals(p)  || pickingQueue.get(0).isEventPick()) {
 
@@ -595,6 +578,22 @@ public class GameManager {
 
         executeNextPick();
     }
+    private void checkAndReturnToTOC(Player p) {
+        synchronized (pickingQueue) {
+            // Verifica se il giocatore ha ancora dei turni in coda
+            boolean hasMoreActions = pickingQueue.stream()
+                    .anyMatch(pick -> pick.player().equals(p)&& !pick.isEventPick());
+
+            if (!hasMoreActions) {
+                if (!board.getTurnOrderCard().getOrder().contains(p)) {
+                    int indexTOC = board.bringBackToTOC(p);
+                    if (indexTOC >= 0) {
+                        notifier.returnTotemOnTurnOrderBroadcast(p, indexTOC);
+                    }
+                }
+            }
+        }
+    }
 
 
     /** The execute next pick method checks if the list is empty:
@@ -606,21 +605,14 @@ public class GameManager {
     public void executeNextPick(){
          synchronized (pickingQueue) {
              while (!pickingQueue.isEmpty()) {
-
                  if (isDirectionPickable()) {
-                   //  PendingPick currentPick = pickingQueue.get(0);
-
                      notifier.showTurnBroadcast(pickingQueue.get(0).player());
-
                      return;
                  }
-
              }
-
              System.out.println("All players have drawn");
              pickingPhase.set(false);
              nextRound();
-
          }
     }
 
@@ -665,7 +657,7 @@ public class GameManager {
             ActivationVisitor visitor = new ConcreteBuildingActivation();
             pickedBuilding.acceptActivation(visitor, player);
 
-            System.out.println("The building" + pickedBuilding.getName() + "was purchased by");
+            System.out.println("The building  " + pickedBuilding.getName() + "  was purchased by");
             return pickedBuilding;
         }else{
             System.out.println("INSUFFICIENT FOOD! (Requested :" + finalCost +")");
