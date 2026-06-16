@@ -242,7 +242,8 @@ public class GameManager {
     }
 
     /**
-     * The method positionPhase call the method execute next position
+     * The method positionPhase starts the phase of positioning
+     * and calls the method execute next position
      */
 
     public void positionPhase(){
@@ -495,33 +496,29 @@ public class GameManager {
         }
         boolean hasCharacters = availableCharacters(isCharactersListAvailable);
         boolean hasBuildings = availableBuilding(isBuildingListEmpty );
-       //when it's all empty
+
         if (!hasCharacters && !hasBuildings) {
-            removeAllPendingPick(isUpper);
+            Player p= currentPick.player();
+            pickingQueue.remove(0);
+            checkAndReturnToTOC(p);
             return false;
         }
-        //else
+
         boolean canSkip = !hasCharacters && hasBuildings;
 
         PendingPick updatedPick = new PendingPick(currentPick.player(), currentPick.isUpper(), currentPick.isEventPick(), canSkip);
 
         pickingQueue.set(0, updatedPick);
 
+        if(canSkip) {
+            Player p = currentPick.player();
+            notifier.allowSkipTurn(p);
+        }
+
         return true;
 
     }
 
-    /**
-     * the method allows to remove all pick which the same directions
-     * @param isUpper:
-     */
-    public void removeAllPendingPick(boolean isUpper) {
-        if (isUpper) {
-            pickingQueue.removeIf(pick -> pick.isUpper() );
-        } else {
-            pickingQueue.removeIf(pick -> !pick.isUpper() );
-        }
-    }
 
     /**
      * the method cheks if the list
@@ -573,47 +570,38 @@ public class GameManager {
                 notifier.invalidCardPick(p);
                 return;
             }
-
             PendingPick currentPick = pickingQueue.get(0);
-
             if (!currentPick.isSkippable()) {
                 notifier.invalidCardPick(p);
                 return;
             }
-
             pickingQueue.remove(0);
             checkAndReturnToTOC(p);
-
-            if (pickingQueue.isEmpty() || !pickingQueue.get(0).player().equals(p)  || pickingQueue.get(0).isEventPick()) {
-
-                if (!board.getTurnOrderCard().getOrder().contains(p)) {
-                    int indexTOC = board.bringBackToTOC(p);
-
-                    if (indexTOC >= 0) {
-                        notifier.returnTotemOnTurnOrderBroadcast(p, indexTOC);
-                    } else {
-                        System.out.println("Error while bring back to TOC");
-                    }
-                }
-            }
         }
-
         executeNextPick();
     }
+
+    /**
+     * The method checks if the player still has pick to consume yet, if not,
+     * the player comes back to the TOC and receives food/prestigePoints based on
+     * the place in Which he is on the TOC
+     * @param p
+     */
     private void checkAndReturnToTOC(Player p) {
         synchronized (pickingQueue) {
-            // Verifica se il giocatore ha ancora dei turni in coda
             boolean hasMoreActions = pickingQueue.stream()
                     .anyMatch(pick -> pick.player().equals(p)&& !pick.isEventPick());
 
             if (!hasMoreActions) {
-                if (!board.getTurnOrderCard().getOrder().contains(p)) {
-                    int indexTOC = board.bringBackToTOC(p);
-                    if (indexTOC >= 0) {
-                        notifier.returnTotemOnTurnOrderBroadcast(p, indexTOC);
-                        board.giveFoodForTOC(p, indexTOC);
-                        notifier.foodUpdateBroadcast(p, p.getFood());
-                        notifier.ppUpdateBroadcast(p, p.getPrestigePoints());
+               synchronized (board.getTurnOrderCard()){
+                    if (!board.getTurnOrderCard().getOrder().contains(p)) {
+                        int indexTOC = board.bringBackToTOC(p);
+                        if (indexTOC >= 0) {
+                            notifier.returnTotemOnTurnOrderBroadcast(p, indexTOC);
+                            board.giveFoodForTOC(p, indexTOC);
+                            notifier.foodUpdateBroadcast(p, p.getFood());
+                            notifier.ppUpdateBroadcast(p, p.getPrestigePoints());
+                        }
                     }
                 }
             }

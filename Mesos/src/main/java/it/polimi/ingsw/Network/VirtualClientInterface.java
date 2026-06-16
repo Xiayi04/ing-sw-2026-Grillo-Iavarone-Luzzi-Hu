@@ -114,6 +114,8 @@ public interface VirtualClientInterface {
     /**
      * Notifies the client that the chosen username is already used.
      */
+    void skipError();
+
     void usernameError() ;
     /**
      * Sends the updated list of available totems to the client.

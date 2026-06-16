@@ -373,7 +373,9 @@ public class ClientController implements AutoCloseable{
     public void showPickedCardError() {
         view.showError("You can't pick this card");
     }
-
+    public void showSkipError(){
+        view.showError("You still have some characters to pick");
+    }
 
     public Player getPlayerByName(String playerName) {
         synchronized (currentBoard.getPlayers()) {
@@ -390,10 +392,12 @@ public class ClientController implements AutoCloseable{
     public void requestLocalMoveTotem(int index){
         if(serverConnection==null || localPlayerName==null){
             view.showError("Command not available in this moment");
+        return;
         }
 
         if(index<0){
             view.showError("Invalid index");
+        return;
         }
         serverConnection.requestMoveTotem(localPlayerName,index);
     }

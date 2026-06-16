@@ -14,6 +14,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.atomic.AtomicInteger;
 
 
 public class Player implements Serializable {
@@ -21,8 +22,8 @@ public class Player implements Serializable {
     private static final long serialVersionUID = 1L;
     private final String name;
     private final Totem totem;
-    private int food;
-    private int prestigePoints;
+    //private int food;
+    //private int prestigePoints;
     private final ArrayList<Character> tribeCard;
     private final ArrayList<Building> buildings;
     private int starCounter;
@@ -35,13 +36,13 @@ public class Player implements Serializable {
     private int shamanCounter;
     private transient final VirtualClientInterface virtualClient;
     public static Object countersLock = new Object();
+    private AtomicInteger food = new AtomicInteger(0);
+    private AtomicInteger prestigePoints = new AtomicInteger(0);
 
     //Constructor
     public Player(String name, Totem totem, int food, VirtualClientInterface virtualClient){
         this.name = name;
         this.totem = totem;
-        this.food = food;
-        this.prestigePoints = 0;
         this.tribeCard = new ArrayList<Character>();
         this.buildings = new ArrayList<Building>();
         this.starCounter = 0;
@@ -52,15 +53,14 @@ public class Player implements Serializable {
     public String getName() {
         return name;
     }
-    public int getFood() {
-        return food;
+    public int getFood() {return food.get();}
+    public int getPrestigePoints() {
+        return prestigePoints.get();
     }
     public Totem getTotem() {
         return totem;
     }
-    public int getPrestigePoints(){
-        return prestigePoints;
-    }
+
     public ArrayList<Character> getTribeCard(){
         return tribeCard;
     }
@@ -114,16 +114,20 @@ public class Player implements Serializable {
         builderCounter = count;
     }
 
-    public void modifyPP(int pp){
-        prestigePoints+=pp;
+    public void modifyPP(int pp) {
+        synchronized (prestigePoints){
+            prestigePoints.addAndGet(pp);
+        }
     }
 
     public void modifyFood(int f){
-        food+=f;
-        if(food<0){
-            int PPDebt = food;
-            modifyPP(PPDebt);
-            food = 0;
+        synchronized (food){
+            food.addAndGet(f);
+            if (food.get() < 0) {
+                int PPDebt = food.get();
+                modifyPP(PPDebt);
+                food.set(0);
+            }
         }
     }
 
@@ -141,7 +145,7 @@ public class Player implements Serializable {
      * @return final PP
      */
     public int finalScore() {
-        return prestigePoints + inventorBonus() + painterBonus() + builderBonus() +
+        return prestigePoints.get() + inventorBonus() + painterBonus() + builderBonus() +
                buildingBonus() + buildingMultipliedBonus();
     }
 

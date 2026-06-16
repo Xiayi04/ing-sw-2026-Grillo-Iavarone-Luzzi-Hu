@@ -87,6 +87,11 @@ public class ClientRMI extends UnicastRemoteObject implements
     }
 
     @Override
+    public void showSkipError(String message) throws RemoteException{
+        clientController.showSkipError();
+    }
+
+    @Override
     public void showPlayerTurn(String player) throws RemoteException {
         clientController.showPlayerTurn(player);
     }
@@ -188,7 +193,7 @@ public class ClientRMI extends UnicastRemoteObject implements
             server.requestPickCardManagement(username, isUpper, isBuilding, index,skip);
         } catch (RemoteException e) {
             if(index == -1) {
-                clientController.showError("You still have some characters to pick");
+                clientController.showSkipError();
                 return;
             }
             clientController.showPickedCardError();

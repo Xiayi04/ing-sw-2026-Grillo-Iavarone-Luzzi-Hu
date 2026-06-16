@@ -184,6 +184,11 @@ public class SocketVirtualClient implements VirtualClientInterface {
     }
 
     @Override
+    public void skipError() {
+
+    }
+
+    @Override
     public void updateLeaderboardFromDB(int PlayerPositionInDB, List<LeaderBoardData> leaderboard) {
         send("db_leaderboard", new DBData(PlayerPositionInDB,leaderboard));
     }

@@ -24,6 +24,12 @@ public class RMIVirtualClient implements VirtualClientInterface {
     public RMIVirtualClient(RemoteClientInterface client) {
         this.client = client;
     }
+
+    @Override
+    public void skipTurn() {
+
+    }
+
     @Override
     public void showUpdateEra(int era)  {
         try{
@@ -172,12 +178,20 @@ public class RMIVirtualClient implements VirtualClientInterface {
             throw new ClientDisconnectedException(e.getMessage());
         }
     }
+    @Override
+    public void skipError(){
+        try{
+            client.showSkipError("errore");
+        }catch(RemoteException e){
+            throw new ClientDisconnectedException(e.getMessage());
+        }
+    }
 
 
     @Override
     public void usernameError()  {
         try{
-            client.showUsernameError("ERRore USERNAME");
+            client.showUsernameError("username error");
         }catch(RemoteException e){
             throw new ClientDisconnectedException(e.getMessage());
         }

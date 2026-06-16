@@ -39,6 +39,8 @@ public interface RemoteClientInterface extends Remote {
 
     void showPickCardError(String message) throws RemoteException;
 
+    void showSkipError(String message) throws RemoteException;
+
     void showTotemMoved(String player, int path) throws RemoteException;
 
     void showTotemMovedError(String message) throws RemoteException;

@@ -72,6 +72,11 @@ public class TurnOrderCard implements Serializable {
         return printer.print(this);
     }
 
+    /**
+     * The method chooses an array of values that represents the food that every single
+     * placement of TOC has, based on the number of the players
+     * @param numPlayers
+     */
     public void initializeTOC(int numPlayers){
         Map<Integer,Integer[]> map = new HashMap<>();
         map.put(2,makeTwoPlayers());
@@ -90,8 +95,8 @@ public class TurnOrderCard implements Serializable {
 
     private Integer[] makeThreePlayers(){
         Integer[] threePlayers = new Integer[3];
-        threePlayers[0] = 1;
-        threePlayers[1] = 0;
+        threePlayers[0] =  2;
+        threePlayers[1] =  0;
         threePlayers[2] = -1;
         return threePlayers;
     }
