@@ -107,9 +107,9 @@ public class RMIVirtualClient implements VirtualClientInterface {
     }
 
     @Override
-    public void updateNextRound(Board board)  {
+    public void updateNextRound(Board board, int round)  {
         try{
-            client.updateNextTurn(board);
+            client.updateNextTurn(board, round);
         }catch(RemoteException e){
             throw new ClientDisconnectedException(e.getMessage());
         }
@@ -118,9 +118,9 @@ public class RMIVirtualClient implements VirtualClientInterface {
 
 
     @Override
-    public void pickedCard (String username, boolean row, boolean isBuilding, int index) {
+    public void pickedCard (String username, boolean row, boolean isBuilding, int index, int round) {
         try {
-            client.showPickedCard(username, row, isBuilding, index);
+            client.showPickedCard(username, row, isBuilding, index, round);
         } catch (RemoteException e) {
             throw new ClientDisconnectedException(e.getMessage());
         }

@@ -29,7 +29,11 @@ import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.util.Duration;
 
+import java.awt.*;
 import java.io.File;
+import java.io.InputStream;
+import java.nio.file.Files;
+import java.nio.file.StandardCopyOption;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -88,6 +92,15 @@ public class GuiView implements GraphicInterface {
         currentPlayerLabel.setVisible(false);
         currentPlayerLabel.setMouseTransparent(true);
         root.getChildren().add(currentPlayerLabel);
+        ImageView help = Utils.createImageView("images/logo/help.png", 40);
+        help.setCursor(Cursor.HAND);
+        help.setOnMouseClicked(event -> {
+            pool.submit(() -> {
+                openManual();
+            });
+        });
+        root.getChildren().add(help);
+        StackPane.setAlignment(help, Pos.TOP_LEFT);
         //root.setRight(vboxMessage);
         /*HBox bottomBar = new HBox();
         bottomBar.setPrefWidth(Double.MAX_VALUE);
@@ -176,18 +189,22 @@ public class GuiView implements GraphicInterface {
                 throw new IllegalArgumentException("Invalid index");
             if(isUpper){
                 if(isBuilding){
-                    boardView.getUpperBuildingRow().getChildren().remove(index);
+                    //boardView.getUpperBuildingRow().getChildren().remove(index);
+                    refreshUpperBuildingCards();
                 }
                 else{
-                    boardView.getUpperCharacterRow().getChildren().remove(index);
+                    //boardView.getUpperCharacterRow().getChildren().remove(index);
+                    refreshUpperCards();
                 }
             }
             else{
                 if(isBuilding){
-                    boardView.getDownBuildingRow().getChildren().remove(index);
+                    //boardView.getDownBuildingRow().getChildren().remove(index);
+                    refreshDownBuildingCards();
                 }
                 else{
-                    boardView.getDownCharacterRow().getChildren().remove(index);
+                    //boardView.getDownCharacterRow().getChildren().remove(index);
+                    refreshDownCards();
                 }
             }
         });
@@ -207,10 +224,91 @@ public class GuiView implements GraphicInterface {
         });
     }
 
+    public void refreshUpperCards(){
+        boardView.getUpperCharacterRow().getChildren().clear();
+        for(Card c : clientController.getCurrentBoard().getUpperCardRow()){
+            ImageView cardView = Utils.createImageView(c.getImagePath(), 150);
+            cardView.setCursor(Cursor.HAND);
+            cardView.setOnMouseClicked(event ->
+            {
+                pool.submit(() -> {
+                    clientController.requestLocalPickCard(true, false, boardView.getUpperCharacterRow().getChildren().indexOf(cardView));
+                });
+            });
+            cardView.setOnMouseEntered(event -> {
+                cardView.setStyle(" -fx-scale-x: 1.2; -fx-scale-y: 1.2;");
+            });
+            cardView.setOnMouseExited(event -> {
+                cardView.setStyle("");
+            });
+            boardView.getUpperCharacterRow().getChildren().add(cardView);
+        }
+    }
+
+    public void refreshDownCards(){
+        boardView.getDownCharacterRow().getChildren().clear();
+        for(Card c : clientController.getCurrentBoard().getLowerCardsRow()){
+            ImageView cardView = Utils.createImageView(c.getImagePath(), 150);
+            cardView.setCursor(Cursor.HAND);
+            cardView.setOnMouseClicked(event -> {
+                pool.submit(() -> {
+                    clientController.requestLocalPickCard(false, false, boardView.getDownCharacterRow().getChildren().indexOf(cardView));
+                });
+            });
+            cardView.setOnMouseEntered(event -> {
+                cardView.setStyle("-fx-scale-x: 1.2; -fx-scale-y: 1.2;");
+            });
+            cardView.setOnMouseExited(event -> {
+                cardView.setStyle("");
+            });
+            boardView.getDownCharacterRow().getChildren().add(cardView);
+        }
+    }
+
+    public void refreshUpperBuildingCards(){
+        boardView.getUpperBuildingRow().getChildren().clear();
+        for(Card c : clientController.getCurrentBoard().getUpperBuildingRow()){
+            ImageView buildingView = Utils.createImageView(c.getImagePath(), 150);
+            buildingView.setCursor(Cursor.HAND);
+            buildingView.setOnMouseClicked(event ->{
+                pool.submit(() -> {
+                    clientController.requestLocalPickCard(true, true, boardView.getUpperBuildingRow().getChildren().indexOf(buildingView));
+                });
+            });
+            buildingView.setOnMouseEntered(event -> {
+                buildingView.setStyle(" -fx-scale-x: 1.2; -fx-scale-y: 1.2;");
+            });
+            buildingView.setOnMouseExited(event -> {
+                buildingView.setStyle("");
+            });
+            boardView.getUpperBuildingRow().getChildren().add(buildingView);
+        }
+    }
+
+    public void refreshDownBuildingCards(){
+        boardView.getDownBuildingRow().getChildren().clear();
+        for(Card c : clientController.getCurrentBoard().getLowerBuildingRow()){
+            ImageView buildingView = Utils.createImageView(c.getImagePath(), 150);
+            buildingView.setCursor(Cursor.HAND);
+            buildingView.setOnMouseClicked(event ->{
+                pool.submit(() -> {
+                    clientController.requestLocalPickCard(false, true, boardView.getDownBuildingRow().getChildren().indexOf(buildingView));
+                });
+            });
+            buildingView.setOnMouseEntered(event -> {
+                buildingView.setStyle("-fx-scale-x: 1.2; -fx-scale-y: 1.2;");
+            });
+            buildingView.setOnMouseExited(event -> {
+                buildingView.setStyle("");
+            });
+            boardView.getDownBuildingRow().getChildren().add(buildingView);
+        }
+    }
+
     public void showNextRound(){
         //System.out.println("DEBUG: metodo  showNextRound chiamato");
         Platform.runLater(() -> {
-            boardView.getDownCharacterRow().getChildren().clear();
+            /*boardView.getDownCharacterRow().getChildren().clear();
             boardView.getUpperCharacterRow().getChildren().clear();
             boardView.getUpperBuildingRow().getChildren().clear();
             boardView.getDownBuildingRow().getChildren().clear();
@@ -280,7 +378,11 @@ public class GuiView implements GraphicInterface {
                     });
                     boardView.getDownBuildingRow().getChildren().add(buildingView);
                 }
-            }
+            }*/
+            refreshUpperCards();
+            refreshUpperBuildingCards();
+            refreshDownCards();
+            refreshDownBuildingCards();
             boardView.getDeck().getChildren().clear();
             if(!clientController.getCurrentBoard().getDeck().isEmpty()){
                 Card c = clientController.getCurrentBoard().getDeck().getFirst();
@@ -294,6 +396,10 @@ public class GuiView implements GraphicInterface {
     public void updateReferences(){
         for(Player p : clientController.getCurrentBoard().getPlayers()){
             panels.get(p.getName()).setPlayer(p);
+        }
+        for(Player p : clientController.getCurrentBoard().getPlayers()){
+            panels.get(p.getName()).refreshFood(p);
+            panels.get(p.getName()).refreshPP(p);
         }
     }
 
@@ -567,5 +673,22 @@ public class GuiView implements GraphicInterface {
                }
            }
         });
+    }
+
+    public void openManual(){
+        try{
+            InputStream is = getClass().getResourceAsStream("/images/manual.pdf");
+            if(is == null){
+                throw new IllegalStateException("Resource not found");
+            }
+
+            File tempfile = File.createTempFile("manual", ".pdf");
+            tempfile.deleteOnExit();
+
+            Files.copy(is, tempfile.toPath(), StandardCopyOption.REPLACE_EXISTING);
+            Desktop.getDesktop().open(tempfile);
+        } catch (Exception e){
+            e.printStackTrace();
+        }
     }
 }

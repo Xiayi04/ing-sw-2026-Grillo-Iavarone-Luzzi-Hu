@@ -67,7 +67,7 @@ public interface VirtualClientInterface {
      * @param isBuilding true if it is a building, false otherwise
      * @param index the position in which the card was picked
      */
-     void pickedCard(String username, boolean row, boolean isBuilding, int index);
+     void pickedCard(String username, boolean row, boolean isBuilding, int index, int round);
     /**
      * Notifies the client that a player has moved its totem.
      * @param username the username of the player who moved the totem.
@@ -106,7 +106,7 @@ public interface VirtualClientInterface {
      * Notifies the client that a new round has started and sends the updated board.
      * @param board the updated board
      */
-     void updateNextRound (Board board);
+     void updateNextRound (Board board, int round);
     /**
      * Notifies the client that the card-picking request was invalid.
      */

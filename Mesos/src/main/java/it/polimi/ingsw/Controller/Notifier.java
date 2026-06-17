@@ -82,12 +82,12 @@ public class Notifier{
         }
     }
 
-    public void nextRoundBroadcast(Board board){
+    public void nextRoundBroadcast(Board board, int round){
         synchronized (outputLock) {
             for(VirtualClientInterface client:clients){
                 pool.submit(()->{
                     try {
-                        client.updateNextRound(board);
+                        client.updateNextRound(board, round);
                     } catch (ClientDisconnectedException e) {
                         handleDisconnect(client);
                     }
@@ -152,12 +152,12 @@ public class Notifier{
         }
     }
 
-    public void pickedCardBroadcast(Player player, boolean row, boolean isBuilding, int index) {
+    public void pickedCardBroadcast(Player player, boolean row, boolean isBuilding, int index, int round) {
         synchronized (outputLock) {
             for (VirtualClientInterface client : getClients()) {
                 pool.submit(() -> {
                     try {
-                        client.pickedCard(player.getName(), row, isBuilding, index);
+                        client.pickedCard(player.getName(), row, isBuilding, index, round);
                     } catch (ClientDisconnectedException e) {
                         handleDisconnect(client);
                     }

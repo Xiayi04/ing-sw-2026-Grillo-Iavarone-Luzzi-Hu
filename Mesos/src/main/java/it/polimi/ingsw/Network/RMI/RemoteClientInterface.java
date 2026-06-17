@@ -35,7 +35,7 @@ public interface RemoteClientInterface extends Remote {
 
     void showPlayerTurn(String player) throws RemoteException;
 
-    void showPickedCard (String playerWhoPicked, boolean row, boolean isBuilding, int index) throws RemoteException;
+    void showPickedCard (String playerWhoPicked, boolean row, boolean isBuilding, int index, int round) throws RemoteException;
 
     void showPickCardError(String message) throws RemoteException;
 
@@ -51,7 +51,7 @@ public interface RemoteClientInterface extends Remote {
 
     void showUpdateForEvent(Event e) throws RemoteException;
 
-    void updateNextTurn(Board board) throws RemoteException;
+    void updateNextTurn(Board board, int round) throws RemoteException;
 
     void showAvailableTotems(ArrayList<Totem> availableTotems) throws RemoteException;
 

@@ -97,9 +97,8 @@ public class ClientRMI extends UnicastRemoteObject implements
     }
 
     @Override
-    public void showPickedCard(String playerWhoPicked, boolean row, boolean isBuilding, int index)
-            throws RemoteException {
-        clientController.showPickedCard(playerWhoPicked, row, isBuilding, index);
+    public void showPickedCard(String playerWhoPicked, boolean row, boolean isBuilding, int index, int round) throws RemoteException {
+        clientController.showPickedCard(playerWhoPicked, row, isBuilding, index, round);
     }
 
     @Override
@@ -128,8 +127,8 @@ public class ClientRMI extends UnicastRemoteObject implements
     }
 
     @Override
-    public void updateNextTurn(Board board) throws RemoteException {
-        clientController.showUpdateTurn(board);
+    public void updateNextTurn(Board board, int round) throws RemoteException {
+        clientController.showUpdateTurn(board, round);
     }
 
     @Override

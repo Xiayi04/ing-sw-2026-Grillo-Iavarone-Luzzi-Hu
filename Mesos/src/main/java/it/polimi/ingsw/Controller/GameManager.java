@@ -107,7 +107,7 @@ public class GameManager {
         if(eraChanged){
             notifier.newEraBroadcast(board.getEra());
         }
-        notifier.nextRoundBroadcast(board);
+        notifier.nextRoundBroadcast(board, round);
 
         if(this.round > 10){
             positioningPhase.set(false);
@@ -170,10 +170,15 @@ public class GameManager {
             notifier.resolvingEventBroadcast(event);
             event.resolveEvent(board.getPlayers());
 
-            for(Player player : this.players){
+            /*for(Player player : this.players){
                 notifier.foodUpdateBroadcast(player, player.getFood());
                 notifier.ppUpdateBroadcast(player, player.getPrestigePoints());
-            }
+            }*/
+        }
+        try {
+            Thread.sleep(TimeUnit.SECONDS.toMillis(1));
+        } catch (InterruptedException ignored) {
+
         }
     }
 
@@ -461,8 +466,7 @@ public class GameManager {
             pickingQueue.remove(i);
             checkAndReturnToTOC(p);
             try {
-
-                notifier.pickedCardBroadcast(p, isUpperRequested, isBuilding, index);
+                notifier.pickedCardBroadcast(p, isUpperRequested, isBuilding, index, round);
             } catch (Exception e) {
                 System.err.println("Network error");
             }

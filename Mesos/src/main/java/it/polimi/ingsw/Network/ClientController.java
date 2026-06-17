@@ -36,6 +36,7 @@ public class ClientController implements AutoCloseable{
     private List<LeaderBoardData> leaderboardDB = null;
     private Integer playerPosition = null;
     private AtomicBoolean isGameFinished = new AtomicBoolean(false);
+    private int localNumberRound=0;
 
     //connection management
     private final String serverIP;
@@ -184,8 +185,9 @@ public class ClientController implements AutoCloseable{
     public void showError(String message) {
         view.showError(message);
     }
-    public void showUpdateTurn(Board board) {
+    public void showUpdateTurn(Board board, int round) {
         currentBoard = board;
+        localNumberRound = round;
         view.showNextRound();
     }
 
@@ -345,7 +347,10 @@ public class ClientController implements AutoCloseable{
         serverConnection.requestPickCard(localPlayerName,isUpper, isBuilding, index,false );
     }
 
-    public void showPickedCard(String playerName,boolean isUpper , boolean isBuilding, int index) {
+    public void showPickedCard(String playerName,boolean isUpper , boolean isBuilding, int index, int round) {
+        if(round<localNumberRound){
+            return;
+        }
         Card pickedCard;
         synchronized (BoardLock){
             pickedCard = currentBoard.pickCard(isUpper, isBuilding, index);
