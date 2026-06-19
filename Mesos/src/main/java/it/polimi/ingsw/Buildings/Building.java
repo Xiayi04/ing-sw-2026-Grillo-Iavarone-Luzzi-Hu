@@ -88,6 +88,6 @@ public abstract class Building extends Card implements BuildingInterface, Serial
     }
 
     public String getImagePath(){
-        return "images/cards/buildings/"+getName()+".png";
+        return "/images/cards/buildings/"+getName()+".png";
     }
 }

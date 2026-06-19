@@ -35,7 +35,7 @@ public class Hunter extends Character implements CharacterInterface {
     }
 
     public String getImagePath(){
-        return "images/cards/characters/"+getCharacterType()+"_"+getSymbol()+".png";
+        return "/images/cards/characters/"+getCharacterType()+"_"+getSymbol()+".png";
     }
 
     public VBox findBox(GuiVisitor visitor){

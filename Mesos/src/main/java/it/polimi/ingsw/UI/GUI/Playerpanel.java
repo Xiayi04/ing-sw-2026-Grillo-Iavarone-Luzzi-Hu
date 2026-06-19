@@ -33,7 +33,7 @@ public class Playerpanel extends HBox {
         foodLabel = new Label("Food: "+ player.getFood());
         PPLabel = new Label("PP: "+player.getPrestigePoints());
 
-        ImageView imageView = Utils.createImageView("images/totem/"+player.getTotem().toString().toLowerCase()+"_profilo.png", 70);
+        ImageView imageView = Utils.createImageView("/images/totem/"+player.getTotem().toString().toLowerCase()+"_profilo.png", 70);
         imageView.setCursor(Cursor.HAND);
         imageView.setOnMouseClicked(event -> {
             openPlayerHand(player);

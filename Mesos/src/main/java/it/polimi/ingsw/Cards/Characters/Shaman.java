@@ -38,7 +38,7 @@ public class Shaman extends Character implements CharacterInterface {
 //     */
 
     public String getImagePath(){
-        return "images/cards/characters/"+getCharacterType()+"_"+getShamanStars()+"star.png";
+        return "/images/cards/characters/"+getCharacterType()+"_"+getShamanStars()+"star.png";
     }
 
     @Override

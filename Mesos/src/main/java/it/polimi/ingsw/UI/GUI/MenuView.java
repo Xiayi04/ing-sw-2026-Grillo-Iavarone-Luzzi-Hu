@@ -111,7 +111,7 @@ public class MenuView extends VBox {
         text.setAlignment(Pos.CENTER);
         HBox hBox = new HBox(50);
         for( Totem totem : totems){
-            ImageView imageView = Utils.createImageView("images/totem/"+totem.toString().toLowerCase()+"_frontale.png", 70);
+            ImageView imageView = Utils.createImageView("/images/totem/"+totem.toString().toLowerCase()+"_frontale.png", 70);
             hBox.getChildren().add(imageView);
             imageView.setCursor(Cursor.HAND);
             imageView.setOnMouseClicked(event -> {

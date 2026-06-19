@@ -69,6 +69,6 @@ public class DiscountBuilding extends Building implements BuildingInterface {
     }
 
     public String getImagePath(){
-        return "images/cards/buildings/"+getName()+"_"+getTypeEvents().toString().toLowerCase()+"_"+getTypeIcons().toString().toLowerCase()+".png";
+        return "/images/cards/buildings/"+getName()+"_"+getTypeEvents().toString().toLowerCase()+"_"+getTypeIcons().toString().toLowerCase()+".png";
     }
 }

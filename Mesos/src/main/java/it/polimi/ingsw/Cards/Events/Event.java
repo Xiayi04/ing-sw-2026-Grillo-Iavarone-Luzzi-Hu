@@ -30,6 +30,6 @@ public abstract class Event extends Card implements Serializable {
     public abstract void resolveEvent(ArrayList<Player> players);
 
     public String getImagePath(){
-        return "images/cards/events/"+getEventName()+"_era"+getEra()+".png";
+        return "/images/cards/events/"+getEventName()+"_era"+getEra()+".png";
     }
 }

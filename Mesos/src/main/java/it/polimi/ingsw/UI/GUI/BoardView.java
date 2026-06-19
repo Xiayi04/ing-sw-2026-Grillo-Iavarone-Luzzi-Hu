@@ -154,7 +154,7 @@ public class BoardView extends VBox {
         centerRow.getChildren().addAll(path,deck);
         centerRow.setAlignment(Pos.CENTER);
         //turn order card + totems
-        ImageView orderCardView = Utils.createImageView("images/orderCard/"+clientController.getCurrentBoard().getPlayers().size()+"giocatori.png", 150);
+        ImageView orderCardView = Utils.createImageView("/images/orderCard/"+clientController.getCurrentBoard().getPlayers().size()+"giocatori.png", 150);
         StackPane orderCardContainer = new StackPane();
         orderCardContainer.getChildren().add(orderCardView);
         totems.setManaged(false);
@@ -171,14 +171,14 @@ public class BoardView extends VBox {
         //riempio gli stackpane con i totem
         for(int i=0; i<clientController.getCurrentBoard().getPlayers().size(); i++){
             String totem = clientController.getCurrentBoard().getTurnOrderCard().getOrder().get(i).getTotem().toString();
-            ImageView totemView = Utils.createImageView("images/totem/"+totem+"_profilo.png", 40);
+            ImageView totemView = Utils.createImageView("/images/totem/"+totem+"_profilo.png", 40);
             TOCSlots.get(i).getChildren().add(totemView);
         }
         path.getChildren().add(orderCardContainer);
         for(int i=0; i<clientController.getCurrentBoard().getPath().size(); i++){
             final int index = i;
             OfferCard c = clientController.getCurrentBoard().getPath().get(i);
-            ImageView offerCardView = Utils.createImageView("images/tessereOfferta/"+c.getID()+".png", 150);
+            ImageView offerCardView = Utils.createImageView("/images/tessereOfferta/"+c.getID()+".png", 150);
             StackPane offerCardContainer = new StackPane();
             offerCardContainer.getChildren().add(offerCardView);
             StackPane OCSlot = new StackPane();
@@ -212,7 +212,7 @@ public class BoardView extends VBox {
             path.getChildren().add(offerCardContainer);
         }
         Card c = clientController.getCurrentBoard().getDeck().getFirst();
-        ImageView imageView = Utils.createImageView("images/cards/back/era"+c.getEra()+".png", 150);
+        ImageView imageView = Utils.createImageView("/images/cards/back/era"+c.getEra()+".png", 150);
         deck.getChildren().add(imageView);
         deck.getChildren().add(label);
         Button skip = new Button("SKIP");

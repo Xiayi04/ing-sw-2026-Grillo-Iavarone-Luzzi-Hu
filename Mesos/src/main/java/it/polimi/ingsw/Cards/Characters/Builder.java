@@ -38,7 +38,7 @@ public class Builder extends Character implements CharacterInterface {
     }
 
     public String getImagePath(){
-        return "images/cards/characters/"+getCharacterType()+"_"+getPP()+"_"+getBuilderDiscount()+".png";
+        return "/images/cards/characters/"+getCharacterType()+"_"+getPP()+"_"+getBuilderDiscount()+".png";
     }
 
     @Override

@@ -34,10 +34,8 @@ import java.io.File;
 import java.io.InputStream;
 import java.nio.file.Files;
 import java.nio.file.StandardCopyOption;
-import java.util.ArrayList;
-import java.util.HashMap;
+import java.util.*;
 import java.util.List;
-import java.util.Map;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
@@ -63,7 +61,7 @@ public class GuiView implements GraphicInterface {
     public void showMainStage() {
         //System.out.println("DEBUG: metodo showMainStage chiamato");
         root.getChildren().clear();
-        ImageView background = new ImageView(new Image(new File("images/background/background.png").toURI().toString()));
+        ImageView background = new ImageView(new Image(Objects.requireNonNull(getClass().getResourceAsStream("/images/background/background.png"))));
         background.setPreserveRatio(false);
         background.setFitWidth(root.getWidth());
         background.setFitHeight(root.getHeight());
@@ -71,7 +69,6 @@ public class GuiView implements GraphicInterface {
         background.fitHeightProperty().bind(root.heightProperty().multiply(1.05));
         background.setEffect(new GaussianBlur(20));
         root.getChildren().add(background);
-        //root.setStyle("-fx-background-color: red");
         BorderPane borderPane = new BorderPane();
         borderPane.setTop(showPlayersBar());
         boardView.showBoard();
@@ -92,11 +89,11 @@ public class GuiView implements GraphicInterface {
         currentPlayerLabel.setVisible(false);
         currentPlayerLabel.setMouseTransparent(true);
         root.getChildren().add(currentPlayerLabel);
-        ImageView help = Utils.createImageView("images/logo/help.png", 40);
+        ImageView help = Utils.createImageView("/images/logo/help.png", 40);
         help.setCursor(Cursor.HAND);
         help.setOnMouseClicked(event -> {
             pool.submit(() -> {
-                openManual();
+                this.openManual();
             });
         });
         root.getChildren().add(help);
@@ -386,7 +383,7 @@ public class GuiView implements GraphicInterface {
             boardView.getDeck().getChildren().clear();
             if(!clientController.getCurrentBoard().getDeck().isEmpty()){
                 Card c = clientController.getCurrentBoard().getDeck().getFirst();
-                ImageView imageView = Utils.createImageView("images/cards/back/era"+c.getEra()+".png", 150);
+                ImageView imageView = Utils.createImageView("/images/cards/back/era"+c.getEra()+".png", 150);
                 boardView.getDeck().getChildren().add(imageView);
             }
             updateReferences();
@@ -675,7 +672,7 @@ public class GuiView implements GraphicInterface {
         });
     }
 
-    public void openManual(){
+    /*public void openManual(){
         try{
             InputStream is = getClass().getResourceAsStream("/images/manual.pdf");
             if(is == null){
@@ -690,5 +687,5 @@ public class GuiView implements GraphicInterface {
         } catch (Exception e){
             e.printStackTrace();
         }
-    }
+    }*/
 }
