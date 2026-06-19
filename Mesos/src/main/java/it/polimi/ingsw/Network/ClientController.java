@@ -38,7 +38,7 @@ public class ClientController implements AutoCloseable{
     private Integer playerPosition = null;
     private AtomicBoolean isGameFinished = new AtomicBoolean(false);
     private int localNumberRound=0;
-
+    private final AtomicBoolean pickingPhase = new AtomicBoolean(false);
     //connection management
     private final String serverIP;
 
@@ -441,6 +441,8 @@ public class ClientController implements AutoCloseable{
             }
         }
         view.moveTotem(playerName,index);
+        if(currentBoard.getTurnOrderCard().getOrder().isEmpty())
+            pickingPhase.set(true);
 //        view.showMessage("Player"+ playerName + "moved to: "+ index);
     }
 
@@ -459,7 +461,7 @@ public class ClientController implements AutoCloseable{
             return;
         }
         synchronized (currentBoard.getPath()) {
-            while (!currentBoard.getTurnOrderCard().getOrder().isEmpty()){
+            while (!pickingPhase.get()){
                 try {
                     Thread.sleep(TimeUnit.MILLISECONDS.toMillis(100));
                 } catch (InterruptedException ignored) {
@@ -477,6 +479,9 @@ public class ClientController implements AutoCloseable{
         }
         synchronized (currentBoard.getTurnOrderCard()) {
             currentBoard.getTurnOrderCard().getOrder().add(player);
+        }
+        if(currentBoard.getTurnOrderCard().getOrder().size() == currentBoard.getPlayers().size()){
+            pickingPhase.set(false);
         }
         view.showReturnToTOC(playerName);
      //   view.showMessage("Player " + playerName + " returned to Turn Order Card position " + indexTOC);
