@@ -114,20 +114,17 @@ public class Player implements Serializable {
         builderCounter = count;
     }
 
-    public void modifyPP(int pp) {
-        synchronized (prestigePoints){
-            prestigePoints.addAndGet(pp);
-        }
+    public synchronized void modifyPP(int pp) {
+        prestigePoints.addAndGet(pp);
+
     }
 
-    public void modifyFood(int f){
-        synchronized (food){
-            food.addAndGet(f);
-            if (food.get() < 0) {
-                int PPDebt = food.get();
-                modifyPP(PPDebt);
-                food.set(0);
-            }
+    public synchronized void modifyFood(int f){
+        food.addAndGet(f);
+        if (food.get() < 0) {
+            int PPDebt = food.get();
+            modifyPP(PPDebt);
+            food.set(0);
         }
     }
 

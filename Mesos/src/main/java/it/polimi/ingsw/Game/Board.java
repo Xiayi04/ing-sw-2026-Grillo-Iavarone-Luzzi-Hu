@@ -98,8 +98,10 @@ public class Board  implements Serializable {
         return buildingsEra3;
     }
 
-    //metodi
-    //scorro la lista per individuare carte evento
+    /**
+     * the method checks if the card is an event, if so, the card is added to the list of the event
+     * @return
+     */
     public ArrayList<Event> checkEvent() {
         ArrayList<Event> events = new ArrayList<>();
         for (Card c : lowerCardsRow) {
@@ -124,7 +126,9 @@ public class Board  implements Serializable {
         this.turnOrderCard = new TurnOrderCard(numPlayers);
     }
 
-    //sposto da sopra a sotto
+    /**
+     * The method shifts the Cards from up to down and clears the lowerCardsRow
+     */
     public void shiftUpToDown() {
         lowerCardsRow.clear();
         lowerCardsRow.addAll(upperCardRow);
@@ -171,11 +175,6 @@ public class Board  implements Serializable {
         turnOrderCard.getOrder().addAll(players);
     }
 
-    //rimozione degli edifici
-    public void removeLowerBuildings() {
-        lowerBuildingRow.clear();
-
-    }
 
     public void initializeDeck(){
         Deck deck = new Deck();
@@ -213,13 +212,7 @@ public class Board  implements Serializable {
        return eraChanged;
    }
 
-    //lo si usa per rimuovere gli edifici
-    public void removeCards(Card card) {
-        upperCardRow.remove(card);
-        lowerCardsRow.remove(card);
-        upperBuildingRow.remove(card);
-        lowerBuildingRow.remove(card);
-    }
+
     //spostamento degli edifici quando cambiano le ere
     public void shiftBuildingUpToDown() {
         lowerBuildingRow.clear();
