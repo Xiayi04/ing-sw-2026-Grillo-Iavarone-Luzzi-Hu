@@ -2,17 +2,20 @@ package it.polimi.ingsw.Network.Socket.Client.Command;
 
 import it.polimi.ingsw.Game.Board;
 import it.polimi.ingsw.Network.ClientController;
+import it.polimi.ingsw.Network.Socket.Server.Command.NextRoundData;
 
 import java.net.Socket;
 
 public class NextRoundCommand implements ClientCommand {
     private final Board board;
-    public NextRoundCommand(Board board) {
-        this.board = board;
+    private final int round;
+    public NextRoundCommand(NextRoundData data) {
+        this.board = data.board();
+        this.round = data.round();
     }
 
     @Override
     public void execute(Socket socket, ClientController clientController) {
-        clientController.showUpdateTurn(board);
+        clientController.showUpdateTurn(board, round);
     }
 }

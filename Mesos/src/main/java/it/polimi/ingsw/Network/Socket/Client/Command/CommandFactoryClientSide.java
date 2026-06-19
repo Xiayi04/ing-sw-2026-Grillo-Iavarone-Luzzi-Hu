@@ -26,7 +26,7 @@ public class CommandFactoryClientSide {
         commands.put("update_food", u-> new UpdateFoodCommand((UpdateFood) u));
         commands.put("update_pp", u-> new UpdatePPCommand((UpdatePP) u));
         commands.put("player_turn", u-> new PlayerTurnCommand((String) u));
-        commands.put("next_round", u-> new NextRoundCommand((Board) u));
+        commands.put("next_round", u-> new NextRoundCommand((NextRoundData) u));
         commands.put("ping", _ ->new PingCommand());
         commands.put("end_game", d->new EndGameCommand((EndGameData) d));
         commands.put("resolving_event", e->new ResolvingEventCommand((Event) e));
