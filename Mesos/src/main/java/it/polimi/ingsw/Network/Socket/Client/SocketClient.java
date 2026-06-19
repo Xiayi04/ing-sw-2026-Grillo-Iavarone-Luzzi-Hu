@@ -69,6 +69,7 @@ public class SocketClient implements Runnable, ServerConnection, AutoCloseable{
 
         } catch (Exception e) {
             System.out.println("Connection failed");
+            e.printStackTrace();
             ClientMain.terminateClient();
         }
     }
@@ -132,7 +133,7 @@ public class SocketClient implements Runnable, ServerConnection, AutoCloseable{
 
     @Override
     public void requestPickCard(String localPlayerName, boolean isUpper, boolean isBuilding, int index, boolean skip) {
-        send("pick", new Pick(localPlayerName, isUpper, isBuilding, index, skip));
+        send("pick", new Pick(localPlayerName, isUpper, isBuilding, index, skip,0));
     }
 
     @Override
