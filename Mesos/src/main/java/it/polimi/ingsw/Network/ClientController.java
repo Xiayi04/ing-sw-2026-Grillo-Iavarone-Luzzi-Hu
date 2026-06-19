@@ -15,6 +15,7 @@ import it.polimi.ingsw.Network.Socket.Client.SocketClient;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicBoolean;
 // riferimento all'if che manda messaggi al server
 // ho bisogno dei metodi chiamati dalla gui
@@ -458,6 +459,13 @@ public class ClientController implements AutoCloseable{
             return;
         }
         synchronized (currentBoard.getPath()) {
+            while (!currentBoard.getTurnOrderCard().getOrder().isEmpty()){
+                try {
+                    Thread.sleep(TimeUnit.MILLISECONDS.toMillis(100));
+                } catch (InterruptedException ignored) {
+                }
+            }
+
             for (OfferCard offerCard : currentBoard.getPath()) {
                 if (offerCard.isOccupied()
                         && offerCard.getOccupiedBy().getName().equals(playerName)) {
