@@ -4,6 +4,7 @@ package it.polimi.ingsw.UI.GUI;
 import it.polimi.ingsw.Buildings.Building;
 import it.polimi.ingsw.Cards.Card;
 import it.polimi.ingsw.Database.LeaderBoardData;
+import it.polimi.ingsw.Game.OfferCard;
 import it.polimi.ingsw.Game.Player;
 import it.polimi.ingsw.Game.Totem;
 import it.polimi.ingsw.Network.ClientController;
@@ -98,17 +99,6 @@ public class GuiView implements GraphicInterface {
         });
         root.getChildren().add(help);
         StackPane.setAlignment(help, Pos.TOP_LEFT);
-        //root.setRight(vboxMessage);
-        /*HBox bottomBar = new HBox();
-        bottomBar.setPrefWidth(Double.MAX_VALUE);
-        Node localPlayer = showLocalPlayer();
-        StackPane centerWrapper = new StackPane(localPlayer);
-        centerWrapper.setAlignment(Pos.CENTER);
-        Region spacer = new Region();
-        HBox.setHgrow(spacer, Priority.ALWAYS);
-        bottomBar.getChildren().addAll(centerWrapper, spacer, label);
-        root.setBottom(bottomBar);*/
-        //root.setBottom(labelError);
     }
 
     public void showLobbyMenu() {
@@ -165,20 +155,6 @@ public class GuiView implements GraphicInterface {
         }
         return null;
     }
-
-    /*public void showHand(Player player){
-        Stage stage = new Stage();
-        Stage currentStage =(Stage) boardView.getScene().getWindow();
-        stage.initOwner(currentStage);
-        stage.initModality(Modality.WINDOW_MODAL);
-        stage.setTitle(player.getName());
-
-        PlayerHandView playerHandView = new PlayerHandView(player);
-
-        Scene scene = new Scene(playerHandView, 600, 600);
-        stage.setScene(scene);
-        stage.show();
-    }*/
 
     public void pickCard(String username, boolean isUpper, boolean isBuilding, int index){
         Platform.runLater(() -> {
@@ -305,77 +281,6 @@ public class GuiView implements GraphicInterface {
     public void showNextRound(){
         //System.out.println("DEBUG: metodo  showNextRound chiamato");
         Platform.runLater(() -> {
-            /*boardView.getDownCharacterRow().getChildren().clear();
-            boardView.getUpperCharacterRow().getChildren().clear();
-            boardView.getUpperBuildingRow().getChildren().clear();
-            boardView.getDownBuildingRow().getChildren().clear();
-            for(Card c : clientController.getCurrentBoard().getUpperCardRow()){
-                ImageView cardView = Utils.createImageView(c.getImagePath(), 150);
-                cardView.setCursor(Cursor.HAND);
-                cardView.setOnMouseClicked(event ->
-                {
-                    pool.submit(() -> {
-                        clientController.requestLocalPickCard(true, false, boardView.getUpperCharacterRow().getChildren().indexOf(cardView));
-                    });
-                });
-                cardView.setOnMouseEntered(event -> {
-                    cardView.setStyle(" -fx-scale-x: 1.2; -fx-scale-y: 1.2;");
-                });
-                cardView.setOnMouseExited(event -> {
-                    cardView.setStyle("");
-                });
-                boardView.getUpperCharacterRow().getChildren().add(cardView);
-            }
-            for(Card c : clientController.getCurrentBoard().getUpperBuildingRow()){
-                ImageView buildingView = Utils.createImageView(c.getImagePath(), 150);
-                buildingView.setCursor(Cursor.HAND);
-                buildingView.setOnMouseClicked(event ->{
-                    pool.submit(() -> {
-                        clientController.requestLocalPickCard(true, true, boardView.getUpperBuildingRow().getChildren().indexOf(buildingView));
-                    });
-                });
-                buildingView.setOnMouseEntered(event -> {
-                    buildingView.setStyle(" -fx-scale-x: 1.2; -fx-scale-y: 1.2;");
-                });
-                buildingView.setOnMouseExited(event -> {
-                    buildingView.setStyle("");
-                });
-                boardView.getUpperBuildingRow().getChildren().add(buildingView);
-            }
-            for(Card c : clientController.getCurrentBoard().getLowerCardsRow()){
-                ImageView cardView = Utils.createImageView(c.getImagePath(), 150);
-                cardView.setCursor(Cursor.HAND);
-                cardView.setOnMouseClicked(event -> {
-                    pool.submit(() -> {
-                        clientController.requestLocalPickCard(false, false, boardView.getDownCharacterRow().getChildren().indexOf(cardView));
-                    });
-                });
-                cardView.setOnMouseEntered(event -> {
-                    cardView.setStyle("-fx-scale-x: 1.2; -fx-scale-y: 1.2;");
-                });
-                cardView.setOnMouseExited(event -> {
-                    cardView.setStyle("");
-                });
-                boardView.getDownCharacterRow().getChildren().add(cardView);
-            }
-            if(!clientController.getCurrentBoard().getLowerBuildingRow().isEmpty()){
-                for(Card c : clientController.getCurrentBoard().getLowerBuildingRow()){
-                    ImageView buildingView = Utils.createImageView(c.getImagePath(), 150);
-                    buildingView.setCursor(Cursor.HAND);
-                    buildingView.setOnMouseClicked(event ->{
-                        pool.submit(() -> {
-                            clientController.requestLocalPickCard(false, true, boardView.getDownBuildingRow().getChildren().indexOf(buildingView));
-                        });
-                    });
-                    buildingView.setOnMouseEntered(event -> {
-                        buildingView.setStyle("-fx-scale-x: 1.2; -fx-scale-y: 1.2;");
-                    });
-                    buildingView.setOnMouseExited(event -> {
-                        buildingView.setStyle("");
-                    });
-                    boardView.getDownBuildingRow().getChildren().add(buildingView);
-                }
-            }*/
             refreshUpperCards();
             refreshUpperBuildingCards();
             refreshDownCards();
@@ -671,21 +576,4 @@ public class GuiView implements GraphicInterface {
            }
         });
     }
-
-    /*public void openManual(){
-        try{
-            InputStream is = getClass().getResourceAsStream("/images/manual.pdf");
-            if(is == null){
-                throw new IllegalStateException("Resource not found");
-            }
-
-            File tempfile = File.createTempFile("manual", ".pdf");
-            tempfile.deleteOnExit();
-
-            Files.copy(is, tempfile.toPath(), StandardCopyOption.REPLACE_EXISTING);
-            Desktop.getDesktop().open(tempfile);
-        } catch (Exception e){
-            e.printStackTrace();
-        }
-    }*/
 }

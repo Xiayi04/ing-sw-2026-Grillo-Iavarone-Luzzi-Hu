@@ -367,6 +367,7 @@ public class ClientController implements AutoCloseable{
                 }
                 else{
                     playerWhoPicked.getBuilding().add((Building) pickedCard);
+                    view.showPlayerFoodUpdate(playerName, ((Building) pickedCard).getPrice());
                 }
 
             } catch (Exception e) {

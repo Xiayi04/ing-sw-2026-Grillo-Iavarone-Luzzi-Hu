@@ -123,7 +123,7 @@ public class Player implements Serializable {
         food.addAndGet(f);
         if (food.get() < 0) {
             int PPDebt = food.get();
-            modifyPP(PPDebt);
+            modifyPP(PPDebt*2);
             food.set(0);
         }
     }
