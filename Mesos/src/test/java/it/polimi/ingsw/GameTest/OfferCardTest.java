@@ -146,7 +146,6 @@ public class OfferCardTest {
         String[] result = card.print(printer);
 
         assertNotNull(result);
-
     }
 
 

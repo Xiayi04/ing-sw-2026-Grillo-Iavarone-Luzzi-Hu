@@ -223,17 +223,7 @@ public class Board  implements Serializable {
 
 
 
-    public void moveTotem(Player players, OfferCard offerCard) {
-        if (players == null || offerCard == null) {
-            throw new IllegalArgumentException("player or offerCard is null");
-        }
 
-
-        if (!offerCard.isOccupied()) {
-            throw new IllegalStateException("OfferCard already occupied");
-        }
-
-    }
 //metodo percorso
     public ArrayList<OfferCard> obtainPath(ArrayList<Player> players) {
         int numPlayers = players.size();

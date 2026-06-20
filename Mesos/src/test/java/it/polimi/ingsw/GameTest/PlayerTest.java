@@ -1,6 +1,6 @@
 package it.polimi.ingsw.GameTest;
 
-import it.polimi.ingsw.Buildings.Icons;
+import it.polimi.ingsw.Buildings.*;
 import it.polimi.ingsw.Cards.CardType;
 import it.polimi.ingsw.Cards.Characters.Builder;
 import it.polimi.ingsw.Cards.Characters.CharacterType;
@@ -12,8 +12,7 @@ import it.polimi.ingsw.Game.Totem;
 import org.junit.jupiter.api.Test;
 
 import static it.polimi.ingsw.Cards.Characters.InventorIcon.TREE;
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.*;
 
 public class PlayerTest {
 
@@ -27,6 +26,9 @@ public class PlayerTest {
         assertTrue(p1.getTribeCard().isEmpty());
         assertTrue(p1.getBuilding().isEmpty());
         assertEquals(0, p1.getStarCounter());
+        assertEquals(0, p1.getStarCounter());
+        assertEquals(0, p1.getBuilderDiscount());
+        assertNull(p1.getVirtualClient());
     }
     @Test
     public void PlayerFoodModifyTest() {
@@ -54,18 +56,55 @@ public class PlayerTest {
         assertEquals(500, p1.getPrestigePoints());
     }
     @Test
+    public void settersAndGettersCounterTest() {
+        Player p1 = new Player("p1", Totem.BLACK, 0, null);
+
+        p1.setHunterCounter(1);
+        p1.setBuilderCounter(2);
+        p1.setPickerCounter(3);
+        p1.setPainterCounter(4);
+        p1.setInventorCounter(5);
+        p1.setShamanCounter(6);
+
+        assertEquals(1, p1.getHunterCounter());
+        assertEquals(2, p1.getBuilderCounter());
+        assertEquals(3, p1.getPickerCounter());
+        assertEquals(4, p1.getPainterCounter());
+        assertEquals(5, p1.getInventorCounter());
+        assertEquals(6, p1.getShamanCounter());
+    }
+    @Test
     public  void InventorBonusPlayerTest() {
         Player p1 = new Player("p1", Totem.BLACK, 0,null);
         p1.getTribeCard().add(new Inventor(1, "CHARACTER",5, "INVENTOR",  "BOWL"));
         p1.getTribeCard().add(new Inventor(1, "CHARACTER",5, "INVENTOR",  "BOWL"));
         p1.getTribeCard().add(new Inventor(1, "CHARACTER",5, "INVENTOR",  "BOWL"));
         p1.getTribeCard().add(new Inventor(1, "CHARACTER",5, "INVENTOR",  "BOWL"));
+        p1.setInventorCounter(4);
         assertEquals(4, p1.inventorBonus());
         p1.getTribeCard().add(new Inventor(1, "CHARACTER",5, "INVENTOR",  "TREE"));
+        p1.setInventorCounter(5);
         assertEquals(10, p1.inventorBonus());
         p1.getTribeCard().add(new Inventor(1, "CHARACTER",5, "INVENTOR",  "BOAT"));
+        p1.setInventorCounter(6);
         assertEquals(18, p1.inventorBonus());
 
+    }
+    @Test
+    public void painterBonusPlayerTest() {
+        Player p1 = new Player("p1", Totem.BLACK, 0, null);
+
+        p1.setPainterCounter(0);
+        assertEquals(0, p1.painterBonus());
+
+        p1.setPainterCounter(1);
+        assertEquals(0, p1.painterBonus());
+
+        p1.setPainterCounter(2);
+        assertEquals(10, p1.painterBonus());
+
+        p1.setPainterCounter(5);
+        assertEquals(20, p1.painterBonus());
     }
 
     @Test
@@ -81,9 +120,11 @@ public class PlayerTest {
     }
 
     @Test
-    public void countTribeCardByIcon(){
+    public void countTribeCardByIconTest(){
         Player p1 = new Player("p1", Totem.BLACK, 0,null);
-
+        p1.setPainterCounter(2);
+        p1.setBuilderCounter(2);
+        p1.setHunterCounter(0);
         p1.getTribeCard().add( new Builder(1, "CHARACTER", 5,"BUILDER", 3,5));
         p1.getTribeCard().add(new Builder(1, "CHARACTER", 5, "BUILDER", 3,5));
         p1.getTribeCard().add(new Painter(1,"CHARACTER", 5, "PAINTER"));
@@ -93,7 +134,7 @@ public class PlayerTest {
         assertEquals(0, p1.countTribeCardsByIcon("HUNTER"));
     }
 
-    @Test
+  /*  @Test
     public void countSetPlayerTest(){
         ConcreteFactoryEra factoryEra = new ConcreteFactoryEra(1);
         Player p1 = new Player("p1", Totem.BLACK, 0,null);
@@ -110,7 +151,167 @@ public class PlayerTest {
 
         assertEquals(2,p1.countSet());
 
+    }*/
+  @Test
+  public void countSetPlayerTest() {
+      Player p1 = new Player("p1", Totem.BLACK, 0, null);
+
+      p1.setInventorCounter(2);
+      p1.setBuilderCounter(2);
+      p1.setHunterCounter(3);
+      p1.setPainterCounter(3);
+      p1.setPickerCounter(2);
+      p1.setShamanCounter(2);
+
+      assertEquals(2, p1.countSet());
+  }
+
+    @Test
+    public void buildingBonusShouldSumBuildingPP() {
+        Player p1 = new Player("p1", Totem.BLACK, 0, null);
+
+        Building b1 = new BonusFood(1, 3, 3);
+        Building b2 = new BonusFood(2, 6, 4);
+
+        p1.getBuilding().add(b1);
+        p1.getBuilding().add(b2);
+
+        assertEquals(b1.getPP() + b2.getPP(), p1.buildingBonus());
     }
+
+    @Test
+    public void buildingMultipliedBonusShouldReturnZeroWithoutMultiplicationBuildings() {
+        Player p1 = new Player("p1", Totem.BLACK, 0, null);
+
+        Building b1 = new BonusFood(1, 3, 3);
+        p1.getBuilding().add(b1);
+
+        assertEquals(0, p1.buildingMultipliedBonus());
+    }
+
+    @Test
+    public void buildingMultipliedBonusShouldUseMultiplicationBuilding() {
+        Player p1 = new Player("p1", Totem.BLACK, 0, null);
+
+        MultiplicationBuilding b1 =
+                new MultiplicationBuilding(1, 6, 6, "INVENTOR", 2);
+
+        p1.setInventorCounter(3);
+        p1.getBuilding().add(b1);
+
+        assertEquals(b1.countPP(p1), p1.buildingMultipliedBonus());
+    }
+
+    @Test
+    public void finalScoreShouldSumAllBonuses() {
+        Player p1 = new Player("p1", Totem.BLACK, 0, null);
+
+        p1.modifyPP(10);
+
+        p1.setPainterCounter(4);
+        p1.setInventorCounter(2);
+        p1.setBuilderCounter(2);
+
+        p1.getTribeCard().add(new Inventor(1, "CHARACTER", 5, "INVENTOR", "BOWL"));
+        p1.getTribeCard().add(new Inventor(1, "CHARACTER", 5, "INVENTOR", "TREE"));
+
+        p1.getTribeCard().add(new Builder(1, "CHARACTER", 5, "BUILDER", 3, 5));
+        p1.getTribeCard().add(new Builder(1, "CHARACTER", 5, "BUILDER", 3, 5));
+
+        Building b1 = new BonusFood(1, 3, 3);
+        p1.getBuilding().add(b1);
+
+        int expected =
+                p1.getPrestigePoints()
+                        + p1.inventorBonus()
+                        + p1.painterBonus()
+                        + p1.builderBonus()
+                        + p1.buildingBonus()
+                        + p1.buildingMultipliedBonus();
+
+        assertEquals(expected, p1.finalScore());
+    }
+
+    @Test
+    void buildingBonusShouldSumPPOfAllBuildings() {
+        Player p1 = new Player("p1", Totem.BLACK, 0, null);
+
+        Building b1 = new BonusFood(1, 3, 3);
+        Building b2 = new BonusStarBuilding(2, 6, 4);
+
+        p1.getBuilding().add(b1);
+        p1.getBuilding().add(b2);
+
+        int expected = b1.getPP() + b2.getPP();
+
+        assertEquals(expected, p1.buildingBonus());
+    }
+    @Test
+    void buildingBonusTest() {
+        Player p1 = new Player("p1", Totem.BLACK, 0, null);
+
+        Building b1 = new BonusFood(1, 3, 3);
+        Building b2 = new BonusStarBuilding(2, 6, 4);
+
+        p1.getBuilding().add(b1);
+        p1.getBuilding().add(b2);
+
+        int result = p1.buildingBonus();
+
+        assertEquals(b1.getPP() + b2.getPP(), result);
+    }
+    @Test
+    void buildingMultipliedBonusCoverageTest() {
+        Player p1 = new Player("p1", Totem.BLACK, 0, null);
+
+        Building normalBuilding = new BonusFood(1, 3, 3);
+
+        MultiplicationBuilding multiplicationBuilding =  new MultiplicationBuilding(1, 6, 6, "INVENTOR", 2);
+
+        p1.setInventorCounter(3);
+
+        p1.getBuilding().add(normalBuilding);
+        p1.getBuilding().add(multiplicationBuilding);
+
+        int result = p1.buildingMultipliedBonus();
+
+        assertEquals(multiplicationBuilding.countPP(p1), result);
+    }
+    @Test
+    void buildingBonusCoverageTest() {
+        Player p1 = new Player("p1", Totem.BLACK, 0, null);
+
+        Building b1 = new BonusFood(1, 3, 3);
+        Building b2 = new BonusStarBuilding(2, 6, 4);
+
+        p1.getBuilding().add(b1);
+        p1.getBuilding().add(b2);
+
+        int result = p1.buildingBonus();
+
+        assertEquals(b1.getPP() + b2.getPP(), result);
+    }
+
+
+    @Test
+    void buildinggMultipliedBonusCoverageTest() {
+        Player p1 = new Player("p1", Totem.BLACK, 0, null);
+
+        Building normalBuilding = new BonusFood(1, 3, 3);
+        MultiplicationBuilding multiplicationBuilding =
+                new MultiplicationBuilding(1, 6, 6, "INVENTOR", 2);
+
+        p1.setInventorCounter(3);
+
+        p1.getBuilding().add(normalBuilding);
+        p1.getBuilding().add(multiplicationBuilding);
+
+        int result = p1.buildingMultipliedBonus();
+
+        assertEquals(multiplicationBuilding.countPP(p1), result);
+    }
+
+
 
 
 }

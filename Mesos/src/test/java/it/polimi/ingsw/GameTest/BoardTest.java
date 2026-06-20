@@ -103,6 +103,54 @@ public class BoardTest {
         assertTrue(board.getBuildingsEra3().isEmpty());
         assertNull(board.getTurnOrderCard());
     }
+    @Test
+    void pickCardUpperBuilding(){
+        Board board= new Board();
+        Card building = new BonusFood(1,3,3);
+
+        board.getUpperBuildingRow().add(building);
+        Card result = board.pickCard(true,true,0);
+
+        assertSame(building, result);
+        assertTrue(board.getUpperBuildingRow().isEmpty());
+
+    }
+    @Test
+    void pickCardDownBuilding(){
+        Board board= new Board();
+        Card building = new BonusFood(1,3,3);
+
+        board.getLowerBuildingRow().add(building);
+        Card result = board.pickCard(false,true,0);
+
+        assertSame(building, result);
+        assertTrue(board.getLowerBuildingRow().isEmpty());
+
+    }
+    @Test
+    void pickCardUpperCardRowTest(){
+        Board board= new Board();
+        Card c1 = new Painter(1,"CHARACTER",2,"PAINTER");
+
+        board.getUpperCardRow().add(c1);
+        Card result = board.pickCard(true,false,0);
+
+        assertSame(c1, result);
+        assertTrue(board.getUpperCardRow().isEmpty());
+
+    }
+    @Test
+    void pickCardLowerCardRowTest(){
+        Board board= new Board();
+        Card c1 = new Painter(1,"CHARACTER",2,"PAINTER");
+
+        board.getLowerCardsRow().add(c1);
+        Card result = board.pickCard(false,false,0);
+
+        assertSame(c1, result);
+        assertTrue(board.getLowerBuildingRow().isEmpty());
+
+    }
 
     @Test
     void checkEvent() {
@@ -137,6 +185,27 @@ public class BoardTest {
         assertNotNull(result);
         assertTrue(result.isEmpty());
     }
+    @Test
+    void checkUpperEventReturnTest() {
+        Board board = new Board();
+
+        Event event1 = new ShamanicEvent(1, "EVENT", "event1", 2, 3);
+        Event event2 = new HuntingEvent(1, "EVENT", "event2", 2);
+
+        Card c1 = new Painter(1, "CHARACTER", 2, "PAINTER");
+
+        board.getUpperCardRow().add(event1);
+        board.getUpperCardRow().add(c1);
+        board.getUpperCardRow().add(event2);
+
+        ArrayList<Event> result = board.checkUpperEvent();
+
+        assertEquals(2, result.size());
+        assertTrue(result.contains(event1));
+        assertTrue(result.contains(event2));
+        assertFalse(result.contains(c1));
+    }
+
 
     @Test
     void shiftUpToDownTest() {
@@ -228,6 +297,19 @@ public class BoardTest {
 
 
     }
+    @Test
+    void checkUpperNoEventsTest() {
+        Board board = new Board();
+
+        Card c2 = new Painter(1, "CHARACTER", 2, "PAINTER");
+
+        board.getUpperCardRow().add(c2);
+
+        ArrayList<Event> result = board.checkUpperEvent();
+
+        assertNotNull(result);
+        assertTrue(result.isEmpty());
+    }
 
     @Test
     void initializeDeckTest() {
@@ -282,24 +364,64 @@ public class BoardTest {
 
         Player p1 = new Player("gemma", Totem.YELLOW,  0, null);
         Player p2 = new Player("luna", Totem.ORANGE, 3, null);
-        board1.getPlayers().add(p1);
-        board1.getPlayers().add(p2);
+        board.getPlayers().add(p1);
+        board.getPlayers().add(p2);
         Card c1 = new Painter(1, "CHARACTER", 2, "PAINTER");
         Card c2 = new Builder(1, "CHARACTER", 2, "BUILDER", 3, 5);
         Card c3 = new Builder(1, "CHARACTER", 2, "BUILDER", 2, 2);
         Card c4 = new Painter(1, "CHARACTER", 2, "PAINTER");
         Card c6 = new Builder(1, "CHARACTER", 2, "BUILDER", 3, 1);
         Card c5 = new Builder(1, "CHARACTER", 2, "BUILDER", 2, 2);
-        board1.getUpperCardRow().add(c1);
-        board1.getUpperCardRow().add(c2);
-        board1.getUpperCardRow().add(c3);
-        board1.getUpperCardRow().add(c4);
-        board1.getUpperCardRow().add(c5);
-        board1.getUpperCardRow().add(c6);
-        assertEquals(1, board1.getEra());
-        assertEquals(6, board1.getUpperCardRow().size());
 
+        board.getDeck().add(c1);
+        board.getDeck().add(c2);
+        board.getDeck().add(c3);
+        board.getDeck().add(c4);
+        board.getDeck().add(c5);
+        board.getDeck().add(c6);
+        boolean eraChanged = board.refillCards();
+
+        assertFalse(eraChanged);
+        assertEquals(1, board.getEra());
+        assertEquals(6, board.getUpperCardRow().size());
+        assertTrue(board.getDeck().isEmpty());
+
+        assertSame(c1, board.getUpperCardRow().get(0));
+        assertSame(c6, board.getUpperCardRow().get(5));
     }
+    @Test
+    void refillCardsShouldChangeEraWhenNewEraCardIsDrawn() {
+        Board board = new Board();
+
+        Player p1 = new Player("p1", Totem.BLACK, 0, null);
+        Player p2 = new Player("p2", Totem.YELLOW, 0, null);
+
+        board.getPlayers().add(p1);
+        board.getPlayers().add(p2);
+
+        board.buildingPerPlayers(2);
+
+        board.getUpperBuildingRow().addAll(board.getBuildingsEra1());
+
+        ArrayList<Card> oldUpperBuildings = new ArrayList<>(board.getUpperBuildingRow());
+        ArrayList<Building> expectedEra2Buildings = new ArrayList<>(board.getBuildingsEra2());
+
+        Card era2Card = new Painter(2, "CHARACTER", 2, "PAINTER");
+
+        board.getDeck().add(era2Card);
+
+        boolean eraChanged = board.refillCards();
+
+        assertTrue(eraChanged);
+        assertEquals(2, board.getEra());
+
+        assertIterableEquals(oldUpperBuildings, board.getLowerBuildingRow());
+        assertIterableEquals(expectedEra2Buildings, board.getUpperBuildingRow());
+
+        assertEquals(1, board.getUpperCardRow().size());
+        assertSame(era2Card, board.getUpperCardRow().get(0));
+    }
+
 
     @Test
     void shiftBuildingUpToDownTest() {
@@ -352,6 +474,28 @@ public class BoardTest {
 
         assertEquals(expectedFood, p1.getFood());
 
+    }
+    @Test
+    void drawCardTest(){
+        Board board = new Board();
+        Card c1 = new Painter(1, "CHARACTER", 2, "PAINTER");
+        Card c2 = new Builder(1, "CHARACTER", 2, "BUILDER", 3, 5);
+
+        board.getDeck().add(c1);
+        board.getDeck().add(c2);
+
+        Card result = board.drawCard();
+
+        assertSame(c1, result);
+        assertEquals(1, board.getDeck().size());
+        assertSame(c2, board.getDeck().getFirst());
+
+    }
+    @Test
+    void drawCardShouldException() {
+        Board board = new Board();
+
+        assertThrows(IllegalArgumentException.class, board::drawCard);
     }
 
 
