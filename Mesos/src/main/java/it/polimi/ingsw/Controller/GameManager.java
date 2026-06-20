@@ -143,10 +143,15 @@ public class GameManager {
     }
 
     public void addPlayer(Player player) {
-        if (this.players.size() >= 5) {
-            throw new IllegalStateException("More than 5 players are not available");
+        synchronized (playersLock) {
+            if (isGameStarted.get()) {
+                throw new IllegalStateException("Cannot add players: game already started");
+            }
+            if (this.players.size() >= 5) {
+                throw new IllegalStateException("More than 5 players are not available");
+            }
+            this.players.add(player);
         }
-        this.players.add(player);
     }
 
     /**the resolve events method orders the events based on which one
@@ -324,8 +329,6 @@ public class GameManager {
             this.numPlayers = numPlayers;
             System.out.println("This game has " + numPlayers + " players.");
         }
-
-
     }
 
     /**
@@ -529,7 +532,7 @@ public class GameManager {
      *
      */
 
-    private boolean availableCharacters(ArrayList<Card> cards) {
+     boolean availableCharacters(ArrayList<Card> cards) {
         if (cards == null || cards.isEmpty()) {
             return false;
         }
@@ -549,7 +552,7 @@ public class GameManager {
      * is empty or not
      * @return :
      */
-    private boolean availableBuilding(ArrayList<Card> buildings) {
+     boolean availableBuilding(ArrayList<Card> buildings) {
         boolean buildingsAvailable = buildings != null && !buildings.isEmpty();
         return buildingsAvailable;
     }
@@ -752,6 +755,24 @@ public class GameManager {
         return this.currentPlayer;
     }
 
+    /**
+     * Returns the queue for testing.
+     * @return
+     */
+    public List<PendingPick> getPickingQueue() {
+        return this.pickingQueue;
+    }
+
+    public boolean isPickingPhase() {
+        return this.pickingPhase.get();
+    }
+
+    /**
+     * For testing purposes only. Not used in the main gameplay flow.
+     */
+    public void setPickingPhaseForTest(boolean value) {
+        this.pickingPhase.set(value);
+    }
 
 }
 
