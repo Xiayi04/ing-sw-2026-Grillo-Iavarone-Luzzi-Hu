@@ -21,7 +21,6 @@ public class ConcreteBuildingActivation extends BuildingActivation{
             for (Character c : player.getTribeCard()) {
                 sameIconBuilding.addInventorIconToMap(c.isInventorAndGetIcon(cv));
             }
-            sameIconBuilding.mapUpdater(player);
         }
     }
 
@@ -31,7 +30,6 @@ public class ConcreteBuildingActivation extends BuildingActivation{
             fullSetCounter = player.countSet();
         }
         setBonus.setFullSetCounter(fullSetCounter);
-        setBonus.setUpdater(player);
     }
 
 
