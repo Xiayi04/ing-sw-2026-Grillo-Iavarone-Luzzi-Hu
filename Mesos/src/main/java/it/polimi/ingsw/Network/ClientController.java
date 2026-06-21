@@ -367,7 +367,6 @@ public class ClientController implements AutoCloseable{
                 }
                 else{
                     playerWhoPicked.getBuilding().add((Building) pickedCard);
-                    view.showPlayerFoodUpdate(playerName, ((Building) pickedCard).getPrice());
                 }
 
             } catch (Exception e) {
@@ -375,6 +374,9 @@ public class ClientController implements AutoCloseable{
             }
         }
         view.pickCard(playerName,isUpper, isBuilding, index);
+        if(isBuilding){
+            view.showPlayerFoodUpdate(playerName, playerWhoPicked.getFood());
+        }
     }
 
     public void showPickedCardError() {
@@ -528,6 +530,7 @@ public class ClientController implements AutoCloseable{
     public void updateLeaderboardFromDB(int playerPositionInDB, List<LeaderBoardData>leaderboardFromDB){
         playerPosition = playerPositionInDB;
         leaderboardDB = leaderboardFromDB;
+        view.showLeaderboardFromDB(playerPosition, leaderboardDB);
         //gestione chiusura sole connessioni
     }
 }
