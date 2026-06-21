@@ -1,13 +1,17 @@
 package it.polimi.ingsw.EventTest;
 
+import it.polimi.ingsw.Buildings.BuildingVisitor.ConcreteBuildingActivation;
 import it.polimi.ingsw.Cards.CardType;
 import it.polimi.ingsw.Cards.Characters.CharacterType;
+import it.polimi.ingsw.Cards.Characters.CharacterVisitor.AddAndCountCharacter;
+import it.polimi.ingsw.Cards.Characters.CharacterVisitor.CharacterVisitor;
 import it.polimi.ingsw.Cards.Characters.Hunter;
 import it.polimi.ingsw.Cards.Events.EventName;
 import it.polimi.ingsw.Cards.Events.HuntingEvent;
 import it.polimi.ingsw.Game.Player;
 import it.polimi.ingsw.Game.Totem;
 import org.junit.jupiter.api.Test;
+import org.junit.platform.engine.TestDescriptor;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -15,41 +19,59 @@ import java.util.List;
 import static org.junit.jupiter.api.Assertions.*;
 
 public class HuntingEventTest {
+    Player p1 = new Player("X", Totem.BLACK,0,null);
+    Player p2 = new Player("Y", Totem.YELLOW,0,null);
+    Player p3 = new Player("Z", Totem.ORANGE,0,null);
+    CharacterVisitor visitor = new AddAndCountCharacter();
 
     @Test
     void shouldThrowExceptionForSinglePlayer(){
         ArrayList<Player> players = new ArrayList<Player>();
         HuntingEvent h = new HuntingEvent(1,"EVENT","HUNTING_EVENT",1);
-        players.add(new Player("X", Totem.BLACK, 10,null));
+        players.add(p1);
         assertThrows(IllegalArgumentException.class, () -> {h.resolveEvent(players);
         });
     }
 
     @Test
     void testHuntingEvent() {
-        HuntingEvent h = new HuntingEvent(2,"EVENT","HUNTING_EVENT",1);
-        Player p1 = new Player("X", Totem.BLACK,10,null);
-        Player p2 = new Player("Y", Totem.YELLOW,10,null);
-        Player p3 = new Player("Z", Totem.ORANGE,10,null);
-        p1.getTribeCard().add(new Hunter(1,"CHARACTER",3,"HUNTER",false));
-        p1.getTribeCard().add(new Hunter(1,"CHARACTER",3,"HUNTER",true));
-        p1.getTribeCard().add(new Hunter(1,"CHARACTER",3, "HUNTER",false));
-        p2.getTribeCard().add(new Hunter(1,"CHARACTER",3, "HUNTER",false));
-        p2.getTribeCard().add(new Hunter(1,"CHARACTER",3, "HUNTER",true));
-        p3.getTribeCard().add(new Hunter(1,"CHARACTER",3, "HUNTER",true));
+        ArrayList<Player> players = new ArrayList<>();
+        players.add(p1);
+        players.add(p2);
+        players.add(p3);
+        p1.modifyFood(10);
+        p1.modifyPP(2);
+        p2.modifyFood(10);
+        p2.modifyPP(0);
+        p3.modifyFood(10);
+        p3.modifyPP(1);
+        Hunter h1 = new Hunter(1,"CHARACTER",3,"HUNTER",false);
+        h1.addCard(visitor,p1);
+        Hunter h2 = new Hunter(1,"CHARACTER",3,"HUNTER",false);
+        h2.addCard(visitor,p1);
+        Hunter h3 = new Hunter(1,"CHARACTER",3,"HUNTER",false);
+        h3.addCard(visitor,p1);
+        Hunter h4 = new Hunter(1,"CHARACTER",3,"HUNTER",false);
+        h4.addCard(visitor,p2);
+        Hunter h5 = new Hunter(1,"CHARACTER",3,"HUNTER",false);
+        h5.addCard(visitor,p2);
+        Hunter h6 = new Hunter(1,"CHARACTER",3,"HUNTER",true);
+        h6.addCard(visitor,p3);
+        HuntingEvent h = new HuntingEvent(2,"EVENT","HUNTING_EVENT",2);
 
-        ArrayList<Player> players = new ArrayList<>(List.of(p1,p2,p3));
         h.resolveEvent(players);
 
         assertEquals(13,p1.getFood());
-        assertEquals(3,p1.getPrestigePoints());
+        assertEquals(8,p1.getPrestigePoints());
         assertEquals(12,p2.getFood());
-        assertEquals(2,p2.getPrestigePoints());
-        assertEquals(11,p3.getFood());
-        assertEquals(1,p3.getPrestigePoints());
+        assertEquals(4,p2.getPrestigePoints());
+        assertEquals(12,p3.getFood());
+        assertEquals(3,p3.getPrestigePoints());
+    }
 
-
-
-
+    @Test
+    public void printCardDoesNotThrowTest(){
+        HuntingEvent event = new HuntingEvent(2,"EVENT","HUNTING_EVENT",2);
+        assertDoesNotThrow(event::printCard);
     }
 }

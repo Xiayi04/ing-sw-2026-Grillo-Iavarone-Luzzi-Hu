@@ -1,9 +1,37 @@
 package it.polimi.ingsw.BuildingTest;
 
-//import org.junit.jupiter.params.ParameterizedTest;
 
+import it.polimi.ingsw.Buildings.BonusStarBuilding;
+import it.polimi.ingsw.Buildings.BuildingVisitor.ConcreteBuildingActivation;
+import it.polimi.ingsw.Game.Player;
+import it.polimi.ingsw.Game.Totem;
+import org.junit.jupiter.api.Test;
+
+
+import static org.junit.jupiter.api.Assertions.*;
 
 public class BonusStarBuildingTest {
+
+
+    @Test
+    void printTest() {
+        BonusStarBuilding building = new BonusStarBuilding(1, 10, 5);
+        assertDoesNotThrow(building::printCard);
+    }
+    @Test
+    public void acceptActivationTest(){
+        BonusStarBuilding b = new BonusStarBuilding(1, 1, 1);
+        Player p = new Player("x", Totem.BLACK, 2,null);
+        final boolean[] visited = {false};
+        ConcreteBuildingActivation visitor = new ConcreteBuildingActivation() {
+            @Override
+            public void visit(BonusStarBuilding b, Player p) {
+                visited[0] = true;
+            }
+        };
+        b.acceptActivation(visitor, p);
+        assertTrue(visited[0]);
+    }
 
 //    @Test
 //    void buildingActivationTest(){

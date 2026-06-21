@@ -105,6 +105,9 @@ public class GameManagerTest {
         board.getLowerBuildingRow().add(b4);
 
         GameManager gm = new GameManager(players, players.size(), board);
+        gm.setNotifier(new  Notifier() {
+           @Override public void foodUpdateBroadcast(Player player, int update){}
+        });
         gm.buyBuilding(player1, true, 0);
 
         assertTrue(player1.getBuilding().contains(b));
@@ -126,6 +129,9 @@ public class GameManagerTest {
         board.getLowerBuildingRow().add(b);
 
         GameManager gm = new GameManager(players,players.size(),board);
+        gm.setNotifier(new  Notifier() {
+            @Override public void foodUpdateBroadcast(Player player, int update){}
+        });
         gm.takeCharacter(player1,true,0);
         gm.buyBuilding(player1,false,0);
 
