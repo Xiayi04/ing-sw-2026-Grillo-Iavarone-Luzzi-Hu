@@ -668,6 +668,7 @@ public class GameManager {
 
         if(player.getFood() >= finalCost){
             player.modifyFood(-finalCost);
+            notifier.foodUpdateBroadcast(player, player.getFood());
             Building pickedBuilding=  (Building) board.pickCard(rowUpper, true, index);
             player.getBuilding().add(pickedBuilding);
             //Some buildings need to be activated when picked up from the board

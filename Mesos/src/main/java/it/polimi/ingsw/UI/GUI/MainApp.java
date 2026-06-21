@@ -70,7 +70,7 @@ public class MainApp extends Application {
         });
         mainStage.setTitle("Mesos");
         mainStage.setMaximized(true);
-        mainStage.getIcons().add(new Image(new File("images/logo/logo_cranio.png").toURI().toString()));
+        mainStage.getIcons().add(new Image(Objects.requireNonNull(getClass().getResourceAsStream("/images/logo/logo_cranio.png"))));
         mainStage.show();
         /*List<PlayerScore> leaderboard = new ArrayList<>();
         leaderboard.add(new PlayerScore("a", 39, 4));
