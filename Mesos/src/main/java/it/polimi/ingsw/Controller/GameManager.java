@@ -12,6 +12,7 @@ import it.polimi.ingsw.Database.LeaderBoardDAO;
 import it.polimi.ingsw.Database.LeaderBoardData;
 import it.polimi.ingsw.Game.*;
 import it.polimi.ingsw.Cards.Characters.Character;
+import it.polimi.ingsw.Network.Notifier;
 import it.polimi.ingsw.Network.PlayerScore;
 import java.sql.SQLException;
 import java.util.*;
