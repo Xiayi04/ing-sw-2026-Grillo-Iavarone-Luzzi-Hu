@@ -15,6 +15,8 @@ import it.polimi.ingsw.Network.Socket.Client.SocketClient;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicBoolean;
 // riferimento all'if che manda messaggi al server
@@ -39,6 +41,7 @@ public class ClientController implements AutoCloseable{
     private AtomicBoolean isGameFinished = new AtomicBoolean(false);
     private int localNumberRound=0;
     private final AtomicBoolean pickingPhase = new AtomicBoolean(false);
+    private final ScheduledExecutorService scheduler = Executors.newSingleThreadScheduledExecutor();
     //connection management
     private final String serverIP;
 
@@ -84,8 +87,8 @@ public class ClientController implements AutoCloseable{
         return currentBoard;
     }
 
-    public void setLocalPlayerName(String localPlayerName) {
-        this.localPlayerName = localPlayerName;
+    public String getLocalPlayerName() {
+        return localPlayerName;
     }
 
     public Player getLocalPlayer() {
@@ -530,7 +533,9 @@ public class ClientController implements AutoCloseable{
     public void updateLeaderboardFromDB(int playerPositionInDB, List<LeaderBoardData>leaderboardFromDB){
         playerPosition = playerPositionInDB;
         leaderboardDB = leaderboardFromDB;
-        view.showLeaderboardFromDB(playerPosition, leaderboardDB);
+        scheduler.schedule(() -> {
+            view.showLeaderboardFromDB(playerPosition, leaderboardDB);
+        }, 10, TimeUnit.SECONDS);
         //gestione chiusura sole connessioni
     }
 }

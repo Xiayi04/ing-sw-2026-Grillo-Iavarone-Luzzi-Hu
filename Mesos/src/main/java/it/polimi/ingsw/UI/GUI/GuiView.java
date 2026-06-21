@@ -14,13 +14,15 @@ import javafx.animation.FadeTransition;
 import javafx.animation.PauseTransition;
 import javafx.animation.SequentialTransition;
 import javafx.application.Platform;
+import javafx.beans.property.ReadOnlyObjectWrapper;
+import javafx.beans.property.ReadOnlyStringWrapper;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Cursor;
 import javafx.scene.Node;
 import javafx.scene.Scene;
+import javafx.scene.control.*;
 import javafx.scene.control.Button;
-import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
 import javafx.scene.effect.GaussianBlur;
 import javafx.scene.image.Image;
@@ -29,12 +31,8 @@ import javafx.scene.layout.*;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.util.Duration;
-
 import java.awt.*;
 import java.io.File;
-import java.io.InputStream;
-import java.nio.file.Files;
-import java.nio.file.StandardCopyOption;
 import java.util.*;
 import java.util.List;
 import java.util.concurrent.ExecutorService;
@@ -51,6 +49,12 @@ public class GuiView implements GraphicInterface {
     private final ExecutorService pool = Executors.newCachedThreadPool();
     //private final Label labelError = new Label("prova");
     private final Label label = new Label();
+    private final TableView<LeaderBoardData> leaderboardTable = new TableView<>();
+    private final TableColumn<LeaderBoardData, Integer> positionColumn = new TableColumn<>("Position");
+    private final TableColumn<LeaderBoardData, String> usernameColumn = new TableColumn<>("Username");
+    private final TableColumn<LeaderBoardData, Integer> scoreColumn = new TableColumn<>("Score");
+    private final TableColumn<LeaderBoardData, String> dateColumn = new TableColumn<>("Date");
+    private int highlightedPosition;
 
     public GuiView(ClientController clientController, StackPane root) {
         this.clientController = clientController;
@@ -312,11 +316,6 @@ public class GuiView implements GraphicInterface {
     }
 
     @Override
-    public void showLeaderboardFromDB(int playerPosition, List<LeaderBoardData> updatedDB) {
-
-    }
-
-    @Override
     public void showEndGameSuccessfully(String winner, List<PlayerScore> leaderboard) {
         System.out.println("il metodo showEndGameSuccessfully è stato chiamato");
         Platform.runLater(() -> {
@@ -574,6 +573,53 @@ public class GuiView implements GraphicInterface {
                    break;
                }
            }
+        });
+    }
+
+    public void initializeLeaderboardDB(){
+        positionColumn.setCellValueFactory(cellData ->
+                new ReadOnlyObjectWrapper<>(cellData.getValue().position()));
+        usernameColumn.setCellValueFactory(cellData ->
+                new ReadOnlyStringWrapper(cellData.getValue().username()));
+        scoreColumn.setCellValueFactory(cellData ->
+                new ReadOnlyObjectWrapper<>(cellData.getValue().score()));
+        dateColumn.setCellValueFactory(cellData ->
+                new ReadOnlyStringWrapper(cellData.getValue().date()));
+        leaderboardTable.getColumns().addAll(positionColumn, usernameColumn, scoreColumn, dateColumn);
+        positionColumn.prefWidthProperty().bind(leaderboardTable.widthProperty().multiply(0.10));
+        usernameColumn.prefWidthProperty().bind(leaderboardTable.widthProperty().multiply(0.30));
+        scoreColumn.prefWidthProperty().bind(leaderboardTable.widthProperty().multiply(0.20));
+        dateColumn.prefWidthProperty().bind(leaderboardTable.widthProperty().multiply(0.40));
+        leaderboardTable.prefWidthProperty().bind(root.widthProperty().multiply(0.85));
+        leaderboardTable.prefHeightProperty().bind(root.heightProperty().multiply(0.75));
+        leaderboardTable.maxWidthProperty().bind(root.widthProperty().multiply(0.85));
+        leaderboardTable.maxHeightProperty().bind(root.heightProperty().multiply(0.75));
+        leaderboardTable.setRowFactory(tv -> new TableRow<>() {
+            @Override
+            protected void updateItem(LeaderBoardData item, boolean empty) {
+                super.updateItem(item, empty);
+
+                if (empty || item == null) {
+                    setStyle("");
+                } else if (item.position() == highlightedPosition && item.username().equals(clientController.getLocalPlayerName())) {
+                    setStyle("-fx-background-color: gold; -fx-font-weight: bold;");
+                } else {
+                    setStyle("");
+                }
+            }
+        });
+    }
+
+    @Override
+    public void showLeaderboardFromDB(int playerPosition, List<LeaderBoardData> updatedDB) {
+        Platform.runLater(() -> {
+            root.getChildren().clear();
+            root.setStyle("-fx-background-color: red");
+            highlightedPosition = playerPosition;
+            System.out.println("DEBUG: highlightedPosition: " + highlightedPosition);
+            initializeLeaderboardDB();
+            leaderboardTable.getItems().setAll(updatedDB);
+            root.getChildren().add(leaderboardTable);
         });
     }
 }
