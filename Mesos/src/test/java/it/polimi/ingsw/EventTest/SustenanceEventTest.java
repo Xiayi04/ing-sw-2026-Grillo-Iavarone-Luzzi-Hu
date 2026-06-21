@@ -1,6 +1,7 @@
 package it.polimi.ingsw.EventTest;
 
 import it.polimi.ingsw.Cards.Characters.*;
+import it.polimi.ingsw.Cards.Events.EventName;
 import it.polimi.ingsw.Cards.Events.SustenanceEvent;
 import it.polimi.ingsw.Game.Player;
 import it.polimi.ingsw.Game.Totem;
@@ -80,7 +81,20 @@ public class SustenanceEventTest {
         assertEquals(0,p2.getFood());
         assertEquals(3,p2.getPrestigePoints());
 
+
+    }
+    @Test
+    void sustenancePrintCardDoesNotThrow() {
+        SustenanceEvent event = new SustenanceEvent(2, "EVENT", "SUSTENANCE_EVENT", -2);
+        assertDoesNotThrow(event::printCard);
+    }
+    @Test
+    void valueOfCorrectEventName() {
+        assertEquals(EventName.SUSTENANCE_EVENT, EventName.valueOf("SUSTENANCE_EVENT"));
     }
 
-
+    @Test
+    void nameShouldReturnCorrectString() {
+        assertEquals("SUSTENANCE_EVENT", EventName.SUSTENANCE_EVENT.name());
+    }
 }
