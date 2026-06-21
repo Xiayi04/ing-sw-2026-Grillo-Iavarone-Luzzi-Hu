@@ -1,7 +1,6 @@
 package it.polimi.ingsw.Network;
 
 import it.polimi.ingsw.Controller.GameManager;
-import it.polimi.ingsw.Controller.Notifier;
 import it.polimi.ingsw.Controller.ServerController;
 import it.polimi.ingsw.Database.DatabaseManager;
 import it.polimi.ingsw.Game.Board;

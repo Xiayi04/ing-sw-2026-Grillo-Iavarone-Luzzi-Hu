@@ -1,6 +1,7 @@
 package it.polimi.ingsw.UI.CommandTUI;
 
 import it.polimi.ingsw.Network.ClientController;
+import it.polimi.ingsw.UI.TUI;
 
 public class SetUsernameCommand implements CommandTUI {
     private final String username;
@@ -10,7 +11,7 @@ public class SetUsernameCommand implements CommandTUI {
     }
 
     @Override
-    public void execute(ClientController clientController) {
+    public void execute(ClientController clientController, TUI tui) {
         clientController.setTmpUsername(username.trim());
     }
 }

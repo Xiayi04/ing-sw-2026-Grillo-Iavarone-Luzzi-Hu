@@ -42,7 +42,6 @@ public class SocketVirtualClient implements VirtualClientInterface {
                 throw new ClientDisconnectedException("Client network connection lost during command: " + commandType);
             } catch (IOException e) {
                 System.out.println("Generic Error while sending " +  commandType + ": " + e.getMessage());
-                e.printStackTrace();
             }
         }
     }
@@ -52,7 +51,6 @@ public class SocketVirtualClient implements VirtualClientInterface {
 
     @Override
     public void skipTurn() {
-        //da implementare lato client
         send("skip", null);
     }
 
@@ -185,7 +183,7 @@ public class SocketVirtualClient implements VirtualClientInterface {
 
     @Override
     public void skipError() {
-
+        send("skip_error",null);
     }
 
     @Override

@@ -7,9 +7,10 @@ import it.polimi.ingsw.Cards.Events.PaintingEvent;
 import it.polimi.ingsw.Cards.Events.ShamanicEvent;
 import it.polimi.ingsw.Cards.Events.SustenanceEvent;
 import it.polimi.ingsw.Game.OfferCard;
-import it.polimi.ingsw.Game.Player;
 import it.polimi.ingsw.Game.Totem;
 import it.polimi.ingsw.Game.TurnOrderCard;
+import org.jline.utils.AttributedStringBuilder;
+import org.jline.utils.AttributedStyle;
 
 import static java.lang.Math.ceil;
 import static java.lang.Math.floor;
@@ -26,6 +27,14 @@ public class Printer  {
     private final char space = ' ';
     private final char upArrow = '↑';
     private final char downArrow = '↓';
+    AttributedStyle communicationsStyle = AttributedStyle.DEFAULT.foreground(AttributedStyle.YELLOW);
+    AttributedStyle yellowStyle = AttributedStyle.DEFAULT.foreground(220).bold();
+    AttributedStyle redStyle = AttributedStyle.DEFAULT.foreground(202).bold();
+    AttributedStyle blackStyle = AttributedStyle.DEFAULT.foreground(242).bold();
+    AttributedStyle blueStyle = AttributedStyle.DEFAULT.foreground(38).bold();
+    AttributedStyle whiteStyle = AttributedStyle.DEFAULT.foreground(15).bold();
+    AttributedStyle msgStyle = AttributedStyle.DEFAULT.foreground(AttributedStyle.GREEN).bold();
+    AttributedStyle errStyle = AttributedStyle.DEFAULT.foreground(AttributedStyle.RED).bold();
 
     public String[] encapsulator(String[] string){
         int max = 0;
@@ -62,12 +71,8 @@ public class Printer  {
 
                 StringBuilder leftSpace = new StringBuilder();
                 StringBuilder rightSpace = new StringBuilder();
-                for(int j=0; j<left; j++){
-                    leftSpace.append(space);
-                }
-                for(int j=0; j<right; j++){
-                    rightSpace.append(space);
-                }
+                leftSpace.append(String.valueOf(space).repeat(Math.max(0, left)));
+                rightSpace.append(String.valueOf(space).repeat(Math.max(0, right)));
 
                 StringBuilder row = new StringBuilder();
                 row.append(side);
@@ -176,8 +181,13 @@ public class Printer  {
             }
             p[4] = p[4] + stringBuilder.toString();
         }
-        return encapsulator(p);
-
+        p = encapsulator(p);
+        p[2] = p[2].replace(Totem.BLACK.toString(), new AttributedStringBuilder().append(Totem.BLACK.toString(), blackStyle).toAnsi());
+        p[2] = p[2].replace(Totem.WHITE.toString(), new AttributedStringBuilder().append(Totem.WHITE.toString(), whiteStyle).toAnsi());
+        p[2] = p[2].replace(Totem.ORANGE.toString(), new AttributedStringBuilder().append(Totem.ORANGE.toString(), redStyle).toAnsi());
+        p[2] = p[2].replace(Totem.BLUE.toString(), new AttributedStringBuilder().append(Totem.BLUE.toString(), blueStyle).toAnsi());
+        p[2] = p[2].replace(Totem.YELLOW.toString(), new AttributedStringBuilder().append(Totem.YELLOW.toString(), yellowStyle).toAnsi());
+        return p;
     }
 
     public String[] print(HuntingEvent huntingEvent){
@@ -375,7 +385,16 @@ public class Printer  {
                 p[i+1] = p[i+1] + "=" +  toc[i].toString().toUpperCase() + "=";
             }
         }
-        return encapsulator(p);
+        p = encapsulator(p);
+
+        for(int i = 0; i < toc.length; i++){
+            p[i+1] = p[i+1].replace(Totem.BLACK.toString(), new AttributedStringBuilder().append(Totem.BLACK.toString(), blackStyle).toAnsi());
+            p[i+1] = p[i+1].replace(Totem.WHITE.toString(), new AttributedStringBuilder().append(Totem.WHITE.toString(), whiteStyle).toAnsi());
+            p[i+1] = p[i+1].replace(Totem.ORANGE.toString(), new AttributedStringBuilder().append(Totem.ORANGE.toString(), redStyle).toAnsi());
+            p[i+1] = p[i+1].replace(Totem.BLUE.toString(), new AttributedStringBuilder().append(Totem.BLUE.toString(), blueStyle).toAnsi());
+            p[i+1] = p[i+1].replace(Totem.YELLOW.toString(), new AttributedStringBuilder().append(Totem.YELLOW.toString(), yellowStyle).toAnsi());
+        }
+        return p;
     }
 
 

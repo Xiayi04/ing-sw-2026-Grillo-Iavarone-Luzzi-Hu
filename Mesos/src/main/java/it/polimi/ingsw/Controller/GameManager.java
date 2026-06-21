@@ -28,7 +28,7 @@ public class GameManager {
     private Board board;
     private Player currentPlayer;
     private final List<PendingPick> pickingQueue = new ArrayList<>();
-    private Notifier  notifier = null;
+    private Notifier notifier = null;
     private final AtomicBoolean pickingPhase = new AtomicBoolean(false);
     private final AtomicBoolean positioningPhase = new AtomicBoolean(false);
     private final AtomicBoolean isGameStarted = new AtomicBoolean(false);

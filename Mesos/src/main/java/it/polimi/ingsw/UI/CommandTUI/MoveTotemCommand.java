@@ -1,6 +1,7 @@
 package it.polimi.ingsw.UI.CommandTUI;
 
 import it.polimi.ingsw.Network.ClientController;
+import it.polimi.ingsw.UI.TUI;
 
 public class MoveTotemCommand implements CommandTUI {
     String provvIndex;
@@ -9,7 +10,7 @@ public class MoveTotemCommand implements CommandTUI {
     }
 
     @Override
-    public void execute(ClientController clientController) {
+    public void execute(ClientController clientController, TUI tui) {
         try {
             clientController.requestLocalMoveTotem(Integer.parseInt(provvIndex)-1);
         } catch (NumberFormatException e) {

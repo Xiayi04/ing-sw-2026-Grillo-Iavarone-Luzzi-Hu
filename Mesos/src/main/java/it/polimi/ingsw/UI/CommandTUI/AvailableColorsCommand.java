@@ -1,9 +1,7 @@
 package it.polimi.ingsw.UI.CommandTUI;
 
-import it.polimi.ingsw.Game.Totem;
 import it.polimi.ingsw.Network.ClientController;
-
-import java.util.ArrayList;
+import it.polimi.ingsw.UI.TUI;
 
 public class AvailableColorsCommand implements CommandTUI {
 
@@ -12,7 +10,7 @@ public class AvailableColorsCommand implements CommandTUI {
     }
 
     @Override
-    public void execute(ClientController clientController) {
+    public void execute(ClientController clientController, TUI tui) {
         clientController.requestLocalAvailableTotems();
     }
 }

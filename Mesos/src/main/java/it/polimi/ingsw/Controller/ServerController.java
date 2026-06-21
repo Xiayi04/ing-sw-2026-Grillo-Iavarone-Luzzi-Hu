@@ -3,6 +3,7 @@ package it.polimi.ingsw.Controller;
 import it.polimi.ingsw.Game.Player;
 import it.polimi.ingsw.Game.Totem;
 import it.polimi.ingsw.Network.ClientDisconnectedException;
+import it.polimi.ingsw.Network.Notifier;
 import it.polimi.ingsw.Network.Server;
 import it.polimi.ingsw.Network.VirtualClientInterface;
 
@@ -76,8 +77,8 @@ public class ServerController implements LobbyManager {
                 tempPlayer.setName(username);
                 try {
                     client.updateConfirmedUsername(username);
-                } catch (Exception e) {
-                    e.printStackTrace();
+                } catch (ClientDisconnectedException e) {
+                    Server.terminate();
                 }
                 checkStartGame();
             }
@@ -96,11 +97,7 @@ public class ServerController implements LobbyManager {
             if (lobby.getTempPlayerByClient(client) != null &&
                     lobby.getTempPlayerByClient(client).getTempPlayerTotem() != null &&
                     lobby.getTempPlayerByClient(client).getTempPlayerTotem().equals(totem)) {
-                try {
-                    client.totemChoiceError();
-                } catch (ClientDisconnectedException e) {
-                    Server.closeConnection(client);
-                }
+
                 return;
             }
 
@@ -133,8 +130,8 @@ public class ServerController implements LobbyManager {
                         return;
                     }
                     client.totemChoiceError();
-                } catch (Exception e) {
-                    e.printStackTrace();
+                } catch (ClientDisconnectedException e) {
+                    Server.terminate();
                 }
             }
         }

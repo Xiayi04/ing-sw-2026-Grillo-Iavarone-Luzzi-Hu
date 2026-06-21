@@ -3,9 +3,12 @@ package it.polimi.ingsw.UI.CommandTUI;
 import it.polimi.ingsw.Network.ClientController;
 import it.polimi.ingsw.UI.TUI;
 
-public class InvalidFormatCommand implements CommandTUI{
+public class ShowCardsCommand implements CommandTUI{
+    String totem;
+    public ShowCardsCommand(String totem) {}
+
     @Override
     public void execute(ClientController clientController, TUI tui) {
-        clientController.showError("Invalid Format Command");
+
     }
 }

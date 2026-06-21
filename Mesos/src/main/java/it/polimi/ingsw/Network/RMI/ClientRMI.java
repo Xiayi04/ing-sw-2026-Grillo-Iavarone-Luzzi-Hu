@@ -5,6 +5,7 @@ import it.polimi.ingsw.Game.Board;
 import it.polimi.ingsw.Game.Player;
 import it.polimi.ingsw.Game.Totem;
 import it.polimi.ingsw.Network.ClientController;
+import it.polimi.ingsw.Network.ClientMain;
 import it.polimi.ingsw.Network.PlayerScore;
 import it.polimi.ingsw.Network.ServerConnection;
 
@@ -233,12 +234,12 @@ public class ClientRMI extends UnicastRemoteObject implements
             server = (VirtualServer) registry.lookup( "---MESOS_SERVER---");
 
             server.connect(this);
-            System.out.println("Connected to RMI server.");
+            //System.out.println("Connected to RMI server.");
 
 
         } catch (Exception e) {
             System.out.println("Cannot connect to RMI server.");
-            e.printStackTrace();
+            ClientMain.terminateClient();
         }
 
     }

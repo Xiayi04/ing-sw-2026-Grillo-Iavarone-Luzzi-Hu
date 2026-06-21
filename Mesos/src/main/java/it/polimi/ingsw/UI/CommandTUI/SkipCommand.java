@@ -3,9 +3,10 @@ package it.polimi.ingsw.UI.CommandTUI;
 import it.polimi.ingsw.Network.ClientController;
 import it.polimi.ingsw.UI.TUI;
 
-public class InvalidFormatCommand implements CommandTUI{
+public class SkipCommand implements CommandTUI{
+
     @Override
     public void execute(ClientController clientController, TUI tui) {
-        clientController.showError("Invalid Format Command");
+        clientController.requestSkip();
     }
 }
