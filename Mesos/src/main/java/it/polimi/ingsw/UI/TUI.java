@@ -685,8 +685,10 @@ public class TUI implements GraphicInterface, Runnable {
         printedBoard.addAll(Arrays.asList(path));
         String[] cardsLowerRow = printCardsRow(board.getLowerCardsRow());
         String[] buildingLowerRow = printBuildingRow(board.getLowerBuildingRow());
-        for (int i = 0; i < cardsLowerRow.length; i++) {
-            cardsLowerRow[i] += buildingLowerRow[i];
+        if (buildingLowerRow.length!=0) {
+            for (int i = 0; i < cardsLowerRow.length; i++) {
+                cardsLowerRow[i] = cardsLowerRow[i] + " " + buildingLowerRow[i];
+            }
         }
 
         printedBoard.addAll(Arrays.asList(cardsLowerRow));
