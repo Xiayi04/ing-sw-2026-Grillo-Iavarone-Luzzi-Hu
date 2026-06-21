@@ -267,7 +267,7 @@ public class GameManager {
      */
 
     public void executeNextPosition() {
-        synchronized (playersLock) { //board.getTurnOrderCard().getOrder()
+        synchronized (board.getTurnOrderCard().getOrder()) { //playersLock
             if (board.getTurnOrderCard().getOrder().isEmpty()) {
                 positioningPhase.set(false);
                 System.out.println("Totem positioning phase completed.");
@@ -504,6 +504,11 @@ public class GameManager {
         if (!hasCharacters && !hasBuildings) {
             Player p= currentPick.player();
             pickingQueue.remove(0);
+            //skip automatico troppo veloce
+            try {
+                Thread.sleep(100);
+            } catch (InterruptedException ignored) {
+            }
             checkAndReturnToTOC(p);
             return false;
         }
@@ -597,7 +602,7 @@ public class GameManager {
                     .anyMatch(pick -> pick.player().equals(p)&& !pick.isEventPick());
 
             if (!hasMoreActions) {
-               synchronized (playersLock){ //board.getTurnOrderCard()
+               synchronized (board.getTurnOrderCard()){ //playersLock
                     if (!board.getTurnOrderCard().getOrder().contains(p)) {
                         int indexTOC = board.bringBackToTOC(p);
                         if (indexTOC >= 0) {
