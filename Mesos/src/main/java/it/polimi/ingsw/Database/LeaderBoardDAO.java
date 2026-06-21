@@ -31,8 +31,8 @@ public class LeaderBoardDAO {
     }
 
     public int getPositionInLeaderBoard( int numPlayers, int playerScore) throws SQLException{
-        String sql= "SELECT COUNT(*)+1 AS position " +
-                    "FROM gamesDB WHERE num_players= ? AND score>?";
+        String sql = "SELECT COUNT(DISTINCT score) + 1 AS position " +
+                "FROM gamesDB WHERE num_players = ? AND score > ?";
 
         try(Connection connection = DatabaseManager.getConnection();
             PreparedStatement preparedStatement = connection.prepareStatement(sql);){
