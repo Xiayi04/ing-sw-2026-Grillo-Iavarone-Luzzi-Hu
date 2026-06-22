@@ -28,10 +28,6 @@ public class ServerController implements LobbyManager {
         return pingManager;
     }
 
-    public GameManager getGameManager() {
-        return gameManager;
-    }
-
     public Notifier getNotifier() {
         return notifier;
     }
@@ -135,7 +131,7 @@ public class ServerController implements LobbyManager {
                 }
             }
         }
-    }//
+    }
 
     @Override
     public void checkSetNumPlayers(int numPlayers, VirtualClientInterface client) {
@@ -198,6 +194,7 @@ public class ServerController implements LobbyManager {
         }
 
     }
+
 
     @Override
     public void connectionInitializer(VirtualClientInterface client) {

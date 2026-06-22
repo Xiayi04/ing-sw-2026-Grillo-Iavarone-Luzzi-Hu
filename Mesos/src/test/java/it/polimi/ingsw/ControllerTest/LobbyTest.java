@@ -141,7 +141,7 @@ public class LobbyTest {
     @Test
     void checkMoreThenEnoughPlayersExcessTest() {
         Lobby.isNumPlayersSet.set(true);
-        lobby.numPlayers.set(2);
+        lobby.numPlayers.set(3);
         Client c1 = new Client();
         Client c2 = new Client();
         Client c3 = new Client();
@@ -153,7 +153,7 @@ public class LobbyTest {
         lobby.checkMoreThenEnoughPlayers();
         assertFalse(c1.refused);
         assertFalse(c2.refused);
-        assertTrue(c3.refused);
+        assertFalse(c3.refused);
         assertTrue(c4.refused);
     }
     @Test

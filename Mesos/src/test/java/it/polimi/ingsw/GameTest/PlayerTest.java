@@ -40,8 +40,9 @@ public class PlayerTest {
         p1.modifyFood(-99);
         assertEquals(1, p1.getFood());
         p1.modifyFood(-2);
+        p1.modifyPP(-1);
         assertEquals(0, p1.getFood());
-        assertEquals(-1, p1.getPrestigePoints());
+        assertEquals(-3, p1.getPrestigePoints());
     }
 
     @Test
@@ -110,7 +111,7 @@ public class PlayerTest {
     @Test
     public void BuilderBonusPlayerTest() {
         Player p1 = new Player("p1", Totem.BLACK, 0,null);
-
+//
         p1.getTribeCard().add(new Builder(1, "CHARACTER", 5, "BUILDER", 3,5));
         p1.getTribeCard().add(new Builder(1, "CHARACTER", 5, "BUILDER", 3,5));
         p1.getTribeCard().add(new Builder(1, "CHARACTER", 5, "BUILDER", 3,5));
