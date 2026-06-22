@@ -41,7 +41,7 @@ public class SameIconBuilding extends Building implements BuildingInterface {
     }
 
     public void addInventorIconToMap(String icon) {
-        if (icon.equals(" "))
+        if (icon.isEmpty())
             return;
         Integer v = checkPair.get(icon);
 
