@@ -1,11 +1,10 @@
 package it.polimi.ingsw.Network.RMI;
 
 import it.polimi.ingsw.Game.Totem;
-import it.polimi.ingsw.Network.VirtualClientInterface;
 
 import java.rmi.Remote;
 import java.rmi.RemoteException;
-import java.util.ArrayList;
+
 
 // Il Client lo usa per mandare comandi verso il Server
 public interface VirtualServer extends Remote {
@@ -24,5 +23,5 @@ public interface VirtualServer extends Remote {
 
     void requestAvailableTotemsManagement(RemoteClientInterface client) throws RemoteException;
 
-    void ping();
+    void ping() throws RemoteException;
 }

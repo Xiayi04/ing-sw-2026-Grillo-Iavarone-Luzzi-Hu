@@ -39,8 +39,6 @@ public class ServerRMI extends UnicastRemoteObject implements VirtualServer,Runn
      * server instance to the specified name ({@code ---MESOS_SERVER---}),
      * making it available for remote clients to look up and invoke.
      *
-     * @throws Exception If the RMI registry cannot be created or the
-     * binding operation fails.
      */
     public void run() {
         try {
@@ -194,7 +192,7 @@ public class ServerRMI extends UnicastRemoteObject implements VirtualServer,Runn
     }
 
     @Override
-    public void ping() {
+    public void ping() throws RemoteException{
 
     }
 
