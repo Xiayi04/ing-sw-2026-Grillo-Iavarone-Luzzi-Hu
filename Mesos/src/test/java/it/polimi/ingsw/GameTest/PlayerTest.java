@@ -40,8 +40,9 @@ public class PlayerTest {
         p1.modifyFood(-99);
         assertEquals(1, p1.getFood());
         p1.modifyFood(-2);
+        p1.modifyPP(-1);
         assertEquals(0, p1.getFood());
-        assertEquals(-1, p1.getPrestigePoints());
+        assertEquals(-3, p1.getPrestigePoints());
     }
 
     @Test
