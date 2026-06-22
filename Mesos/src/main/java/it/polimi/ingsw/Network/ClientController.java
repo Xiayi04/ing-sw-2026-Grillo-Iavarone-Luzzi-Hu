@@ -102,13 +102,17 @@ public class ClientController implements AutoCloseable{
 
     public Player getLocalPlayer() {
         synchronized (BoardLock){
-        for (Player p : currentBoard.getPlayers()) {
-            if (p.getName().equals(localPlayerName)) {
-                return p;
+            try{
+                for (Player p : currentBoard.getPlayers()) {
+                    if (p.getName().equals(localPlayerName)) {
+                        return p;
+                    }
+                }
+            }
+            catch (NullPointerException ignored){
             }
         }
         return null;
-        }
     }
     public void setCurrentBoard(Board currentBoard) {
         this.currentBoard = currentBoard;

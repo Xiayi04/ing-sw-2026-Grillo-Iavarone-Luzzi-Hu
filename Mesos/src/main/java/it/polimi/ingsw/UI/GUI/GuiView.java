@@ -148,14 +148,18 @@ public class GuiView implements GraphicInterface {
     }
 
     public Node showLocalPlayer(){
-        for(Player p : clientController.getCurrentBoard().getPlayers()){
-            if(p.getName().equals(clientController.getLocalPlayer().getName())){
-                Playerpanel localPlayer = new Playerpanel(p, this);
-                panels.put(p.getName(), localPlayer);
-                localPlayer.setAlignment(Pos.CENTER);
-                localPlayer.setPadding(new Insets(0, 0, 20, 0));
-                return localPlayer;
+        try{
+            for (Player p : clientController.getCurrentBoard().getPlayers()) {
+                if (p.getName().equals(clientController.getLocalPlayer().getName())) {
+                    Playerpanel localPlayer = new Playerpanel(p, this);
+                    panels.put(p.getName(), localPlayer);
+                    localPlayer.setAlignment(Pos.CENTER);
+                    localPlayer.setPadding(new Insets(0, 0, 20, 0));
+                    return localPlayer;
+                }
             }
+        }
+        catch (NullPointerException ignored){
         }
         return null;
     }
