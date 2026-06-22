@@ -33,7 +33,7 @@ public class Picker extends Character implements CharacterInterface {
     }
 
     public String getImagePath(){
-        return "/images/cards/characters/"+getCharacterType()+".png";
+        return "/images/cards/characters/"+getCharacterType().toLowerCase()+".png";
     }
 
     @Override

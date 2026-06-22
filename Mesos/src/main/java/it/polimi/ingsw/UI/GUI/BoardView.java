@@ -171,7 +171,7 @@ public class BoardView extends VBox {
         //riempio gli stackpane con i totem
         for(int i=0; i<clientController.getCurrentBoard().getPlayers().size(); i++){
             String totem = clientController.getCurrentBoard().getTurnOrderCard().getOrder().get(i).getTotem().toString();
-            ImageView totemView = Utils.createImageView("/images/totem/"+totem+"_profilo.png", 40);
+            ImageView totemView = Utils.createImageView("/images/totem/"+totem.toLowerCase()+"_profilo.png", 40);
             TOCSlots.get(i).getChildren().add(totemView);
         }
         path.getChildren().add(orderCardContainer);

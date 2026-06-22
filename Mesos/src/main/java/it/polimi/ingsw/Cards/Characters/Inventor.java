@@ -40,7 +40,7 @@ public class Inventor extends Character implements CharacterInterface, InventorI
     }
 
     public String getImagePath(){
-        return "/images/cards/characters/"+getCharacterType()+"_"+getInventorIcon()+".png";
+        return "/images/cards/characters/"+getCharacterType().toLowerCase()+"_"+getInventorIcon()+".png";
     }
 
     public VBox findBox(GuiVisitor visitor){
