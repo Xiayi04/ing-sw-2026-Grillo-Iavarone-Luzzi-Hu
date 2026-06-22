@@ -19,4 +19,6 @@ public interface ServerConnection  extends AutoCloseable{
 
     @Override
     void close();
+
+    void ping();
 }
