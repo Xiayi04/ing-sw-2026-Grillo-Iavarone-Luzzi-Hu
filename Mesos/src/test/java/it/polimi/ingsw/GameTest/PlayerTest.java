@@ -111,7 +111,7 @@ public class PlayerTest {
     @Test
     public void BuilderBonusPlayerTest() {
         Player p1 = new Player("p1", Totem.BLACK, 0,null);
-
+//
         p1.getTribeCard().add(new Builder(1, "CHARACTER", 5, "BUILDER", 3,5));
         p1.getTribeCard().add(new Builder(1, "CHARACTER", 5, "BUILDER", 3,5));
         p1.getTribeCard().add(new Builder(1, "CHARACTER", 5, "BUILDER", 3,5));
