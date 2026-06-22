@@ -121,7 +121,7 @@ public class TurnOrderCard implements Serializable {
     }
 
     public int getFoodByIndex(int idx){
-        if(idx<0 || idx > foodContainer.length){
+        if(idx<0 || idx >= foodContainer.length){
             return -2;
         }
         return foodContainer[idx];

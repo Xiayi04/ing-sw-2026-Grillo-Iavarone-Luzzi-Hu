@@ -56,7 +56,7 @@ public class SustenanceEventTest {
         s.resolveEvent(players);
         assertEquals(4,p1.getPrestigePoints());
         assertEquals(1,p2.getPrestigePoints());
-    }
+    }//
 
     @Test
     public void payCharacterInTheTribeWithFoodAndPP_Test(){
