@@ -149,4 +149,9 @@ public class SocketClient implements Runnable, ServerConnection, AutoCloseable{
     public void requestAvailableTotems() {
         send("available_colors",null);
     }
+
+    @Override
+    public void ping() {
+        send("ping", null);
+    }
 }

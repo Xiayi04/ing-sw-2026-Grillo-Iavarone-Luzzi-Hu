@@ -43,6 +43,7 @@ public class ClientController implements AutoCloseable{
     private final ScheduledExecutorService scheduler = Executors.newSingleThreadScheduledExecutor();
     //connection management
     private final String serverIP;
+    private PingManagerClientSide pingManager;
 
     public ClientController(String serverIP) {
         this.serverIP = serverIP;
@@ -84,6 +85,8 @@ public class ClientController implements AutoCloseable{
                     SocketClient socketClient = new SocketClient(this, serverIP);
                     this.serverConnection = socketClient;
                 }
+                pingManager = new PingManagerClientSide();
+                pingManager.start(serverConnection);
             } catch (Exception e) {
                 view.showError("Connection error.");
             }
@@ -519,6 +522,7 @@ public class ClientController implements AutoCloseable{
             return;
         }
         isRunning.set(false);
+        pingManager.close();
         serverConnection.close();
         view.close();
     }
