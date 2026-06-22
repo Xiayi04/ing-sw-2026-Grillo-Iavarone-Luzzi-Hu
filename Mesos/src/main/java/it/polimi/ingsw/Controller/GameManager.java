@@ -3,6 +3,7 @@ package it.polimi.ingsw.Controller;
 import it.polimi.ingsw.Buildings.Building;
 import it.polimi.ingsw.Buildings.BuildingVisitor.ActivationVisitor;
 import it.polimi.ingsw.Buildings.BuildingVisitor.ConcreteBuildingActivation;
+import it.polimi.ingsw.Buildings.BuildingVisitor.SpecialBuildings.AddCardException;
 import it.polimi.ingsw.Buildings.BuildingVisitor.SpecialBuildings.AddCardVisitor;
 import it.polimi.ingsw.Cards.Card;
 import it.polimi.ingsw.Cards.Characters.CharacterVisitor.CharacterVisitor;
@@ -679,7 +680,13 @@ public class GameManager {
             player.getBuilding().add(pickedBuilding);
             //Some buildings need to be activated when picked up from the board
             ActivationVisitor visitor = new ConcreteBuildingActivation();
-            pickedBuilding.acceptActivation(visitor, player);
+            try {
+                pickedBuilding.acceptActivation(visitor, player);
+            } catch (AddCardException e) {
+                synchronized (pickingQueue){
+                    pickingQueue.add(new PendingPick(player, true, true, false));
+                }
+            }
 
             System.out.println("The building " + pickedBuilding.getName() + " was purchased by " + player);
             return pickedBuilding;

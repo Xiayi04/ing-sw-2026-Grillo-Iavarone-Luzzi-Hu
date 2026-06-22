@@ -1,14 +1,14 @@
 package it.polimi.ingsw.Buildings.BuildingVisitor;
 
+import it.polimi.ingsw.Buildings.AddCard;
 import it.polimi.ingsw.Buildings.BonusStarBuilding;
+import it.polimi.ingsw.Buildings.BuildingVisitor.SpecialBuildings.AddCardException;
 import it.polimi.ingsw.Buildings.SameIconBuilding;
 import it.polimi.ingsw.Buildings.SetBonus;
 import it.polimi.ingsw.Cards.Characters.Character;
 import it.polimi.ingsw.Cards.Characters.CharacterVisitor.CharacterVisitor;
 import it.polimi.ingsw.Cards.Characters.CharacterVisitor.InventorIconCounter;
-import it.polimi.ingsw.Cards.Characters.Inventor;
 import it.polimi.ingsw.Game.Player;
-import java.util.Map;
 
 public class ConcreteBuildingActivation extends BuildingActivation{
     public void visit(BonusStarBuilding visitorBonusStarBuilding, Player player){
@@ -32,5 +32,8 @@ public class ConcreteBuildingActivation extends BuildingActivation{
         setBonus.setFullSetCounter(fullSetCounter);
     }
 
-
+    @Override
+    public void visit(AddCard visitorAddCard, Player player){
+        throw new AddCardException("");
+    }
 }
