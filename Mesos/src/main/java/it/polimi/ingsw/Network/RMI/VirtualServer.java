@@ -24,5 +24,5 @@ public interface VirtualServer extends Remote {
 
     void requestAvailableTotemsManagement(RemoteClientInterface client) throws RemoteException;
 
-
+    void ping();
 }

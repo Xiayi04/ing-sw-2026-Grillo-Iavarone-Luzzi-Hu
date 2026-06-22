@@ -193,6 +193,11 @@ public class ServerRMI extends UnicastRemoteObject implements VirtualServer,Runn
         lobby.sendAvailableColors(wrappedClient);
     }
 
+    @Override
+    public void ping() {
+
+    }
+
     /**
      * Closes the RMI module by unexporting the remote object and unbinding it
      * from the RMI registry.

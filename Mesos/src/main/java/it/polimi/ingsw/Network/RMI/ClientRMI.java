@@ -150,8 +150,13 @@ public class ClientRMI extends UnicastRemoteObject implements
 
 
     @Override
-    public void ping() throws RemoteException {
-
+    public void ping(){
+        try {
+            server.ping();
+        } catch (Exception e) {
+            clientController.showError("Connection error, terminating game");
+            ClientMain.terminateClient();
+        }
     }
 
     @Override
@@ -171,7 +176,7 @@ public class ClientRMI extends UnicastRemoteObject implements
             try {
                 server.login(username, chosenTotem, this);
             } catch (RemoteException e) {
-                throw new RuntimeException(e);
+                ClientMain.terminateClient();
             }
         }).start();
 
@@ -184,6 +189,7 @@ public class ClientRMI extends UnicastRemoteObject implements
             server.requestSetNumPlayersManagement(numPlayer, this);
         } catch (RemoteException e) {
             clientController.showError("RMI error while setting number of players.");
+            ClientMain.terminateClient();
         }
     }
 
@@ -192,11 +198,7 @@ public class ClientRMI extends UnicastRemoteObject implements
         try {
             server.requestPickCardManagement(username, isUpper, isBuilding, index,skip);
         } catch (RemoteException e) {
-            if(index == -1) {
-                clientController.showSkipError();
-                return;
-            }
-            clientController.showPickedCardError();
+            ClientMain.terminateClient();
         }
     }
 
@@ -206,6 +208,7 @@ public class ClientRMI extends UnicastRemoteObject implements
             server.requestMoveTotemManagement(username, chosenPosition);
         } catch (RemoteException e) {
             clientController.showError("RMI error while setting totem position.");
+            ClientMain.terminateClient();
         }
     }
 
@@ -215,6 +218,7 @@ public class ClientRMI extends UnicastRemoteObject implements
             server.requestAvailableTotemsManagement(this);
         } catch (RemoteException e) {
             clientController.showError("RMI error while asking Totem.");
+            ClientMain.terminateClient();
         }
     }
 
@@ -224,6 +228,7 @@ public class ClientRMI extends UnicastRemoteObject implements
             server.leave(this);
         } catch (RemoteException e) {
             clientController.showError("RMI error while leaving the game.");
+            ClientMain.terminateClient();
         }
     }
     @Override

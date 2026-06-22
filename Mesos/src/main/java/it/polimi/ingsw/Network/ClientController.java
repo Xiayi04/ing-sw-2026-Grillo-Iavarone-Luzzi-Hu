@@ -416,6 +416,10 @@ public class ClientController implements AutoCloseable{
         return null;
     }
 
+    public void showSkipMessage(){
+        view.showMessage("You can skip if you want");
+    }
+
     //totem->offerCard
     public void requestLocalMoveTotem(int index){
         if(serverConnection==null || localPlayerName==null){
@@ -482,14 +486,14 @@ public class ClientController implements AutoCloseable{
             view.showError("Player " + playerName + " not found.");
             return;
         }
-        synchronized (currentBoard.getPath()) {
+
             while (!pickingPhase.get()){
                 try {
-                    Thread.sleep(TimeUnit.MILLISECONDS.toMillis(100));
+                    TimeUnit.MILLISECONDS.sleep(500);
                 } catch (InterruptedException ignored) {
                 }
             }
-
+        synchronized (currentBoard.getPath()) {
             for (OfferCard offerCard : currentBoard.getPath()) {
                 if (offerCard.isOccupied()
                         && offerCard.getOccupiedBy().getName().equals(playerName)) {

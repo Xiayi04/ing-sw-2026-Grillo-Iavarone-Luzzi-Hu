@@ -7,6 +7,6 @@ import java.net.Socket;
 public class SkipCommand implements ClientCommand{
     @Override
     public void execute(Socket socket, ClientController clientController) {
-        clientController.requestSkip();
+        clientController.showSkipMessage();
     }
 }
