@@ -46,7 +46,7 @@ public class DiscountBuildingTest {
         assertTrue(visited[0]);
     }
     @Test
-    void discountBuildingTestFail(){
+    void discountBuildingTest1(){
         players.add(p1);
         players.add(p2);
         p1.modifyFood(10);
