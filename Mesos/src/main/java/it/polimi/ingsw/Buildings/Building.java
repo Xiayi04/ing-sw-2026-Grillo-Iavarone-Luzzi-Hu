@@ -5,6 +5,7 @@ import it.polimi.ingsw.Buildings.BuildingVisitor.EventBuildings.Discount.Discoun
 import it.polimi.ingsw.Buildings.BuildingVisitor.EndGame.EndGameVisitorInterface;
 import it.polimi.ingsw.Buildings.BuildingVisitor.EventBuildings.Shamanic.ShamanicVisitorInterface;
 import it.polimi.ingsw.Buildings.BuildingVisitor.ActivationVisitor;
+import it.polimi.ingsw.Buildings.BuildingVisitor.SetAndIconVisitor.SetAndIconVisitor;
 import it.polimi.ingsw.Buildings.BuildingVisitor.SpecialBuildings.AddCardVisitorInterface;
 import it.polimi.ingsw.Buildings.BuildingVisitor.SpecialBuildings.TurnOrderCardFoodBonus;
 import it.polimi.ingsw.Cards.Card;
@@ -85,6 +86,16 @@ public abstract class Building extends Card implements BuildingInterface, Serial
     @Override
     public int acceptEndGame(EndGameVisitorInterface visitor, Player player) {
         return 0;
+    }
+
+    @Override
+    public void acceptSameIconBonus(SetAndIconVisitor visitor, Player player, String icon) {
+
+    }
+
+    @Override
+    public void acceptSetBonus(SetAndIconVisitor visitor, Player player) {
+
     }
 
     public String getImagePath(){

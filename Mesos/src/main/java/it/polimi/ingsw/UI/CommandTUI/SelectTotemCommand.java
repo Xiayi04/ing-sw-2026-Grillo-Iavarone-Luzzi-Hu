@@ -2,6 +2,7 @@ package it.polimi.ingsw.UI.CommandTUI;
 
 import it.polimi.ingsw.Game.Totem;
 import it.polimi.ingsw.Network.ClientController;
+import it.polimi.ingsw.UI.TUI;
 
 public class SelectTotemCommand implements CommandTUI {
     private String totem;
@@ -10,10 +11,10 @@ public class SelectTotemCommand implements CommandTUI {
     }
 
     @Override
-    public void execute(ClientController clientController) {
+    public void execute(ClientController clientController, TUI tui) {
         totem = totem.toUpperCase();
         totem = totem.trim();
-        Totem t = null;
+        Totem t;
         try {
             t = Totem.valueOf(totem);
         } catch (IllegalArgumentException e) {

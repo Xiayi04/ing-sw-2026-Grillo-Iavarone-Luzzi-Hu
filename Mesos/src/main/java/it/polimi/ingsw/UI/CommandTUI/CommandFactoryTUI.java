@@ -5,8 +5,8 @@ import java.util.Map;
 import java.util.function.Function;
 
 public class CommandFactoryTUI {
-    private Map<String, Function<String, CommandTUI>> noSepCommandsMap = new HashMap<>();
-    private Map<String, Function<String, CommandTUI>> commandsMap = new HashMap<>();
+    private final Map<String, Function<String, CommandTUI>> noSepCommandsMap = new HashMap<>();
+    private final Map<String, Function<String, CommandTUI>> commandsMap = new HashMap<>();
     private final char separator = ':';
     public CommandFactoryTUI(){
         createCommandsMap();
@@ -14,14 +14,14 @@ public class CommandFactoryTUI {
     }
 
     public void createNoSepCommandsMap(){
-        noSepCommandsMap.put("colors",key -> new AvailableColorsCommand());
-
+        noSepCommandsMap.put("colors", _ -> new AvailableColorsCommand());
+        noSepCommandsMap.put("skip", _ ->new SkipCommand());
+        noSepCommandsMap.put("help", _ -> new HelpCommand());
     }
 
     public void createCommandsMap(){
         commandsMap.put("username", SetUsernameCommand::new);
         commandsMap.put("totem", SelectTotemCommand::new);
-//        commandsMap.put("connect", c-> new ConnectionSelectionCommand(c));
         commandsMap.put("players", SetNumPlayersRequestCommand::new);
         commandsMap.put("pick", PickCommand::new);
         commandsMap.put("move", MoveTotemCommand::new);

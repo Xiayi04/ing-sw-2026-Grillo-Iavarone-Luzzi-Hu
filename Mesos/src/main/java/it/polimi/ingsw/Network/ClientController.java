@@ -13,6 +13,7 @@ import it.polimi.ingsw.Network.RMI.ClientRMI;
 import it.polimi.ingsw.Network.Socket.Client.SocketClient;
 
 
+import java.rmi.RemoteException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.Executors;
@@ -24,7 +25,7 @@ import java.util.concurrent.atomic.AtomicBoolean;
 // e quelli che aggiornano la gui
 
 public class ClientController implements AutoCloseable{
-    private  GraphicInterface view;
+    private volatile GraphicInterface view;
     private  ServerConnection serverConnection;
     private  String tmpUsername = null;
     private  Totem tmpTotem = null;
@@ -33,12 +34,10 @@ public class ClientController implements AutoCloseable{
     private  Board currentBoard;
     private String localPlayerName = null;
     private Totem localTotem = null;
-    String rowName ;
-    String cardType;
     private final AtomicBoolean isRunning = new AtomicBoolean(true);
     private List<LeaderBoardData> leaderboardDB = null;
     private Integer playerPosition = null;
-    private AtomicBoolean isGameFinished = new AtomicBoolean(false);
+    private final AtomicBoolean isGameFinished = new AtomicBoolean(false);
     private int localNumberRound=0;
     private final AtomicBoolean pickingPhase = new AtomicBoolean(false);
     private final ScheduledExecutorService scheduler = Executors.newSingleThreadScheduledExecutor();
@@ -61,22 +60,32 @@ public class ClientController implements AutoCloseable{
         return serverConnection;
     }
 
+    public Totem getLocalTotem(){
+        return localTotem;
+    }
+
     public void setServerConnection(boolean isRMI) {
         if(this.serverConnection == null) {
             try {
                 if (isRMI) {
-                    ClientRMI clientRMI = new ClientRMI(serverIP, 1234, "VirtualServer",this);
-                    clientRMI.setClientController(this);
-                    clientRMI.run();
-
-                    this.serverConnection = clientRMI;
+                    new Thread(()->{
+                        ClientRMI clientRMI = null;
+                        try {
+                            clientRMI = new ClientRMI(serverIP, 1234, "VirtualServer",this);
+                        } catch (RemoteException e) {
+                            view.showError("Connection attempt failed");
+                            scheduler.schedule(ClientMain::terminateClient, 5,  TimeUnit.SECONDS);
+                        }
+                        clientRMI.setClientController(this);
+                        clientRMI.run();
+                        this.serverConnection = clientRMI;
+                    }).start();
                 } else {
                     SocketClient socketClient = new SocketClient(this, serverIP);
                     this.serverConnection = socketClient;
                 }
             } catch (Exception e) {
                 view.showError("Connection error.");
-                e.printStackTrace();
             }
         }
         else{
@@ -516,8 +525,9 @@ public class ClientController implements AutoCloseable{
     }
 
     public void handleForcedEndGame(){
-        view.showError("The Game is about to end due to another player disconnection");
-        ClientMain.terminateClient();
+        view.showError("Connection error, the game will close");
+
+        scheduler.schedule(ClientMain::terminateClient,5, TimeUnit.SECONDS );
     }
 
     public void handleEndGameNormally(String winner, List<PlayerScore> leaderboard){
@@ -526,16 +536,14 @@ public class ClientController implements AutoCloseable{
         }
         isGameFinished.set(true);
 
-        view.showMessage("Connection closed, the game ended successfully");
+        //view.showMessage("Connection closed, the game ended successfully");
         view.showEndGameSuccessfully(winner, leaderboard);
 
     }
     public void updateLeaderboardFromDB(int playerPositionInDB, List<LeaderBoardData>leaderboardFromDB){
         playerPosition = playerPositionInDB;
         leaderboardDB = leaderboardFromDB;
-        scheduler.schedule(() -> {
-            view.showLeaderboardFromDB(playerPosition, leaderboardDB);
-        }, 10, TimeUnit.SECONDS);
+        scheduler.schedule(() -> view.showLeaderboardFromDB(playerPosition, leaderboardDB), 10, TimeUnit.SECONDS);
         //gestione chiusura sole connessioni
     }
 }

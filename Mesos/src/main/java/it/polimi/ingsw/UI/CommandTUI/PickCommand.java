@@ -1,6 +1,7 @@
 package it.polimi.ingsw.UI.CommandTUI;
 
 import it.polimi.ingsw.Network.ClientController;
+import it.polimi.ingsw.UI.TUI;
 
 public class PickCommand implements CommandTUI {
 
@@ -43,7 +44,7 @@ public class PickCommand implements CommandTUI {
     }
 
     @Override
-    public void execute(ClientController clientController) {
+    public void execute(ClientController clientController, TUI tui) {
         if(!success){
             clientController.showError("Invalid pick format, please try again.");
             return;

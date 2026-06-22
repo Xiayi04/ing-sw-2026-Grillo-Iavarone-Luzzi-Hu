@@ -2,6 +2,8 @@ package it.polimi.ingsw.Buildings;
 
 import it.polimi.ingsw.Buildings.BuildingVisitor.BuildingInterface;
 import it.polimi.ingsw.Buildings.BuildingVisitor.ActivationVisitor;
+import it.polimi.ingsw.Buildings.BuildingVisitor.SetAndIconVisitor.AddedFoodException;
+import it.polimi.ingsw.Buildings.BuildingVisitor.SpecialBuildings.AddCardException;
 import it.polimi.ingsw.Buildings.BuildingVisitor.SpecialBuildings.AddCardVisitor;
 import it.polimi.ingsw.Buildings.BuildingVisitor.SpecialBuildings.AddCardVisitorInterface;
 import it.polimi.ingsw.Buildings.BuildingVisitor.SpecialBuildings.TurnOrderCardFoodBonus;
@@ -19,7 +21,11 @@ public class AddCard extends Building implements BuildingInterface {
     }
 
     public void acceptActivation(ActivationVisitor activationVisitor, Player player){
-        activationVisitor.visit(this, player);
+        try {
+            activationVisitor.visit(this, player);
+        } catch (AddCardException e) {
+            throw new AddCardException("");
+        }
     }
 
     public int acceptAddCard(AddCardVisitorInterface visitor, Player player){

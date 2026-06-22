@@ -3,7 +3,6 @@ package it.polimi.ingsw.Network.Socket.Client.Command;
 
 
 import it.polimi.ingsw.Cards.Events.Event;
-import it.polimi.ingsw.Game.Board;
 import it.polimi.ingsw.Game.Totem;
 import it.polimi.ingsw.Network.Socket.Server.Command.*;
 import it.polimi.ingsw.Network.Socket.Server.MessageFromServer;
@@ -31,6 +30,7 @@ public class CommandFactoryClientSide {
         commands.put("end_game", d->new EndGameCommand((EndGameData) d));
         commands.put("resolving_event", e->new ResolvingEventCommand((Event) e));
         commands.put("db_leaderboard", d-> new DBLeaderBoardCommand((DBData) d));
+        commands.put("skip", _ -> new SkipCommand());
 
         //login
         commands.put("setnumplayers", _ -> new NumPlayersCommand());
@@ -42,6 +42,7 @@ public class CommandFactoryClientSide {
         commands.put("chosen_num_players", p-> new ConfirmNumPlayers((Integer)p));
         commands.put("confirm_numplayers", n->new ConfirmNumPlayers((Integer)n));
         //Errors
+        commands.put("skip_error", _ ->new SkipErrorCommand());
         commands.put("refuse_connection", _ -> new RefusedConnectionCommand());
         commands.put("setnumplayers_error", _ -> new SetNumPlayersError());
         commands.put("totem_error",e->new TotemError((ArrayList<Totem>)e));

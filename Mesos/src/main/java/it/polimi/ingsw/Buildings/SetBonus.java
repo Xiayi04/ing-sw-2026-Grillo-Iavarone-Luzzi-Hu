@@ -13,13 +13,16 @@ public class SetBonus extends Building implements BuildingInterface {
     }
 
     //aggiungere classe per questa roba
-    public void giveExtraFoodSet(Player player) {
+    public boolean giveExtraFoodSet(Player player) {
+        boolean bonus = false;
         if (fullSetCounter != player.countSet()) {
             fullSetCounter = player.countSet();
             for (; fullSetCounter < player.countSet(); fullSetCounter++) {
                 player.modifyFood(5);
             }
+            bonus = true;
         }
+        return bonus;
     }
 
     public String[] print(Printer printer) {
@@ -37,18 +40,5 @@ public class SetBonus extends Building implements BuildingInterface {
 
     public void setFullSetCounter(int fullSetCounter) {
         this.fullSetCounter = fullSetCounter;
-    }
-
-    public void setUpdater(Player player) {
-        synchronized (player.getTribeCard()) {
-            while (player.countSet() != fullSetCounter) {
-                try {
-                    player.getTribeCard().wait();
-                } catch (Exception e) {
-                    throw new RuntimeException(e);
-                }
-            }
-            giveExtraFoodSet(player);
-        }
     }
 }

@@ -3,6 +3,7 @@ package it.polimi.ingsw.Buildings.BuildingVisitor;
 import it.polimi.ingsw.Buildings.BuildingVisitor.EventBuildings.Discount.DiscountVisitorInterface;
 import it.polimi.ingsw.Buildings.BuildingVisitor.EndGame.EndGameVisitorInterface;
 import it.polimi.ingsw.Buildings.BuildingVisitor.EventBuildings.Shamanic.ShamanicVisitorInterface;
+import it.polimi.ingsw.Buildings.BuildingVisitor.SetAndIconVisitor.SetAndIconVisitor;
 import it.polimi.ingsw.Buildings.BuildingVisitor.SpecialBuildings.AddCardVisitorInterface;
 import it.polimi.ingsw.Buildings.BuildingVisitor.SpecialBuildings.TurnOrderCardFoodBonus;
 import it.polimi.ingsw.Cards.Events.HuntingEvent;
@@ -24,4 +25,6 @@ public interface BuildingInterface {
     //for
     void acceptFoodBonus(TurnOrderCardFoodBonus visitor, Player player);
     int acceptAddCard(AddCardVisitorInterface visitor, Player player);
+    void acceptSameIconBonus(SetAndIconVisitor visitor, Player player, String icon);
+    void acceptSetBonus(SetAndIconVisitor visitor, Player player);
 }

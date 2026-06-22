@@ -64,12 +64,11 @@ public class SocketClient implements Runnable, ServerConnection, AutoCloseable{
                 }
                 ClientCommand cmd = commandFactory.getCommand(msg);
 
-                pool.submit(()->{cmd.execute(socket, clientController);});
+                pool.submit(()-> cmd.execute(socket, clientController));
             }
 
         } catch (Exception e) {
             System.out.println("Connection failed");
-            e.printStackTrace();
             ClientMain.terminateClient();
         }
     }

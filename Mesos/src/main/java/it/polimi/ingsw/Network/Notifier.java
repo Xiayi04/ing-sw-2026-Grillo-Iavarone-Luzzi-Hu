@@ -1,13 +1,10 @@
-package it.polimi.ingsw.Controller;
+package it.polimi.ingsw.Network;
 
 import it.polimi.ingsw.Cards.Events.Event;
 import it.polimi.ingsw.Database.LeaderBoardData;
 import it.polimi.ingsw.Game.Board;
 import it.polimi.ingsw.Game.Player;
-import it.polimi.ingsw.Network.ClientDisconnectedException;
-import it.polimi.ingsw.Network.PlayerScore;
-import it.polimi.ingsw.Network.Server;
-import it.polimi.ingsw.Network.VirtualClientInterface;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ExecutorService;
