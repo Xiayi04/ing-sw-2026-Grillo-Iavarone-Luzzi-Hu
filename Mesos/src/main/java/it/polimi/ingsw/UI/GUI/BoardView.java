@@ -87,7 +87,7 @@ public class BoardView extends VBox {
         upperRow.getChildren().addAll(characterRow, buildingRow);
         upperRow.setAlignment(Pos.CENTER);
         for(Card card : clientController.getCurrentBoard().getUpperCardRow()){
-            ImageView imageView = Utils.createImageView(card.getImagePath(), 150);
+            ImageView imageView = Utils.createImageView(card.getImagePath(), 135);
             imageView.setCursor(Cursor.HAND);
             imageView.setOnMouseClicked(event ->
                 {
@@ -104,7 +104,7 @@ public class BoardView extends VBox {
             characterRow.getChildren().add(imageView);
         }
         for(Card b : clientController.getCurrentBoard().getBuildingsEra1()) {
-            ImageView imageView = Utils.createImageView(b.getImagePath(), 150);
+            ImageView imageView = Utils.createImageView(b.getImagePath(), 135);
             imageView.setCursor(Cursor.HAND);
             imageView.setOnMouseClicked(event ->
                 {
@@ -129,7 +129,7 @@ public class BoardView extends VBox {
         downRow.getChildren().addAll(characterRow, buildingRow);
         downRow.setAlignment(Pos.CENTER);
         for(Card card : clientController.getCurrentBoard().getLowerCardsRow()){
-            ImageView imageView = Utils.createImageView(card.getImagePath(), 150);
+            ImageView imageView = Utils.createImageView(card.getImagePath(), 135);
             imageView.setCursor(Cursor.HAND);
             imageView.setOnMouseClicked(event ->
                 {
@@ -212,7 +212,7 @@ public class BoardView extends VBox {
             path.getChildren().add(offerCardContainer);
         }
         Card c = clientController.getCurrentBoard().getDeck().getFirst();
-        ImageView imageView = Utils.createImageView("/images/cards/back/era"+c.getEra()+".png", 150);
+        ImageView imageView = Utils.createImageView("/images/cards/back/era"+c.getEra()+".png", 135);
         deck.getChildren().add(imageView);
         deck.getChildren().add(label);
         Button skip = new Button("SKIP");

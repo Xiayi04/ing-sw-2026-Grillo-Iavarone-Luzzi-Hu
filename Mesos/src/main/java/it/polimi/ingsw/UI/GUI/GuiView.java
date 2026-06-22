@@ -208,7 +208,7 @@ public class GuiView implements GraphicInterface {
     public void refreshUpperCards(){
         boardView.getUpperCharacterRow().getChildren().clear();
         for(Card c : clientController.getCurrentBoard().getUpperCardRow()){
-            ImageView cardView = Utils.createImageView(c.getImagePath(), 150);
+            ImageView cardView = Utils.createImageView(c.getImagePath(), 135);
             cardView.setCursor(Cursor.HAND);
             cardView.setOnMouseClicked(event ->
             {
@@ -229,7 +229,7 @@ public class GuiView implements GraphicInterface {
     public void refreshDownCards(){
         boardView.getDownCharacterRow().getChildren().clear();
         for(Card c : clientController.getCurrentBoard().getLowerCardsRow()){
-            ImageView cardView = Utils.createImageView(c.getImagePath(), 150);
+            ImageView cardView = Utils.createImageView(c.getImagePath(), 135);
             cardView.setCursor(Cursor.HAND);
             cardView.setOnMouseClicked(event -> {
                 pool.submit(() -> {
@@ -249,7 +249,7 @@ public class GuiView implements GraphicInterface {
     public void refreshUpperBuildingCards(){
         boardView.getUpperBuildingRow().getChildren().clear();
         for(Card c : clientController.getCurrentBoard().getUpperBuildingRow()){
-            ImageView buildingView = Utils.createImageView(c.getImagePath(), 150);
+            ImageView buildingView = Utils.createImageView(c.getImagePath(), 135);
             buildingView.setCursor(Cursor.HAND);
             buildingView.setOnMouseClicked(event ->{
                 pool.submit(() -> {
@@ -269,7 +269,7 @@ public class GuiView implements GraphicInterface {
     public void refreshDownBuildingCards(){
         boardView.getDownBuildingRow().getChildren().clear();
         for(Card c : clientController.getCurrentBoard().getLowerBuildingRow()){
-            ImageView buildingView = Utils.createImageView(c.getImagePath(), 150);
+            ImageView buildingView = Utils.createImageView(c.getImagePath(), 135);
             buildingView.setCursor(Cursor.HAND);
             buildingView.setOnMouseClicked(event ->{
                 pool.submit(() -> {
@@ -296,7 +296,7 @@ public class GuiView implements GraphicInterface {
             boardView.getDeck().getChildren().clear();
             if(!clientController.getCurrentBoard().getDeck().isEmpty()){
                 Card c = clientController.getCurrentBoard().getDeck().getFirst();
-                ImageView imageView = Utils.createImageView("/images/cards/back/era"+c.getEra()+".png", 150);
+                ImageView imageView = Utils.createImageView("/images/cards/back/era"+c.getEra()+".png", 135);
                 boardView.getDeck().getChildren().add(imageView);
             }
             updateReferences();
@@ -380,7 +380,7 @@ public class GuiView implements GraphicInterface {
             SequentialTransition sequence = new SequentialTransition();
             for(int i= labels.size()-1; i>=0; i--){
                 Label label = labels.get(i);
-                FadeTransition fadeTransition = new FadeTransition(Duration.seconds(3), label);
+                FadeTransition fadeTransition = new FadeTransition(Duration.seconds(2), label);
                 fadeTransition.setFromValue(0);
                 fadeTransition.setToValue(1);
                 sequence.getChildren().add(fadeTransition);

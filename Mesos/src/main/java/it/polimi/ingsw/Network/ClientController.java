@@ -555,7 +555,7 @@ public class ClientController implements AutoCloseable{
     public void updateLeaderboardFromDB(int playerPositionInDB, List<LeaderBoardData>leaderboardFromDB){
         playerPosition = playerPositionInDB;
         leaderboardDB = leaderboardFromDB;
-        scheduler.schedule(() -> view.showLeaderboardFromDB(playerPosition, leaderboardDB), 10, TimeUnit.SECONDS);
+        scheduler.schedule(() -> view.showLeaderboardFromDB(playerPosition, leaderboardDB), 20, TimeUnit.SECONDS);
         //gestione chiusura sole connessioni
     }
 }
