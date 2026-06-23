@@ -1,9 +1,7 @@
 package it.polimi.ingsw.ControllerTest;
 
+import it.polimi.ingsw.Controller.*;
 import it.polimi.ingsw.Model.Cards.Events.Event;
-import it.polimi.ingsw.Controller.GameManager;
-import it.polimi.ingsw.Controller.ServerController;
-import it.polimi.ingsw.Controller.TempPlayer;
 import it.polimi.ingsw.Database.LeaderBoardData;
 import it.polimi.ingsw.Model.Game.Board;
 import it.polimi.ingsw.Model.Game.Player;
@@ -20,6 +18,8 @@ import static org.junit.jupiter.api.Assertions.*;
 public class ServerControllerTest {
     private ServerController serverController;
     private GameManagerFake gm;
+    private PingManager pingManager;
+    private Notifier notifier;
     private Client client1;
     private Client client2;
     private Client client3;
@@ -29,7 +29,9 @@ public class ServerControllerTest {
     @BeforeEach
     public void setup() {
         gm = new GameManagerFake();
-        serverController = new ServerController(gm,null);
+        pingManager = new PingManager();
+        notifier = new Notifier();
+        serverController = new ServerController(gm,notifier);
         client1 = new Client();
         client2 = new Client();
         client3 = new Client();
@@ -38,6 +40,17 @@ public class ServerControllerTest {
         serverController.getLobby().getTempPlayers().clear();
         serverController.getLobby().IsNumPlayersSet().set(false);
         serverController.getLobby().getNumPlayers().set(0);
+
+    }
+    @Test
+    void gettersTest() {
+        assertEquals(notifier, serverController.getNotifier());
+        assertEquals(gm, serverController.getGM());
+    }
+    @Test
+    public  void setterTest(){
+        serverController.setNotifier(notifier);
+        assertEquals(notifier, serverController.getNotifier());
 
     }
 
@@ -290,6 +303,16 @@ public class ServerControllerTest {
         assertEquals("Player1", gm.getPlayers().get(0).getName());
         assertNotEquals("Player2", gm.getPlayers().get(0).getName());
     }
+//    @Test
+//    public void closeConnectionTest(){
+//        PingManagerFake fakePing = new PingManagerFake();
+//        NotifierFake fakeNotifier = new NotifierFake();
+//        serverController.closeConnections(d);
+//
+//        assertTrue(fakePing.closeCalled);
+//        assertTrue(fakeNotifier.farewellCalled);
+//        assertEquals(client1, fakeNotifier.clientReceived);
+//    }
 
 
 
@@ -358,6 +381,7 @@ public class ServerControllerTest {
         public boolean notifierSetCalled = false;
         private ArrayList<Player> players = new ArrayList<>();
         public int numPlayers;
+
         public GameManagerFake() { super(new ArrayList<>() ,5,null); }
         @Override public void startGame() { this.startGameCalled = true; }
         @Override public void resolvePosition ( String username, int pathIndex ) {
@@ -389,4 +413,22 @@ public class ServerControllerTest {
         @Override public ArrayList <Player> getPlayers() { return players; }
         @Override public void addPlayer(Player p) { this.players.add(p);}
     }
+
+//    class PingManagerFake extends PingManager {
+//        public boolean closeCalled = false;
+//        @Override
+//        public void close() {
+//            this.closeCalled = true;
+//        }
+//    }
+//
+//    class NotifierFake extends Notifier {
+//        public boolean farewellCalled = false;
+//        public VirtualClientInterface clientReceived;
+//        @Override
+//        public void sendFarewell(VirtualClientInterface client) {
+//            this.farewellCalled = true;
+//            this.clientReceived = client;
+//        }
+//    }
 }

@@ -13,6 +13,7 @@ import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
 
 public class AddCardTest {
+    @Test
     public void acceptActivationTest() {
         AddCard b = new AddCard(1, 1, 1);
         Player p = new Player("X", Totem.BLACK,0,null);
