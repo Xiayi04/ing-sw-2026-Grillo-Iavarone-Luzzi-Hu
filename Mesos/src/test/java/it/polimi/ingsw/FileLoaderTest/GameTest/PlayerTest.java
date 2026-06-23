@@ -3,10 +3,13 @@ package it.polimi.ingsw.FileLoaderTest.GameTest;
 import it.polimi.ingsw.Model.Cards.Buildings.BonusFood;
 import it.polimi.ingsw.Model.Cards.Buildings.BonusStarBuilding;
 import it.polimi.ingsw.Model.Cards.Buildings.Building;
+import it.polimi.ingsw.Model.Cards.Buildings.BuildingVisitor.EndGame.EndGameVisitor;
+import it.polimi.ingsw.Model.Cards.Buildings.BuildingVisitor.EndGame.EndGameVisitorInterface;
 import it.polimi.ingsw.Model.Cards.Buildings.MultiplicationBuilding;
 import it.polimi.ingsw.Model.Cards.Characters.Builder;
 import it.polimi.ingsw.Model.Cards.Characters.Inventor;
 import it.polimi.ingsw.Model.Cards.Characters.Painter;
+import it.polimi.ingsw.Model.Cards.Characters.Picker;
 import it.polimi.ingsw.Model.Game.Player;
 import it.polimi.ingsw.Model.Game.Totem;
 import org.junit.jupiter.api.Test;
@@ -203,7 +206,7 @@ public class PlayerTest {
     }
 
     @Test
-    public void finalScoreShouldSumAllBonuses() {
+    public void finalScoreTest() {
         Player p1 = new Player("p1", Totem.BLACK, 0, null);
 
         p1.modifyPP(10);
@@ -261,7 +264,7 @@ public class PlayerTest {
         assertEquals(b1.getPP() + b2.getPP(), result);
     }
     @Test
-    void buildingMultipliedBonusCoverageTest() {
+    void buildingMultipliedBonustest() {
         Player p1 = new Player("p1", Totem.BLACK, 0, null);
 
         Building normalBuilding = new BonusFood(1, 3, 3);
@@ -294,7 +297,7 @@ public class PlayerTest {
 
 
     @Test
-    void buildinggMultipliedBonusCoverageTest() {
+    void buildingMultipliedBonusTest() {
         Player p1 = new Player("p1", Totem.BLACK, 0, null);
 
         Building normalBuilding = new BonusFood(1, 3, 3);
@@ -310,6 +313,26 @@ public class PlayerTest {
 
         assertEquals(multiplicationBuilding.countPP(p1), result);
     }
+    @Test
+    void buildingMultipliedBonus(){
+      Building b = new MultiplicationBuilding(1,2,3,"PICKER",4);
+      Building b1 = new MultiplicationBuilding(1,3,2,"INVENTOR", 3);
+      Player p1 = new Player("p1", Totem.BLACK, 0, null);
+      p1.getBuilding().add(b1);
+      p1.getBuilding().add(b);
+      EndGameVisitorInterface visitor = new EndGameVisitor();
+      p1.getTribeCard().add(new Inventor(1, "CHARACTER", 5, "INVENTOR", "BOWL"));
+      p1.getTribeCard().add(new Inventor(1, "CHARACTER", 5, "INVENTOR", "TREE"));
+      p1.getTribeCard().add(new Picker(1, "CHARACTER", 2, "PICKER"));
+      p1.setInventorCounter(2);
+      p1.setPickerCounter(1);
+      b.acceptEndGame(visitor,p1);
+      b1.acceptEndGame(visitor,p1);
+      p1.modifyPP(p1.buildingMultipliedBonus());
+      assertEquals(10, p1.getPrestigePoints());
+
+    }
+
 
 
 
