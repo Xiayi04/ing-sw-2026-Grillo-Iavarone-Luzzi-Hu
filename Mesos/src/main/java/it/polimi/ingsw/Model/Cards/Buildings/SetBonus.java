@@ -15,6 +15,13 @@ public class SetBonus extends Building implements BuildingInterface {
     }
 
     //aggiungere classe per questa roba
+
+    /**
+     * The method compares the number of sets completed previously (saved in the variable fullSetCounter)
+     * with the number of current sets found using the countSet method. It adds 5 food to the player until the two
+     * values match.
+     * @return a boolean, if true you enter an if to send the notifications
+     */
     public boolean giveExtraFoodSet(Player player) {
         boolean bonus = false;
         if (fullSetCounter != player.countSet()) {

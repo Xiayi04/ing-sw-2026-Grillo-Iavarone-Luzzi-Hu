@@ -114,18 +114,10 @@ public class Board  implements Serializable {
 
     }
 
-    public void test(){
-        PaintingEvent p = new PaintingEvent(1, "EVENT", "PAINTING_EVENT", 0, 1, -1);
-        PaintingEvent p1 = new PaintingEvent(1, "EVENT", "PAINTING_EVENT", 0, 1, -1);
-        PaintingEvent p2 = new PaintingEvent(1, "EVENT", "PAINTING_EVENT", 0, 1, -1);
-        lowerCardsRow.removeFirst();
-        lowerCardsRow.removeFirst();
-        lowerCardsRow.removeFirst();
-        lowerCardsRow.add(p);
-        lowerCardsRow.add(p1);
-        lowerCardsRow.add(p2);
-    }
-
+    /**
+     * the method checks if there are events in the top row of cards, it is useful because in the last round
+     * the final events remain in the row above
+     */
     public ArrayList<Event> checkUpperEvent() {
         ArrayList<Event> UpperEvents = new ArrayList<>();
         for (Card c : upperCardRow) {
@@ -134,9 +126,6 @@ public class Board  implements Serializable {
             }
         }
         return UpperEvents;
-    }
-    public void chooseTurnOrderCard(int numPlayers) {
-        this.turnOrderCard = new TurnOrderCard(numPlayers);
     }
 
     /**
@@ -148,18 +137,22 @@ public class Board  implements Serializable {
         upperCardRow.clear();
     }
 
+    /**
+     * it is the method that is called at the beginning of the game to create the deck, the path, the turn order card,
+     * and the right buildings based on the number of players
+     */
     public void initializeBoard(int NumPlayers){
         initializeDeck();
         buildingPerPlayers(NumPlayers);
-        //test();
         obtainPath(players);
         upperBuildingRow.addAll(buildingsEra1);
         initializeTurnOrderCard();
         setCardOnBoard();
-
-
     }
 
+    /**
+     * the method places the right number of cards on the board, checking that there are no events in the bottom row
+     */
     public void setCardOnBoard(){
         int upper = players.size()+4;
         int lower = players.size()+1;
@@ -239,6 +232,11 @@ public class Board  implements Serializable {
 
 
 //metodo percorso
+
+    /**
+     * The method adds to the path list the offer cards needed based on the number of players.
+     * It finally sorts them based on the ID associated with each card.
+     */
     public ArrayList<OfferCard> obtainPath(ArrayList<Player> players) {
         int numPlayers = players.size();
         path.clear();
@@ -353,6 +351,10 @@ public class Board  implements Serializable {
     }
 
 
+    /**
+     * The method modifies the player's food when they return to the spaces of the turn order card that give food to the
+     * player. It also checks that the player has the building that gives +1 food through the visitor.
+     */
     public void giveFoodForTOC(Player p, int idx){
         int food = turnOrderCard.getFoodByIndex(idx);
         if(food<-1){

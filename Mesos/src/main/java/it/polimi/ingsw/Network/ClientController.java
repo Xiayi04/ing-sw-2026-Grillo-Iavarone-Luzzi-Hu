@@ -65,6 +65,11 @@ public class ClientController implements AutoCloseable{
         return localTotem;
     }
 
+    /**
+     * The method, by checking a boolean passed to it as a parameter, creates an RMI client if the boolean is true,
+     * whereas if it is false it creates a Socket client. If the connection has already been established, it displays
+     * an error message.
+     */
     public void setServerConnection(boolean isRMI) {
         if(this.serverConnection == null) {
             try {
@@ -298,7 +303,12 @@ public class ClientController implements AutoCloseable{
     }
 
 
-
+    /**
+     *
+     * Checks whether both the username and the totem needed for login are available,
+     * and if so sends the login request to the server, handling partial login data
+     * from previous steps when necessary.
+     */
     public void checkForLogin(){
         Totem t;
         String name;
@@ -367,6 +377,15 @@ public class ClientController implements AutoCloseable{
         serverConnection.requestPickCard(localPlayerName,isUpper, isBuilding, index,false );
     }
 
+    /**
+     * The method retrieves from the local board the card that has been drawn and adds it to the player's card list,
+     * still locally. It calls the view's methods to display the changes.
+     * @param playerName player who drew the card
+     * @param isUpper boolean that indicates the row of cards
+     * @param isBuilding boolean that indicates whether it’s a building or not
+     * @param index card index in the row
+     * @param round indicates the round in which the request was sent
+     */
     public void showPickedCard(String playerName,boolean isUpper , boolean isBuilding, int index, int round) {
         if(round<localNumberRound){
             return;
@@ -434,6 +453,11 @@ public class ClientController implements AutoCloseable{
         serverConnection.requestMoveTotem(localPlayerName,index);
     }
 
+    /**
+     * The method performs the checks in order to move the totem. If everything goes well, it sets the offer card as
+     * occupied and calls the method of the view, and if the list of the turn order card is empty
+     * (that is, all the totems have been moved) the parameter pickingPhase is set to true.
+     */
     public void showTotemMoved(String playerName, int index){
         Player player = getPlayerByName(playerName);
         if(player==null || index < 0){
@@ -552,6 +576,13 @@ public class ClientController implements AutoCloseable{
         view.showEndGameSuccessfully(winner, leaderboard);
 
     }
+
+    /**
+     * The method retrieves the data from the database and passes it to the view's method, which is called
+     * with a 20-second delay
+     * @param playerPositionInDB current player's ranking in the overall leaderboard
+     * @param leaderboardFromDB the list of database information
+     */
     public void updateLeaderboardFromDB(int playerPositionInDB, List<LeaderBoardData>leaderboardFromDB){
         playerPosition = playerPositionInDB;
         leaderboardDB = leaderboardFromDB;

@@ -123,9 +123,9 @@ public class Player implements Serializable {
     }
 
     /**
-     * The method changes the player's food; if the food becomes negative, the difference is paid with PP points
+     * The method changes the player's food adding the amount passed as a parameter ; if the food becomes negative, the difference is paid with PP points
      * (this can only happen if, returning as the last player on the turn order card, no food is available)
-     * @param f new value of food
+     * @param f the amount of food to add
      */
     public synchronized void modifyFood(int f){
         food.addAndGet(f);
