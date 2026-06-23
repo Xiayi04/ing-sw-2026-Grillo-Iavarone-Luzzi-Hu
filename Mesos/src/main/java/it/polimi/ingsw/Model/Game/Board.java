@@ -312,9 +312,9 @@ public class Board  implements Serializable {
         totalBuildingEra3.addAll(buildings.subList(13,21));
         Collections.shuffle(totalBuildingEra3);
         if(numPlayers==2) {
-            buildingsEra1.addAll(totalBuildingEra1);
-            buildingsEra2.addAll(totalBuildingEra2);
-            buildingsEra3.addAll(totalBuildingEra3);
+            buildingsEra1.add(totalBuildingEra1.getFirst());
+            buildingsEra2.addAll(totalBuildingEra2.subList(0,2));
+            buildingsEra3.addAll(totalBuildingEra3.subList(0,3));
         } else if (numPlayers==3) {
             buildingsEra1.addAll(totalBuildingEra1.subList(0,2));
             buildingsEra2.addAll(totalBuildingEra2.subList(0,2));
