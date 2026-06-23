@@ -4,6 +4,7 @@ import it.polimi.ingsw.Model.Cards.Buildings.*;
 import it.polimi.ingsw.Model.Cards.Buildings.BuildingVisitor.ActivationVisitor;
 import it.polimi.ingsw.Model.Cards.Buildings.BuildingVisitor.ConcreteBuildingActivation;
 import it.polimi.ingsw.Model.Cards.Buildings.BuildingVisitor.SpecialBuildings.AddCardException;
+import it.polimi.ingsw.Model.Cards.Buildings.BuildingVisitor.SpecialBuildings.AddCardVisitor;
 import it.polimi.ingsw.Model.Cards.Buildings.BuildingVisitor.SpecialBuildings.AddCardVisitorInterface;
 import it.polimi.ingsw.Model.Game.Player;
 import it.polimi.ingsw.Model.Game.Totem;
@@ -43,6 +44,16 @@ public class AddCardTest {
         int result = addCard.addArrow();
         assertEquals(1, result);
     }
+    @Test
+    void acceptAddCardTest() {
+        AddCard addCard = new AddCard(1, 2, 3);
+        Player player = new Player("p1", Totem.BLACK, 0, null);
+        AddCardVisitorInterface visitor = new AddCardVisitor();
+
+        int succeded = addCard.acceptAddCard(visitor, player);
+        assertEquals(1, succeded);
+    }
+
 
 
 }

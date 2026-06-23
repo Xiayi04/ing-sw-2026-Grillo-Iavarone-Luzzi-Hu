@@ -71,7 +71,7 @@ public class SetBonusTest {
         assertEquals(3, building.getFullSetCounter());
     }
     @Test
-    void acceptActivationAndVisitorTest(){
+    void acceptActivationVisitorTest(){
         ActivationVisitor v = new ConcreteBuildingActivation();
         Player p = new Player("io", Totem.BLACK, 2, null);
         SetBonus b = new SetBonus(1, 1, 1);

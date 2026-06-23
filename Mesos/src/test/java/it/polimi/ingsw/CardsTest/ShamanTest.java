@@ -7,16 +7,6 @@ import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
 
 public class ShamanTest {
-
-
-
-
-
-
-
-
-
-
     @Test
     void shamanPrintTest() {
         Shaman s = new Shaman(1, "CHARACTER", 2, "SHAMAN", 3);

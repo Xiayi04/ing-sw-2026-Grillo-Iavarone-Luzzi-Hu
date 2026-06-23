@@ -12,8 +12,7 @@ import org.junit.jupiter.api.Test;
 
 import java.util.ArrayList;
 
-import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
-import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.*;
 
 public class SustenanceEventTest {
     Player p1 = new Player("ALFA", Totem.YELLOW,0,null);
@@ -86,6 +85,13 @@ public class SustenanceEventTest {
 
     }
     @Test
+    void constructorTest(){
+        SustenanceEvent e = new SustenanceEvent(1,"EVENT", "SUSTENANCEEVENT", -2);
+        assertEquals(-2,e.getSuEvePointsLossMultiplier());
+
+    }
+
+    @Test
     void sustenancePrintCardDoesNotThrow() {
         SustenanceEvent event = new SustenanceEvent(2, "EVENT", "SUSTENANCE_EVENT", -2);
         assertDoesNotThrow(event::printCard);
@@ -99,4 +105,6 @@ public class SustenanceEventTest {
     void nameShouldReturnCorrectString() {
         assertEquals("SUSTENANCE_EVENT", EventName.SUSTENANCE_EVENT.name());
     }
-}
+
+    }
+
