@@ -8,6 +8,8 @@ import it.polimi.ingsw.Model.Cards.Events.SustenanceEvent;
 import it.polimi.ingsw.Model.Game.Player;
 import it.polimi.ingsw.UI.Printer;
 
+import static java.lang.Math.abs;
+
 public class DiscountBuilding extends Building implements BuildingInterface {
     private final int foodBonus;
     private final int ppBonus;
@@ -43,12 +45,32 @@ public class DiscountBuilding extends Building implements BuildingInterface {
         return typeEvents;
     }
 
-    public int getFoodBonusForPlayer(Player player){
-        return foodBonus * player.countTribeCardsByIcon(typeIcons.toString());
+    public int getFoodBonusForHunting(Player player){
+        if(typeEvents.toString().toLowerCase().equals("hunterevent")){
+            return abs(foodBonus) * player.countTribeCardsByIcon(typeIcons.toString());
+        }
+        return 0;
+    }
+
+    public int getFoodBonusForSustenance(Player player){
+        if(typeEvents.toString().toLowerCase().equals("sustenanceevent")){
+            return abs(foodBonus) * player.countTribeCardsByIcon(typeIcons.toString());
+        }
+        return 0;
+    }
+
+    public int getFoodBonusForPainting(Player player){
+        if(typeEvents.toString().toLowerCase().equals("paintingevent")){
+            return abs(foodBonus) * player.countTribeCardsByIcon(typeIcons.toString());
+        }
+        return 0;
     }
 
     public int getPpBonus(Player player) {
-        return ppBonus * player.countTribeCardsByIcon(typeIcons.toString());
+        if(typeEvents.toString().toLowerCase().equals("hunterevent")) {
+            return abs(ppBonus) * player.countTribeCardsByIcon(typeIcons.toString());
+        }
+        return 0;
     }
 
 

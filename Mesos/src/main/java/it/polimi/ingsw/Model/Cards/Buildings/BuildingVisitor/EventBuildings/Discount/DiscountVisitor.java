@@ -11,15 +11,15 @@ import static java.lang.Math.abs;
 public class DiscountVisitor extends DiscountAbstractVisitor{
 
     public int visit(DiscountBuilding discountBuilding, Player player, SustenanceEvent event) {
-        return discountBuilding.getFoodBonusForPlayer(player);
+        return discountBuilding.getFoodBonusForSustenance(player);
     }
 
     public void visit(DiscountBuilding discountBuilding, Player player, PaintingEvent event) {
-        player.modifyFood(abs(discountBuilding.getFoodBonusForPlayer(player)));
+        player.modifyFood(abs(discountBuilding.getFoodBonusForPainting(player)));
     }
 
     public void visit(DiscountBuilding discountBuilding, Player player, HuntingEvent event) {
-        player.modifyFood(abs(discountBuilding.getFoodBonusForPlayer(player)));
+        player.modifyFood(abs(discountBuilding.getFoodBonusForHunting(player)));
         player.modifyPP(abs(discountBuilding.getPpBonus(player)));
     }
 }
