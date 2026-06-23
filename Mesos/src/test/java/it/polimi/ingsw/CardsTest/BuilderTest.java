@@ -1,14 +1,9 @@
 package it.polimi.ingsw.CardsTest;
-
-import com.sun.source.tree.BreakTree;
 import it.polimi.ingsw.Model.Cards.Characters.*;
-import it.polimi.ingsw.Model.Cards.Characters.CharacterVisitor.AbstractGuiVisitor;
 import it.polimi.ingsw.Model.Cards.Characters.CharacterVisitor.CharacterVisitor;
-import it.polimi.ingsw.Model.Cards.Characters.CharacterVisitor.GuiCharacterVisitor;
-import it.polimi.ingsw.Model.Cards.Characters.CharacterVisitor.GuiVisitor;
 import it.polimi.ingsw.Model.Game.Player;
 import it.polimi.ingsw.Model.Game.Totem;
-import javafx.scene.layout.VBox;
+import it.polimi.ingsw.UI.Printer;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -95,5 +90,24 @@ public class BuilderTest {
 
         assertEquals("/images/cards/characters/builder_5_3.png", result);
     }
+    @Test
+    void printTest() {
+       Builder b = new Builder(1,"CHARACTER", 2, "BUILDER", 3, 5);
+
+        Printer printer = new Printer() {
+            @Override
+            public String[] print( Builder builder) {
+                assertSame(b, builder);
+                return new String[]{};
+            }
+
+        };
+
+        String[] result = b.print(printer);
+
+        assertArrayEquals(new String[]{}, result);
+    }
+
+
 
 }

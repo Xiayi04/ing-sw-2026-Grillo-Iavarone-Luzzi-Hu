@@ -29,3 +29,4 @@ public class NoMalusBuilding extends Building implements BuildingInterface {
         return printer.print(this);
     }
 }
+//
