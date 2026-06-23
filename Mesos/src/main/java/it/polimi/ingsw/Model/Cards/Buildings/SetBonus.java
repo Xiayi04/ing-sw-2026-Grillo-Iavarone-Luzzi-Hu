@@ -1,6 +1,8 @@
 package it.polimi.ingsw.Model.Cards.Buildings;
 import it.polimi.ingsw.Model.Cards.Buildings.BuildingVisitor.BuildingInterface;
 import it.polimi.ingsw.Model.Cards.Buildings.BuildingVisitor.ActivationVisitor;
+import it.polimi.ingsw.Model.Cards.Buildings.BuildingVisitor.SetAndIconVisitor.AddedFoodException;
+import it.polimi.ingsw.Model.Cards.Buildings.BuildingVisitor.SetAndIconVisitor.SetAndIconVisitor;
 import it.polimi.ingsw.Model.Game.Player;
 import it.polimi.ingsw.UI.Printer;
 
@@ -32,6 +34,15 @@ public class SetBonus extends Building implements BuildingInterface {
     @Override
     public void acceptActivation(ActivationVisitor activationVisitor, Player player) {
         activationVisitor.visit(this, player);
+    }
+
+    @Override
+    public void acceptSetBonus(SetAndIconVisitor visitor, Player player) {
+        try {
+            visitor.visit(this, player, null);
+        } catch (AddedFoodException e) {
+            throw new AddedFoodException("");
+        }
     }
 
     public int getFullSetCounter() {

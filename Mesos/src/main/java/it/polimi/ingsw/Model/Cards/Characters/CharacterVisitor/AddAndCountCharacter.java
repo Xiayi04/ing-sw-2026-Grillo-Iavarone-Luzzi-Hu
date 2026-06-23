@@ -13,14 +13,15 @@ public class AddAndCountCharacter extends AbstractCharacterVisitor {
 
     private boolean setBonusCalculator(Player player){
         SetAndIconVisitor visitor = new ConcreteSetAndIconVisitor();
+        boolean bonus = false;
         for(Building b : player.getBuilding()){
             try {
                 b.acceptSetBonus(visitor,player);
             } catch (AddedFoodException e) {
-                return true;
+                bonus = true;
             }
         }
-        return false;
+        return bonus;
     }
 
     public boolean visit(Inventor inventor, Player player) {
