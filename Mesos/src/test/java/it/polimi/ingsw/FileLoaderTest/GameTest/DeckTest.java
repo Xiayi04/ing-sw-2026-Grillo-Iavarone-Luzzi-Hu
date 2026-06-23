@@ -1,4 +1,4 @@
-package it.polimi.ingsw.GameTest;
+package it.polimi.ingsw.FileLoaderTest.GameTest;
 import it.polimi.ingsw.Model.Cards.Card;
 import it.polimi.ingsw.Model.Cards.Events.Event;
 import it.polimi.ingsw.Model.Game.Deck;

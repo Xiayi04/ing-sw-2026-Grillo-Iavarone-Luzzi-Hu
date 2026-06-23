@@ -5,12 +5,13 @@ import it.polimi.ingsw.Model.Cards.Buildings.BuildingVisitor.ConcreteBuildingAct
 import it.polimi.ingsw.Model.Cards.Buildings.BuildingVisitor.EventBuildings.Shamanic.ShamanicNoMalusVisitor;
 import it.polimi.ingsw.Model.Cards.Buildings.BuildingVisitor.EventBuildings.Shamanic.ShamanicVisitorInterface;
 import it.polimi.ingsw.Model.Cards.Buildings.NoMalusBuilding;
+
 import it.polimi.ingsw.Model.Cards.Events.ShamanicEvent;
 import it.polimi.ingsw.Model.Game.Player;
 import it.polimi.ingsw.Model.Game.Totem;
 import it.polimi.ingsw.UI.Printer;
 import org.junit.jupiter.api.Test;
-//
+
 import static org.junit.jupiter.api.Assertions.*;
 
 public class NoMalusBuildingTest {
