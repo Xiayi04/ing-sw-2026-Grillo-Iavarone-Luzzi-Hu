@@ -8,13 +8,12 @@ import it.polimi.ingsw.UI.Printer;
 public class MultiplicationBuilding extends EndGameBuilding {
     private final int multiplier;
 
-    //costruttore
+
     public MultiplicationBuilding(int era, int price, int pp, String typeIcons, int multiplier){
         super (era, price, pp, "MultiplicationBuilding", typeIcons);
         this.multiplier = multiplier;
     }
 
-    //getter
     public int getMultiplier(){
         return multiplier;
     }
@@ -36,7 +35,7 @@ public class MultiplicationBuilding extends EndGameBuilding {
     public void acceptActivation(ActivationVisitor activationVisitor, Player player) {
         activationVisitor.visit(this,player);
     }
-    //HO fatto due metodi in player per contare le carte di un tipo e i set completi
+
     @Override
     public int acceptEndGame(EndGameVisitorInterface visitor, Player player){
         return visitor.visit(this,player);

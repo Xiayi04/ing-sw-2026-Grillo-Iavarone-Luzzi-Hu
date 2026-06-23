@@ -17,7 +17,7 @@ public class Builder extends Character implements CharacterInterface {
         this.builderDiscount = discount;
         this.PP = PP;
     }
-// metodi getter
+
     public Integer getBuilderDiscount() { return builderDiscount;}
     public Integer getPP() { return PP; }
 

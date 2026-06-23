@@ -128,4 +128,10 @@ public class DiscountBuildingTest {
         discountBuilding.acceptActivation(visitor,p1);
         assertTrue(visited[0]);
     }
+    @Test
+    public void imagePathTest(){
+        DiscountBuilding discountBuilding =  new DiscountBuilding(1, 1, 1, -1, 0, Icons.INVENTOR, Events.SUSTENANCEEVENT);
+        String result = discountBuilding.getImagePath();
+        assertEquals("/images/cards/buildings/DiscountBuilding_sustenanceevent_inventor.png",result);
+    }
 }

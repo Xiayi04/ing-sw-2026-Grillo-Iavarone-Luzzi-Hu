@@ -14,7 +14,6 @@ public class SetBonus extends Building implements BuildingInterface {
         this.fullSetCounter = 0;
     }
 
-    //aggiungere classe per questa roba
 
     /**
      * The method compares the number of sets completed previously (saved in the variable fullSetCounter)
@@ -25,7 +24,6 @@ public class SetBonus extends Building implements BuildingInterface {
     public boolean giveExtraFoodSet(Player player) {
         boolean bonus = false;
         if (fullSetCounter != player.countSet()) {
-            //fullSetCounter = player.countSet(); se facciamo questa riga non entriamo mai nell'if
             for (; fullSetCounter < player.countSet(); fullSetCounter++) {
                 player.modifyFood(5);
             }
