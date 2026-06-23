@@ -45,4 +45,12 @@ public class PaintingEventTest {
         PaintingEvent event = new PaintingEvent(1, "EVENT", "PAINTING_EVENT",1,1,-2);
         assertDoesNotThrow(event::printCard);
     }
+    @Test
+    void paintingEventGettersTest() {
+        PaintingEvent event = new PaintingEvent(1, "EVENT", "PAINTING_EVENT", 2, 3, -4);
+
+        assertEquals(2, event.getPaEveNumMinPainters());
+        assertEquals(3, event.getPaEveMultiplierPP());
+        assertEquals(-4, event.getPaEvePointsLoss());
+    }
 }
