@@ -1,5 +1,7 @@
 package it.polimi.ingsw.Model.Game;
 import it.polimi.ingsw.Model.Cards.Buildings.Building;
+import it.polimi.ingsw.Model.Cards.Buildings.BuildingVisitor.EndGame.EndGameVisitor;
+import it.polimi.ingsw.Model.Cards.Buildings.BuildingVisitor.EndGame.EndGameVisitorInterface;
 import it.polimi.ingsw.Model.Cards.Buildings.MultiplicationBuilding;
 import it.polimi.ingsw.Model.Cards.Buildings.MultiplierPPBuilderBuilding;
 import it.polimi.ingsw.Model.Cards.Characters.Builder;
@@ -220,12 +222,15 @@ public class Player implements Serializable {
      * calls the building's method and adds up the bonus points given by each building of that type
      * @return the sum of the bonus points given by the MultiplicationBuilding
      */
-    public int buildingMultipliedBonus(){
+    public int buildingMultipliedBonus() {
         int sumPP = 0;
-        for(Building b : buildings){
-            if(b instanceof MultiplicationBuilding ed)
-                sumPP += ed.countPP(this);
+
+        EndGameVisitorInterface visitor = new EndGameVisitor();
+
+        for (Building b : buildings) {
+            sumPP += b.acceptEndGame(visitor, this);
         }
+
         return sumPP;
     }
 
