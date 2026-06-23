@@ -37,7 +37,7 @@ public class GameManager {
     private final AtomicBoolean positioningPhase = new AtomicBoolean(false);
     private final AtomicBoolean isGameStarted = new AtomicBoolean(false);
 
-    //costruttore
+
     public GameManager(ArrayList<Player> players, int numPlayers, Board board) {
         this.players = players;
         this.numPlayers = numPlayers;
@@ -178,11 +178,6 @@ public class GameManager {
         for (Event event : events) {
             notifier.resolvingEventBroadcast(event);
             event.resolveEvent(board.getPlayers());
-
-            /*for(Player player : this.players){
-                notifier.foodUpdateBroadcast(player, player.getFood());
-                notifier.ppUpdateBroadcast(player, player.getPrestigePoints());
-            }*/
         }
         try {
             Thread.sleep(TimeUnit.SECONDS.toMillis(1));
@@ -221,7 +216,6 @@ public class GameManager {
         if(this.notifier != null){
             this.notifier.showEndGameBroadcast(getPlayerByName(winner.username()), leaderboard);
         }
-        // aggiunge il punteggio di un giocatore uno per volta nel database
         LeaderBoardDAO leaderboardDAO = new LeaderBoardDAO();
         for (Player p : players) {
             try{
@@ -230,7 +224,7 @@ public class GameManager {
                 System.out.println("Error in the record of the points for the player " + p.getName() + ": " + e.getMessage());
             }
         }
-        //aggiorna la classifica di tutte le partite fatte con quel numero di giocatori
+
         ArrayList<LeaderBoardData> leaderboardFromDB = new ArrayList<>();
 
         try {
@@ -368,12 +362,6 @@ public class GameManager {
                     for (int i = 0; i < offerCard.getDownArrow(); i++) {
                         pickingQueue.add(new PendingPick(offerCard.getOccupiedBy(), false,false,false));
                     }
-                    /*for (int i = 0; i < offerCard.getOccupiedBy().getBuilding().size(); i++) {
-                        //AddCardVisitor addCardVisitor = new AddCardVisitor();
-                        if (offerCard.getOccupiedBy().getBuilding().get(i).acceptAddCard(addCardVisitor, offerCard.getOccupiedBy()) == 1) {
-                            playersWithBonus = offerCard.getOccupiedBy();
-                        }
-                    }*/
                     Player player = offerCard.getOccupiedBy();
                     for(Building b : player.getBuilding()){
                         if(b.acceptAddCard(addCardVisitor, player)==1){
@@ -508,7 +496,6 @@ public class GameManager {
         if (!hasCharacters && !hasBuildings) {
             Player p= currentPick.player();
             pickingQueue.remove(0);
-            //skip automatico troppo veloce
             try {
                 Thread.sleep(100);
             } catch (InterruptedException ignored) {

@@ -24,8 +24,6 @@ public class Player implements Serializable {
     private static final long serialVersionUID = 1L;
     private final String name;
     private final Totem totem;
-    //private int food;
-    //private int prestigePoints;
     private final ArrayList<Character> tribeCard;
     private final ArrayList<Building> buildings;
     private int starCounter;
@@ -51,7 +49,7 @@ public class Player implements Serializable {
         this.virtualClient = virtualClient;
     }
 
-    //metodi getter
+    // getter
     public String getName() {
         return name;
     }

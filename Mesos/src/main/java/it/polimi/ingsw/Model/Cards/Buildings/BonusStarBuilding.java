@@ -10,11 +10,6 @@ public class BonusStarBuilding extends Building implements BuildingInterface {
         super(era, price, pp, "BonusStarBuilding");
     }
 
-    /*@Override
-    public void buildingActivation(Player player){
-        player.modifyStarCounter(3);
-    }*/
-
     public void acceptActivation(ActivationVisitor activationVisitor, Player player){
         activationVisitor.visit(this, player);
     }

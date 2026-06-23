@@ -33,12 +33,12 @@ public class Deck implements Serializable {
         ArrayList<Card> deckEra2 = new ArrayList<>();
         ArrayList<Card> deckEra3 = new ArrayList<>();
         ArrayList<Card> deckEra4 = new ArrayList<>();
-        //creazione delle factory
+        //Factory creations
         ConcreteFactoryEra factory1 = new ConcreteFactoryEra(1);
         ConcreteFactoryEra factory2 = new ConcreteFactoryEra(2);
         ConcreteFactoryEra factory3 = new ConcreteFactoryEra(3);
         ConcreteFactoryEra factory4 = new ConcreteFactoryEra(4);
-        //mazzo dell'era 1 mischiato
+        //Deck of era 1 mixed
         ArrayList<Character> charactersEra1 = factory1.createCharacterList();
         charactersEra1.removeIf(c -> c.getNumPlayers() > numPlayers);
         ArrayList<Event> eventsEra1 = factory1.createEventList();
@@ -46,7 +46,7 @@ public class Deck implements Serializable {
         deckEra1.addAll(eventsEra1);
         Collections.shuffle(deckEra1);
         Collections.shuffle(deckEra1);
-        //mazzo dell'era 2 mischiato
+        //Deck of era 2 mixed
         ArrayList<Character> charactersEra2 = factory2.createCharacterList();
         charactersEra2.removeIf(c -> c.getNumPlayers() > numPlayers);
         ArrayList<Event> eventsEra2 = factory2.createEventList();
@@ -54,7 +54,7 @@ public class Deck implements Serializable {
         deckEra2.addAll(eventsEra2);
         Collections.shuffle(deckEra2);
         Collections.shuffle(deckEra2);
-        //mazzo dell'era 3 mischiato
+        //Deck of era 3 mixed
         ArrayList<Character> charactersEra3 = factory3.createCharacterList();
         charactersEra3.removeIf(c -> c.getNumPlayers() > numPlayers);
         ArrayList<Event> eventsEra3 = factory3.createEventList();
@@ -62,11 +62,11 @@ public class Deck implements Serializable {
         deckEra3.addAll(eventsEra3);
         Collections.shuffle(deckEra3);
         Collections.shuffle(deckEra3);
-        //mazzo dell'era 4 mischiato
+        //Deck of era 4 mixed
         ArrayList<Event> eventsEra4 = factory4.createEventList();
         deckEra4.addAll(eventsEra4);
         Collections.shuffle(deckEra4);
-        //creazione mazzo completo
+        //Complete deck creation
         deck.addAll(deckEra1);
         deck.addAll(deckEra2);
         deck.addAll(deckEra3);

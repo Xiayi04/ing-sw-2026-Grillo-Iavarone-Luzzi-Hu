@@ -21,7 +21,7 @@ public class OfferCard implements Serializable {
         this.UpArrow = UpArrow;
         this.DownArrow = DownArrow;
         this.Food = Food;
-        this.IsOccupied = false; //di dafaul la posiz. è libera
+        this.IsOccupied = false;
         this.OccupiedBy = null;
     }
 

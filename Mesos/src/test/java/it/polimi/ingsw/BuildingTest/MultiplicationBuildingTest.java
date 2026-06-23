@@ -82,6 +82,13 @@ public class MultiplicationBuildingTest {
         assertTrue(visitorFake.visitCalled);
         assertEquals(5, result);
     }
+    @Test
+    public void  ImagePathTest() {
+        MultiplicationBuilding b = new MultiplicationBuilding(1, 5, 6, "SET", 6);
+        String result = b.getImagePath();
+
+        assertEquals("/images/cards/buildings/MultiplicationBuilding_SET.png", result);
+    }
 
     class ActivationVisitorFake implements ActivationVisitor {
         public boolean visitCalled = false;

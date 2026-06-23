@@ -13,7 +13,7 @@ public class MultiplierPPBuilderBuilding extends EndGameBuilding implements Buil
     }
     @Override
     public int countPP(Player player){
-        return player.builderBonus()*2; /*devo creare un metodo in player che calcola builderbonus(?)*/
+        return player.builderBonus()*2;
     }
 
     @Override

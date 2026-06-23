@@ -15,8 +15,6 @@ public class BonusFood extends Building implements BuildingInterface {
 
     }
 
-    /*@Override
-    public void buildingActivation(Player player) {}*/
 
     @Override
     public void acceptActivation(ActivationVisitor activationVisitor, Player player){
@@ -32,4 +30,3 @@ public class BonusFood extends Building implements BuildingInterface {
         return printer.print(this);
     }
 }
-//ricommittato

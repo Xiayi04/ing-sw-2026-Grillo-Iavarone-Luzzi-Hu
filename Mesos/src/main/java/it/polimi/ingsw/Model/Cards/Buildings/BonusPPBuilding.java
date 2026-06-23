@@ -8,11 +8,9 @@ import it.polimi.ingsw.UI.Printer;
 
 public class BonusPPBuilding extends Building implements BuildingInterface {
     public BonusPPBuilding(int era, int price) {
-        super(era, price, 25, "BonusPPBuilding");                      //lo gestisco come pp finali dell'edificio(non da sommare subito)
+        super(era, price, 25, "BonusPPBuilding");
     }
 
-    /*@Override
-    public void buildingActivation(Player player) {}*/
 
     public void printCard(){
         super.printCard();
