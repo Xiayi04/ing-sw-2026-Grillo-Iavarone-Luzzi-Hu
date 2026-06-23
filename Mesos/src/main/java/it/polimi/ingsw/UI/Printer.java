@@ -15,6 +15,9 @@ import org.jline.utils.AttributedStyle;
 import static java.lang.Math.ceil;
 import static java.lang.Math.floor;
 
+/**
+ * the class is used to print the TUI cards: it prints the card's shape with all its features inside
+ */
 public class Printer  {
     private final int height = 7;
     private final char topLeftCorner = '┌';

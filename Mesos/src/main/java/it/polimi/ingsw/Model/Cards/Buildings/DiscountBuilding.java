@@ -90,6 +90,9 @@ public class DiscountBuilding extends Building implements BuildingInterface {
         visitor.visit(this, player, event);
     }
 
+    /**
+     * builds the path to retrieve the correct image of the building
+     */
     public String getImagePath(){
         return "/images/cards/buildings/"+getName()+"_"+getTypeEvents().toString().toLowerCase()+"_"+getTypeIcons().toString().toLowerCase()+".png";
     }
