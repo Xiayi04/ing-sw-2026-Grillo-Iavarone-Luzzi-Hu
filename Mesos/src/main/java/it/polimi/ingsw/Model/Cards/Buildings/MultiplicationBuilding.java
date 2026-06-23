@@ -43,7 +43,7 @@ public class MultiplicationBuilding extends EndGameBuilding {
     }
 
     public String getImagePath(){
-        return "/images/cards/buildings/"+getName()+"_"+getTypeIcons()+".png";
+        return "/images/cards/buildings/"+getName()+"_"+getTypeIcons().toUpperCase()+".png";
     }
 }
 

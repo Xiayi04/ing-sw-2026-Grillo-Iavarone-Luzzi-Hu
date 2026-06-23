@@ -21,6 +21,11 @@ public class Playerpanel extends HBox {
     //private Stage handStage;
     private Player player;
 
+    /**
+     * PlayerPanel constructor method.
+     * A PlayerPanel is an object that groups the following player information: the totem image, the username,
+     * and the current food and PP.
+     */
     public Playerpanel(Player p, GuiView guiView) {
         this.guiView = guiView;
         this.player = p;
@@ -51,14 +56,25 @@ public class Playerpanel extends HBox {
         return playerHandView;
     }
 
+    /**
+     * the method updates the player's food label
+     * @param player player whose label you want to update
+     */
     public void refreshFood(Player player) {
         foodLabel.setText("Food: "+ player.getFood());
     }
 
+    /**
+     * the method updates the player's PP label
+     * @param player player whose label you want to update
+     */
     public void refreshPP(Player player) {
         PPLabel.setText("PP: "+player.getPrestigePoints());
     }
 
+    /**
+     * The method is responsible for creating the window that will host the player's cards
+     */
     public void openPlayerHand(Player player) {
         Stage stage = new Stage();
         Stage currentStage =(Stage) this.getScene().getWindow();

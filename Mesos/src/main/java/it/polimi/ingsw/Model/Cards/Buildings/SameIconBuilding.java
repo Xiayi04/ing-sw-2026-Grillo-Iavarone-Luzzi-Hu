@@ -27,6 +27,12 @@ public class SameIconBuilding extends Building implements BuildingInterface {
         checkPair.put("bread", 0);
     }
 
+    /**
+     * update the icon map every time an inventor is drawn and, if a pair is found, give 3 food to the player
+     * @param player
+     * @param icon specific icon of the inventor
+     * @return
+     */
     public boolean giveFoodBonus(Player player, String icon) {
         boolean bonus = false;
         Integer v = checkPair.get(icon);
@@ -40,6 +46,11 @@ public class SameIconBuilding extends Building implements BuildingInterface {
         return bonus;
     }
 
+    /**
+     * The method is responsible for initializing the map that keeps track of how many icons a player has.
+     * It is called when the building is drawn.
+     * @param icon specific icon of the inventor
+     */
     public void addInventorIconToMap(String icon) {
         if (icon.isEmpty())
             return;

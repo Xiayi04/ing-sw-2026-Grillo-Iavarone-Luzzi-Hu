@@ -16,6 +16,9 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.concurrent.ExecutorService;
 
+/**
+ * the class deals with the creation of the menu items
+ */
 public class MenuView extends VBox {
     private final ClientController clientController;
     private final GuiView guiView;
@@ -25,8 +28,8 @@ public class MenuView extends VBox {
     private final HBox login = new HBox();
     private final VBox numPlayers = new VBox(5);
     private final ExecutorService pool;
-    private Label provaUsername = new Label();
-    private Label provaTotem = new Label();
+    //private Label provaUsername = new Label();
+    //private Label provaTotem = new Label();
 
     public MenuView(ClientController clientController, GuiView guiView, ExecutorService pool) {
         this.clientController = clientController;
@@ -38,6 +41,10 @@ public class MenuView extends VBox {
         return numPlayers;
     }
 
+    /**
+     * the method, using the methods chooseConnection, chooseUsername, and showAvailableTotems, builds the general
+     * structure of the menu
+     */
     public void createSchema(){
         ArrayList<Totem> totems = new ArrayList<>();
         totems.addAll(Arrays.asList(Totem.values()));
@@ -47,10 +54,14 @@ public class MenuView extends VBox {
         this.getChildren().add(chooseConnection());
         this.getChildren().add(chooseUsername());
         this.getChildren().add(showAvailableTotems(totems));
-        this.getChildren().add(provaTotem);
-        this.getChildren().add(provaUsername);
+        //this.getChildren().add(provaTotem);
+        //this.getChildren().add(provaUsername);
     }
 
+    /**
+     * The method, through a combobox and a button, allows choosing whether to use sockets or RMI. By clicking on
+     * "Confirm" the setServerConnection method is called.
+     */
     public VBox chooseConnection(){
         connection.setAlignment(Pos.CENTER);
         Label text  = new Label();
@@ -76,6 +87,9 @@ public class MenuView extends VBox {
         return connection;
     }
 
+    /**
+     * The method allows you to write the username inside a textfield and confirm it with the "Confirm" button.
+     */
     public VBox chooseUsername(){
         username.setAlignment(Pos.CENTER);
         Label text  = new Label();
@@ -91,10 +105,6 @@ public class MenuView extends VBox {
                 clientController.setTmpUsername(name);
                 System.out.println("DEBUG: l'username è "+name);
             });
-            /*new Thread(()->{
-                clientController.setTmpUsername(name);
-                System.out.println("DEBUG: l'username è "+name);
-            }).start();*/
         });
         hBox.getChildren().addAll(space,button);
         space.setAlignment(Pos.CENTER);
@@ -103,6 +113,11 @@ public class MenuView extends VBox {
         return username;
     }
 
+    /**
+     * the method shows the game's totems by displaying the corresponding images and making them clickable.
+     * when clicked, they call the setTmpTotem method to confirm it
+     * @param totems the list of all the totems in the game
+     */
     public VBox showAvailableTotems(ArrayList<Totem> totems){
         totemsLine.getChildren().clear();
         totemsLine.setAlignment(Pos.CENTER);

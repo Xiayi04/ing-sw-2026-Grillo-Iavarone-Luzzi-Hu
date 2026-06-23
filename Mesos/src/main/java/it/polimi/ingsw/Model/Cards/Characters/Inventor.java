@@ -39,6 +39,10 @@ public class Inventor extends Character implements CharacterInterface, InventorI
         return visitor.visit(this, player);
     }
 
+    /**
+     * The method constructs, using the card's parameters, the path to retrieve the image in the resources folder
+     * @return the path to the specific image
+     */
     public String getImagePath(){
         return "/images/cards/characters/"+getCharacterType().toLowerCase()+"_"+getInventorIcon()+".png";
     }

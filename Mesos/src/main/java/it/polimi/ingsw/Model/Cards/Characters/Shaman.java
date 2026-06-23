@@ -37,6 +37,10 @@ public class Shaman extends Character implements CharacterInterface {
 //     * @return  the highest number of stars among the players
 //     */
 
+    /**
+     * The method constructs, using the card's parameters, the path to retrieve the image in the resources folder
+     * @return the path to the specific image
+     */
     public String getImagePath(){
         return "/images/cards/characters/"+getCharacterType().toLowerCase()+"_"+getShamanStars()+"star.png";
     }

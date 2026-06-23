@@ -24,7 +24,8 @@ public class MainApp extends Application {
     }
 
     /**
-     *
+     * The method creates the window that will contain all the screens of the game. Clicking on the X of the window
+     * launches the method for disconnection.
      * @param mainStage
      */
     @Override

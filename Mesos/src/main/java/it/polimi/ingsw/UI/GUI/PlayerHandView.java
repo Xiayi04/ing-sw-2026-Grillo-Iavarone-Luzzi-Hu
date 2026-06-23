@@ -16,11 +16,16 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class PlayerHandView extends VBox {
-    private HBox building;
-    private HBox hand;
+    private final HBox building;
+    private final HBox hand;
     private Player player;
-    private Map<Class, VBox> boxes = new HashMap<>();
+    private final Map<Class, VBox> boxes = new HashMap<>();
 
+    /**
+     * constructor method of PlayerHandView. creates 6 VBoxes (one for each type of character) with spacing -100 to have
+     * overlapping cards. finally calls the method fillPlayerHand
+     * @param player player whose cards you want to see
+     */
     public PlayerHandView(Player player){
         this.player = player;
 
@@ -68,6 +73,10 @@ public class PlayerHandView extends VBox {
         return building;
     }
 
+    /**
+     * The method recreates all the cards drawn by the player. It uses a GuiVisitor to insert them into the correct
+     * column and, by passing the mouse over them, brings the card to the foreground.
+     */
     public void fillPlayerHand(){
         GuiVisitor visitor = new GuiCharacterVisitor(boxes);
         for(Character c : player.getTribeCard()){
