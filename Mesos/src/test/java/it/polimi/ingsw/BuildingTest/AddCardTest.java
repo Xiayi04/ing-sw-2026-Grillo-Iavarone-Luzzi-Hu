@@ -4,6 +4,7 @@ import it.polimi.ingsw.Buildings.*;
 import it.polimi.ingsw.Buildings.BuildingVisitor.ActivationVisitor;
 import it.polimi.ingsw.Buildings.BuildingVisitor.ConcreteBuildingActivation;
 import it.polimi.ingsw.Buildings.BuildingVisitor.SpecialBuildings.AddCardException;
+import it.polimi.ingsw.UI.Printer;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -21,6 +22,8 @@ public class AddCardTest {
     @Test
     public void printTest(){
         AddCard b = new AddCard(1, 1, 1);
-        assertDoesNotThrow(b::printCard);
+        Printer printer = new Printer();
+        String[] result = b.print(printer);
+        assertNotNull(result);
     }
 }

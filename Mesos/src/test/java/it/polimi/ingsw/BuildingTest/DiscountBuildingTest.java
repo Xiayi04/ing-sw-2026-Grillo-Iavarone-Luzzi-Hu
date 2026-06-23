@@ -1,16 +1,14 @@
 package it.polimi.ingsw.BuildingTest;
 
 import it.polimi.ingsw.Buildings.*;
-import it.polimi.ingsw.Buildings.BuildingVisitor.BuildingActivation;
 import it.polimi.ingsw.Buildings.BuildingVisitor.ConcreteBuildingActivation;
-import it.polimi.ingsw.Buildings.BuildingVisitor.EventBuildings.Discount.DiscountVisitor;
 import it.polimi.ingsw.Cards.Characters.Character;
 import it.polimi.ingsw.Cards.Events.Event;
-import it.polimi.ingsw.Cards.Events.SustenanceEvent;
 import it.polimi.ingsw.Factory.BuildingFactory;
 import it.polimi.ingsw.Factory.ConcreteFactoryEra;
 import it.polimi.ingsw.Game.Player;
 import it.polimi.ingsw.Game.Totem;
+import it.polimi.ingsw.UI.Printer;
 import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -69,6 +67,8 @@ public class DiscountBuildingTest {
     @Test
     public void printCardTest(){
         DiscountBuilding building = new DiscountBuilding(1,7,2,1,1,Icons.HUNTER,Events.SUSTENANCEEVENT);
-        assertDoesNotThrow(building::printCard);
+        Printer printer = new Printer();
+        String[] result = building.print(printer);
+        assertNotNull(result);
     }
 }

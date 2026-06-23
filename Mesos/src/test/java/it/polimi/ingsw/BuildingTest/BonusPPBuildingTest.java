@@ -3,6 +3,7 @@ package it.polimi.ingsw.BuildingTest;
 import it.polimi.ingsw.Buildings.*;
 import it.polimi.ingsw.Buildings.BuildingVisitor.ActivationVisitor;
 import it.polimi.ingsw.Game.Player;
+import it.polimi.ingsw.UI.Printer;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -21,7 +22,9 @@ public class BonusPPBuildingTest {
 
     @Test
     public void printTest(){
-        assertDoesNotThrow(bonusPPBuilding::printCard);
+        Printer printer = new Printer();
+        String[] result = bonusPPBuilding.print(printer);
+        assertNotNull(result);
     }
     @Test
     public void acceptActivation_ShouldCallVisitor_Test() {

@@ -4,6 +4,7 @@ import it.polimi.ingsw.Buildings.*;
 import it.polimi.ingsw.Buildings.BuildingVisitor.ActivationVisitor;
 import it.polimi.ingsw.Buildings.BuildingVisitor.SpecialBuildings.TurnOrderCardFoodBonus;
 import it.polimi.ingsw.Game.Player;
+import it.polimi.ingsw.UI.Printer;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -26,7 +27,9 @@ public class BonusFoodTest {
     }
     @Test
     public void printTest() {
-        assertDoesNotThrow(bonusFood::printCard);
+        Printer printer = new Printer();
+        String[] result = bonusFood.print(printer);
+        assertNotNull(result);
     }
 
     @Test

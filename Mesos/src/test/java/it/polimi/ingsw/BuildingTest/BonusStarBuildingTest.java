@@ -5,6 +5,7 @@ import it.polimi.ingsw.Buildings.BonusStarBuilding;
 import it.polimi.ingsw.Buildings.BuildingVisitor.ConcreteBuildingActivation;
 import it.polimi.ingsw.Game.Player;
 import it.polimi.ingsw.Game.Totem;
+import it.polimi.ingsw.UI.Printer;
 import org.junit.jupiter.api.Test;
 
 
@@ -16,7 +17,9 @@ public class BonusStarBuildingTest {
     @Test
     void printTest() {
         BonusStarBuilding building = new BonusStarBuilding(1, 10, 5);
-        assertDoesNotThrow(building::printCard);
+        Printer printer = new Printer();
+        String[] result = building.print(printer);
+        assertNotNull(result);
     }
     @Test
     public void acceptActivationTest(){

@@ -5,6 +5,7 @@ import it.polimi.ingsw.Buildings.BuildingVisitor.ActivationVisitor;
 import it.polimi.ingsw.Buildings.BuildingVisitor.EventBuildings.Shamanic.ShamanicVisitorInterface;
 import it.polimi.ingsw.Cards.Events.ShamanicEvent;
 import it.polimi.ingsw.Game.Player;
+import it.polimi.ingsw.UI.Printer;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -23,7 +24,9 @@ public class DoubleBonusBuildingTest {
     }
     @Test
     public void printTest(){
-        assertDoesNotThrow(building::printCard);
+        Printer printer = new Printer();
+        String[] result = building.print(printer);
+        assertNotNull(result);
     }
     @Test
     public void giveDouble_ShouldReturnTwo_Test() {

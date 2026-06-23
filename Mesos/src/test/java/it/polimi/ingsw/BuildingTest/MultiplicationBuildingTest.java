@@ -2,16 +2,13 @@ package it.polimi.ingsw.BuildingTest;
 
 import it.polimi.ingsw.Buildings.*;
 import it.polimi.ingsw.Buildings.BuildingVisitor.ActivationVisitor;
-import it.polimi.ingsw.Buildings.BuildingVisitor.ConcreteBuildingActivation;
 import it.polimi.ingsw.Buildings.BuildingVisitor.EndGame.EndGameVisitorInterface;
-import it.polimi.ingsw.Cards.Characters.Builder;
 import it.polimi.ingsw.Cards.Characters.Character;
-import it.polimi.ingsw.Cards.Characters.CharacterVisitor.AddAndCountCharacter;
-import it.polimi.ingsw.Cards.Characters.CharacterVisitor.CharacterVisitor;
 import it.polimi.ingsw.Cards.Characters.Hunter;
 import it.polimi.ingsw.Factory.ConcreteFactoryEra;
 import it.polimi.ingsw.Game.Player;
 import it.polimi.ingsw.Game.Totem;
+import it.polimi.ingsw.UI.Printer;
 import org.junit.jupiter.api.Test;
 
 import java.util.ArrayList;
@@ -59,7 +56,9 @@ public class MultiplicationBuildingTest {
     @Test
     public void printTest(){
         MultiplicationBuilding b = new MultiplicationBuilding(1, 5, 6, "SET", 6);
-        assertDoesNotThrow(b::printCard);
+        Printer printer = new Printer();
+        String[] result = b.print(printer);
+        assertNotNull(result);
     }
     @Test
     public void acceptActivation_CallsVisitor_Test() {
