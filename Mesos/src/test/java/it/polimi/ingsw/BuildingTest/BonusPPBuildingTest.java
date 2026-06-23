@@ -27,6 +27,10 @@ public class BonusPPBuildingTest {
         assertNotNull(result);
     }
     @Test
+    public void printCardTest(){
+        assertDoesNotThrow(() -> {bonusPPBuilding.printCard();});
+    }
+    @Test
     public void acceptActivation_ShouldCallVisitor_Test() {
         FakeActivationVisitor visitor = new FakeActivationVisitor();
 

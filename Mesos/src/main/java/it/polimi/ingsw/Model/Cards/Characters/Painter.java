@@ -11,10 +11,6 @@ public class Painter extends Character implements CharacterInterface {
         super( era, cardType, numPlayers, characterType);
     }
 
-    public void printCard(){
-        super.printCard();
-    }
-
     public String[] print(Printer printer){
         return printer.print(this);
     }
