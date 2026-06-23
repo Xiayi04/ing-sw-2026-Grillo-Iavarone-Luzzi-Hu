@@ -26,6 +26,9 @@ public class PingManager implements AutoCloseable {
         }
     }
 
+    /**
+     * Schedules a periodic task to send ping signals to all connected clients at a fixed rate.
+     */
     public void startPingTask(){
         Runnable pingTask = ()->{
             try {
@@ -37,6 +40,11 @@ public class PingManager implements AutoCloseable {
         scheduler.scheduleAtFixedRate(pingTask, 0, delay, TimeUnit.SECONDS);
     }
 
+    /**
+     *Iterates through all connected clients to send a heartbeat ping signal.
+     * It thread-safely handles any connection failures by triggering a disconnection
+     * cleanup and closing resources.
+     */
     private void sendPingToClients(){
         synchronized (clients) {
 

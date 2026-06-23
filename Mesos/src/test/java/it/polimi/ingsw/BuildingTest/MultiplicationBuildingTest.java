@@ -1,8 +1,8 @@
 package it.polimi.ingsw.BuildingTest;
 
 import it.polimi.ingsw.Model.Cards.Buildings.*;
-import it.polimi.ingsw.Model.Cards.Buildings.BuildingVisitor.ActivationVisitor;
-import it.polimi.ingsw.Model.Cards.Buildings.BuildingVisitor.EndGame.EndGameVisitorInterface;
+import it.polimi.ingsw.Visitors.BuildingVisitor.ActivationVisitor;
+import it.polimi.ingsw.Visitors.BuildingVisitor.EndGame.EndGameVisitorInterface;
 import it.polimi.ingsw.Model.Cards.Characters.Character;
 import it.polimi.ingsw.Model.Cards.Characters.Hunter;
 import it.polimi.ingsw.Model.Factory.ConcreteFactoryEra;

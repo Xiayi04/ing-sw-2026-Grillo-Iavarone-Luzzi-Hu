@@ -1,13 +1,7 @@
 package it.polimi.ingsw.Controller;
 
 import it.polimi.ingsw.Model.Cards.Buildings.Building;
-import it.polimi.ingsw.Model.Cards.Buildings.BuildingVisitor.ActivationVisitor;
-import it.polimi.ingsw.Model.Cards.Buildings.BuildingVisitor.ConcreteBuildingActivation;
-import it.polimi.ingsw.Model.Cards.Buildings.BuildingVisitor.SpecialBuildings.AddCardException;
-import it.polimi.ingsw.Model.Cards.Buildings.BuildingVisitor.SpecialBuildings.AddCardVisitor;
 import it.polimi.ingsw.Model.Cards.Card;
-import it.polimi.ingsw.Model.Cards.Characters.CharacterVisitor.CharacterVisitor;
-import it.polimi.ingsw.Model.Cards.Characters.CharacterVisitor.AddAndCountCharacter;
 import it.polimi.ingsw.Model.Cards.Events.Event;
 import it.polimi.ingsw.Database.LeaderBoardDAO;
 import it.polimi.ingsw.Database.LeaderBoardData;
@@ -17,6 +11,13 @@ import it.polimi.ingsw.Model.Game.OfferCard;
 import it.polimi.ingsw.Model.Game.Player;
 import it.polimi.ingsw.Network.Notifier;
 import it.polimi.ingsw.Network.PlayerScore;
+import it.polimi.ingsw.Visitors.BuildingVisitor.ActivationVisitor;
+import it.polimi.ingsw.Visitors.BuildingVisitor.ConcreteBuildingActivation;
+import it.polimi.ingsw.Visitors.BuildingVisitor.SpecialBuildings.AddCardException;
+import it.polimi.ingsw.Visitors.BuildingVisitor.SpecialBuildings.AddCardVisitor;
+import it.polimi.ingsw.Visitors.CharacterVisitor.AddAndCountCharacter;
+import it.polimi.ingsw.Visitors.CharacterVisitor.CharacterVisitor;
+
 import java.sql.SQLException;
 import java.util.*;
 import java.util.concurrent.TimeUnit;

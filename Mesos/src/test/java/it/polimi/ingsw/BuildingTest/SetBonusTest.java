@@ -1,7 +1,7 @@
 package it.polimi.ingsw.BuildingTest;
 
-import it.polimi.ingsw.Model.Cards.Buildings.BuildingVisitor.ActivationVisitor;
-import it.polimi.ingsw.Model.Cards.Buildings.BuildingVisitor.ConcreteBuildingActivation;
+import it.polimi.ingsw.Visitors.BuildingVisitor.ActivationVisitor;
+import it.polimi.ingsw.Visitors.BuildingVisitor.ConcreteBuildingActivation;
 import it.polimi.ingsw.Model.Cards.Buildings.SameIconBuilding;
 import it.polimi.ingsw.Model.Cards.Buildings.SetBonus;
 import it.polimi.ingsw.Model.Factory.ConcreteFactoryEra;

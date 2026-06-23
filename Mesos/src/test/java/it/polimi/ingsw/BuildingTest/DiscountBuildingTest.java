@@ -1,7 +1,7 @@
 package it.polimi.ingsw.BuildingTest;
 
 import it.polimi.ingsw.Model.Cards.Buildings.Building;
-import it.polimi.ingsw.Model.Cards.Buildings.BuildingVisitor.ConcreteBuildingActivation;
+import it.polimi.ingsw.Visitors.BuildingVisitor.ConcreteBuildingActivation;
 import it.polimi.ingsw.Model.Cards.Buildings.DiscountBuilding;
 import it.polimi.ingsw.Model.Cards.Buildings.Events;
 import it.polimi.ingsw.Model.Cards.Buildings.Icons;

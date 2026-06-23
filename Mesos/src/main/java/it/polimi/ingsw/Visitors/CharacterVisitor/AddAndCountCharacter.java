@@ -1,0 +1,101 @@
+package it.polimi.ingsw.Visitors.CharacterVisitor;
+
+import it.polimi.ingsw.Model.Cards.Buildings.Building;
+import it.polimi.ingsw.Visitors.BuildingVisitor.SetAndIconVisitor.AddedFoodException;
+import it.polimi.ingsw.Visitors.BuildingVisitor.SetAndIconVisitor.ConcreteSetAndIconVisitor;
+import it.polimi.ingsw.Visitors.BuildingVisitor.SetAndIconVisitor.SetAndIconVisitor;
+import it.polimi.ingsw.Model.Cards.Characters.*;
+import it.polimi.ingsw.Model.Game.Player;
+
+import static java.lang.Math.abs;
+
+/**
+ * Adds the picked card to the player's cards and increases its specific counter.
+ * If the card has a food bonus the methods return true so that the change can be notified to
+ * the players.
+ */
+public class AddAndCountCharacter extends AbstractCharacterVisitor {
+    /**
+     * Checks if the player who just picked a card has the SetBonus Building with its visitor.
+     */
+    private boolean setBonusCalculator(Player player){
+        SetAndIconVisitor visitor = new ConcreteSetAndIconVisitor();
+        boolean bonus = false;
+        for(Building b : player.getBuilding()){
+            try {
+                b.acceptSetBonus(visitor,player);
+            } catch (AddedFoodException e) {
+                bonus = true;
+            }
+        }
+        return bonus;
+    }
+
+    public boolean visit(Inventor inventor, Player player) {
+        synchronized (player.getTribeCard()) {
+            player.setInventorCounter((player.getInventorCounter()) + 1);
+            player.getTribeCard().add(inventor);
+            player.getTribeCard().notifyAll();
+            SetAndIconVisitor setAndIconVisitor = new ConcreteSetAndIconVisitor();
+            boolean isFoodIncreased = false;
+            for(Building b : player.getBuilding()){
+                try {
+                    b.acceptSameIconBonus(setAndIconVisitor, player, inventor.getInventorIcon());
+                } catch (AddedFoodException e) {
+                    isFoodIncreased = true;
+                }
+            }
+            if(isFoodIncreased || setBonusCalculator(player)){
+                return true;
+            }
+        }
+        return false;
+    }
+
+    public boolean visit(Shaman shaman, Player player) {
+        synchronized (player.getTribeCard()) {
+            player.setShamanCounter((player.getShamanCounter()) + 1);
+            player.getTribeCard().add(shaman);
+            player.modifyStarCounter(shaman.getShamanStars());
+        }
+        return setBonusCalculator(player);
+    }
+
+    public boolean visit(Picker picker, Player player) {
+        synchronized (player.getTribeCard()) {
+            player.setPickerCounter((player.getPickerCounter()) + 1);
+            player.getTribeCard().add(picker);
+        }
+        return setBonusCalculator(player);
+    }
+
+    public boolean visit(Hunter hunter, Player player) {
+        synchronized (player.getTribeCard()) {
+            player.setHunterCounter((player.getHunterCounter()) + 1);
+            player.getTribeCard().add(hunter);
+            if (hunter.getSymbol()) {
+                player.modifyFood(abs(player.getHunterCounter()));
+                return (hunter.getSymbol() || setBonusCalculator(player));
+            }
+        }
+        return false;
+    }
+
+    public boolean visit(Builder builder, Player player) {
+        synchronized (player.getTribeCard()) {
+            player.setBuilderCounter((player.getBuilderCounter() + 1));
+            player.getTribeCard().add(builder);
+            player.increaseBuilderDiscount(builder.getBuilderDiscount());
+        }
+        return setBonusCalculator(player);
+    }
+
+    public boolean visit(Painter painter, Player player) {
+        synchronized (player.getTribeCard()) {
+            player.setPainterCounter((player.getPainterCounter()) + 1);
+            player.getTribeCard().add(painter);
+        }
+        return setBonusCalculator(player);
+    }
+
+}

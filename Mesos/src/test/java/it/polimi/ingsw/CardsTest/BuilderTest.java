@@ -1,6 +1,6 @@
 package it.polimi.ingsw.CardsTest;
 import it.polimi.ingsw.Model.Cards.Characters.*;
-import it.polimi.ingsw.Model.Cards.Characters.CharacterVisitor.CharacterVisitor;
+import it.polimi.ingsw.Visitors.CharacterVisitor.CharacterVisitor;
 import it.polimi.ingsw.Model.Game.Player;
 import it.polimi.ingsw.Model.Game.Totem;
 import it.polimi.ingsw.UI.Printer;

@@ -351,7 +351,7 @@ public class Printer  {
         String[] p = new String[height];
         p= initialize(p);
         p[1] = p[1] + "SET BONUS";
-        p[3] =  p[3] + "+6FOOD x";
+        p[3] =  p[3] + "+5 FOOD x";
         p[4] = p[4] + "SET";
         p[5] = p[5] +building.getPP()+"PP / " + "PRICE:" + building.getPrice();
         return encapsulator(p);

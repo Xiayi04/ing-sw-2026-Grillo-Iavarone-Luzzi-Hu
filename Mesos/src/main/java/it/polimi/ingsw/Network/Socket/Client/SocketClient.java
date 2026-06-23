@@ -34,6 +34,12 @@ public class SocketClient implements Runnable, ServerConnection, AutoCloseable{
         new Thread(this).start();
     }
 
+    /**
+     * Starts the socket client connection, initializes the input/output object streams,
+     * and enters the message receiving loop. It continuously reads incoming messages
+     * from the server, maps them to commands via a factory, and executes them asynchronously
+     * using a thread pool until a close signal is triggered.
+     */
     @Override
     public void run(){
         try {
@@ -73,6 +79,11 @@ public class SocketClient implements Runnable, ServerConnection, AutoCloseable{
         }
     }
 
+    /**
+     * Thread-safely serializes and sends a structured command and payload message
+     * to the server via the output stream.If an input/output error occurs during
+     * transmission, it triggers a forced endgame handling routine.
+     */
     public <T> void send (String command, Object payload){
         synchronized (outputLock) {
             try{

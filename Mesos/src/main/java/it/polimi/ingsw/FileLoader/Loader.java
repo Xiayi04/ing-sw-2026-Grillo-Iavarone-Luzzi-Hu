@@ -5,7 +5,7 @@ import java.io.*;
 public class Loader {
 
     /**
-     *
+     *Loads and parses a specific JSON era file from the application resources into an EraDTO object.
      * @param era which deck it's needed to create
      * @return a DTO which contains all the data to use for the creation of the deck for said era
      */

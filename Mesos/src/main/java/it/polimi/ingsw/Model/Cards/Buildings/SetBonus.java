@@ -1,8 +1,8 @@
 package it.polimi.ingsw.Model.Cards.Buildings;
-import it.polimi.ingsw.Model.Cards.Buildings.BuildingVisitor.BuildingInterface;
-import it.polimi.ingsw.Model.Cards.Buildings.BuildingVisitor.ActivationVisitor;
-import it.polimi.ingsw.Model.Cards.Buildings.BuildingVisitor.SetAndIconVisitor.AddedFoodException;
-import it.polimi.ingsw.Model.Cards.Buildings.BuildingVisitor.SetAndIconVisitor.SetAndIconVisitor;
+import it.polimi.ingsw.Visitors.BuildingVisitor.BuildingInterface;
+import it.polimi.ingsw.Visitors.BuildingVisitor.ActivationVisitor;
+import it.polimi.ingsw.Visitors.BuildingVisitor.SetAndIconVisitor.AddedFoodException;
+import it.polimi.ingsw.Visitors.BuildingVisitor.SetAndIconVisitor.SetAndIconVisitor;
 import it.polimi.ingsw.Model.Game.Player;
 import it.polimi.ingsw.UI.Printer;
 

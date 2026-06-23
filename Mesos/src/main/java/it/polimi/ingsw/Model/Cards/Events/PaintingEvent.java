@@ -1,8 +1,8 @@
 package it.polimi.ingsw.Model.Cards.Events;
 
 import it.polimi.ingsw.Model.Cards.Buildings.Building;
-import it.polimi.ingsw.Model.Cards.Buildings.BuildingVisitor.EventBuildings.Discount.DiscountVisitor;
-import it.polimi.ingsw.Model.Cards.Buildings.BuildingVisitor.EventBuildings.Discount.DiscountVisitorInterface;
+import it.polimi.ingsw.Visitors.BuildingVisitor.EventBuildings.Discount.DiscountVisitor;
+import it.polimi.ingsw.Visitors.BuildingVisitor.EventBuildings.Discount.DiscountVisitorInterface;
 import it.polimi.ingsw.Model.Game.Player;
 import it.polimi.ingsw.UI.Printer;
 

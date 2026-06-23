@@ -8,12 +8,10 @@ import java.util.List;
 
 
 public class LeaderBoardDAO {
-//in questa classe devo creare 3 metodi:
-//1:salvataggio della nuova partita del giocatore
-//2:ottenere la posizione in classifica che ha ottenuto il giocatore con questa partita
-//3:ottenere la classifica totale
-//NB:classifica riferita alle partite con stesso numero di giocatori di quella appena conclusa
-
+    /**
+     * Inserts a new player match record with their score,
+     * the current date, and the total player count into the database.
+     */
     public void addNewPlayerScore(String username, int playerScore, int numPlayers) throws SQLException{
         String sql =
                 "INSERT INTO gamesDB (username, score,game_date, num_players) VALUES (?, ?, ?, ?)";
@@ -30,6 +28,10 @@ public class LeaderBoardDAO {
         }
     }
 
+    /**
+     * Calculates a player's rank in the leaderboard based on
+     * their score and the matching game lobby size.
+     */
     public int getPositionInLeaderBoard( int numPlayers, int playerScore) throws SQLException{
         String sql = "SELECT COUNT(DISTINCT score) + 1 AS position " +
                 "FROM gamesDB WHERE num_players = ? AND score > ?";
@@ -50,7 +52,11 @@ public class LeaderBoardDAO {
     }
 
 
-
+    /**
+     * Retrieves the complete leaderboard filtered by lobby size,
+     * sorted in descending order by score.It dynamically assigns ranking positions,
+     * taking ties into account, and formats dates into a standard string representation.
+     */
     public List<LeaderBoardData> getAllTimeLeaderBoard(int numPlayers) throws SQLException{
         String sql ="SELECT username, score, game_date, num_players FROM gamesDB "+
                     "WHERE  num_players= ? "+

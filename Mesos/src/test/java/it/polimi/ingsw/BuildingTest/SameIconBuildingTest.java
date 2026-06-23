@@ -1,11 +1,11 @@
 package it.polimi.ingsw.BuildingTest;
 
-import it.polimi.ingsw.Model.Cards.Buildings.BuildingVisitor.ActivationVisitor;
-import it.polimi.ingsw.Model.Cards.Buildings.BuildingVisitor.ConcreteBuildingActivation;
+import it.polimi.ingsw.Visitors.BuildingVisitor.ActivationVisitor;
+import it.polimi.ingsw.Visitors.BuildingVisitor.ConcreteBuildingActivation;
 //import it.polimi.ingsw.Buildings.BuildingVisitor.Visitor;
-import it.polimi.ingsw.Model.Cards.Buildings.BuildingVisitor.SetAndIconVisitor.AddedFoodException;
-import it.polimi.ingsw.Model.Cards.Buildings.BuildingVisitor.SetAndIconVisitor.ConcreteSetAndIconVisitor;
-import it.polimi.ingsw.Model.Cards.Buildings.BuildingVisitor.SetAndIconVisitor.SetAndIconVisitor;
+import it.polimi.ingsw.Visitors.BuildingVisitor.SetAndIconVisitor.AddedFoodException;
+import it.polimi.ingsw.Visitors.BuildingVisitor.SetAndIconVisitor.ConcreteSetAndIconVisitor;
+import it.polimi.ingsw.Visitors.BuildingVisitor.SetAndIconVisitor.SetAndIconVisitor;
 import it.polimi.ingsw.Model.Cards.Buildings.SameIconBuilding;
 import it.polimi.ingsw.Model.Cards.Characters.Character;
 import it.polimi.ingsw.Model.Cards.Characters.Inventor;

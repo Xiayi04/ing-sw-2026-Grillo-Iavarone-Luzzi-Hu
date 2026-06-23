@@ -1,13 +1,13 @@
 package it.polimi.ingsw.Model.Cards.Buildings;
 
-import it.polimi.ingsw.Model.Cards.Buildings.BuildingVisitor.BuildingInterface;
-import it.polimi.ingsw.Model.Cards.Buildings.BuildingVisitor.EventBuildings.Discount.DiscountVisitorInterface;
-import it.polimi.ingsw.Model.Cards.Buildings.BuildingVisitor.EndGame.EndGameVisitorInterface;
-import it.polimi.ingsw.Model.Cards.Buildings.BuildingVisitor.EventBuildings.Shamanic.ShamanicVisitorInterface;
-import it.polimi.ingsw.Model.Cards.Buildings.BuildingVisitor.ActivationVisitor;
-import it.polimi.ingsw.Model.Cards.Buildings.BuildingVisitor.SetAndIconVisitor.SetAndIconVisitor;
-import it.polimi.ingsw.Model.Cards.Buildings.BuildingVisitor.SpecialBuildings.AddCardVisitorInterface;
-import it.polimi.ingsw.Model.Cards.Buildings.BuildingVisitor.SpecialBuildings.TurnOrderCardFoodBonus;
+import it.polimi.ingsw.Visitors.BuildingVisitor.BuildingInterface;
+import it.polimi.ingsw.Visitors.BuildingVisitor.EventBuildings.Discount.DiscountVisitorInterface;
+import it.polimi.ingsw.Visitors.BuildingVisitor.EndGame.EndGameVisitorInterface;
+import it.polimi.ingsw.Visitors.BuildingVisitor.EventBuildings.Shamanic.ShamanicVisitorInterface;
+import it.polimi.ingsw.Visitors.BuildingVisitor.ActivationVisitor;
+import it.polimi.ingsw.Visitors.BuildingVisitor.SetAndIconVisitor.SetAndIconVisitor;
+import it.polimi.ingsw.Visitors.BuildingVisitor.SpecialBuildings.AddCardVisitorInterface;
+import it.polimi.ingsw.Visitors.BuildingVisitor.SpecialBuildings.TurnOrderCardFoodBonus;
 import it.polimi.ingsw.Model.Cards.Card;
 import it.polimi.ingsw.Model.Cards.Events.HuntingEvent;
 import it.polimi.ingsw.Model.Cards.Events.PaintingEvent;

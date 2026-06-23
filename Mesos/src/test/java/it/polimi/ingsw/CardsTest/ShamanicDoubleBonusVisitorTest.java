@@ -2,9 +2,6 @@ package it.polimi.ingsw.CardsTest;
 
 import it.polimi.ingsw.Model.Factory.BuildingFactory;
 import it.polimi.ingsw.Model.Cards.Buildings.Building;
-import it.polimi.ingsw.Model.Cards.Buildings.BuildingVisitor.EventBuildings.Shamanic.ShamanicDoubleBonusVisitor;
-import it.polimi.ingsw.Model.Cards.Buildings.DoubleBonusBuilding;
-import it.polimi.ingsw.Model.Cards.Characters.Shaman;
 import it.polimi.ingsw.Model.Cards.Events.ShamanicEvent;
 import it.polimi.ingsw.Model.Game.Player;
 import it.polimi.ingsw.Model.Game.Totem;

@@ -1,7 +1,7 @@
 package it.polimi.ingsw.Model.Cards.Characters;
-import it.polimi.ingsw.Model.Cards.Characters.CharacterVisitor.CharacterInterface;
-import it.polimi.ingsw.Model.Cards.Characters.CharacterVisitor.CharacterVisitor;
-import it.polimi.ingsw.Model.Cards.Characters.CharacterVisitor.GuiVisitor;
+import it.polimi.ingsw.Visitors.CharacterVisitor.CharacterInterface;
+import it.polimi.ingsw.Visitors.CharacterVisitor.CharacterVisitor;
+import it.polimi.ingsw.Visitors.CharacterVisitor.GuiVisitor;
 import it.polimi.ingsw.Model.Game.Player;
 import it.polimi.ingsw.UI.Printer;
 import javafx.scene.layout.VBox;

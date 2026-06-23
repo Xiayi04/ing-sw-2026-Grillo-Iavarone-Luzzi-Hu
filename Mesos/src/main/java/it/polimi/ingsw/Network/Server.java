@@ -17,7 +17,9 @@ public class Server{
     static ServerController serverController;
     static final AtomicBoolean isTerminationStarted = new AtomicBoolean(false);
 
-
+    /**
+     * Configures database, initializes game state, and starts RMI and Socket server threads.
+     */
     public static void main(String[] args) throws RemoteException {
         System.out.println("Server starting...");
         DatabaseManager.createTable();
@@ -33,7 +35,11 @@ public class Server{
         serverSocketThread.start();
     }
 
-
+    /**
+     * Safely shuts down the server by closing socket and RMI connections,
+     * then exits the application.This method ensures thread-safe,
+     * single-execution termination logic and includes a short delay before exit.
+     */
     public synchronized static void terminate(){
         if(isTerminationStarted.get()){
             return;

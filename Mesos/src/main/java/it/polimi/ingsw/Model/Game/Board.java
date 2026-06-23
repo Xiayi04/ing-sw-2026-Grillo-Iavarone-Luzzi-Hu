@@ -5,8 +5,8 @@ import java.util.ArrayList;
 import java.util.Collections;
 
 import it.polimi.ingsw.Model.Cards.Buildings.Building;
-import it.polimi.ingsw.Model.Cards.Buildings.BuildingVisitor.SpecialBuildings.BonusFoodVisitor;
-import it.polimi.ingsw.Model.Cards.Buildings.BuildingVisitor.SpecialBuildings.TurnOrderCardFoodBonus;
+import it.polimi.ingsw.Visitors.BuildingVisitor.SpecialBuildings.BonusFoodVisitor;
+import it.polimi.ingsw.Visitors.BuildingVisitor.SpecialBuildings.TurnOrderCardFoodBonus;
 import it.polimi.ingsw.Model.Cards.Card;
 import it.polimi.ingsw.Model.Cards.Events.Event;
 import it.polimi.ingsw.Model.Factory.BuildingFactory;
@@ -312,9 +312,9 @@ public class Board  implements Serializable {
         totalBuildingEra3.addAll(buildings.subList(13,21));
         Collections.shuffle(totalBuildingEra3);
         if(numPlayers==2) {
-            buildingsEra1.add(totalBuildingEra1.getFirst());
-            buildingsEra2.addAll(totalBuildingEra2.subList(0,2));
-            buildingsEra3.addAll(totalBuildingEra3.subList(0,3));
+            buildingsEra1.addAll(totalBuildingEra1);
+            buildingsEra2.addAll(totalBuildingEra2);
+            buildingsEra3.addAll(totalBuildingEra3);
         } else if (numPlayers==3) {
             buildingsEra1.addAll(totalBuildingEra1.subList(0,2));
             buildingsEra2.addAll(totalBuildingEra2.subList(0,2));

@@ -2,7 +2,7 @@ package it.polimi.ingsw.BuildingTest;
 
 
 import it.polimi.ingsw.Model.Cards.Buildings.BonusStarBuilding;
-import it.polimi.ingsw.Model.Cards.Buildings.BuildingVisitor.ConcreteBuildingActivation;
+import it.polimi.ingsw.Visitors.BuildingVisitor.ConcreteBuildingActivation;
 import it.polimi.ingsw.Model.Game.Player;
 import it.polimi.ingsw.Model.Game.Totem;
 import it.polimi.ingsw.UI.Printer;

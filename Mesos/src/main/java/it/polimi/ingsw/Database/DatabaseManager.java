@@ -11,6 +11,9 @@ import java.util.Properties;
 public class DatabaseManager {
     private final static Properties properties = new Properties();
 
+    /*
+      Static initializer block that loads the database configuration from the 'database.properties' resource file.
+     */
     static {
         try (InputStream input = DatabaseManager.class
                 .getClassLoader().getResourceAsStream("database.properties")) {
@@ -21,6 +24,10 @@ public class DatabaseManager {
         }
     }
 
+    /**
+     * Establishes and returns a connection to the database using credentials retrieved
+     * from the system properties.
+     */
     public static Connection getConnection() throws SQLException {
         return DriverManager.getConnection(
                 properties.getProperty("db.url"),
@@ -28,6 +35,11 @@ public class DatabaseManager {
                 properties.getProperty("db.password"));
     }
 
+    /**
+     * Creates the 'gamesDB' tracking table in the database if it does not already exist.
+     * This method initializes columns for game identification, player statistics,
+     * match date, and lobby sizes.
+     */
     public static void createTable() {
         String sql = "CREATE TABLE IF NOT EXISTS gamesDB(" +
             "id INT auto_increment primary key," +

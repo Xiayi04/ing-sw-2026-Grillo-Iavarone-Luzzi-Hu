@@ -1,7 +1,7 @@
 package it.polimi.ingsw.CardsTest;
 
 import it.polimi.ingsw.Model.Cards.Buildings.BonusFood;
-import it.polimi.ingsw.Model.Cards.Buildings.BuildingVisitor.SpecialBuildings.BonusFoodVisitor;
+import it.polimi.ingsw.Visitors.BuildingVisitor.SpecialBuildings.BonusFoodVisitor;
 import it.polimi.ingsw.Model.Game.Player;
 import it.polimi.ingsw.Model.Game.Totem;
 import org.junit.jupiter.api.Test;

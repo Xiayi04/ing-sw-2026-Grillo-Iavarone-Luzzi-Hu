@@ -1,9 +1,9 @@
 package it.polimi.ingsw.Model.Cards.Characters;
 
 import it.polimi.ingsw.Model.Cards.Card;
-import it.polimi.ingsw.Model.Cards.Characters.CharacterVisitor.CharacterInterface;
-import it.polimi.ingsw.Model.Cards.Characters.CharacterVisitor.CharacterVisitor;
-import it.polimi.ingsw.Model.Cards.Characters.CharacterVisitor.InventorInterface;
+import it.polimi.ingsw.Visitors.CharacterVisitor.CharacterInterface;
+import it.polimi.ingsw.Visitors.CharacterVisitor.CharacterVisitor;
+import it.polimi.ingsw.Visitors.CharacterVisitor.InventorInterface;
 import it.polimi.ingsw.Model.Game.Player;
 import it.polimi.ingsw.UI.Printer;
 

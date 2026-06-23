@@ -76,7 +76,11 @@ public class TUI implements GraphicInterface, Runnable {
         controller.setView(this);
     }
 
-
+    /**
+     *Starts and manages the main TUI client execution loop.
+     * It handles connection selection, initializes UI components,and continuously processes user inputs either
+     * synchronously or asynchronously until the client terminates.
+     */
     @Override
     public void run() {
         if (terminal != null) {
@@ -168,6 +172,10 @@ public class TUI implements GraphicInterface, Runnable {
         close();
     }
 
+    /**
+     * Used when a user wants to see which cards he has.
+     * @param request : the string that the user wrote in the terminal
+     */
     private void handleCardsRequest(String request) {
         if(request.contains(":")){
             String[] split = request.split(":");
@@ -177,6 +185,11 @@ public class TUI implements GraphicInterface, Runnable {
         }
     }
 
+    /**
+     * Handles the input from the user when he has to insert the number
+     * of players that will join the game
+     * @param input : the string from the user.
+     */
     private void handleNumPlayersInput(String input) {
         input = input.trim();
 
@@ -218,7 +231,7 @@ public class TUI implements GraphicInterface, Runnable {
         totemStylesMap.put(Totem.ORANGE, redStyle);
     }
 
-    //TOC management
+
     private void addInHead(Totem totem) {
         synchronized (tocLock) {
             int i = 0;
@@ -260,7 +273,9 @@ public class TUI implements GraphicInterface, Runnable {
         }
     }
 
-    //show managers
+    /**
+     * Shows the game's leaderboard
+     */
     @Override
     public void showEndGameSuccessfully(String winner, List<PlayerScore> leaderboard) {
         if(leaderboard == null || leaderboard.isEmpty()){
@@ -306,6 +321,9 @@ public class TUI implements GraphicInterface, Runnable {
         printingHandler.addToPipeline(asb.toAnsi());
     }
 
+    /**
+     * Inserts a totem in the Turn Order Card (TOC) when needed
+     */
     @Override
     public void showReturnToTOC(String playerName) {
         addInHead(controller.getPlayerByName(playerName).getTotem());
@@ -323,6 +341,9 @@ public class TUI implements GraphicInterface, Runnable {
 
     }
 
+    /**
+     * Shows the leaderboard from the DataBase
+     */
     @Override
     public void showLeaderboardFromDB(int playerPosition, List<LeaderBoardData> updatedDB) {
         if(updatedDB == null || updatedDB.isEmpty()){
@@ -401,6 +422,9 @@ public class TUI implements GraphicInterface, Runnable {
 //        }
 //    }
 
+    /**
+     * Shows to the player who picked a card and from where.
+     */
     @Override
     public void pickCard(String name, boolean isUpper, boolean isBuilding, int index) {
         synchronized (LOCK) {
@@ -438,6 +462,10 @@ public class TUI implements GraphicInterface, Runnable {
         }
     }
 
+    /**
+     * Starts a blocking "pop-up" to ask to the user how many players
+     * will join the game
+     */
     @Override
     public void askNumToPlayer() {
         synchronized (LOCK) {
@@ -541,6 +569,9 @@ public class TUI implements GraphicInterface, Runnable {
 
     }
 
+    /**
+     * Used to format in the same way all the command's descriptions
+     */
     private void menuFormatter(AttributedStringBuilder asb, String pre_cmd, String cmd, String in_cmd) {
         int length = 30;
         int delta = length - pre_cmd.length();
@@ -705,7 +736,9 @@ public class TUI implements GraphicInterface, Runnable {
         printingHandler.addToPipeline(finalOutput.toAnsi());
     }
 
-
+    /**
+     * Takes the cards in raw form and joins the edges.
+     */
     public String[] cardMerger(String[] cards) {
         for (int i = 0; i < cards.length; i++) {
             if (i == 0) {
@@ -738,20 +771,6 @@ public class TUI implements GraphicInterface, Runnable {
         cards[cards.length - 1] = provvIdx.toString();
 
         return cards;
-    }
-
-    public void pathPrinter(Board board, String update) {
-        ArrayList<String> bluePrint = new ArrayList<>();
-
-        bluePrint.add("PATH:");
-        String[] path = printPath(board.getTurnOrderCard(), board.getPath());
-        bluePrint.addAll(Arrays.asList(path));
-        bluePrint.add("UPDATE:");
-        bluePrint.add(update);
-        for (String s : bluePrint) {
-            System.out.println(s);
-        }
-
     }
 
     public String[] printPlayers(ArrayList<Player> players) {
@@ -789,7 +808,9 @@ public class TUI implements GraphicInterface, Runnable {
         return result;
     }
 
-
+    /**
+     *  Shows all the cards that a player has.
+     */
     public void showCardsCommandTui(String totem){
         Board currentBoard = controller.getCurrentBoard();
         if(currentBoard == null){

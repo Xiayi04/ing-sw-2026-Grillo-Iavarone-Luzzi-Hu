@@ -22,7 +22,11 @@ public class ServerSocket implements Runnable,AutoCloseable {
         this.lobby = serverController.getLobby();
     }
 
-
+    /**
+     * Starts the network socket server loop on port 8000 and listens for incoming connections.
+     * It continuously accepts sockets, instantiates virtual client proxies,
+     * registers them in the lobby, and delegates handling tasks.
+     */
     @Override
     public void run() {
         System.out.println("SocketServer starting...");

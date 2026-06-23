@@ -1,17 +1,13 @@
 package it.polimi.ingsw.CardsTest;
 
-import it.polimi.ingsw.Model.Cards.Buildings.AddCard;
-import it.polimi.ingsw.Model.Cards.Buildings.BuildingVisitor.EventBuildings.Discount.DiscountVisitor;
 import it.polimi.ingsw.Model.Cards.Buildings.DiscountBuilding;
 import it.polimi.ingsw.Model.Cards.Buildings.Events;
 import it.polimi.ingsw.Model.Cards.Buildings.Icons;
-import it.polimi.ingsw.Model.Cards.Characters.CharacterVisitor.AddAndCountCharacter;
-import it.polimi.ingsw.Model.Cards.Characters.CharacterVisitor.CharacterVisitor;
+import it.polimi.ingsw.Visitors.CharacterVisitor.AddAndCountCharacter;
+import it.polimi.ingsw.Visitors.CharacterVisitor.CharacterVisitor;
 import it.polimi.ingsw.Model.Cards.Characters.Hunter;
 import it.polimi.ingsw.Model.Cards.Characters.Inventor;
 import it.polimi.ingsw.Model.Cards.Characters.Painter;
-import it.polimi.ingsw.Model.Cards.Characters.Picker;
-import it.polimi.ingsw.Model.Cards.Events.Event;
 import it.polimi.ingsw.Model.Cards.Events.HuntingEvent;
 import it.polimi.ingsw.Model.Cards.Events.PaintingEvent;
 import it.polimi.ingsw.Model.Cards.Events.SustenanceEvent;
@@ -19,7 +15,6 @@ import it.polimi.ingsw.Model.Game.Player;
 import it.polimi.ingsw.Model.Game.Totem;
 import org.junit.jupiter.api.Test;
 
-import java.awt.*;
 import java.util.ArrayList;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;

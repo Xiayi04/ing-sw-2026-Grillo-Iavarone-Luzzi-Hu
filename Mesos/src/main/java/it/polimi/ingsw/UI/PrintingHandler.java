@@ -24,10 +24,18 @@ public class PrintingHandler implements Runnable{
         this.reader = reader;
     }
 
+    /**
+     * Adds a String to print to the buffer.
+     */
     public void addToPipeline(String input){
         pipeline.add(input);
     }
 
+    /**
+     * Starts a thread that waits to print whatever strings is present in the pipeline.
+     * If a string contains [LOCK] the buffer gets stopped while if contains [CLEAR]
+     * the screen needs to be cleaned before printing the string.
+     */
     @Override
     public void run() {
         printerExec.submit(()->{
@@ -87,6 +95,9 @@ public class PrintingHandler implements Runnable{
         lock.set(true);
     }
 
+    /**
+     *  Unlocks the pipeline after a locking string.
+     */
     public void unlockPipeline(){
         synchronized (lock){
             lock.set(false);

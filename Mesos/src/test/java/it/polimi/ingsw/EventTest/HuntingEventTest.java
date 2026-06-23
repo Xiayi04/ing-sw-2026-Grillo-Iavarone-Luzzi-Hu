@@ -1,7 +1,7 @@
 package it.polimi.ingsw.EventTest;
 
-import it.polimi.ingsw.Model.Cards.Characters.CharacterVisitor.AddAndCountCharacter;
-import it.polimi.ingsw.Model.Cards.Characters.CharacterVisitor.CharacterVisitor;
+import it.polimi.ingsw.Visitors.CharacterVisitor.AddAndCountCharacter;
+import it.polimi.ingsw.Visitors.CharacterVisitor.CharacterVisitor;
 import it.polimi.ingsw.Model.Cards.Characters.Hunter;
 import it.polimi.ingsw.Model.Cards.Events.HuntingEvent;
 import it.polimi.ingsw.Model.Game.Player;

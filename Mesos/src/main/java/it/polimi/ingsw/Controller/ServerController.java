@@ -44,7 +44,11 @@ public class ServerController implements LobbyManager {
         return gameManager;
     }
 
-    //lobby management
+    /**
+     * Validates and assigns a unique username to a temporarily connected client.
+     * It checks for availability within the lobby, updates the player name,
+     * notifies the client, and triggers game start checks if successful.
+     */
     @Override
     public void checkUsername(String username, VirtualClientInterface client) {
 
@@ -85,6 +89,11 @@ public class ServerController implements LobbyManager {
 
     }
 
+    /**
+     * Validates and assigns a unique totem to a temporary client within the lobby.
+     * If the totem is available, it updates the client and triggers game start checks;
+     * if already taken, it handles the conflict or rejects the connection if no totems remain.
+     */
     @Override
     public void checkTotem(Totem totem, VirtualClientInterface client) {
 
@@ -133,6 +142,11 @@ public class ServerController implements LobbyManager {
         }
     }
 
+    /**
+     * Validates and sets the total number of players for the game,
+     * restricted to the first client in the lobby.It enforces bounds (2 to 5 players),
+     * updates lobby configurations, and triggers game start checks upon successful validation.
+     */
     @Override
     public void checkSetNumPlayers(int numPlayers, VirtualClientInterface client) {
 
@@ -171,6 +185,11 @@ public class ServerController implements LobbyManager {
 
     }
 
+    /**
+     * Verifies if all conditions to start the game are met and initializes it if ready.
+     * It checks if the player count is set, the required number of clients is reached,
+     * and all connected players have finalized their usernames and totems.
+     */
     public void checkStartGame() {
 
         ArrayList<TempPlayer> tempPlayers = lobby.getTempPlayers();
@@ -195,14 +214,16 @@ public class ServerController implements LobbyManager {
 
     }
 
-
+    /**
+     * Registers a newly connected client into the ping and notification subsystems.
+     */
     @Override
     public void connectionInitializer(VirtualClientInterface client) {
         pingManager.addClientToPingList(client);
         notifier.addClientToNotifier(client);
     }
 
-    //Requests management
+
 
     public synchronized void moveTotemRequest(String username, int pathIndex) {
         gameManager.resolvePosition(username, pathIndex);
@@ -218,11 +239,16 @@ public class ServerController implements LobbyManager {
 
     //Game Initializing
 
+    /**
+     * Initializes the game session with the specified player count and list of temporary
+     * players.It registers the players into the game manager, configures the notifier,
+     * and starts the game loop.
+     */
     public void gameInitializer(int numPLayers, ArrayList<TempPlayer> tempPlayers) {
         pushPlayersInGM(tempPlayers);
-
         gameManager.setNumPlayers(numPLayers);
         gameManager.setNotifier(notifier);
+        //necessità di far partire la partita
         gameManager.startGame();
     }
 
@@ -234,6 +260,9 @@ public class ServerController implements LobbyManager {
         }
     }
 
+    /**
+     * Transfers temporary players into the primary game manager if it is currently empty.
+     */
     public void pushPlayersInGM(ArrayList<TempPlayer> tempPlayers) {
 
         if (!gameManager.getPlayers().isEmpty()) {

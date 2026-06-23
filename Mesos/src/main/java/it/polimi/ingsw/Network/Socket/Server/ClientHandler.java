@@ -31,6 +31,11 @@ public class ClientHandler implements Runnable, AutoCloseable {
         new Thread(this).start();
     }
 
+    /**
+     * Continuously listens for incoming client messages and schedules their execution
+     * via a thread pool.It deserializes network packets, translates them into server commands,
+     * and cleans up connections upon reading errors.
+     */
     @Override
     public void run() {
         CommandFactoryServer commandFactoryServer = new CommandFactoryServer();

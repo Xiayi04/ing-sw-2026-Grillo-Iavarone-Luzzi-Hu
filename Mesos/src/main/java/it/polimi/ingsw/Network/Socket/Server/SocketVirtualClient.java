@@ -31,7 +31,9 @@ public class SocketVirtualClient implements VirtualClientInterface {
         this.gm = gameManager;
     }
 
-
+    /**
+     * Thread-safely resets the output stream and transmits a synchronized message to the client.
+     */
     private <T> void send(String commandType, T data){
         synchronized (outputLock) {
             try {
@@ -46,7 +48,6 @@ public class SocketVirtualClient implements VirtualClientInterface {
         }
     }
 
-    //public record TotemPosition(String playerName, int index) implements Serializable {};
 
 
     @Override

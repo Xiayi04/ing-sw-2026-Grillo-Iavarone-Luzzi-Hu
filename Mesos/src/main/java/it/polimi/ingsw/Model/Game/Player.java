@@ -1,13 +1,12 @@
 package it.polimi.ingsw.Model.Game;
 import it.polimi.ingsw.Model.Cards.Buildings.Building;
-import it.polimi.ingsw.Model.Cards.Buildings.BuildingVisitor.EndGame.EndGameVisitor;
-import it.polimi.ingsw.Model.Cards.Buildings.BuildingVisitor.EndGame.EndGameVisitorInterface;
-import it.polimi.ingsw.Model.Cards.Buildings.MultiplicationBuilding;
+import it.polimi.ingsw.Visitors.BuildingVisitor.EndGame.EndGameVisitor;
+import it.polimi.ingsw.Visitors.BuildingVisitor.EndGame.EndGameVisitorInterface;
 import it.polimi.ingsw.Model.Cards.Buildings.MultiplierPPBuilderBuilding;
 import it.polimi.ingsw.Model.Cards.Characters.Builder;
 import it.polimi.ingsw.Model.Cards.Characters.Character;
-import it.polimi.ingsw.Model.Cards.Characters.CharacterVisitor.CharacterVisitor;
-import it.polimi.ingsw.Model.Cards.Characters.CharacterVisitor.InventorIconCounter;
+import it.polimi.ingsw.Visitors.CharacterVisitor.CharacterVisitor;
+import it.polimi.ingsw.Visitors.CharacterVisitor.InventorIconCounter;
 import it.polimi.ingsw.Network.VirtualClientInterface;
 
 import java.io.Serial;

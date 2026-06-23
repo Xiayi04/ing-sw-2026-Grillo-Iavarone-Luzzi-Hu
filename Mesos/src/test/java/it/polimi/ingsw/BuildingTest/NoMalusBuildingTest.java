@@ -1,9 +1,9 @@
 package it.polimi.ingsw.BuildingTest;
 
-import it.polimi.ingsw.Model.Cards.Buildings.BuildingVisitor.ActivationVisitor;
-import it.polimi.ingsw.Model.Cards.Buildings.BuildingVisitor.ConcreteBuildingActivation;
-import it.polimi.ingsw.Model.Cards.Buildings.BuildingVisitor.EventBuildings.Shamanic.ShamanicNoMalusVisitor;
-import it.polimi.ingsw.Model.Cards.Buildings.BuildingVisitor.EventBuildings.Shamanic.ShamanicVisitorInterface;
+import it.polimi.ingsw.Visitors.BuildingVisitor.ActivationVisitor;
+import it.polimi.ingsw.Visitors.BuildingVisitor.ConcreteBuildingActivation;
+import it.polimi.ingsw.Visitors.BuildingVisitor.EventBuildings.Shamanic.ShamanicNoMalusVisitor;
+import it.polimi.ingsw.Visitors.BuildingVisitor.EventBuildings.Shamanic.ShamanicVisitorInterface;
 import it.polimi.ingsw.Model.Cards.Buildings.NoMalusBuilding;
 
 import it.polimi.ingsw.Model.Cards.Events.ShamanicEvent;

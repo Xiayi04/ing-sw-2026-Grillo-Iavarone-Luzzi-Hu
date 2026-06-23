@@ -25,6 +25,11 @@ public class Lobby {
         return isNumPlayersSet;
     }
 
+    /**
+     * Adds a new client to the lobby if the player capacity has not been exceeded and the
+     * client is not already present. Authorizes the first player to choose the number
+     * of players that will play in the game.
+     */
     public void addClient(VirtualClientInterface client){
         synchronized (tempPlayers){
             if(isNumPlayersSet.get() && tempPlayers.size() >= numPlayers.get()){
@@ -106,6 +111,12 @@ public class Lobby {
         }
     }
 
+    /**
+     * Evicts excess clients from the lobby if the current number of connected players exceeds
+     * the maximum capacity set for the game.It iterates through overflow temporary players and
+     * explicitly refuses their connection while safely ignoring their potential disconnection
+     * exceptions.
+     */
     public void checkMoreThenEnoughPlayers(){
         synchronized (tempPlayers){
             if(!isNumPlayersSet.get()){

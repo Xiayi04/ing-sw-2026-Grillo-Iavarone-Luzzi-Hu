@@ -1,8 +1,8 @@
 package it.polimi.ingsw.Model.Cards.Buildings;
 
-import it.polimi.ingsw.Model.Cards.Buildings.BuildingVisitor.BuildingInterface;
-import it.polimi.ingsw.Model.Cards.Buildings.BuildingVisitor.EventBuildings.Shamanic.ShamanicVisitorInterface;
-import it.polimi.ingsw.Model.Cards.Buildings.BuildingVisitor.ActivationVisitor;
+import it.polimi.ingsw.Visitors.BuildingVisitor.BuildingInterface;
+import it.polimi.ingsw.Visitors.BuildingVisitor.EventBuildings.Shamanic.ShamanicVisitorInterface;
+import it.polimi.ingsw.Visitors.BuildingVisitor.ActivationVisitor;
 import it.polimi.ingsw.Model.Cards.Events.ShamanicEvent;
 import it.polimi.ingsw.Model.Game.Player;
 import it.polimi.ingsw.UI.Printer;

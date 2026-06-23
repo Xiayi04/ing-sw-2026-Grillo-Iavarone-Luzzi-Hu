@@ -22,6 +22,9 @@ public class Notifier{
 
     public Notifier(){}
 
+    /**
+     * Thread-safely registers a new client to the notification list.
+     */
     public void addClientToNotifier(VirtualClientInterface client){
         synchronized (clients){
             clients.add(client);

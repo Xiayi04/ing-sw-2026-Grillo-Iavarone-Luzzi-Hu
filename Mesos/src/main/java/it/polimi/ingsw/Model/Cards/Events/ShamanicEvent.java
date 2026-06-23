@@ -1,9 +1,9 @@
 package it.polimi.ingsw.Model.Cards.Events;
 
 import it.polimi.ingsw.Model.Cards.Buildings.Building;
-import it.polimi.ingsw.Model.Cards.Buildings.BuildingVisitor.EventBuildings.Shamanic.ShamanicDoubleBonusVisitor;
-import it.polimi.ingsw.Model.Cards.Buildings.BuildingVisitor.EventBuildings.Shamanic.ShamanicNoMalusVisitor;
-import it.polimi.ingsw.Model.Cards.Buildings.BuildingVisitor.EventBuildings.Shamanic.ShamanicVisitorInterface;
+import it.polimi.ingsw.Visitors.BuildingVisitor.EventBuildings.Shamanic.ShamanicDoubleBonusVisitor;
+import it.polimi.ingsw.Visitors.BuildingVisitor.EventBuildings.Shamanic.ShamanicNoMalusVisitor;
+import it.polimi.ingsw.Visitors.BuildingVisitor.EventBuildings.Shamanic.ShamanicVisitorInterface;
 import it.polimi.ingsw.Model.Game.Player;
 import it.polimi.ingsw.UI.Printer;
 
@@ -99,9 +99,8 @@ public class ShamanicEvent extends Event {
                 }
                 p.modifyPP(-abs(this.getShEvePenPoints()));
             }
-            //p.getProxy().notifyAll(p,this);
         }
-        //resetting the values of max e min stars for security reasons.
+
         MaxStars = 0;
         MinStars = 0;
 
