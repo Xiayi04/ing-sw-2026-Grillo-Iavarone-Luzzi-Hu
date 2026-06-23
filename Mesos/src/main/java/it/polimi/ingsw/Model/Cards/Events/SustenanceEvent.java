@@ -48,7 +48,7 @@ public class SustenanceEvent extends Event {
             DiscountVisitorInterface visitor = new DiscountVisitor();
 
             for (Building b : player.getBuilding()) {
-                buildingDiscount += b.acceptDiscountEvent(visitor, player, this);
+                buildingDiscount += abs(b.acceptDiscountEvent(visitor, player, this));
             }
             numCards = abs(numCards);
             pickerDiscount = abs(pickerDiscount);
