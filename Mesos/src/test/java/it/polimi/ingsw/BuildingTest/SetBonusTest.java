@@ -1,12 +1,12 @@
 package it.polimi.ingsw.BuildingTest;
 
-import it.polimi.ingsw.Buildings.BuildingVisitor.ActivationVisitor;
-import it.polimi.ingsw.Buildings.BuildingVisitor.ConcreteBuildingActivation;
-import it.polimi.ingsw.Buildings.SameIconBuilding;
-import it.polimi.ingsw.Buildings.SetBonus;
+import it.polimi.ingsw.Model.Cards.Buildings.BuildingVisitor.ActivationVisitor;
+import it.polimi.ingsw.Model.Cards.Buildings.BuildingVisitor.ConcreteBuildingActivation;
+import it.polimi.ingsw.Model.Cards.Buildings.SameIconBuilding;
+import it.polimi.ingsw.Model.Cards.Buildings.SetBonus;
 import it.polimi.ingsw.Factory.ConcreteFactoryEra;
-import it.polimi.ingsw.Game.Player;
-import it.polimi.ingsw.Game.Totem;
+import it.polimi.ingsw.Model.Game.Player;
+import it.polimi.ingsw.Model.Game.Totem;
 import it.polimi.ingsw.UI.Printer;
 import org.junit.jupiter.api.Test;
 

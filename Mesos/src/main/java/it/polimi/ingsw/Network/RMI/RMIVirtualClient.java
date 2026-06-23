@@ -1,11 +1,11 @@
 package it.polimi.ingsw.Network.RMI;
 
 
-import it.polimi.ingsw.Cards.Events.Event;
+import it.polimi.ingsw.Model.Cards.Events.Event;
 import it.polimi.ingsw.Database.LeaderBoardData;
-import it.polimi.ingsw.Game.Board;
-import it.polimi.ingsw.Game.Player;
-import it.polimi.ingsw.Game.Totem;
+import it.polimi.ingsw.Model.Game.Board;
+import it.polimi.ingsw.Model.Game.Player;
+import it.polimi.ingsw.Model.Game.Totem;
 import it.polimi.ingsw.Network.ClientDisconnectedException;
 
 import it.polimi.ingsw.Network.PlayerScore;

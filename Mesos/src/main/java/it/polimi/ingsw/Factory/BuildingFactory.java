@@ -1,13 +1,9 @@
 package it.polimi.ingsw.Factory;
 
-import it.polimi.ingsw.Buildings.Building;
-import it.polimi.ingsw.Buildings.*;
-import it.polimi.ingsw.Buildings.Events;
-import it.polimi.ingsw.Buildings.Icons;
 import it.polimi.ingsw.FileLoader.*;
+import it.polimi.ingsw.Model.Cards.Buildings.*;
 
 import java.util.ArrayList;
-import java.util.List;
 
 public class BuildingFactory {
 

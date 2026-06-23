@@ -1,0 +1,68 @@
+package it.polimi.ingsw.Model.Cards.Events;
+
+import it.polimi.ingsw.Model.Cards.Buildings.Building;
+import it.polimi.ingsw.Model.Cards.Buildings.BuildingVisitor.EventBuildings.Discount.DiscountVisitor;
+import it.polimi.ingsw.Model.Cards.Buildings.BuildingVisitor.EventBuildings.Discount.DiscountVisitorInterface;
+import it.polimi.ingsw.Model.Game.Player;
+import it.polimi.ingsw.UI.Printer;
+
+import java.util.ArrayList;
+import static java.lang.Math.abs;
+
+public class PaintingEvent extends Event {
+    private final Integer PaEveNumMinPainters;
+    private final Integer PaEveMultiplierPP;
+    private final Integer PaEvePointsLoss;
+    //CONSTRUCTOR
+    public PaintingEvent(int era, String cardType, String eventName, Integer minPainters, Integer multiplierPP, Integer pointsLoss) {
+        super(era, cardType ,eventName);
+        this.PaEveNumMinPainters = minPainters;
+        this.PaEveMultiplierPP = multiplierPP;
+        this.PaEvePointsLoss = pointsLoss;
+    }
+
+    public String[] print(Printer printer){
+        return printer.print(this);
+    }
+
+    public Integer getPaEveNumMinPainters() {
+        return PaEveNumMinPainters;
+    }
+    public Integer getPaEveMultiplierPP() {
+        return PaEveMultiplierPP;
+    }
+    public Integer getPaEvePointsLoss() { //returns a negative integer
+        return PaEvePointsLoss;
+    }
+
+    public void printCard() {
+        super.printCard();
+        System.out.println("pittori minimi:"+PaEveNumMinPainters);
+        System.out.println("moltiplicatore:"+PaEveMultiplierPP);
+        System.out.println("punti persi:"+PaEvePointsLoss);
+    }
+
+    /**
+     * checks the number of painters for each player, if that number is greater or equal to NumMinPainters
+     * gives the player a bonus in PP, else if the number is smaller gives them a penalty
+     * @param players: array containing the game's players
+     */
+    @Override
+    public void resolveEvent(ArrayList<Player> players){
+        DiscountVisitorInterface v = new DiscountVisitor();
+        for(Player player : players){
+            synchronized(player.getTribeCard()) {
+                Integer numPainters = player.getPainterCounter(); //player.countTribeCardsByIcon("PAINTER");
+
+                if (numPainters >= PaEveNumMinPainters) {
+                    player.modifyPP(abs(numPainters * PaEveMultiplierPP));
+                } else {
+                    player.modifyPP(-abs(PaEvePointsLoss));
+                }
+                for (Building b : player.getBuilding()) {
+                    b.acceptDiscountEvent(v, player, this);
+                }
+            }
+        }
+    }
+}

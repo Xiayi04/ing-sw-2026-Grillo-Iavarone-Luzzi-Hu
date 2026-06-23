@@ -1,14 +1,16 @@
 package it.polimi.ingsw.EventTest;
 
-import it.polimi.ingsw.Cards.Characters.*;
-import it.polimi.ingsw.Cards.Events.EventName;
-import it.polimi.ingsw.Cards.Events.SustenanceEvent;
-import it.polimi.ingsw.Game.Player;
-import it.polimi.ingsw.Game.Totem;
+import it.polimi.ingsw.Model.Cards.Characters.Hunter;
+import it.polimi.ingsw.Model.Cards.Characters.Inventor;
+import it.polimi.ingsw.Model.Cards.Characters.Painter;
+import it.polimi.ingsw.Model.Cards.Characters.Shaman;
+import it.polimi.ingsw.Model.Cards.Events.EventName;
+import it.polimi.ingsw.Model.Cards.Events.SustenanceEvent;
+import it.polimi.ingsw.Model.Game.Player;
+import it.polimi.ingsw.Model.Game.Totem;
 import org.junit.jupiter.api.Test;
 
 import java.util.ArrayList;
-import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertEquals;

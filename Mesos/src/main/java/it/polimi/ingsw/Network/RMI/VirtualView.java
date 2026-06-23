@@ -1,11 +1,11 @@
 package it.polimi.ingsw.Network.RMI;
 
-import it.polimi.ingsw.Buildings.Building;
-import it.polimi.ingsw.Cards.Card;
+import it.polimi.ingsw.Model.Cards.Buildings.Building;
+import it.polimi.ingsw.Model.Cards.Card;
 
-import it.polimi.ingsw.Game.Board;
-import it.polimi.ingsw.Game.Player;
-import it.polimi.ingsw.Game.Totem;
+import it.polimi.ingsw.Model.Game.Board;
+import it.polimi.ingsw.Model.Game.Player;
+import it.polimi.ingsw.Model.Game.Totem;
 
 import java.rmi.Remote;
 import java.rmi.RemoteException;

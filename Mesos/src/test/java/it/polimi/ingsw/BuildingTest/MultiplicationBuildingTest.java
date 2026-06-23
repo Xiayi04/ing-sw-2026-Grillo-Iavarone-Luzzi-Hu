@@ -1,13 +1,13 @@
 package it.polimi.ingsw.BuildingTest;
 
-import it.polimi.ingsw.Buildings.*;
-import it.polimi.ingsw.Buildings.BuildingVisitor.ActivationVisitor;
-import it.polimi.ingsw.Buildings.BuildingVisitor.EndGame.EndGameVisitorInterface;
-import it.polimi.ingsw.Cards.Characters.Character;
-import it.polimi.ingsw.Cards.Characters.Hunter;
+import it.polimi.ingsw.Model.Cards.Buildings.*;
+import it.polimi.ingsw.Model.Cards.Buildings.BuildingVisitor.ActivationVisitor;
+import it.polimi.ingsw.Model.Cards.Buildings.BuildingVisitor.EndGame.EndGameVisitorInterface;
+import it.polimi.ingsw.Model.Cards.Characters.Character;
+import it.polimi.ingsw.Model.Cards.Characters.Hunter;
 import it.polimi.ingsw.Factory.ConcreteFactoryEra;
-import it.polimi.ingsw.Game.Player;
-import it.polimi.ingsw.Game.Totem;
+import it.polimi.ingsw.Model.Game.Player;
+import it.polimi.ingsw.Model.Game.Totem;
 import it.polimi.ingsw.UI.Printer;
 import org.junit.jupiter.api.Test;
 

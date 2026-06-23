@@ -1,11 +1,10 @@
 package it.polimi.ingsw.GameTest;
 
-import it.polimi.ingsw.Game.Board;
-import it.polimi.ingsw.Game.OfferCard;
-import it.polimi.ingsw.Game.Player;
-import it.polimi.ingsw.Game.Totem;
+import it.polimi.ingsw.Model.Game.Board;
+import it.polimi.ingsw.Model.Game.OfferCard;
+import it.polimi.ingsw.Model.Game.Player;
+import it.polimi.ingsw.Model.Game.Totem;
 import it.polimi.ingsw.UI.Printer;
-import junit.framework.Assert;
 import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
 import java.util.ArrayList;

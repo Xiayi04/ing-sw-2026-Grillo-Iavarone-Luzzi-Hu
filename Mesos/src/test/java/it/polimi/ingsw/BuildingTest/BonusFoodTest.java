@@ -1,9 +1,9 @@
 package it.polimi.ingsw.BuildingTest;
 
-import it.polimi.ingsw.Buildings.*;
-import it.polimi.ingsw.Buildings.BuildingVisitor.ActivationVisitor;
-import it.polimi.ingsw.Buildings.BuildingVisitor.SpecialBuildings.TurnOrderCardFoodBonus;
-import it.polimi.ingsw.Game.Player;
+import it.polimi.ingsw.Model.Cards.Buildings.*;
+import it.polimi.ingsw.Model.Cards.Buildings.BuildingVisitor.ActivationVisitor;
+import it.polimi.ingsw.Model.Cards.Buildings.BuildingVisitor.SpecialBuildings.TurnOrderCardFoodBonus;
+import it.polimi.ingsw.Model.Game.Player;
 import it.polimi.ingsw.UI.Printer;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;

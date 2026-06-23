@@ -1,6 +1,6 @@
 package it.polimi.ingsw.Network.RMI;
 
-import it.polimi.ingsw.Game.Totem;
+import it.polimi.ingsw.Model.Game.Totem;
 
 import java.rmi.Remote;
 import java.rmi.RemoteException;

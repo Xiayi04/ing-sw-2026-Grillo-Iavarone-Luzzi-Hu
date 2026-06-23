@@ -1,18 +1,18 @@
 package it.polimi.ingsw.GameTest;
 
-import it.polimi.ingsw.Buildings.BonusFood;
-import it.polimi.ingsw.Buildings.BonusStarBuilding;
-import it.polimi.ingsw.Buildings.Building;
-import it.polimi.ingsw.Buildings.MultiplicationBuilding;
-import it.polimi.ingsw.Cards.Card;
-import it.polimi.ingsw.Cards.Characters.Builder;
-import it.polimi.ingsw.Cards.Characters.Painter;
-import it.polimi.ingsw.Cards.Events.Event;
-import it.polimi.ingsw.Cards.Events.HuntingEvent;
-import it.polimi.ingsw.Cards.Events.ShamanicEvent;
-import it.polimi.ingsw.Game.Board;
-import it.polimi.ingsw.Game.Player;
-import it.polimi.ingsw.Game.Totem;
+import it.polimi.ingsw.Model.Cards.Buildings.BonusFood;
+import it.polimi.ingsw.Model.Cards.Buildings.BonusStarBuilding;
+import it.polimi.ingsw.Model.Cards.Buildings.Building;
+import it.polimi.ingsw.Model.Cards.Buildings.MultiplicationBuilding;
+import it.polimi.ingsw.Model.Cards.Card;
+import it.polimi.ingsw.Model.Cards.Characters.Builder;
+import it.polimi.ingsw.Model.Cards.Characters.Painter;
+import it.polimi.ingsw.Model.Cards.Events.Event;
+import it.polimi.ingsw.Model.Cards.Events.HuntingEvent;
+import it.polimi.ingsw.Model.Cards.Events.ShamanicEvent;
+import it.polimi.ingsw.Model.Game.Board;
+import it.polimi.ingsw.Model.Game.Player;
+import it.polimi.ingsw.Model.Game.Totem;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 

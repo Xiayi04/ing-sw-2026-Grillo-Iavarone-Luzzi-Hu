@@ -1,17 +1,16 @@
 package it.polimi.ingsw.GameTest;
 
-import it.polimi.ingsw.Buildings.*;
-import it.polimi.ingsw.Cards.CardType;
-import it.polimi.ingsw.Cards.Characters.Builder;
-import it.polimi.ingsw.Cards.Characters.CharacterType;
-import it.polimi.ingsw.Cards.Characters.Inventor;
-import it.polimi.ingsw.Cards.Characters.Painter;
-import it.polimi.ingsw.Factory.ConcreteFactoryEra;
-import it.polimi.ingsw.Game.Player;
-import it.polimi.ingsw.Game.Totem;
+import it.polimi.ingsw.Model.Cards.Buildings.BonusFood;
+import it.polimi.ingsw.Model.Cards.Buildings.BonusStarBuilding;
+import it.polimi.ingsw.Model.Cards.Buildings.Building;
+import it.polimi.ingsw.Model.Cards.Buildings.MultiplicationBuilding;
+import it.polimi.ingsw.Model.Cards.Characters.Builder;
+import it.polimi.ingsw.Model.Cards.Characters.Inventor;
+import it.polimi.ingsw.Model.Cards.Characters.Painter;
+import it.polimi.ingsw.Model.Game.Player;
+import it.polimi.ingsw.Model.Game.Totem;
 import org.junit.jupiter.api.Test;
 
-import static it.polimi.ingsw.Cards.Characters.InventorIcon.TREE;
 import static org.junit.jupiter.api.Assertions.*;
 
 public class PlayerTest {

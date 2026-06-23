@@ -1,9 +1,9 @@
 package it.polimi.ingsw.BuildingTest;
 
-import it.polimi.ingsw.Buildings.*;
-import it.polimi.ingsw.Buildings.BuildingVisitor.ActivationVisitor;
-import it.polimi.ingsw.Buildings.BuildingVisitor.ConcreteBuildingActivation;
-import it.polimi.ingsw.Buildings.BuildingVisitor.SpecialBuildings.AddCardException;
+import it.polimi.ingsw.Model.Cards.Buildings.AddCard;
+import it.polimi.ingsw.Model.Cards.Buildings.BuildingVisitor.ActivationVisitor;
+import it.polimi.ingsw.Model.Cards.Buildings.BuildingVisitor.ConcreteBuildingActivation;
+import it.polimi.ingsw.Model.Cards.Buildings.BuildingVisitor.SpecialBuildings.AddCardException;
 import it.polimi.ingsw.UI.Printer;
 import org.junit.jupiter.api.Test;
 

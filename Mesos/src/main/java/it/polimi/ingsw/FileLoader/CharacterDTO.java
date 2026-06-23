@@ -1,5 +1,5 @@
 package it.polimi.ingsw.FileLoader;
-import it.polimi.ingsw.Cards.Characters.CharacterType;
+import it.polimi.ingsw.Model.Cards.Characters.CharacterType;
 
 public class CharacterDTO extends CardDTO {
     private CharacterType characterType;

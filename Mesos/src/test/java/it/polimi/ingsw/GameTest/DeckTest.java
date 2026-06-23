@@ -1,12 +1,11 @@
 package it.polimi.ingsw.GameTest;
-import it.polimi.ingsw.Cards.Card;
-import it.polimi.ingsw.Cards.Characters.CharacterType;
-import it.polimi.ingsw.Cards.Events.Event;
-import it.polimi.ingsw.Game.Deck;
+import it.polimi.ingsw.Model.Cards.Card;
+import it.polimi.ingsw.Model.Cards.Events.Event;
+import it.polimi.ingsw.Model.Game.Deck;
 import org.junit.jupiter.api.Test;
-import it.polimi.ingsw.Cards.CardType;
+
 import java.util.ArrayList;
-import it.polimi.ingsw.Cards.Characters.Character;
+import it.polimi.ingsw.Model.Cards.Characters.Character;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class DeckTest {
@@ -53,7 +52,7 @@ public class DeckTest {
         int counterSuEve=0;
         for(Card c : deck) {
             if(c.getCardType().equals("CHARACTER")){
-                switch(((it.polimi.ingsw.Cards.Characters.Character)c).getCharacterType()){
+                switch(((Character)c).getCharacterType()){
                     case "HUNTER":
                         counterHunter++;
                         break;

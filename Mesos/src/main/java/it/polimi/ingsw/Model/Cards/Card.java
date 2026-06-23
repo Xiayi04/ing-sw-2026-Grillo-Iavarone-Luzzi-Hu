@@ -1,0 +1,39 @@
+package it.polimi.ingsw.Model.Cards;
+
+import it.polimi.ingsw.UI.Printer;
+
+import java.io.Serial;
+import java.io.Serializable;
+
+public abstract class Card implements Serializable {
+    @Serial
+    private static final long serialVersionUID = 1L;
+    private final int era;
+    private final String cardType;
+    private boolean isPickable;
+
+    public Card(int era, String cardType, boolean isPickable) {
+        this.era = era;
+        this.cardType = cardType;
+        this.isPickable = isPickable;
+    }
+
+    public int getEra() {
+        return era;
+    }
+
+    public String getCardType() { return cardType; }
+
+    public boolean getIsPickable() {
+        return isPickable;
+    }
+
+    public void printCard(){
+        System.out.println("era:"+era);
+        System.out.println("tipo di carta:"+cardType);
+    }
+
+    public abstract String[] print(Printer printer);
+
+    public abstract String getImagePath();
+}

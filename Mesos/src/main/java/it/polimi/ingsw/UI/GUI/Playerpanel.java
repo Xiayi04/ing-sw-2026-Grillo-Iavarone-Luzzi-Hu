@@ -1,22 +1,16 @@
 package it.polimi.ingsw.UI.GUI;
 
-import it.polimi.ingsw.Game.Player;
+import it.polimi.ingsw.Model.Game.Player;
 import javafx.geometry.Pos;
 import javafx.scene.Cursor;
-import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.Label;
-import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
-import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
-import javafx.scene.paint.Color;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
-
-import java.util.Objects;
 
 public class Playerpanel extends HBox {
 

@@ -4,7 +4,7 @@ import it.polimi.ingsw.Controller.GameManager;
 import it.polimi.ingsw.Controller.Lobby;
 
 import it.polimi.ingsw.Controller.ServerController;
-import it.polimi.ingsw.Game.Totem;
+import it.polimi.ingsw.Model.Game.Totem;
 import it.polimi.ingsw.Network.VirtualClientInterface;
 
 import java.rmi.RemoteException;

@@ -1,8 +1,8 @@
 package it.polimi.ingsw.GameTest;
 
-import it.polimi.ingsw.Game.Player;
-import it.polimi.ingsw.Game.Totem;
-import it.polimi.ingsw.Game.TurnOrderCard;
+import it.polimi.ingsw.Model.Game.Player;
+import it.polimi.ingsw.Model.Game.Totem;
+import it.polimi.ingsw.Model.Game.TurnOrderCard;
 import it.polimi.ingsw.UI.Printer;
 import org.junit.jupiter.api.Test;
 

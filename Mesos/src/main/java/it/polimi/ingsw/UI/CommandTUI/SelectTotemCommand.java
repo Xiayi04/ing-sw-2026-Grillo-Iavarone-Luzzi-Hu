@@ -1,6 +1,6 @@
 package it.polimi.ingsw.UI.CommandTUI;
 
-import it.polimi.ingsw.Game.Totem;
+import it.polimi.ingsw.Model.Game.Totem;
 import it.polimi.ingsw.Network.ClientController;
 import it.polimi.ingsw.UI.TUI;
 

@@ -1,20 +1,19 @@
 package it.polimi.ingsw.BuildingTest;
 
-import it.polimi.ingsw.Buildings.*;
-import it.polimi.ingsw.Buildings.BuildingVisitor.ActivationVisitor;
-import it.polimi.ingsw.Buildings.BuildingVisitor.ConcreteBuildingActivation;
+import it.polimi.ingsw.Model.Cards.Buildings.BuildingVisitor.ActivationVisitor;
+import it.polimi.ingsw.Model.Cards.Buildings.BuildingVisitor.ConcreteBuildingActivation;
 //import it.polimi.ingsw.Buildings.BuildingVisitor.Visitor;
-import it.polimi.ingsw.Buildings.BuildingVisitor.SetAndIconVisitor.AddedFoodException;
-import it.polimi.ingsw.Buildings.BuildingVisitor.SetAndIconVisitor.ConcreteSetAndIconVisitor;
-import it.polimi.ingsw.Buildings.BuildingVisitor.SetAndIconVisitor.SetAndIconVisitor;
-import it.polimi.ingsw.Cards.Characters.Character;
-import it.polimi.ingsw.Cards.Characters.Inventor;
+import it.polimi.ingsw.Model.Cards.Buildings.BuildingVisitor.SetAndIconVisitor.AddedFoodException;
+import it.polimi.ingsw.Model.Cards.Buildings.BuildingVisitor.SetAndIconVisitor.ConcreteSetAndIconVisitor;
+import it.polimi.ingsw.Model.Cards.Buildings.BuildingVisitor.SetAndIconVisitor.SetAndIconVisitor;
+import it.polimi.ingsw.Model.Cards.Buildings.SameIconBuilding;
+import it.polimi.ingsw.Model.Cards.Characters.Character;
+import it.polimi.ingsw.Model.Cards.Characters.Inventor;
 import it.polimi.ingsw.Factory.ConcreteFactoryEra;
-import it.polimi.ingsw.Game.Player;
-import it.polimi.ingsw.Game.Totem;
+import it.polimi.ingsw.Model.Game.Player;
+import it.polimi.ingsw.Model.Game.Totem;
 import it.polimi.ingsw.UI.Printer;
 import org.junit.jupiter.api.Test;
-import org.junit.platform.engine.TestDescriptor;
 
 import static org.junit.jupiter.api.Assertions.*;
 

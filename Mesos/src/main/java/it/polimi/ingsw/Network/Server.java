@@ -3,7 +3,7 @@ package it.polimi.ingsw.Network;
 import it.polimi.ingsw.Controller.GameManager;
 import it.polimi.ingsw.Controller.ServerController;
 import it.polimi.ingsw.Database.DatabaseManager;
-import it.polimi.ingsw.Game.Board;
+import it.polimi.ingsw.Model.Game.Board;
 import it.polimi.ingsw.Network.RMI.ServerRMI;
 import it.polimi.ingsw.Network.Socket.Server.ServerSocket;
 import java.rmi.RemoteException;

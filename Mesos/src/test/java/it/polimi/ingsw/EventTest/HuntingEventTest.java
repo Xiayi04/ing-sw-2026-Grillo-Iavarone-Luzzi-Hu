@@ -1,20 +1,14 @@
 package it.polimi.ingsw.EventTest;
 
-import it.polimi.ingsw.Buildings.BuildingVisitor.ConcreteBuildingActivation;
-import it.polimi.ingsw.Cards.CardType;
-import it.polimi.ingsw.Cards.Characters.CharacterType;
-import it.polimi.ingsw.Cards.Characters.CharacterVisitor.AddAndCountCharacter;
-import it.polimi.ingsw.Cards.Characters.CharacterVisitor.CharacterVisitor;
-import it.polimi.ingsw.Cards.Characters.Hunter;
-import it.polimi.ingsw.Cards.Events.EventName;
-import it.polimi.ingsw.Cards.Events.HuntingEvent;
-import it.polimi.ingsw.Game.Player;
-import it.polimi.ingsw.Game.Totem;
+import it.polimi.ingsw.Model.Cards.Characters.CharacterVisitor.AddAndCountCharacter;
+import it.polimi.ingsw.Model.Cards.Characters.CharacterVisitor.CharacterVisitor;
+import it.polimi.ingsw.Model.Cards.Characters.Hunter;
+import it.polimi.ingsw.Model.Cards.Events.HuntingEvent;
+import it.polimi.ingsw.Model.Game.Player;
+import it.polimi.ingsw.Model.Game.Totem;
 import org.junit.jupiter.api.Test;
-import org.junit.platform.engine.TestDescriptor;
 
 import java.util.ArrayList;
-import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 

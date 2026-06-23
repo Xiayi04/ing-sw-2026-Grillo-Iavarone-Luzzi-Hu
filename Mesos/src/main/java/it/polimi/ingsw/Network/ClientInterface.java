@@ -1,6 +1,6 @@
 package it.polimi.ingsw.Network;
 
-import it.polimi.ingsw.Game.Totem;
+import it.polimi.ingsw.Model.Game.Totem;
 
 //interfaccia per mandare messaggi da client al server
 public interface ClientInterface {

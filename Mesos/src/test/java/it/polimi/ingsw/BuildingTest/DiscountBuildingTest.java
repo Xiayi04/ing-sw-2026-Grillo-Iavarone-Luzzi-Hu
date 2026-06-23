@@ -1,13 +1,16 @@
 package it.polimi.ingsw.BuildingTest;
 
-import it.polimi.ingsw.Buildings.*;
-import it.polimi.ingsw.Buildings.BuildingVisitor.ConcreteBuildingActivation;
-import it.polimi.ingsw.Cards.Characters.Character;
-import it.polimi.ingsw.Cards.Events.Event;
+import it.polimi.ingsw.Model.Cards.Buildings.Building;
+import it.polimi.ingsw.Model.Cards.Buildings.BuildingVisitor.ConcreteBuildingActivation;
+import it.polimi.ingsw.Model.Cards.Buildings.DiscountBuilding;
+import it.polimi.ingsw.Model.Cards.Buildings.Events;
+import it.polimi.ingsw.Model.Cards.Buildings.Icons;
+import it.polimi.ingsw.Model.Cards.Characters.Character;
+import it.polimi.ingsw.Model.Cards.Events.Event;
 import it.polimi.ingsw.Factory.BuildingFactory;
 import it.polimi.ingsw.Factory.ConcreteFactoryEra;
-import it.polimi.ingsw.Game.Player;
-import it.polimi.ingsw.Game.Totem;
+import it.polimi.ingsw.Model.Game.Player;
+import it.polimi.ingsw.Model.Game.Totem;
 import it.polimi.ingsw.UI.Printer;
 import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;

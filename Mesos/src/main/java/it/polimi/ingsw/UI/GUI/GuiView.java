@@ -1,12 +1,10 @@
 package it.polimi.ingsw.UI.GUI;
 
 
-import it.polimi.ingsw.Buildings.Building;
-import it.polimi.ingsw.Cards.Card;
+import it.polimi.ingsw.Model.Cards.Card;
 import it.polimi.ingsw.Database.LeaderBoardData;
-import it.polimi.ingsw.Game.OfferCard;
-import it.polimi.ingsw.Game.Player;
-import it.polimi.ingsw.Game.Totem;
+import it.polimi.ingsw.Model.Game.Player;
+import it.polimi.ingsw.Model.Game.Totem;
 import it.polimi.ingsw.Network.ClientController;
 import it.polimi.ingsw.Network.GraphicInterface;
 import it.polimi.ingsw.Network.PlayerScore;
@@ -31,7 +29,7 @@ import javafx.scene.layout.*;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.util.Duration;
-import java.awt.*;
+
 import java.io.File;
 import java.util.*;
 import java.util.List;
@@ -63,6 +61,12 @@ public class GuiView implements GraphicInterface {
         this.root = root;
     }
 
+    /**
+     * The method is responsible for displaying the main screen of the game. It adds the following visible elements to
+     * it: a help button for viewing the rules, a row of player panels for displaying the main data of the opposing
+     * players, the board, a VBox to show error messages, a player panel at the bottom to display the main data of the
+     * local player, and a label to show whose turn it is.
+     */
     public void showMainStage() {
         //System.out.println("DEBUG: metodo showMainStage chiamato");
         root.getChildren().clear();
@@ -105,6 +109,9 @@ public class GuiView implements GraphicInterface {
         StackPane.setAlignment(help, Pos.TOP_LEFT);
     }
 
+    /**
+     * the method shows the menu screen: it inserts the menu and the vbox for displaying messages
+     */
     public void showLobbyMenu() {
         root.setStyle("-fx-background-color: red");
         /*ImageView background = new ImageView(new Image(new File("images/background/background.png").toURI().toString()));
@@ -134,6 +141,11 @@ public class GuiView implements GraphicInterface {
 
     }
 
+    /**
+     * the method builds and displays the row of opposing players: for each player with a name different from the
+     * localPlayer it creates a player panel and adds it to the hbox
+     * @return playersBar
+     */
     public Node showPlayersBar(){
         HBox playersBar = new HBox(50);
         playersBar.setAlignment(Pos.CENTER);
@@ -147,23 +159,31 @@ public class GuiView implements GraphicInterface {
         return playersBar;
     }
 
+    /**
+     * show the player panel for the localPlayer
+     * @return localPlayer
+     */
     public Node showLocalPlayer(){
-        try{
-            for (Player p : clientController.getCurrentBoard().getPlayers()) {
-                if (p.getName().equals(clientController.getLocalPlayer().getName())) {
-                    Playerpanel localPlayer = new Playerpanel(p, this);
-                    panels.put(p.getName(), localPlayer);
-                    localPlayer.setAlignment(Pos.CENTER);
-                    localPlayer.setPadding(new Insets(0, 0, 20, 0));
-                    return localPlayer;
-                }
+        for (Player p : clientController.getCurrentBoard().getPlayers()) {
+            if (p.getName().equals(clientController.getLocalPlayer().getName())) {
+                Playerpanel localPlayer = new Playerpanel(p, this);
+                panels.put(p.getName(), localPlayer);
+                localPlayer.setAlignment(Pos.CENTER);
+                localPlayer.setPadding(new Insets(0, 0, 20, 0));
+                return localPlayer;
             }
-        }
-        catch (NullPointerException ignored){
         }
         return null;
     }
 
+    /**
+     * the method, based on the values of the booleans isUpper and isBuilding, reloads the row of cards from which
+     * the card was drawn
+     * @param username: username of the player who has to draw the card
+     * @param isUpper: if true the card was drawn from the top row, if false from the bottom row
+     * @param isBuilding: if true the drawn card is a building, if false it's a character
+     * @param index: index where the drawn card is in the corresponding row
+     */
     public void pickCard(String username, boolean isUpper, boolean isBuilding, int index){
         Platform.runLater(() -> {
             if(index<0)
@@ -191,6 +211,12 @@ public class GuiView implements GraphicInterface {
         });
     }
 
+    /**
+     * The method is responsible for moving the totem from the turn order card to the selected offer card on the path,
+     * removing the image from the TOCSlots arraylist and adding it in the correct position in the OCSlots arraylist
+     * @param username: username of the player who has to move the totem
+     * @param index: position where you want to place the totem
+     */
     public void moveTotem(String username, int index) {
         //System.out.println("DEBUG: totem mosso");
         Platform.runLater(() -> {
@@ -205,6 +231,9 @@ public class GuiView implements GraphicInterface {
         });
     }
 
+    /**
+     * delete and reload the top row of characters and events
+     */
     public void refreshUpperCards(){
         boardView.getUpperCharacterRow().getChildren().clear();
         for(Card c : clientController.getCurrentBoard().getUpperCardRow()){
@@ -226,6 +255,9 @@ public class GuiView implements GraphicInterface {
         }
     }
 
+    /**
+     * delete and reload the bottom row of characters and events
+     */
     public void refreshDownCards(){
         boardView.getDownCharacterRow().getChildren().clear();
         for(Card c : clientController.getCurrentBoard().getLowerCardsRow()){
@@ -246,6 +278,9 @@ public class GuiView implements GraphicInterface {
         }
     }
 
+    /**
+     * delete and reload the building's top row
+     */
     public void refreshUpperBuildingCards(){
         boardView.getUpperBuildingRow().getChildren().clear();
         for(Card c : clientController.getCurrentBoard().getUpperBuildingRow()){
@@ -266,6 +301,9 @@ public class GuiView implements GraphicInterface {
         }
     }
 
+    /**
+     * delete and reload the building's bottom row
+     */
     public void refreshDownBuildingCards(){
         boardView.getDownBuildingRow().getChildren().clear();
         for(Card c : clientController.getCurrentBoard().getLowerBuildingRow()){
@@ -286,6 +324,9 @@ public class GuiView implements GraphicInterface {
         }
     }
 
+    /**
+     * the method updates the board for the next round, also showing the back of the updated deck
+     */
     public void showNextRound(){
         //System.out.println("DEBUG: metodo  showNextRound chiamato");
         Platform.runLater(() -> {
@@ -303,6 +344,11 @@ public class GuiView implements GraphicInterface {
         });
     }
 
+    /**
+     * Before performing the next round, a new board is sent to the client controller; this method is used to update
+     * the references of the players, thus pointing to the player objects of the new board and always displaying the
+     * updated data
+     */
     public void updateReferences(){
         for(Player p : clientController.getCurrentBoard().getPlayers()){
             panels.get(p.getName()).setPlayer(p);
@@ -319,6 +365,11 @@ public class GuiView implements GraphicInterface {
         });
     }
 
+    /**
+     * The method shows the leaderboard screen of the just-finished match
+     * @param leaderboard: It's the list, already sorted by points and food, where the players' scores from the
+     *                     game are recorded.
+     */
     @Override
     public void showEndGameSuccessfully(String winner, List<PlayerScore> leaderboard) {
         System.out.println("il metodo showEndGameSuccessfully è stato chiamato");
@@ -412,6 +463,11 @@ public class GuiView implements GraphicInterface {
         menuView.getNumPlayers().getChildren().addAll(text,hbox);
     }*/
 
+    /**
+     * Create a window to ask the first player for the number of participants in the game. You can't close it using
+     * the window's X, and you have to enter a number of players. Only when the number has been entered will it be
+     * possible to close the window by clicking "confirm," and the number of participants can't be changed anymore.
+     */
     public void askNumToPlayer() {
         Platform.runLater(() -> {
             Stage stage = new Stage();
@@ -441,11 +497,6 @@ public class GuiView implements GraphicInterface {
                         event.consume();
                     }
                 });
-                /*new Thread(()-> {
-                    int numPlayers = Integer.parseInt(comboBox.getValue());
-                    clientController.setNumPlayers(numPlayers);
-                    System.out.println("DEBUG: il numero di giocatori è "+ numPlayers);
-                }).start();*/
                 //cliccando il tasto conferma si chiude la finestra, non si può cambiare il numero di giocatori
                 if (!comboBox.getValue().equals(null)){
                     stage.close();
@@ -464,6 +515,11 @@ public class GuiView implements GraphicInterface {
         });
     }
 
+    /**
+     * display the current food value for a given player
+     * @param playerName: player's username whose food you want to view
+     * @param food: amount of food (not used but included for the tui)
+     */
     public void showPlayerFoodUpdate(String playerName, int food){
         Platform.runLater(() -> {
             Player player = clientController.getPlayerByName(playerName);
@@ -471,6 +527,11 @@ public class GuiView implements GraphicInterface {
         });
     }
 
+    /**
+     * display the current PP value for a given player
+     * @param playerName: player's username whose PP you want to view
+     * @param pp: amount of PP (not used but included for the tui)
+     */
     public void showPlayerPPUpdate(String playerName, int pp){
         Platform.runLater(() -> {
             Player player = clientController.getPlayerByName(playerName);
@@ -478,6 +539,11 @@ public class GuiView implements GraphicInterface {
         });
     }
 
+    /**
+     * Create a label for player communications and insert it into the message VBox. Each label will be visible
+     * for 5 seconds, and a maximum of 3 labels can be displayed at a time.
+     * @param message: it's the message to display
+     */
     public void showMessage(String message){
         System.out.println("DEBUG: il messaggio è "+message);
         Platform.runLater(() -> {
@@ -508,22 +574,29 @@ public class GuiView implements GraphicInterface {
         });
     }
 
+    /**
+     * The method makes a label visible for 5 seconds, showing whose turn it is to play
+     * @param username: username of the player who has to take the action
+     */
     public void showCurrentPlayer(String username) {
         Platform.runLater(() -> {
             //currentPlayerLabel.setText("PROVA");
-            if(username.equals(clientController.getLocalPlayer().getName())){
-                currentPlayerLabel.setText("It's your turn");
+            try{
+                if (username.equals(clientController.getLocalPlayer().getName())) {
+                    currentPlayerLabel.setText("It's your turn");
+                } else {
+                    currentPlayerLabel.setText("It's " + username + "'s turn");
+                }
+                currentPlayerLabel.setVisible(true);
+                PauseTransition pause = new PauseTransition(Duration.seconds(5));
+                pause.setOnFinished(event -> {
+                    currentPlayerLabel.setVisible(false);
+                });
+                pause.stop();
+                pause.playFromStart();
             }
-            else{
-                currentPlayerLabel.setText("It's " + username +  "'s turn");
+            catch (NullPointerException ignored){
             }
-            currentPlayerLabel.setVisible(true);
-            PauseTransition pause = new PauseTransition(Duration.seconds(5));
-            pause.setOnFinished(event -> {
-                currentPlayerLabel.setVisible(false);
-            });
-            pause.stop();
-            pause.playFromStart();
         });
     }
 
@@ -531,6 +604,11 @@ public class GuiView implements GraphicInterface {
 
     }
 
+    /**
+     * Create a label for the errors sent from the server to the player and insert it into the message VBox.
+     * Each label will be visible for 5 seconds, and a maximum of 3 labels can be displayed at a time.
+     * @param message: it's the error to display
+     */
     public void showError(String message){
         System.out.println("DEBUG: l'errore  è "+message);
         Platform.runLater(() -> {
@@ -561,6 +639,12 @@ public class GuiView implements GraphicInterface {
         });
     }
 
+    /**
+     * The method deals with putting the totems back on the turn order card at the end of the corresponding player's
+     * turn.
+     * It does the opposite of the moveTotem method.
+     * @param username: username of the player whose totem needs to be moved
+     */
     public void showReturnToTOC(String username){
         //System.out.println("DEBUG: metodo showReturnToTOC chiamato");
         Platform.runLater(() -> {
@@ -580,6 +664,11 @@ public class GuiView implements GraphicInterface {
         });
     }
 
+    /**
+     * The method takes care of initializing the tableView by adding the necessary columns and sizing them correctly.
+     * It also overrides the updateItem method which, with this implementation, highlights the row where the player is
+     * positioned in the overall ranking.
+     */
     public void initializeLeaderboardDB(){
         positionColumn.setCellValueFactory(cellData ->
                 new ReadOnlyObjectWrapper<>(cellData.getValue().position()));
@@ -614,6 +703,11 @@ public class GuiView implements GraphicInterface {
         });
     }
 
+    /**
+     * the method shows the correct overall ranking based on the number of players
+     * @param playerPosition: player's position in the overall ranking
+     * @param updatedDB: list containing the records to correctly rebuild the table rows
+     */
     @Override
     public void showLeaderboardFromDB(int playerPosition, List<LeaderBoardData> updatedDB) {
         Platform.runLater(() -> {

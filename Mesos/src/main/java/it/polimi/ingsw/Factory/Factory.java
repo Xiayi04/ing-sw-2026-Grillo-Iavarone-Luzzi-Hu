@@ -1,9 +1,6 @@
 package it.polimi.ingsw.Factory;
-import it.polimi.ingsw.Buildings.Building;
-import it.polimi.ingsw.Buildings.Events;
-import it.polimi.ingsw.Buildings.Icons;
-import it.polimi.ingsw.Cards.Characters.Character;
-import it.polimi.ingsw.Cards.Events.Event;
+import it.polimi.ingsw.Model.Cards.Characters.Character;
+import it.polimi.ingsw.Model.Cards.Events.Event;
 
 
 public interface Factory {

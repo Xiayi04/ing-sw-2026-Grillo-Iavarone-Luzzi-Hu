@@ -1,11 +1,10 @@
 package it.polimi.ingsw.EventTest;
 
-import it.polimi.ingsw.Cards.Characters.Shaman;
-import it.polimi.ingsw.Cards.Events.ShamanicEvent;
-import it.polimi.ingsw.Game.Player;
-import it.polimi.ingsw.Game.Totem;
+import it.polimi.ingsw.Model.Cards.Characters.Shaman;
+import it.polimi.ingsw.Model.Cards.Events.ShamanicEvent;
+import it.polimi.ingsw.Model.Game.Player;
+import it.polimi.ingsw.Model.Game.Totem;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.Assertions.*;
 
 import java.util.ArrayList;
 import java.util.List;

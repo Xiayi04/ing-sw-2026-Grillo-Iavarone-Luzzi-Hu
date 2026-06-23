@@ -1,6 +1,6 @@
 package it.polimi.ingsw.Controller;
 
-import it.polimi.ingsw.Game.Totem;
+import it.polimi.ingsw.Model.Game.Totem;
 import it.polimi.ingsw.Network.VirtualClientInterface;
 
 public interface LobbyManager {

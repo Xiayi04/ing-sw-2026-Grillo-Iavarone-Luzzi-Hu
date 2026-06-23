@@ -1,10 +1,8 @@
 package it.polimi.ingsw.Network.Socket.Server.Command;
 
-import it.polimi.ingsw.Game.Totem;
+import it.polimi.ingsw.Model.Game.Totem;
 import it.polimi.ingsw.Network.Socket.Client.MessageFromClient;
-import it.polimi.ingsw.Network.Socket.Server.SocketVirtualClient;
 
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.function.Function;

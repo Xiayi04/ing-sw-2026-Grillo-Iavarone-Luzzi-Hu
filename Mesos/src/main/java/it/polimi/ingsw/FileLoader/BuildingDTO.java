@@ -1,7 +1,7 @@
 package it.polimi.ingsw.FileLoader;
 
-import it.polimi.ingsw.Buildings.Events;
-import it.polimi.ingsw.Buildings.Icons;
+import it.polimi.ingsw.Model.Cards.Buildings.Events;
+import it.polimi.ingsw.Model.Cards.Buildings.Icons;
 
 public class BuildingDTO {
     int era;

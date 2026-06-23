@@ -1,13 +1,11 @@
 package it.polimi.ingsw.Factory;
 
-import it.polimi.ingsw.Cards.Characters.Character;
-import it.polimi.ingsw.Cards.Characters.*;
-import it.polimi.ingsw.Cards.Events.*;
-import it.polimi.ingsw.Cards.CardType;
+import it.polimi.ingsw.Model.Cards.Characters.*;
 import it.polimi.ingsw.FileLoader.*;
+import it.polimi.ingsw.Model.Cards.Characters.Character;
+import it.polimi.ingsw.Model.Cards.Events.*;
 
 import java.util.ArrayList;
-import java.util.List;
 
 public class ConcreteFactoryEra implements Factory{
 

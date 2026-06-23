@@ -1,14 +1,13 @@
 package it.polimi.ingsw.ControllerTest;
 
-import it.polimi.ingsw.Cards.Events.Event;
+import it.polimi.ingsw.Model.Cards.Events.Event;
 import it.polimi.ingsw.Controller.GameManager;
-import it.polimi.ingsw.Controller.PingManager;
 import it.polimi.ingsw.Controller.ServerController;
 import it.polimi.ingsw.Controller.TempPlayer;
 import it.polimi.ingsw.Database.LeaderBoardData;
-import it.polimi.ingsw.Game.Board;
-import it.polimi.ingsw.Game.Player;
-import it.polimi.ingsw.Game.Totem;
+import it.polimi.ingsw.Model.Game.Board;
+import it.polimi.ingsw.Model.Game.Player;
+import it.polimi.ingsw.Model.Game.Totem;
 import it.polimi.ingsw.Network.*;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;

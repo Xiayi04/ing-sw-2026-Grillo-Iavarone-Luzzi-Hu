@@ -1,14 +1,14 @@
 package it.polimi.ingsw.UI;
 
-import it.polimi.ingsw.Buildings.*;
-import it.polimi.ingsw.Cards.Characters.*;
-import it.polimi.ingsw.Cards.Events.HuntingEvent;
-import it.polimi.ingsw.Cards.Events.PaintingEvent;
-import it.polimi.ingsw.Cards.Events.ShamanicEvent;
-import it.polimi.ingsw.Cards.Events.SustenanceEvent;
-import it.polimi.ingsw.Game.OfferCard;
-import it.polimi.ingsw.Game.Totem;
-import it.polimi.ingsw.Game.TurnOrderCard;
+import it.polimi.ingsw.Model.Cards.Buildings.*;
+import it.polimi.ingsw.Model.Cards.Characters.*;
+import it.polimi.ingsw.Model.Cards.Events.HuntingEvent;
+import it.polimi.ingsw.Model.Cards.Events.PaintingEvent;
+import it.polimi.ingsw.Model.Cards.Events.ShamanicEvent;
+import it.polimi.ingsw.Model.Cards.Events.SustenanceEvent;
+import it.polimi.ingsw.Model.Game.OfferCard;
+import it.polimi.ingsw.Model.Game.Totem;
+import it.polimi.ingsw.Model.Game.TurnOrderCard;
 import org.jline.utils.AttributedStringBuilder;
 import org.jline.utils.AttributedStyle;
 

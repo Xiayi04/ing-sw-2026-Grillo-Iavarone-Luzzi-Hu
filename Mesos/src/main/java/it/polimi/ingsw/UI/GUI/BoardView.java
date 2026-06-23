@@ -1,14 +1,13 @@
 package it.polimi.ingsw.UI.GUI;
 
-import it.polimi.ingsw.Cards.Card;
-import it.polimi.ingsw.Game.OfferCard;
+import it.polimi.ingsw.Model.Cards.Card;
+import it.polimi.ingsw.Model.Game.OfferCard;
 import it.polimi.ingsw.Network.ClientController;
 import javafx.geometry.Pos;
 import javafx.scene.Cursor;
 import javafx.scene.Node;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
-import javafx.scene.effect.Glow;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.StackPane;
@@ -17,9 +16,13 @@ import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 
 import java.util.ArrayList;
-import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ExecutorService;
+
+/**
+ * the class manages the display of the board, which includes the path, the cards above and under it, and the pawns.
+ * it extends the VBox class in this way the elements that make up the board are inserted in order
+ */
 
 public class BoardView extends VBox {
     private final ClientController clientController;
@@ -73,6 +76,9 @@ public class BoardView extends VBox {
         return (HBox) centerRow.getChildren().get(1);
     }
 
+    /**
+     * calls the methods showUpperRow, showPath, and showDownRow and inserts the returned elements into the vbox
+     */
     public void showBoard() {
         this.setAlignment(Pos.CENTER);
         this.setSpacing(20);
@@ -80,6 +86,14 @@ public class BoardView extends VBox {
         this.getChildren().add(showPath());
         this.getChildren().add(showDownRow());
     }
+
+    /**
+     * The method creates two HBoxes (one for building cards and the other for character/event cards) and, retrieving
+     * data from the local board in the ClientController, displays the cards present in the top row using the
+     * createImageView method. For each card, it sets the following features: when clicked, it calls the
+     * requestLocalPickCard method; when hovered over with the mouse, the cursor becomes a hand and the card is enlarged.
+     * @return a single hbox where the two previously created hboxes are inserted
+     */
 
     public Node showUpperRow(){
         HBox characterRow = new HBox(10);
@@ -123,6 +137,14 @@ public class BoardView extends VBox {
         return upperRow;
     }
 
+    /**
+     * The method creates two HBoxes (one for building cards and the other for character/event cards) and, retrieving
+     * data from the local board in the ClientController, displays the cards present in the bottom row using the
+     * createImageView method. For each card, it sets the following features: when clicked, it calls the
+     * requestLocalPickCard method; when hovered over with the mouse, the cursor becomes a hand and the card is enlarged.
+     * @return a single hbox where the two previously created hboxes are inserted
+     */
+
     public Node showDownRow(){
         HBox characterRow = new HBox(10);
         HBox buildingRow = new HBox(10);
@@ -147,6 +169,18 @@ public class BoardView extends VBox {
         }
         return downRow;
     }
+
+    /**
+     * The method displays the path and the totems above it. It inserts the turn order card into a stackpane so that
+     * images of the totems can be displayed on top, which are inserted into other stackpanes (one per player) and
+     * superimposed on the image of the turn order card.
+     * It displays the path next to it: the tiles are clickable and when clicked they call the method
+     * requestLocalMoveTotem, and additionally, when hovered over with the mouse, a yellow border appears to facilitate
+     * selection.
+     * The deck and a "skip" button are also shown, which when pressed calls the requestSkip method.
+     * Inserts all these elements of the hbox centerRow
+     * @return centerRow
+     */
 
     public Node showPath(){
         HBox path =  new HBox(-1);

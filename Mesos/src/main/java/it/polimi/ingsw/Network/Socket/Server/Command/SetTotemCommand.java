@@ -1,10 +1,8 @@
 package it.polimi.ingsw.Network.Socket.Server.Command;
 
 import it.polimi.ingsw.Controller.ServerController;
-import it.polimi.ingsw.Game.Totem;
+import it.polimi.ingsw.Model.Game.Totem;
 import it.polimi.ingsw.Network.VirtualClientInterface;
-
-import java.util.Arrays;
 
 public class SetTotemCommand implements ServerCommand{
     Totem totem;

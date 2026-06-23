@@ -1,10 +1,10 @@
 package it.polimi.ingsw.UI;
 
-import it.polimi.ingsw.Buildings.Building;
-import it.polimi.ingsw.Cards.Card;
-import it.polimi.ingsw.Cards.Characters.Character;
+import it.polimi.ingsw.Model.Cards.Buildings.Building;
+import it.polimi.ingsw.Model.Cards.Card;
+import it.polimi.ingsw.Model.Cards.Characters.Character;
 import it.polimi.ingsw.Database.LeaderBoardData;
-import it.polimi.ingsw.Game.*;
+import it.polimi.ingsw.Model.Game.*;
 import it.polimi.ingsw.Network.ClientController;
 import it.polimi.ingsw.Network.ClientMain;
 import it.polimi.ingsw.Network.GraphicInterface;

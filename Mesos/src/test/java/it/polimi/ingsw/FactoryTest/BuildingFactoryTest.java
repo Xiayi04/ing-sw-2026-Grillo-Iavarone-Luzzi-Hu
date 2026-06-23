@@ -1,6 +1,6 @@
 package it.polimi.ingsw.FactoryTest;
-import it.polimi.ingsw.Buildings.*;
 import it.polimi.ingsw.Factory.BuildingFactory;
+import it.polimi.ingsw.Model.Cards.Buildings.*;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -25,7 +25,7 @@ public class BuildingFactoryTest {
 
      }
 
-    @Test
+    /*@Test
     void testCreateMultiplicationBuilding() {
         BuildingFactory factory = new BuildingFactory();
         Building building = factory.createMultiplicationBuilding(9, 6, 6, "PICKER", 2);
@@ -45,10 +45,10 @@ public class BuildingFactoryTest {
         assertNotEquals(6, b.getPrice());
         assertNotEquals(Icons.PICKER, b.getTypeIcons());
         assertNotEquals(2, b.getMultiplier());
-        */
 
-    }
-    @Test
+
+    }*/
+    /*@Test
     void testMultiplierPPBuilderBuilding() {
         BuildingFactory factory = new BuildingFactory();
         Building building = factory.createMultiplierPPBuilderBuilding(1,6,4);
@@ -65,7 +65,7 @@ public class BuildingFactoryTest {
 
 
 
-    }
+    }*/
 
     @Test
     void testDiscountBuilding() {

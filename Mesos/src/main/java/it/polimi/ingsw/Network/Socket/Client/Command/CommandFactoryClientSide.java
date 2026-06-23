@@ -2,8 +2,8 @@ package it.polimi.ingsw.Network.Socket.Client.Command;
 
 
 
-import it.polimi.ingsw.Cards.Events.Event;
-import it.polimi.ingsw.Game.Totem;
+import it.polimi.ingsw.Model.Cards.Events.Event;
+import it.polimi.ingsw.Model.Game.Totem;
 import it.polimi.ingsw.Network.Socket.Server.Command.*;
 import it.polimi.ingsw.Network.Socket.Server.MessageFromServer;
 import it.polimi.ingsw.Network.Socket.Server.SocketVirtualClient;

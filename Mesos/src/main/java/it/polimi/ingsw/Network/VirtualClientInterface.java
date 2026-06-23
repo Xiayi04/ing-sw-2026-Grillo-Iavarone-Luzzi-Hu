@@ -1,8 +1,11 @@
 package it.polimi.ingsw.Network;
 
-import it.polimi.ingsw.Cards.Events.Event;
+import it.polimi.ingsw.Model.Cards.Events.Event;
 import it.polimi.ingsw.Database.LeaderBoardData;
-import it.polimi.ingsw.Game.*;
+import it.polimi.ingsw.Model.Game.Board;
+import it.polimi.ingsw.Model.Game.Player;
+import it.polimi.ingsw.Model.Game.Totem;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -45,7 +48,7 @@ public interface VirtualClientInterface {
      * @param players:
      * @param board:
      */
-     void updateStartGame( ArrayList<Player> players, Board board);
+     void updateStartGame(ArrayList<Player> players, Board board);
 
     /**
      * Notifies the client that the game successfully ended and The list of the result

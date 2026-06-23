@@ -1,7 +1,7 @@
 package it.polimi.ingsw.Network;
 
 import it.polimi.ingsw.Database.LeaderBoardData;
-import it.polimi.ingsw.Game.Totem;
+import it.polimi.ingsw.Model.Game.Totem;
 
 import java.awt.*;
 import java.io.File;

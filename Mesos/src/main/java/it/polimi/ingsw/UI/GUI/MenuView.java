@@ -1,6 +1,6 @@
 package it.polimi.ingsw.UI.GUI;
 
-import it.polimi.ingsw.Game.Totem;
+import it.polimi.ingsw.Model.Game.Totem;
 import it.polimi.ingsw.Network.ClientController;
 import javafx.geometry.Pos;
 import javafx.scene.Cursor;
@@ -119,10 +119,6 @@ public class MenuView extends VBox {
                     clientController.setTmpTotem(totem);
                     System.out.println("DEBUG: il totem è "+totem.toString());
                 });
-                /*new Thread(()->{
-                    clientController.setTmpTotem(totem);
-                    System.out.println("DEBUG: il totem è "+totem.toString());
-                }).start();*/
             });
             imageView.setOnMouseEntered(event -> {
                 imageView.setStyle(" -fx-scale-x: 1.2; -fx-scale-y: 1.2;");

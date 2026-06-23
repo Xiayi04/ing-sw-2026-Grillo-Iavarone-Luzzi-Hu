@@ -1,7 +1,7 @@
 package it.polimi.ingsw.Controller;
 
-import it.polimi.ingsw.Game.Player;
-import it.polimi.ingsw.Game.Totem;
+import it.polimi.ingsw.Model.Game.Player;
+import it.polimi.ingsw.Model.Game.Totem;
 import it.polimi.ingsw.Network.ClientDisconnectedException;
 import it.polimi.ingsw.Network.Notifier;
 import it.polimi.ingsw.Network.Server;

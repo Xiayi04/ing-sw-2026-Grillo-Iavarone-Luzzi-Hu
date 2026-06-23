@@ -1,14 +1,14 @@
 package it.polimi.ingsw.Network;
 
-import it.polimi.ingsw.Buildings.Building;
-import it.polimi.ingsw.Cards.Card;
-import it.polimi.ingsw.Cards.Characters.Character;
-import it.polimi.ingsw.Cards.Events.Event;
+import it.polimi.ingsw.Model.Cards.Buildings.Building;
+import it.polimi.ingsw.Model.Cards.Card;
+import it.polimi.ingsw.Model.Cards.Characters.Character;
+import it.polimi.ingsw.Model.Cards.Events.Event;
 import it.polimi.ingsw.Database.LeaderBoardData;
-import it.polimi.ingsw.Game.Board;
-import it.polimi.ingsw.Game.OfferCard;
-import it.polimi.ingsw.Game.Player;
-import it.polimi.ingsw.Game.Totem;
+import it.polimi.ingsw.Model.Game.Board;
+import it.polimi.ingsw.Model.Game.OfferCard;
+import it.polimi.ingsw.Model.Game.Player;
+import it.polimi.ingsw.Model.Game.Totem;
 import it.polimi.ingsw.Network.RMI.ClientRMI;
 import it.polimi.ingsw.Network.Socket.Client.SocketClient;
 
@@ -88,7 +88,7 @@ public class ClientController implements AutoCloseable{
                 pingManager = new PingManagerClientSide();
                 pingManager.start(serverConnection);
             } catch (Exception e) {
-                view.showError("Connection error.");
+                //view.showError("Connection error.");
             }
         }
         else{

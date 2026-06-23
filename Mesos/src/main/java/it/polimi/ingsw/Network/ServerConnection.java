@@ -1,6 +1,6 @@
 package it.polimi.ingsw.Network;
 
-import it.polimi.ingsw.Game.Totem;
+import it.polimi.ingsw.Model.Game.Totem;
 
 // LATO CLIENT , VALIDA SIA PER RMI E SOCKET
 //interfaccia DAL CLIENTCONTROLLER per mandare messaggi  al server

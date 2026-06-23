@@ -1,26 +1,19 @@
 package it.polimi.ingsw.UI.GUI;
 
-import it.polimi.ingsw.Buildings.Building;
-import it.polimi.ingsw.Cards.Characters.*;
-import it.polimi.ingsw.Cards.Characters.Character;
-import it.polimi.ingsw.Cards.Characters.CharacterVisitor.GuiCharacterVisitor;
-import it.polimi.ingsw.Cards.Characters.CharacterVisitor.GuiVisitor;
-import it.polimi.ingsw.Game.Player;
+import it.polimi.ingsw.Model.Cards.Buildings.Building;
+import it.polimi.ingsw.Model.Cards.Characters.*;
+import it.polimi.ingsw.Model.Cards.Characters.Character;
+import it.polimi.ingsw.Model.Cards.Characters.CharacterVisitor.GuiCharacterVisitor;
+import it.polimi.ingsw.Model.Cards.Characters.CharacterVisitor.GuiVisitor;
+import it.polimi.ingsw.Model.Game.Player;
 import javafx.geometry.Pos;
-import javafx.scene.Node;
-import javafx.scene.Scene;
-import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Region;
-import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
-import javafx.stage.Modality;
-import javafx.stage.Stage;
 
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Objects;
 
 public class PlayerHandView extends VBox {
     private HBox building;
