@@ -90,7 +90,8 @@ public class ShamanicEvent extends Event {
                     b.acceptShamanicEvent(v,p,this);
                 }
                 p.modifyPP(abs(this.getShEvePrizePoints()));
-            } else if (p.getStarCounter()==MinStars) {
+            }
+            if (p.getStarCounter()==MinStars) {
                 ShamanicVisitorInterface v = new ShamanicNoMalusVisitor();
 
                 for(Building b : p.getBuilding()){
