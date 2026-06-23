@@ -21,11 +21,6 @@ public class Builder extends Character implements CharacterInterface {
     public Integer getBuilderDiscount() { return builderDiscount;}
     public Integer getPP() { return PP; }
 
-    public void printCard(){
-        super.printCard();
-        System.out.println("sconto:"+builderDiscount);
-        System.out.println("pp:"+PP);
-    }
     @Override
     public String[] print(Printer printer){
         return printer.print(this);

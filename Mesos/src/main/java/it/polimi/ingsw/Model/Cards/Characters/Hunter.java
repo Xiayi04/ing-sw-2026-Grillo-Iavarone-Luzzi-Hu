@@ -20,10 +20,6 @@ public class Hunter extends Character implements CharacterInterface {
         return symbol;
     }
 
-    public void printCard(){
-        super.printCard();
-        System.out.println("simbolo:"+symbol);
-    }
 
     public String[] print(Printer printer){
         return printer.print(this);

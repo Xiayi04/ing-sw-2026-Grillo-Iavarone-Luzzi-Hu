@@ -25,13 +25,6 @@ public abstract class Character extends Card implements CharacterInterface, Inve
         return this.characterType;
     }
 
-    public void printCard(){
-        super.printCard();
-        System.out.println("numero giocatori:"+numPlayers);
-        System.out.println(("tipo di personaggio:"+characterType));
-    }
-
-
     public abstract String[] print(Printer printer);
 
     /**

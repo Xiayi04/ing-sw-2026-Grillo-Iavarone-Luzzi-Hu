@@ -22,10 +22,6 @@ public class Picker extends Character implements CharacterInterface {
         return printer.print(this);
     }
 
-    public void printCard(){
-        super.printCard();
-        System.out.println("sconto:"+discount);
-    }
     //accepter
     @Override
     public boolean addCard(CharacterVisitor visitor, Player player){

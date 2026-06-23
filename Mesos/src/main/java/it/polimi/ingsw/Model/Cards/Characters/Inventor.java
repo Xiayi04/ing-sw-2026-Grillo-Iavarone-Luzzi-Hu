@@ -25,10 +25,6 @@ public class Inventor extends Character implements CharacterInterface, InventorI
         return printer.print(this);
     }
 
-    public void printCard(){
-        super.printCard();
-        System.out.println("icona:"+inventorIcon);
-    }
     @Override
     public String isInventorAndGetIcon(CharacterVisitor visitor){
         return visitor.visit(this);

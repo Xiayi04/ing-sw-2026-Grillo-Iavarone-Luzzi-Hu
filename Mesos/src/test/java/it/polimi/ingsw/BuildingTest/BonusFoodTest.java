@@ -56,121 +56,39 @@ public class BonusFoodTest {
         public BonusFood building;
         public Player player;
 
-        @Override
-        public void visit(AddCard addCard, Player player) {
-
-        }
-
-        @Override
-        public void visit(BonusStarBuilding bonusStarBuilding, Player player) {
-
-        }
-
+        @Override public void visit(AddCard addCard, Player player) {}
+        @Override public void visit(BonusStarBuilding bonusStarBuilding, Player player) {}
         @Override
         public void visit(BonusFood b, Player p) {
             this.visitCalled = true;
             this.building = b;
             this.player = p;
         }
-
-        @Override
-        public void visit(BonusPPBuilding bonusPPBuilding, Player player) {
-
-        }
-
-        @Override
-        public void visit(DiscountBuilding discountBuilding, Player player) {
-
-        }
-
-        @Override
-        public void visit(DoubleBonusBuilding doubleBonusBuilding, Player player) {
-
-        }
-
-        @Override
-        public void visit(MultiplicationBuilding multiplicationBuilding, Player player) {
-
-        }
-
-        @Override
-        public void visit(MultiplierPPBuilderBuilding multiplierPPBuilderBuilding, Player player) {
-
-        }
-
-        @Override
-        public void visit(NoMalusBuilding noMalusBuilding, Player player) {
-
-        }
-
-        @Override
-        public void visit(SameIconBuilding sameIconBuilding, Player player) {
-
-        }
-
-        @Override
-        public void visit(SetBonus setBonus, Player player) {
-
-        }
-
+        @Override public void visit(BonusPPBuilding bonusPPBuilding, Player player) {}
+        @Override public void visit(DiscountBuilding discountBuilding, Player player) {}
+        @Override public void visit(DoubleBonusBuilding doubleBonusBuilding, Player player) {}
+        @Override public void visit(MultiplicationBuilding multiplicationBuilding, Player player) {}
+        @Override public void visit(MultiplierPPBuilderBuilding multiplierPPBuilderBuilding, Player player) {}
+        @Override public void visit(NoMalusBuilding noMalusBuilding, Player player) {}
+        @Override public void visit(SameIconBuilding sameIconBuilding, Player player) {}
+        @Override public void visit(SetBonus setBonus, Player player) {}
     }
 
     class FakeFoodBonusVisitor implements TurnOrderCardFoodBonus {
         public boolean visitCalled = false;
 
-        @Override
-        public void visit(AddCard addCard, Player player) {
-
-        }
-
-        @Override
-        public void visit(BonusStarBuilding bonusStarBuilding, Player player) {
-
-        }
-
-        @Override
-        public void visit(BonusFood b, Player p) {
+        @Override public void visit(AddCard addCard, Player player) {}
+        @Override public void visit(BonusStarBuilding bonusStarBuilding, Player player) {}
+        @Override public void visit(BonusFood b, Player p) {
             this.visitCalled = true;
         }
-
-        @Override
-        public void visit(BonusPPBuilding bonusPPBuilding, Player player) {
-
-        }
-
-        @Override
-        public void visit(DiscountBuilding discountBuilding, Player player) {
-
-        }
-
-        @Override
-        public void visit(DoubleBonusBuilding doubleBonusBuilding, Player player) {
-
-        }
-
-        @Override
-        public void visit(MultiplicationBuilding multiplicationBuilding, Player player) {
-
-        }
-
-        @Override
-        public void visit(MultiplierPPBuilderBuilding multiplierPPBuilderBuilding, Player player) {
-
-        }
-
-        @Override
-        public void visit(NoMalusBuilding noMalusBuilding, Player player) {
-
-        }
-
-        @Override
-        public void visit(SameIconBuilding sameIconBuilding, Player player) {
-
-        }
-
-        @Override
-        public void visit(SetBonus setBonus, Player player) {
-
-        }
+        @Override public void visit(BonusPPBuilding bonusPPBuilding, Player player) {}
+        @Override public void visit(DiscountBuilding discountBuilding, Player player) {}
+        @Override public void visit(DoubleBonusBuilding doubleBonusBuilding, Player player) {}
+        @Override public void visit(MultiplicationBuilding multiplicationBuilding, Player player) {}
+        @Override public void visit(MultiplierPPBuilderBuilding multiplierPPBuilderBuilding, Player player) {}
+        @Override public void visit(NoMalusBuilding noMalusBuilding, Player player) {}
+        @Override public void visit(SameIconBuilding sameIconBuilding, Player player) {}
+        @Override public void visit(SetBonus setBonus, Player player) {}
     }
 }
