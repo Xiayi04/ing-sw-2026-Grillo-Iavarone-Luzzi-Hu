@@ -6,6 +6,8 @@ import it.polimi.ingsw.Model.Cards.Events.PaintingEvent;
 import it.polimi.ingsw.Model.Cards.Events.SustenanceEvent;
 import it.polimi.ingsw.Model.Game.Player;
 
+import static java.lang.Math.abs;
+
 public class DiscountVisitor extends DiscountAbstractVisitor{
 
     public int visit(DiscountBuilding discountBuilding, Player player, SustenanceEvent event) {
@@ -13,11 +15,11 @@ public class DiscountVisitor extends DiscountAbstractVisitor{
     }
 
     public void visit(DiscountBuilding discountBuilding, Player player, PaintingEvent event) {
-        player.modifyFood(discountBuilding.getFoodBonusForPlayer(player));
+        player.modifyFood(abs(discountBuilding.getFoodBonusForPlayer(player)));
     }
 
     public void visit(DiscountBuilding discountBuilding, Player player, HuntingEvent event) {
-        player.modifyFood(discountBuilding.getFoodBonusForPlayer(player));
-        player.modifyPP(discountBuilding.getPpBonus(player));
+        player.modifyFood(abs(discountBuilding.getFoodBonusForPlayer(player)));
+        player.modifyPP(abs(discountBuilding.getPpBonus(player)));
     }
 }
