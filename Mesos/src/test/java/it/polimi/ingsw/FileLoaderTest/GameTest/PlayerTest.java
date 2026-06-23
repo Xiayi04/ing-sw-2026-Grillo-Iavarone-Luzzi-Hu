@@ -1,4 +1,4 @@
-package it.polimi.ingsw.GameTest;
+package it.polimi.ingsw.FileLoaderTest.GameTest;
 
 import it.polimi.ingsw.Model.Cards.Buildings.BonusFood;
 import it.polimi.ingsw.Model.Cards.Buildings.BonusStarBuilding;
