@@ -3,7 +3,7 @@ package it.polimi.ingsw.Model.Cards.Characters.CharacterVisitor;
 import it.polimi.ingsw.Model.Cards.Characters.*;
 import it.polimi.ingsw.Model.Game.Player;
 
-public  class AbstractCharacterVisitor implements CharacterVisitor{
+public abstract class AbstractCharacterVisitor implements CharacterVisitor{
 
 
     @Override

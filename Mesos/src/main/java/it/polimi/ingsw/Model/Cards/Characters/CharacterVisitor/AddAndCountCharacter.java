@@ -67,7 +67,7 @@ public class AddAndCountCharacter extends AbstractCharacterVisitor {
             player.getTribeCard().add(hunter);
             if (hunter.getSymbol()) {
                 player.modifyFood(abs(player.getHunterCounter()));
-                return setBonusCalculator(player);
+                return (hunter.getSymbol() || setBonusCalculator(player));
             }
         }
         return false;
