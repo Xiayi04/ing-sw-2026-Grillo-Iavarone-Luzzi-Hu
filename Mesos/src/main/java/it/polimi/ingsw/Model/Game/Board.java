@@ -9,8 +9,7 @@ import it.polimi.ingsw.Model.Cards.Buildings.BuildingVisitor.SpecialBuildings.Bo
 import it.polimi.ingsw.Model.Cards.Buildings.BuildingVisitor.SpecialBuildings.TurnOrderCardFoodBonus;
 import it.polimi.ingsw.Model.Cards.Card;
 import it.polimi.ingsw.Model.Cards.Events.Event;
-import it.polimi.ingsw.Model.Cards.Events.PaintingEvent;
-import it.polimi.ingsw.Factory.BuildingFactory;
+import it.polimi.ingsw.Model.Factory.BuildingFactory;
 
 
 public class Board  implements Serializable {

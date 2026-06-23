@@ -1,5 +1,5 @@
 package it.polimi.ingsw.FactoryTest;
-import it.polimi.ingsw.Factory.BuildingFactory;
+import it.polimi.ingsw.Model.Factory.BuildingFactory;
 import it.polimi.ingsw.Model.Cards.Buildings.*;
 import org.junit.jupiter.api.Test;
 

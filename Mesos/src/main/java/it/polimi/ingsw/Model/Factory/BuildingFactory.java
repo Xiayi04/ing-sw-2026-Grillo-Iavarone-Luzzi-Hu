@@ -1,4 +1,4 @@
-package it.polimi.ingsw.Factory;
+package it.polimi.ingsw.Model.Factory;
 
 import it.polimi.ingsw.FileLoader.*;
 import it.polimi.ingsw.Model.Cards.Buildings.*;

@@ -9,8 +9,7 @@ import it.polimi.ingsw.Model.Cards.Buildings.BuildingVisitor.SetAndIconVisitor.S
 import it.polimi.ingsw.Model.Cards.Buildings.SameIconBuilding;
 import it.polimi.ingsw.Model.Cards.Characters.Character;
 import it.polimi.ingsw.Model.Cards.Characters.Inventor;
-import it.polimi.ingsw.Factory.ConcreteFactoryEra;
-import it.polimi.ingsw.Model.Cards.Characters.InventorIcon;
+import it.polimi.ingsw.Model.Factory.ConcreteFactoryEra;
 import it.polimi.ingsw.Model.Game.Player;
 import it.polimi.ingsw.Model.Game.Totem;
 import it.polimi.ingsw.UI.Printer;

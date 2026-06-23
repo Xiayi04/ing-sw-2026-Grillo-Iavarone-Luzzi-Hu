@@ -3,7 +3,7 @@ package it.polimi.ingsw.Model.Cards.Buildings.BuildingVisitor.EndGame;
 import it.polimi.ingsw.Model.Cards.Buildings.*;
 import it.polimi.ingsw.Model.Game.Player;
 
-public  class EndGameAbstractVisitor implements EndGameVisitorInterface{
+public  abstract class EndGameAbstractVisitor implements EndGameVisitorInterface{
 
 
     @Override

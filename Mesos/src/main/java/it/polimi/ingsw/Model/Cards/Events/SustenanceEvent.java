@@ -33,8 +33,6 @@ public class SustenanceEvent extends Event {
 
     /**
      * This method resolves the Sustenance Event by counting the number of characters and picker each player has
-     *
-     * @param players </Player> players
      */
     @Override
     public void resolveEvent(ArrayList<Player> players) {

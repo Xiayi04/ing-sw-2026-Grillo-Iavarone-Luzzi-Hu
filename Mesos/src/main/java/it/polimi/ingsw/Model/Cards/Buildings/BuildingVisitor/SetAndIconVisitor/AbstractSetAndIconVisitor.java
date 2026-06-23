@@ -3,7 +3,7 @@ package it.polimi.ingsw.Model.Cards.Buildings.BuildingVisitor.SetAndIconVisitor;
 import it.polimi.ingsw.Model.Cards.Buildings.*;
 import it.polimi.ingsw.Model.Game.Player;
 
-public  class AbstractSetAndIconVisitor implements SetAndIconVisitor {
+public abstract class AbstractSetAndIconVisitor implements SetAndIconVisitor {
 
     public void visit(AddCard addCard, Player player, String icon) {
 

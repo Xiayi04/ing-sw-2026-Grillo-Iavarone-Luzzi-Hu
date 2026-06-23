@@ -3,7 +3,7 @@ package it.polimi.ingsw.Model.Game;
 import it.polimi.ingsw.Model.Cards.Card;
 import it.polimi.ingsw.Model.Cards.Characters.Character;
 import it.polimi.ingsw.Model.Cards.Events.Event;
-import it.polimi.ingsw.Factory.*;
+import it.polimi.ingsw.Model.Factory.ConcreteFactoryEra;
 
 import java.io.Serial;
 import java.io.Serializable;
