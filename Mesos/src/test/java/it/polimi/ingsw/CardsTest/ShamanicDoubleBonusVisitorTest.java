@@ -1,5 +1,7 @@
 package it.polimi.ingsw.CardsTest;
 
+import it.polimi.ingsw.Factory.BuildingFactory;
+import it.polimi.ingsw.Model.Cards.Buildings.Building;
 import it.polimi.ingsw.Model.Cards.Buildings.BuildingVisitor.EventBuildings.Shamanic.ShamanicDoubleBonusVisitor;
 import it.polimi.ingsw.Model.Cards.Buildings.DoubleBonusBuilding;
 import it.polimi.ingsw.Model.Cards.Characters.Shaman;
@@ -28,8 +30,9 @@ public class ShamanicDoubleBonusVisitorTest {
 
         ShamanicEvent event = new ShamanicEvent(1,"EVENT","SHAMANIC_EVENT",-3,5);
 
-        DoubleBonusBuilding building = new DoubleBonusBuilding(1,7,1);
-        player.getBuilding().add(building);
+        BuildingFactory factory = new BuildingFactory();
+        ArrayList<Building> buildings = factory.createBuildingList();
+        player.getBuilding().addAll(buildings);
         event.resolveEvent(players);
 
         assertEquals(20, player.getPrestigePoints());
