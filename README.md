@@ -1,5 +1,10 @@
 # ing-sw-2026-Grillo-Iavarone-Luzzi-Hu
 
+### Copyright
+Il gioco da tavolo Mesos e tutto il relativo materiale grafico è di esclusiva proprietà di Cranio Creations.
+
+The board game Mesos and all related graphic material are the exclusive property of Cranio Creations.
+
 ### Group Members
 
 *   **Grillo Giuseppepio Salvatore Pasquale**
@@ -59,7 +64,6 @@ Find the Server IP:
 * On the machine running the server, open the command prompt and type: 'ipconfig'.
 * Look for the IPv4 Address (e.g., 192.168.1.X) under your active network adapter.Use this IP address on the client machines to connect to the server.
 
-### Copyright
-Il gioco da tavolo Mesos e tutto il relativo materiale grafico è di esclusiva proprietà di Cranio Creations.
+
 
     
